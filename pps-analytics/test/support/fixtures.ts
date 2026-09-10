@@ -9,7 +9,7 @@ import {
 } from "../../src/types";
 
 export const FIXTURE_CONTENT_DIR = resolve("test/fixtures/content/pages");
-export const FIXTURE_CONFIG_PATH = resolve("test/fixtures/pps.config.ts");
+export const FIXTURE_CONFIG_PATH = resolve("test/fixtures/pps.config.cjs");
 export const FIXTURE_GENERATED_AT = new Date("2026-01-01T00:00:00.000Z");
 export const FIXTURE_GENERATED_AT_ISO = FIXTURE_GENERATED_AT.toISOString();
 

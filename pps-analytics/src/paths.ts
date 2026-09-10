@@ -32,8 +32,14 @@ export function resolveDefaultOutDir(): string {
 }
 
 export function resolveDefaultConfigPath(): string | undefined {
-  const configPath = join(resolvePackageRoot(), "pps.config.ts");
-  return existsSync(configPath) ? configPath : undefined;
+  const root = resolvePackageRoot();
+  const compiledConfigPath = join(root, "dist", "pps.config.js");
+  if (existsSync(compiledConfigPath)) {
+    return compiledConfigPath;
+  }
+
+  const sourceConfigPath = join(root, "pps.config.ts");
+  return existsSync(sourceConfigPath) ? sourceConfigPath : undefined;
 }
 
 export function resolveAnalyticsConfig(configPath?: string): string | undefined {
