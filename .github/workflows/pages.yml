@@ -19,6 +19,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SITE_BASE: /syllabus-pps/
+      CMS_BASE: /syllabus-pps/cms/
     steps:
       - uses: actions/checkout@v4
 
