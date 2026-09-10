@@ -1,0 +1,25 @@
+{
+  "name": "@pps/site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@pps/cms": "workspace:*",
+    "@pps/core": "workspace:*",
+    "astro": "^5.5.2",
+    "cytoscape": "^3.30.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "typescript": "^5.9.3"
+  }
+}

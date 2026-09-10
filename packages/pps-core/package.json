@@ -1,0 +1,26 @@
+{
+  "name": "@pps/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser-safe curriculum graph parser, diagnostics, and projections for PPS.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3"
+  }
+}

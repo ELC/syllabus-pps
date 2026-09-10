@@ -1,0 +1,13 @@
+logs/queries
+node_modules
+dist
+pps-analytics/_generated
+**/LCD/*
+!**/LCD/.gitkeep
+**/LDS/*
+!**/LDS/.gitkeep
+**/LND/*
+!**/LND/.gitkeep
+**/TUP/*
+!**/TUP/.gitkeep
+**/degrees/*.docx

@@ -1,0 +1,4 @@
+---
+title: algoritmos
+---
+- [[algoritmos]]

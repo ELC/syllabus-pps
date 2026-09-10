@@ -1,0 +1,30 @@
+---
+import SiteLayout from "../../../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="PPS Graph" activeNav="graph">
+  <header class="dashboard-header">
+    <h1>Curriculum graph</h1>
+    <p>
+      Click a node to focus its neighborhood. Double-click to open in the CMS. Click the background
+      to show all nodes again.
+    </p>
+  </header>
+
+  <section class="graph-panel">
+    <div id="cy"></div>
+  </section>
+
+  <script>
+    import { mountGraph } from "../../../scripts/graph";
+
+    mountGraph("cy", "../data/graph.cy.json").catch((error) => {
+      console.error(error);
+      const container = document.getElementById("cy");
+      if (container) {
+        container.textContent =
+          "Failed to load graph. Run pps-analytics build and copy artifacts into public/analytics/data.";
+      }
+    });
+  </script>
+</SiteLayout>

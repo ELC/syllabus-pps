@@ -1,0 +1,716 @@
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"dashboards","generatedAt":"2026-09-10T19:04:49.917Z","docs":"../../README.md"}
+{
+  "generatedAt": "2026-09-10T19:04:49.917Z",
+  "dashboards": [
+    {
+      "id": "quality",
+      "name": "Quality",
+      "description": "Structural and curricular diagnostics generated from the PPS curriculum mirror",
+      "metrics": [
+        {
+          "name": "Pages",
+          "description": "Total parsed pages. Use this as a quick check that content is being read.",
+          "value": 5,
+          "format": ",.0f"
+        },
+        {
+          "name": "Edges",
+          "description": "Total explicit links and hashtags. Higher values indicate a denser zettelkasten graph.",
+          "value": 12,
+          "format": ",.0f"
+        },
+        {
+          "name": "Expected Courses",
+          "description": "Courses declared in pps.config.ts. Compare this with course pages and diagnostics.",
+          "value": 2,
+          "format": ",.0f"
+        },
+        {
+          "name": "Red Diagnostics",
+          "description": "Errors that should block confidence in the current graph. Read the Diagnostics table for details.",
+          "value": 0,
+          "format": ",.0f"
+        },
+        {
+          "name": "Warnings",
+          "description": "Non-blocking issues that still deserve review. Filter the table below by code or page.",
+          "value": 9,
+          "format": ",.0f"
+        },
+        {
+          "name": "Concept Pages",
+          "description": "Pages classified as concepts. These should contain source links and connect course content.",
+          "value": 1,
+          "format": ",.0f"
+        },
+        {
+          "name": "Course Pages",
+          "description": "Pages classified as courses. These are expected to link forward into concept pages.",
+          "value": 2,
+          "format": ",.0f"
+        },
+        {
+          "name": "Year Pages",
+          "description": "Pages classified as curriculum years. These should reference their expected courses.",
+          "value": 1,
+          "format": ",.0f"
+        }
+      ],
+      "filters": [
+        {
+          "name": "severity",
+          "description": "Limit diagnostics to errors, warnings, or all severities.",
+          "defaultValue": "All",
+          "options": [
+            "All",
+            "warning"
+          ]
+        },
+        {
+          "name": "code",
+          "description": "Focus on one diagnostic rule, such as missing sources or course pages without concepts.",
+          "defaultValue": "All",
+          "options": [
+            "All",
+            "concept-low-course-coverage",
+            "concept-note-without-source-link",
+            "course-without-year-link",
+            "self-link",
+            "uuid-ref-resolved"
+          ]
+        },
+        {
+          "name": "page",
+          "description": "Inspect diagnostics affecting one page.",
+          "defaultValue": "All",
+          "options": [
+            "All",
+            "algoritmos",
+            "algoritmos y estructuras de datos",
+            "año 1",
+            "LDS",
+            "programación i"
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "name": "Diagnostics",
+          "description": "Each row is one generated quality finding. Use severity, code, page, and line to decide what to fix.",
+          "columns": [
+            {
+              "name": "severity",
+              "label": "Severity"
+            },
+            {
+              "name": "code",
+              "label": "Code"
+            },
+            {
+              "name": "page",
+              "label": "Page"
+            },
+            {
+              "name": "line",
+              "label": "Line"
+            },
+            {
+              "name": "message",
+              "label": "Message"
+            }
+          ],
+          "rows": [
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "algoritmos",
+              "line": "",
+              "message": "Concept \"algoritmos\" is referenced by 2 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-note-without-source-link",
+              "page": "algoritmos",
+              "line": 1,
+              "message": "Concept page \"algoritmos\" has a note without a source link."
+            },
+            {
+              "severity": "warning",
+              "code": "course-without-year-link",
+              "page": "programación i",
+              "line": "",
+              "message": "Course \"programación i\" is not referenced by an expected year page."
+            },
+            {
+              "severity": "warning",
+              "code": "self-link",
+              "page": "algoritmos",
+              "line": 1,
+              "message": "Page \"algoritmos\" links to itself."
+            },
+            {
+              "severity": "warning",
+              "code": "self-link",
+              "page": "algoritmos y estructuras de datos",
+              "line": 1,
+              "message": "Page \"algoritmos y estructuras de datos\" links to itself."
+            },
+            {
+              "severity": "warning",
+              "code": "self-link",
+              "page": "año 1",
+              "line": 1,
+              "message": "Page \"año 1\" links to itself."
+            },
+            {
+              "severity": "warning",
+              "code": "self-link",
+              "page": "LDS",
+              "line": 1,
+              "message": "Page \"LDS\" links to itself."
+            },
+            {
+              "severity": "warning",
+              "code": "self-link",
+              "page": "programación i",
+              "line": 1,
+              "message": "Page \"programación i\" links to itself."
+            },
+            {
+              "severity": "warning",
+              "code": "uuid-ref-resolved",
+              "page": "algoritmos y estructuras de datos",
+              "line": 3,
+              "message": "UUID reference in \"algoritmos y estructuras de datos\" resolves to \"programación i\"."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-coverage",
+      "name": "Concept Coverage",
+      "description": "Course-note coverage by explicit concept links",
+      "metrics": [
+        {
+          "name": "Course Notes",
+          "description": "Total note blocks found in course pages. This is the denominator for concept coverage.",
+          "value": 6,
+          "format": ",.0f"
+        },
+        {
+          "name": "Notes With Concepts",
+          "description": "Course notes that link to at least one concept through a hashtag or concept page link.",
+          "value": 2,
+          "format": ",.0f"
+        },
+        {
+          "name": "Missing Concept Links",
+          "description": "Course notes with no explicit concept link. These are candidates for zettelkasten cleanup.",
+          "value": 4,
+          "format": ",.0f"
+        },
+        {
+          "name": "Coverage Percent",
+          "description": "Share of course notes that have at least one concept link. Higher is better.",
+          "value": 33.3,
+          "format": ".1f"
+        }
+      ],
+      "filters": [],
+      "tables": [
+        {
+          "name": "Coverage by Year",
+          "description": "Aggregates notes, covered notes, and missing concept links by configured year.",
+          "columns": [
+            {
+              "name": "year",
+              "label": "Year"
+            },
+            {
+              "name": "notes",
+              "label": "Notes"
+            },
+            {
+              "name": "covered",
+              "label": "With Concept"
+            },
+            {
+              "name": "missing",
+              "label": "Missing"
+            },
+            {
+              "name": "coverage_percent",
+              "label": "Coverage %"
+            }
+          ],
+          "rows": [
+            {
+              "year": "año 1",
+              "notes": "6",
+              "covered": "2",
+              "missing": "4",
+              "coverage_percent": "33.3"
+            }
+          ]
+        },
+        {
+          "name": "Coverage by Course",
+          "description": "Aggregates note coverage per course. Use this to find which courses need concept-link enrichment.",
+          "columns": [
+            {
+              "name": "course",
+              "label": "Course"
+            },
+            {
+              "name": "notes",
+              "label": "Notes"
+            },
+            {
+              "name": "covered",
+              "label": "With Concept"
+            },
+            {
+              "name": "missing",
+              "label": "Missing"
+            },
+            {
+              "name": "coverage_percent",
+              "label": "Coverage %"
+            }
+          ],
+          "rows": [
+            {
+              "course": "algoritmos y estructuras de datos",
+              "notes": "4",
+              "covered": "1",
+              "missing": "3",
+              "coverage_percent": "25.0"
+            },
+            {
+              "course": "programación i",
+              "notes": "2",
+              "covered": "1",
+              "missing": "1",
+              "coverage_percent": "50.0"
+            }
+          ]
+        },
+        {
+          "name": "Notes Missing Concept Links",
+          "description": "Lists individual course notes without concept links.",
+          "columns": [
+            {
+              "name": "course",
+              "label": "Course"
+            },
+            {
+              "name": "line",
+              "label": "Line"
+            },
+            {
+              "name": "note",
+              "label": "Note"
+            }
+          ],
+          "rows": [
+            {
+              "course": "algoritmos y estructuras de datos",
+              "line": "1",
+              "note": "[[algoritmos y estructuras de datos]]"
+            },
+            {
+              "course": "algoritmos y estructuras de datos",
+              "line": "3",
+              "note": "[[44444444-4444-4444-8444-444444444444]]"
+            },
+            {
+              "course": "algoritmos y estructuras de datos",
+              "line": "4",
+              "note": "[[programación i]]"
+            },
+            {
+              "course": "programación i",
+              "line": "1",
+              "note": "[[programación i]]"
+            }
+          ]
+        },
+        {
+          "name": "Covered Notes",
+          "description": "Lists notes that already have concept links.",
+          "columns": [
+            {
+              "name": "course",
+              "label": "Course"
+            },
+            {
+              "name": "line",
+              "label": "Line"
+            },
+            {
+              "name": "concept_links",
+              "label": "Concept Links"
+            },
+            {
+              "name": "note",
+              "label": "Note"
+            }
+          ],
+          "rows": [
+            {
+              "course": "algoritmos y estructuras de datos",
+              "line": "2",
+              "concept_links": "algoritmos",
+              "note": "#algoritmos"
+            },
+            {
+              "course": "programación i",
+              "line": "2",
+              "concept_links": "algoritmos",
+              "note": "#algoritmos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "curriculum-map",
+      "name": "Curriculum Map",
+      "description": "Expected years, expected courses, and parsed curriculum pages",
+      "metrics": [
+        {
+          "name": "Expected Years",
+          "description": "Number of curriculum years configured for validation.",
+          "value": 1,
+          "format": ",.0f"
+        },
+        {
+          "name": "Expected Courses",
+          "description": "Number of configured courses across all years.",
+          "value": 2,
+          "format": ",.0f"
+        },
+        {
+          "name": "Unique Linked Concepts",
+          "description": "Distinct concepts linked from all course pages.",
+          "value": 1,
+          "format": ",.0f"
+        },
+        {
+          "name": "All Pages",
+          "description": "Total parsed pages in the mirror, including years, courses, concepts, and other page kinds.",
+          "value": 5,
+          "format": ",.0f"
+        }
+      ],
+      "filters": [
+        {
+          "name": "year",
+          "description": "Show rows for one configured curriculum year.",
+          "defaultValue": "All",
+          "options": [
+            "All",
+            "año 1"
+          ]
+        },
+        {
+          "name": "course",
+          "description": "Show concept rows for one course.",
+          "defaultValue": "All",
+          "options": [
+            "All",
+            "algoritmos y estructuras de datos",
+            "programación i"
+          ]
+        },
+        {
+          "name": "concept",
+          "description": "Show where a specific concept appears across courses.",
+          "defaultValue": "All",
+          "options": [
+            "All",
+            "algoritmos"
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "name": "Expected Curriculum",
+          "description": "Read one row as year, course, and concept.",
+          "columns": [
+            {
+              "name": "year",
+              "label": "Year"
+            },
+            {
+              "name": "course",
+              "label": "Course"
+            },
+            {
+              "name": "concept",
+              "label": "Concept"
+            }
+          ],
+          "rows": [
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "algoritmos"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "algoritmos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source-coverage",
+      "name": "Source Coverage",
+      "description": "Source-link coverage for concept notes reached from course pages",
+      "metrics": [
+        {
+          "name": "Linked Concept Notes",
+          "description": "Distinct concept note blocks reachable from all course-linked concepts.",
+          "value": 1,
+          "format": ",.0f"
+        },
+        {
+          "name": "Notes With Sources",
+          "description": "Reachable concept notes that include at least one detected source link.",
+          "value": 0,
+          "format": ",.0f"
+        },
+        {
+          "name": "Missing Source Links",
+          "description": "Reachable concept notes without a detected source link.",
+          "value": 1,
+          "format": ",.0f"
+        },
+        {
+          "name": "Source Coverage Percent",
+          "description": "Share of reachable concept notes that have source links. Higher is better.",
+          "value": 0,
+          "format": ".1f"
+        }
+      ],
+      "filters": [],
+      "tables": [
+        {
+          "name": "Source Coverage by Year",
+          "description": "For each year, counts unique concept note blocks linked by that year's courses and how many have sources.",
+          "columns": [
+            {
+              "name": "year",
+              "label": "Year"
+            },
+            {
+              "name": "concept_notes",
+              "label": "Concept Notes"
+            },
+            {
+              "name": "sourced",
+              "label": "With Source"
+            },
+            {
+              "name": "missing",
+              "label": "Missing Source"
+            },
+            {
+              "name": "coverage_percent",
+              "label": "Coverage %"
+            }
+          ],
+          "rows": [
+            {
+              "year": "año 1",
+              "concept_notes": "1",
+              "sourced": "0",
+              "missing": "1",
+              "coverage_percent": "0.0"
+            }
+          ]
+        },
+        {
+          "name": "Source Coverage by Course",
+          "description": "For each course, answers how many note blocks from its linked concepts have source links.",
+          "columns": [
+            {
+              "name": "year",
+              "label": "Year"
+            },
+            {
+              "name": "course",
+              "label": "Course"
+            },
+            {
+              "name": "concept_notes",
+              "label": "Concept Notes"
+            },
+            {
+              "name": "sourced",
+              "label": "With Source"
+            },
+            {
+              "name": "missing",
+              "label": "Missing Source"
+            },
+            {
+              "name": "coverage_percent",
+              "label": "Coverage %"
+            }
+          ],
+          "rows": [
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept_notes": "1",
+              "sourced": "0",
+              "missing": "1",
+              "coverage_percent": "0.0"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept_notes": "1",
+              "sourced": "0",
+              "missing": "1",
+              "coverage_percent": "0.0"
+            }
+          ]
+        },
+        {
+          "name": "Concept Note Sources",
+          "description": "Each row is one concept note reached from a course.",
+          "columns": [
+            {
+              "name": "year",
+              "label": "Year"
+            },
+            {
+              "name": "course",
+              "label": "Course"
+            },
+            {
+              "name": "concept",
+              "label": "Concept"
+            },
+            {
+              "name": "line",
+              "label": "Line"
+            },
+            {
+              "name": "has_source",
+              "label": "Has Source"
+            },
+            {
+              "name": "source_links",
+              "label": "Source Links"
+            },
+            {
+              "name": "note",
+              "label": "Note"
+            }
+          ],
+          "rows": [
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "algoritmos",
+              "line": "1",
+              "has_source": "no",
+              "source_links": "",
+              "note": "[[algoritmos]]"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "algoritmos",
+              "line": "1",
+              "has_source": "no",
+              "source_links": "",
+              "note": "[[algoritmos]]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-map",
+      "name": "Concept Map",
+      "description": "Concept pages, their source links, and the courses that use them",
+      "metrics": [
+        {
+          "name": "Concepts",
+          "description": "Total concept pages.",
+          "value": 1,
+          "format": ",.0f"
+        },
+        {
+          "name": "Concepts With Sources",
+          "description": "Concepts where at least one source link was detected in the prose.",
+          "value": 0,
+          "format": ",.0f"
+        },
+        {
+          "name": "Concepts Missing Sources",
+          "description": "Concepts with no detected source.",
+          "value": 1,
+          "format": ",.0f"
+        },
+        {
+          "name": "Source Links",
+          "description": "Total source rows found across concept pages.",
+          "value": 0,
+          "format": ",.0f"
+        }
+      ],
+      "filters": [
+        {
+          "name": "source_type",
+          "description": "Filter sources by URL, documentation, bibliography, article, reference, or missing.",
+          "defaultValue": "All",
+          "options": [
+            "All",
+            "(missing)"
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "name": "Concept Sources",
+          "description": "Read each row as concept, detected source type, source value, and source line.",
+          "columns": [
+            {
+              "name": "concept",
+              "label": "Concept"
+            },
+            {
+              "name": "source_type",
+              "label": "Source Type"
+            },
+            {
+              "name": "source",
+              "label": "Source"
+            },
+            {
+              "name": "line",
+              "label": "Line"
+            }
+          ],
+          "rows": [
+            {
+              "concept": "algoritmos",
+              "source_type": "(missing)",
+              "source": "(missing)",
+              "line": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

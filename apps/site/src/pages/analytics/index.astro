@@ -1,0 +1,20 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="PPS Analytics" activeNav="analytics">
+  <nav slot="sidebar" id="dashboard-tabs" class="dashboard-nav dashboard-nav-sub" aria-label="Dashboards"></nav>
+  <div id="analytics-root"></div>
+  <script>
+    import { mountAnalyticsDashboard } from "../../scripts/analytics-dashboard";
+
+    mountAnalyticsDashboard("analytics-root", "dashboard-tabs", "./data/dashboards.json").catch((error) => {
+      console.error(error);
+      const root = document.getElementById("analytics-root");
+      if (root) {
+        root.innerHTML =
+          '<p class="dashboard-error">Failed to load analytics dashboards. Run <code>pnpm build:content</code> and sync artifacts into <code>apps/site/public/analytics/data/</code>.</p>';
+      }
+    });
+  </script>
+</SiteLayout>

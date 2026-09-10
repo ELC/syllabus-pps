@@ -1,0 +1,94 @@
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"diagnostics","generatedAt":"2026-09-10T19:04:49.917Z","docs":"../../README.md"}
+[
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"algoritmos\" is referenced by 2 course(s); target is at least 3.",
+    "page": "algoritmos",
+    "details": {
+      "courseCount": 2,
+      "minimumCourses": 3,
+      "courses": [
+        "algoritmos y estructuras de datos",
+        "programación i"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-note-without-source-link",
+    "message": "Concept page \"algoritmos\" has a note without a source link.",
+    "page": "algoritmos",
+    "line": 1,
+    "details": {
+      "text": "[[algoritmos]]"
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "course-without-year-link",
+    "message": "Course \"programación i\" is not referenced by an expected year page.",
+    "page": "programación i"
+  },
+  {
+    "severity": "warning",
+    "code": "self-link",
+    "message": "Page \"algoritmos\" links to itself.",
+    "page": "algoritmos",
+    "line": 1,
+    "details": {
+      "target": "algoritmos"
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "self-link",
+    "message": "Page \"algoritmos y estructuras de datos\" links to itself.",
+    "page": "algoritmos y estructuras de datos",
+    "line": 1,
+    "details": {
+      "target": "algoritmos y estructuras de datos"
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "self-link",
+    "message": "Page \"año 1\" links to itself.",
+    "page": "año 1",
+    "line": 1,
+    "details": {
+      "target": "año 1"
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "self-link",
+    "message": "Page \"LDS\" links to itself.",
+    "page": "LDS",
+    "line": 1,
+    "details": {
+      "target": "LDS"
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "self-link",
+    "message": "Page \"programación i\" links to itself.",
+    "page": "programación i",
+    "line": 1,
+    "details": {
+      "target": "programación i"
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "uuid-ref-resolved",
+    "message": "UUID reference in \"algoritmos y estructuras de datos\" resolves to \"programación i\".",
+    "page": "algoritmos y estructuras de datos",
+    "line": 3,
+    "details": {
+      "target": "44444444-4444-4444-8444-444444444444",
+      "resolvedTarget": "programación i"
+    }
+  }
+]

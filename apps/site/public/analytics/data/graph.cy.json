@@ -1,0 +1,153 @@
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"graph-cy","generatedAt":"2026-09-10T19:04:49.917Z","docs":"../../README.md"}
+{
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "algoritmos",
+          "label": "algoritmos",
+          "kind": "concept",
+          "slug": "algoritmos",
+          "path": "algoritmos.md"
+        }
+      },
+      {
+        "data": {
+          "id": "algoritmos y estructuras de datos",
+          "label": "algoritmos y estructuras de datos",
+          "kind": "course",
+          "slug": "algoritmos-y-estructuras-de-datos",
+          "path": "algoritmos-y-estructuras-de-datos.md"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1",
+          "label": "año 1",
+          "kind": "year",
+          "slug": "ano-1",
+          "path": "ano-1.md"
+        }
+      },
+      {
+        "data": {
+          "id": "LDS",
+          "label": "LDS",
+          "kind": "career",
+          "slug": "lds",
+          "path": "lds.md"
+        }
+      },
+      {
+        "data": {
+          "id": "programación i",
+          "label": "programación i",
+          "kind": "course",
+          "slug": "programacion-i",
+          "path": "programacion-i.md"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "algoritmos::algoritmos::page-ref",
+          "source": "algoritmos",
+          "target": "algoritmos",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "algoritmos y estructuras de datos::algoritmos::concept-tag",
+          "source": "algoritmos y estructuras de datos",
+          "target": "algoritmos",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "algoritmos y estructuras de datos::algoritmos y estructuras de datos::page-ref",
+          "source": "algoritmos y estructuras de datos",
+          "target": "algoritmos y estructuras de datos",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "algoritmos y estructuras de datos::programación i::page-ref",
+          "source": "algoritmos y estructuras de datos",
+          "target": "programación i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1::algoritmos y estructuras de datos::page-ref",
+          "source": "año 1",
+          "target": "algoritmos y estructuras de datos",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1::año 1::page-ref",
+          "source": "año 1",
+          "target": "año 1",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "LDS::algoritmos y estructuras de datos::page-ref",
+          "source": "LDS",
+          "target": "algoritmos y estructuras de datos",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "LDS::año 1::page-ref",
+          "source": "LDS",
+          "target": "año 1",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "LDS::LDS::page-ref",
+          "source": "LDS",
+          "target": "LDS",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "programación i::algoritmos::concept-tag",
+          "source": "programación i",
+          "target": "algoritmos",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "programación i::programación i::page-ref",
+          "source": "programación i",
+          "target": "programación i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      }
+    ]
+  }
+}

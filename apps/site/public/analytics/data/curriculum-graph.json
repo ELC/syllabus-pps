@@ -1,0 +1,465 @@
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-10T19:04:49.917Z","docs":"../../README.md"}
+{
+  "generatedAt": "2026-09-10T19:04:49.917Z",
+  "pages": [
+    {
+      "slug": "algoritmos",
+      "title": "algoritmos",
+      "normalizedTitle": "algoritmos",
+      "path": "algoritmos.md",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "[[algoritmos]]",
+          "refs": [
+            {
+              "raw": "[[algoritmos]]",
+              "target": "algoritmos",
+              "normalizedTarget": "algoritmos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "algoritmos"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[algoritmos]]",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "algoritmos"
+        }
+      ],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": []
+    },
+    {
+      "slug": "algoritmos-y-estructuras-de-datos",
+      "title": "algoritmos y estructuras de datos",
+      "normalizedTitle": "algoritmos y estructuras de datos",
+      "path": "algoritmos-y-estructuras-de-datos.md",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "[[algoritmos y estructuras de datos]]",
+          "refs": [
+            {
+              "raw": "[[algoritmos y estructuras de datos]]",
+              "target": "algoritmos y estructuras de datos",
+              "normalizedTarget": "algoritmos y estructuras de datos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "algoritmos y estructuras de datos"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "#algoritmos",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#algoritmos",
+              "target": "algoritmos",
+              "normalizedTarget": "algoritmos",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "algoritmos"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 3,
+          "text": "[[44444444-4444-4444-8444-444444444444]]",
+          "refs": [
+            {
+              "raw": "[[44444444-4444-4444-8444-444444444444]]",
+              "target": "44444444-4444-4444-8444-444444444444",
+              "normalizedTarget": "programación i",
+              "isUuid": true,
+              "line": 3,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 4,
+          "text": "[[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[algoritmos y estructuras de datos]]",
+          "target": "algoritmos y estructuras de datos",
+          "normalizedTarget": "algoritmos y estructuras de datos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "algoritmos y estructuras de datos"
+        },
+        {
+          "raw": "[[44444444-4444-4444-8444-444444444444]]",
+          "target": "44444444-4444-4444-8444-444444444444",
+          "normalizedTarget": "programación i",
+          "isUuid": true,
+          "line": 3,
+          "resolvedTarget": "programación i"
+        },
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "programación i"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "algoritmos"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": []
+    },
+    {
+      "slug": "ano-1",
+      "title": "año 1",
+      "normalizedTitle": "año 1",
+      "path": "ano-1.md",
+      "kind": "year",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "[[año 1]]",
+          "refs": [
+            {
+              "raw": "[[año 1]]",
+              "target": "año 1",
+              "normalizedTarget": "año 1",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "año 1"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "[[algoritmos y estructuras de datos]]",
+          "refs": [
+            {
+              "raw": "[[algoritmos y estructuras de datos]]",
+              "target": "algoritmos y estructuras de datos",
+              "normalizedTarget": "algoritmos y estructuras de datos",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "algoritmos y estructuras de datos"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[año 1]]",
+          "target": "año 1",
+          "normalizedTarget": "año 1",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "año 1"
+        },
+        {
+          "raw": "[[algoritmos y estructuras de datos]]",
+          "target": "algoritmos y estructuras de datos",
+          "normalizedTarget": "algoritmos y estructuras de datos",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "algoritmos y estructuras de datos"
+        }
+      ],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": []
+    },
+    {
+      "slug": "lds",
+      "title": "LDS",
+      "normalizedTitle": "lds",
+      "path": "lds.md",
+      "kind": "career",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "[[LDS]]",
+          "refs": [
+            {
+              "raw": "[[LDS]]",
+              "target": "LDS",
+              "normalizedTarget": "lds",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "LDS"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "[[algoritmos y estructuras de datos]]",
+          "refs": [
+            {
+              "raw": "[[algoritmos y estructuras de datos]]",
+              "target": "algoritmos y estructuras de datos",
+              "normalizedTarget": "algoritmos y estructuras de datos",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "algoritmos y estructuras de datos"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 3,
+          "text": "[[año 1]]",
+          "refs": [
+            {
+              "raw": "[[año 1]]",
+              "target": "año 1",
+              "normalizedTarget": "año 1",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "año 1"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[LDS]]",
+          "target": "LDS",
+          "normalizedTarget": "lds",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "LDS"
+        },
+        {
+          "raw": "[[algoritmos y estructuras de datos]]",
+          "target": "algoritmos y estructuras de datos",
+          "normalizedTarget": "algoritmos y estructuras de datos",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "algoritmos y estructuras de datos"
+        },
+        {
+          "raw": "[[año 1]]",
+          "target": "año 1",
+          "normalizedTarget": "año 1",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "año 1"
+        }
+      ],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": []
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444444",
+      "slug": "programacion-i",
+      "title": "programación i",
+      "normalizedTitle": "programación i",
+      "path": "programacion-i.md",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "[[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "#algoritmos",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#algoritmos",
+              "target": "algoritmos",
+              "normalizedTarget": "algoritmos",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "algoritmos"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "programación i"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "algoritmos"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "algoritmos",
+      "target": "algoritmos",
+      "kind": "page-ref",
+      "rawTarget": "algoritmos",
+      "line": 1
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "algoritmos",
+      "kind": "concept-tag",
+      "rawTarget": "algoritmos",
+      "line": 2
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "algoritmos y estructuras de datos",
+      "kind": "page-ref",
+      "rawTarget": "algoritmos y estructuras de datos",
+      "line": 1
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "44444444-4444-4444-8444-444444444444",
+      "line": 3
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 4
+    },
+    {
+      "source": "año 1",
+      "target": "algoritmos y estructuras de datos",
+      "kind": "page-ref",
+      "rawTarget": "algoritmos y estructuras de datos",
+      "line": 2
+    },
+    {
+      "source": "año 1",
+      "target": "año 1",
+      "kind": "page-ref",
+      "rawTarget": "año 1",
+      "line": 1
+    },
+    {
+      "source": "LDS",
+      "target": "algoritmos y estructuras de datos",
+      "kind": "page-ref",
+      "rawTarget": "algoritmos y estructuras de datos",
+      "line": 2
+    },
+    {
+      "source": "LDS",
+      "target": "año 1",
+      "kind": "page-ref",
+      "rawTarget": "año 1",
+      "line": 3
+    },
+    {
+      "source": "LDS",
+      "target": "LDS",
+      "kind": "page-ref",
+      "rawTarget": "LDS",
+      "line": 1
+    },
+    {
+      "source": "programación i",
+      "target": "algoritmos",
+      "kind": "concept-tag",
+      "rawTarget": "algoritmos",
+      "line": 2
+    },
+    {
+      "source": "programación i",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 1
+    }
+  ],
+  "expected": {
+    "contentDir": "../content/pages",
+    "years": [
+      {
+        "title": "año 1",
+        "courses": [
+          "algoritmos y estructuras de datos",
+          "programación i"
+        ]
+      }
+    ]
+  }
+}

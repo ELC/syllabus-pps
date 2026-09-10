@@ -1,0 +1,24 @@
+{
+  "name": "utn-pps",
+  "private": true,
+  "packageManager": "pnpm@10.15.0",
+  "scripts": {
+    "build:core": "pnpm --filter @pps/core build",
+    "build": "pnpm build:core && pnpm --filter pps-analytics build",
+    "typecheck": "pnpm build:core && pnpm --filter @pps/core typecheck && pnpm --filter pps-analytics typecheck && pnpm --filter @pps/cms typecheck && pnpm --filter @pps/site typecheck",
+    "test": "pnpm build:core && pnpm --filter pps-analytics test",
+    "test:watch": "pnpm --filter pps-analytics test:watch",
+    "inspect": "pnpm --filter pps-analytics inspect",
+    "build:content": "pnpm build:core && pnpm --filter pps-analytics build:analytics && node scripts/sync-analytics-data.mjs",
+    "build:cms": "pnpm build:core && pnpm --filter @pps/cms build",
+    "build:site": "pnpm --filter @pps/site build",
+    "build:pages": "pnpm build:content && pnpm build:cms && pnpm build:site && node scripts/build-pages.mjs",
+    "watch:analytics": "pnpm --filter pps-analytics watch:analytics",
+    "serve:dac": "pnpm --filter pps-analytics serve:dac",
+    "dev": "node scripts/sync-analytics-data.mjs && pnpm --filter @pps/site dev",
+    "dev:cms": "pnpm dev"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
