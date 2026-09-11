@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 
 const root = resolve(import.meta.dirname, "..");
 const shellCssSource = join(root, "workspaces/shell/dist/pps-shell.css");
-const shellLogoSource = join(root, "workspaces/shell/brand/logo-horizontal-blanco.png");
+const shellLogoSource = join(root, "workspaces/shell/assets/logo-horizontal-blanco.png");
 const shellCssDest = join(root, "dist/assets/shell/pps-shell.css");
 const shellLogoDest = join(root, "dist/assets/shell/logo-horizontal-blanco.png");
 

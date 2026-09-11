@@ -33,3 +33,7 @@ export function siteRootFromEnv(appBaseUrl: string): string {
 export function shellStylesHref(appBaseUrl: string): string {
   return `${siteRootFromEnv(appBaseUrl)}assets/shell/pps-shell.css`;
 }
+
+export function shellLogoHref(appBaseUrl: string): string {
+  return `${siteRootFromEnv(appBaseUrl)}assets/shell/logo-horizontal-blanco.png`;
+}

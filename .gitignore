@@ -11,7 +11,7 @@ workspaces/pps-analytics/_generated
 **/TUP/*
 !**/TUP/.gitkeep
 **/degrees/*.docx
-brand
+/brand
 *.pdf
 
 .astro

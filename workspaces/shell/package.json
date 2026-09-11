@@ -17,7 +17,7 @@
     "./styles/scrollbars.css": "./src/styles/scrollbars.css",
     "./vite/shell-font-links": "./vite/shell-font-links.mjs",
     "./vite/shell-head": "./vite/shell-head.mjs",
-    "./brand/logo-horizontal-blanco.png": "./brand/logo-horizontal-blanco.png"
+    "./assets/logo-horizontal-blanco.png": "./assets/logo-horizontal-blanco.png"
   },
   "scripts": {
     "build:css": "node scripts/build-css.mjs",

@@ -5,7 +5,7 @@ import { dirname, join, resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const buildCssScript = join(root, "workspaces/shell/scripts/build-css.mjs");
 const shellCss = join(root, "workspaces/shell/dist/pps-shell.css");
-const shellLogo = join(root, "workspaces/shell/brand/logo-horizontal-blanco.png");
+const shellLogo = join(root, "workspaces/shell/assets/logo-horizontal-blanco.png");
 const relativeDest = join("assets", "shell", "pps-shell.css");
 const logoDest = join("assets", "shell", "logo-horizontal-blanco.png");
 

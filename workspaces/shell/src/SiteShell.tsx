@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
 
-import logoUrl from "../brand/logo-horizontal-blanco.png";
 import { NAV_ITEMS, navHref } from "./nav";
 import type { NavId } from "./site-root";
-import { siteRootFromEnv } from "./site-root";
+import { shellLogoHref, siteRootFromEnv } from "./site-root";
 
 interface SiteShellProps {
   children: ReactNode;
@@ -12,7 +11,9 @@ interface SiteShellProps {
 }
 
 export function SiteShell({ children, activeNav, sidebarExtra }: SiteShellProps) {
-  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/");
+  const appBase = import.meta.env.BASE_URL ?? "/";
+  const siteRoot = siteRootFromEnv(appBase);
+  const logoUrl = shellLogoHref(appBase);
 
   return (
     <div className="dashboard-app">

@@ -17,7 +17,7 @@
     "build:roadmap": "pnpm --filter @pps/roadmap build",
     "build:shell": "node workspaces/shell/scripts/build-css.mjs",
     "sync:shell-css": "node workspaces/shell/scripts/build-css.mjs && node scripts/sync-shell-css.mjs",
-    "build:pages": "pnpm build:content && pnpm build:cms && pnpm build:site && pnpm build:analytics && pnpm build:network && pnpm build:roadmap && node scripts/build-pages.mjs",
+    "build:pages": "pnpm build:content && node scripts/sync-shell-css.mjs && pnpm build:cms && pnpm build:site && pnpm build:analytics && pnpm build:network && pnpm build:roadmap && node scripts/build-pages.mjs",
     "dev": "node scripts/sync-analytics-data.mjs && node scripts/sync-shell-css.mjs && pnpm --filter @pps/site dev",
     "dev:analytics": "node scripts/sync-analytics-data.mjs && pnpm --filter @pps/analytics dev",
     "dev:network": "node scripts/sync-analytics-data.mjs && pnpm --filter @pps/network dev",
