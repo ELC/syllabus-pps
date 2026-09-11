@@ -1,4 +1,4 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"graph-cy","generatedAt":"2026-09-11T15:39:19.318Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"graph-cy","generatedAt":"2026-09-11T15:41:03.133Z","docs":"../../README.md"}
 {
   "elements": {
     "nodes": [
@@ -130,6 +130,15 @@
       },
       {
         "data": {
+          "id": "estadística i",
+          "label": "estadística i",
+          "kind": "course",
+          "slug": "estadistica-i",
+          "path": "estadistica-i.md"
+        }
+      },
+      {
+        "data": {
           "id": "estructuras de datos",
           "label": "estructuras de datos",
           "kind": "concept",
@@ -162,6 +171,15 @@
           "kind": "concept",
           "slug": "induccion-y-logica",
           "path": "induccion-y-logica.md"
+        }
+      },
+      {
+        "data": {
+          "id": "matemática discreta",
+          "label": "matemática discreta",
+          "kind": "course",
+          "slug": "matematica-discreta",
+          "path": "matematica-discreta.md"
         }
       },
       {
@@ -465,15 +483,6 @@
       },
       {
         "data": {
-          "id": "análisis de sistemas::requerimiento::concept-tag",
-          "source": "análisis de sistemas",
-          "target": "requerimiento",
-          "kind": "concept-tag",
-          "label": "concept-tag"
-        }
-      },
-      {
-        "data": {
           "id": "análisis de sistemas::requerimientos::concept-tag",
           "source": "análisis de sistemas",
           "target": "requerimientos",
@@ -699,6 +708,24 @@
       },
       {
         "data": {
+          "id": "estadística i::análisis matemático i::page-ref",
+          "source": "estadística i",
+          "target": "análisis matemático i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "estadística i::optimización::concept-tag",
+          "source": "estadística i",
+          "target": "optimización",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
           "id": "LDS::algoritmos y estructuras de datos::page-ref",
           "source": "LDS",
           "target": "algoritmos y estructuras de datos",
@@ -713,6 +740,51 @@
           "target": "año 1",
           "kind": "page-ref",
           "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "matemática discreta::algoritmos y estructuras de datos::page-ref",
+          "source": "matemática discreta",
+          "target": "algoritmos y estructuras de datos",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "matemática discreta::análisis matemático i::page-ref",
+          "source": "matemática discreta",
+          "target": "análisis matemático i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "matemática discreta::bases de datos::page-ref",
+          "source": "matemática discreta",
+          "target": "bases de datos",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "matemática discreta::lógica::concept-tag",
+          "source": "matemática discreta",
+          "target": "lógica",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "matemática discreta::pensamiento matemático::concept-tag",
+          "source": "matemática discreta",
+          "target": "pensamiento matemático",
+          "kind": "concept-tag",
+          "label": "concept-tag"
         }
       },
       {

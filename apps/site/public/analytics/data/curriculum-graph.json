@@ -1,6 +1,6 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-11T15:39:19.318Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-11T15:41:03.133Z","docs":"../../README.md"}
 {
-  "generatedAt": "2026-09-11T15:39:19.318Z",
+  "generatedAt": "2026-09-11T15:41:03.133Z",
   "pages": [
     {
       "slug": "acid",
@@ -2079,6 +2079,70 @@
       "nonBulletLines": []
     },
     {
+      "slug": "estadistica-i",
+      "title": "estadística i",
+      "normalizedTitle": "estadística i",
+      "path": "estadistica-i.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "inicia lectura cuantitativa de datos para productos y decisiones a partir de [[análisis matemático i]]",
+          "refs": [
+            {
+              "raw": "[[análisis matemático i]]",
+              "target": "análisis matemático i",
+              "normalizedTarget": "análisis matemático i",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "análisis matemático i"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "conecta cálculo y #optimizacion con métricas, experimentos e inferencia estadística",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#optimizacion",
+              "target": "optimizacion",
+              "normalizedTarget": "optimización",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "optimización"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[análisis matemático i]]",
+          "target": "análisis matemático i",
+          "normalizedTarget": "análisis matemático i",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "análisis matemático i"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#optimizacion",
+          "target": "optimizacion",
+          "normalizedTarget": "optimización",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "optimización"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": []
+    },
+    {
       "slug": "estructuras-de-datos",
       "title": "estructuras de datos",
       "normalizedTitle": "estructuras de datos",
@@ -2388,6 +2452,119 @@
           "line": 5
         }
       ],
+      "nonBulletLines": []
+    },
+    {
+      "slug": "matematica-discreta",
+      "title": "matemática discreta",
+      "normalizedTitle": "matemática discreta",
+      "path": "matematica-discreta.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "formaliza estructuras discretas usadas por algoritmos y programación, conectando conjuntos, relaciones y grafos con [[bases de datos]] y [[algoritmos y estructuras de datos]]",
+          "refs": [
+            {
+              "raw": "[[bases de datos]]",
+              "target": "bases de datos",
+              "normalizedTarget": "bases de datos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "bases de datos"
+            },
+            {
+              "raw": "[[algoritmos y estructuras de datos]]",
+              "target": "algoritmos y estructuras de datos",
+              "normalizedTarget": "algoritmos y estructuras de datos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "algoritmos y estructuras de datos"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "continúa el #pensamiento-matematico y la #induccion-y-logica de [[análisis matemático i]] hacia razonamiento sobre estructuras finitas",
+          "refs": [
+            {
+              "raw": "[[análisis matemático i]]",
+              "target": "análisis matemático i",
+              "normalizedTarget": "análisis matemático i",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "análisis matemático i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#pensamiento-matematico",
+              "target": "pensamiento-matematico",
+              "normalizedTarget": "pensamiento matemático",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "pensamiento matemático"
+            },
+            {
+              "raw": "#induccion-y-logica",
+              "target": "induccion-y-logica",
+              "normalizedTarget": "lógica",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "lógica"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[bases de datos]]",
+          "target": "bases de datos",
+          "normalizedTarget": "bases de datos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "bases de datos"
+        },
+        {
+          "raw": "[[algoritmos y estructuras de datos]]",
+          "target": "algoritmos y estructuras de datos",
+          "normalizedTarget": "algoritmos y estructuras de datos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "algoritmos y estructuras de datos"
+        },
+        {
+          "raw": "[[análisis matemático i]]",
+          "target": "análisis matemático i",
+          "normalizedTarget": "análisis matemático i",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "análisis matemático i"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#pensamiento-matematico",
+          "target": "pensamiento-matematico",
+          "normalizedTarget": "pensamiento matemático",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "pensamiento matemático"
+        },
+        {
+          "raw": "#induccion-y-logica",
+          "target": "induccion-y-logica",
+          "normalizedTarget": "lógica",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "lógica"
+        }
+      ],
+      "urls": [],
       "nonBulletLines": []
     },
     {
@@ -4618,6 +4795,20 @@
       "line": 4
     },
     {
+      "source": "estadística i",
+      "target": "análisis matemático i",
+      "kind": "page-ref",
+      "rawTarget": "análisis matemático i",
+      "line": 1
+    },
+    {
+      "source": "estadística i",
+      "target": "optimización",
+      "kind": "concept-tag",
+      "rawTarget": "optimizacion",
+      "line": 2
+    },
+    {
       "source": "LDS",
       "target": "algoritmos y estructuras de datos",
       "kind": "page-ref",
@@ -4629,6 +4820,41 @@
       "target": "año 1",
       "kind": "page-ref",
       "rawTarget": "año 1",
+      "line": 2
+    },
+    {
+      "source": "matemática discreta",
+      "target": "algoritmos y estructuras de datos",
+      "kind": "page-ref",
+      "rawTarget": "algoritmos y estructuras de datos",
+      "line": 1
+    },
+    {
+      "source": "matemática discreta",
+      "target": "análisis matemático i",
+      "kind": "page-ref",
+      "rawTarget": "análisis matemático i",
+      "line": 2
+    },
+    {
+      "source": "matemática discreta",
+      "target": "bases de datos",
+      "kind": "page-ref",
+      "rawTarget": "bases de datos",
+      "line": 1
+    },
+    {
+      "source": "matemática discreta",
+      "target": "lógica",
+      "kind": "concept-tag",
+      "rawTarget": "induccion-y-logica",
+      "line": 2
+    },
+    {
+      "source": "matemática discreta",
+      "target": "pensamiento matemático",
+      "kind": "concept-tag",
+      "rawTarget": "pensamiento-matematico",
       "line": 2
     },
     {

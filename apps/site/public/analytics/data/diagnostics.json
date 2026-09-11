@@ -1,4 +1,4 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"diagnostics","generatedAt":"2026-09-11T15:39:19.318Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"diagnostics","generatedAt":"2026-09-11T15:41:03.133Z","docs":"../../README.md"}
 [
   {
     "severity": "warning",
@@ -108,13 +108,14 @@
   {
     "severity": "warning",
     "code": "concept-low-course-coverage",
-    "message": "Concept \"lógica\" is referenced by 1 course(s); target is at least 3.",
+    "message": "Concept \"lógica\" is referenced by 2 course(s); target is at least 3.",
     "page": "lógica",
     "details": {
-      "courseCount": 1,
+      "courseCount": 2,
       "minimumCourses": 3,
       "courses": [
-        "análisis matemático i"
+        "análisis matemático i",
+        "matemática discreta"
       ]
     }
   },
@@ -186,13 +187,14 @@
   {
     "severity": "warning",
     "code": "concept-low-course-coverage",
-    "message": "Concept \"optimización\" is referenced by 1 course(s); target is at least 3.",
+    "message": "Concept \"optimización\" is referenced by 2 course(s); target is at least 3.",
     "page": "optimización",
     "details": {
-      "courseCount": 1,
+      "courseCount": 2,
       "minimumCourses": 3,
       "courses": [
-        "análisis matemático i"
+        "análisis matemático i",
+        "estadística i"
       ]
     }
   },

@@ -28,6 +28,7 @@ export interface CytoscapeGraphExport {
 }
 
 export function exportToCytoscape(graph: CurriculumGraph): CytoscapeGraphExport {
+  const pageTitles = new Set(graph.pages.map((page) => page.title));
   const nodes: CytoscapeElementNode[] = graph.pages.map((page) => ({
     data: {
       id: page.title,
@@ -42,6 +43,10 @@ export function exportToCytoscape(graph: CurriculumGraph): CytoscapeGraphExport 
   const edges: CytoscapeElementEdge[] = [];
 
   for (const edge of graph.edges) {
+    if (!pageTitles.has(edge.source) || !pageTitles.has(edge.target)) {
+      continue;
+    }
+
     const key = `${edge.source}::${edge.target}::${edge.kind}`;
     if (seen.has(key)) {
       continue;

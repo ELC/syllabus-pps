@@ -16,4 +16,21 @@ describe("exportToCytoscape", () => {
     expect(exported.elements.edges.length).toBe(uniqueEdgeCount(graph));
     expect(exported.elements.nodes[0]?.data.slug).toBeTruthy();
   });
+
+  it("omits edges whose source or target is not a known page", () => {
+    const graph = buildFixtureGraph();
+    graph.edges.push({
+      source: "programación i",
+      target: "nonexistent course",
+      kind: "page-ref",
+      rawTarget: "nonexistent course",
+      line: 1,
+    });
+
+    const exported = exportToCytoscape(graph);
+
+    expect(exported.elements.edges.some((edge) => edge.data.target === "nonexistent course")).toBe(
+      false,
+    );
+  });
 });
