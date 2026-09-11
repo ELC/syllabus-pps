@@ -1,5 +1,5 @@
 import { normalizeTitle } from "../normalize";
-import { ConceptTag, PageRef, ZettelBlock } from "../types";
+import { ConceptDependency, ConceptTag, PageRef, ZettelBlock } from "../types";
 import { PageIndex, resolveLinkTarget } from "./page-index";
 
 export function resolveBlock(block: ZettelBlock, index: PageIndex): ZettelBlock {
@@ -17,6 +17,16 @@ export function resolveRef(ref: PageRef, index: PageIndex): PageRef {
     ...ref,
     resolvedTarget: resolvedTarget === ref.target && ref.isUuid && !uuidResolved ? undefined : resolvedTarget,
     normalizedTarget: normalizeTitle(resolvedTarget),
+  };
+}
+
+export function resolveDependsOn(target: string, index: PageIndex): ConceptDependency {
+  const resolvedTarget = resolveLinkTarget(target, index);
+  return {
+    raw: target,
+    target,
+    normalizedTarget: normalizeTitle(resolvedTarget),
+    resolvedTarget: resolvedTarget === target ? undefined : resolvedTarget,
   };
 }
 

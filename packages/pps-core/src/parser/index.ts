@@ -2,7 +2,7 @@ import { ZettelPage } from "../types";
 import { classifyPage } from "./classify";
 import { buildPageIndex } from "./page-index";
 import { parsePageContent } from "./parse-content";
-import { resolveBlock } from "./resolve";
+import { resolveBlock, resolveDependsOn } from "./resolve";
 import { PageSource, ParseOptions } from "./types";
 
 export type { PageSource, ParseOptions, RawPage } from "./types";
@@ -37,19 +37,30 @@ export function parsePages(sources: PageSource[], options: ParseOptions = {}): Z
   );
 
   return resolvedPages
-    .map((page) => ({
-      id: page.id,
-      slug: page.slug,
-      title: page.title,
-      normalizedTitle: page.normalizedTitle,
-      path: page.path,
-      declaredKind: page.frontmatterKind,
-      kind: classifyPage(page, page.tags, options, conceptTitles),
-      blocks: page.blocks,
-      refs: page.refs,
-      tags: page.tags,
-      urls: page.urls,
-      nonBulletLines: page.nonBulletLines,
-    }))
+    .map((page) => {
+      const kind = classifyPage(page, page.tags, options, conceptTitles);
+      const dependsOnInvalid =
+        page.dependsOnRaw !== undefined && page.dependsOnTargets === undefined;
+      const dependsOn = dependsOnInvalid
+        ? []
+        : page.dependsOnTargets?.map((target) => resolveDependsOn(target, index));
+
+      return {
+        id: page.id,
+        slug: page.slug,
+        title: page.title,
+        normalizedTitle: page.normalizedTitle,
+        path: page.path,
+        declaredKind: page.frontmatterKind,
+        kind,
+        blocks: page.blocks,
+        refs: page.refs,
+        tags: page.tags,
+        urls: page.urls,
+        nonBulletLines: page.nonBulletLines,
+        dependsOn,
+        dependsOnInvalid,
+      };
+    })
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
 }

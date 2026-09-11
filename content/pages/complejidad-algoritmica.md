@@ -1,6 +1,9 @@
 ---
 title: complejidad algorítmica
 kind: concept
+dependsOn:
+  - algoritmos
+  - estructuras de datos
 ---
 - La complejidad algorítmica describe cómo crece el costo de un algoritmo con el tamaño de la entrada; la Wikipedia en español introduce notación O y análisis de eficiencia https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos
 - CS50x dedica una sección a tiempo de ejecución, notación O, Ω y Θ con búsqueda y ordenamiento https://cs50.harvard.edu/x/notes/3/

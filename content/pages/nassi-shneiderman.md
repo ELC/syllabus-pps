@@ -1,6 +1,8 @@
 ---
 title: nassi-shneiderman
 kind: concept
+dependsOn:
+  - algoritmos
 ---
 - Un diagrama de Nassi-Shneiderman representa algoritmos con cajas estructuradas sin flechas de flujo; la Wikipedia en español muestra secuencia, selección e iteración anidadas https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman
 - Ben Shneiderman recorre la historia de los diagramas NS, sus símbolos y su relación con la programación estructurada https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/

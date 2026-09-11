@@ -1,6 +1,8 @@
 ---
 title: criterios de aceptación
 kind: concept
+dependsOn:
+  - requerimientos
 ---
 - Un criterio de aceptación define condiciones observables para considerar satisfecho un requerimiento; la Wikipedia en inglés lo distingue de especificación técnica y pruebas de aceptación https://en.wikipedia.org/wiki/Acceptance_criteria
 - Atlassian muestra cómo escribir criterios en formato dado-cuando-entonces, vincularlos a historias de usuario y evitar ambigüedad https://www.atlassian.com/work-management/project-management/acceptance-criteria

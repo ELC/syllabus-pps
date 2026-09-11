@@ -43,6 +43,10 @@ export function exportToCytoscape(graph: CurriculumGraph): CytoscapeGraphExport 
   const edges: CytoscapeElementEdge[] = [];
 
   for (const edge of graph.edges) {
+    if (edge.kind === "concept-dependency") {
+      continue;
+    }
+
     if (!pageTitles.has(edge.source) || !pageTitles.has(edge.target)) {
       continue;
     }

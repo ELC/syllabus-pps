@@ -1,6 +1,7 @@
 ---
 title: algoritmos
 kind: concept
+dependsOn: []
 ---
 - Un algoritmo es un procedimiento finito y bien definido para resolver un problema; la Wikipedia en español distingue algoritmo, programa e implementación https://es.wikipedia.org/wiki/Algoritmo
 - CS50x recorre búsqueda lineal y binaria, ordenamiento, recursión y notación O con pseudocódigo y código en C https://cs50.harvard.edu/x/notes/3/

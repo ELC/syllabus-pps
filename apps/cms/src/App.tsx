@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { listPages, loadAllPageSources, readPage, writePage } from "./api/content";
 import { readPageParam, writePageParam } from "./page-param";
-import { SiteShell } from "./SiteShell";
+import { SiteShell } from "@pps/shell/SiteShell";
 import { hasBlockingDiagnostics, runDiagnosticsForEditor } from "./validation/runDiagnostics";
 
 function severityClass(severity: string): string {
@@ -74,7 +74,7 @@ export function App() {
   );
 
   return (
-    <SiteShell sidebarExtra={pageNav}>
+    <SiteShell activeNav="cms" sidebarExtra={pageNav}>
       <header className="dashboard-header">
         <h1>{selectedSlug || "CMS"}</h1>
         <p>Local dev mode: edits write to content/pages via the Vite API middleware.</p>

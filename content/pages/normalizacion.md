@@ -1,6 +1,9 @@
 ---
 title: normalización
 kind: concept
+dependsOn:
+  - modelo entidad-relación
+  - álgebra relacional
 ---
 - La normalización reorganiza un esquema relacional para reducir redundancia y anomalías; la Wikipedia en español recorre formas normales 1NF a BCNF https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos
 - DB Fiddle permite crear esquemas en el navegador y comparar tablas desnormalizadas con descomposiciones en formas normales https://www.db-fiddle.com/

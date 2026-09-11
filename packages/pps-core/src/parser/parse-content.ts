@@ -22,6 +22,26 @@ function parseKind(value: unknown): PageKind | undefined {
   return VALID_KINDS.has(value as PageKind) ? (value as PageKind) : undefined;
 }
 
+function parseDependsOn(value: unknown): { raw: unknown; targets?: string[] } {
+  if (value === undefined) {
+    return { raw: undefined };
+  }
+
+  if (!Array.isArray(value)) {
+    return { raw: value };
+  }
+
+  const targets: string[] = [];
+  for (const item of value) {
+    if (typeof item !== "string" || item.trim().length === 0) {
+      return { raw: value };
+    }
+    targets.push(item.trim());
+  }
+
+  return { raw: value, targets };
+}
+
 export function parsePageContent(source: { path: string; content: string }): RawPage {
   const parsed = parseFrontmatter(source.content);
   const fileSlug = slugFromPath(source.path);
@@ -34,6 +54,7 @@ export function parsePageContent(source: { path: string; content: string }): Raw
   const normalizedTitle = normalizeTitle(title);
   const id = typeof parsed.data.id === "string" ? parsed.data.id.trim() : undefined;
   const frontmatterKind = parseKind(parsed.data.kind);
+  const dependsOn = parseDependsOn(parsed.data.dependsOn);
   const blocks: ZettelBlock[] = [];
   const nonBulletLines: number[] = [];
 
@@ -67,6 +88,8 @@ export function parsePageContent(source: { path: string; content: string }): Raw
     normalizedTitle,
     path: source.path.replace(/\\/g, "/"),
     frontmatterKind,
+    dependsOnRaw: dependsOn.raw,
+    dependsOnTargets: dependsOn.targets,
     blocks,
     nonBulletLines,
   };

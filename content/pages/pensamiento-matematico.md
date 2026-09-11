@@ -1,6 +1,7 @@
 ---
 title: pensamiento matemático
 kind: concept
+dependsOn: []
 ---
 - El pensamiento matemático combina abstracción, razonamiento lógico y argumentación rigurosa; la Wikipedia en inglés distingue demostración, modelado y resolución de problemas https://en.wikipedia.org/wiki/Mathematical_reasoning
 - El Open Logic Project es un libro abierto que recorre lógica proposicional, cuantificadores y métodos de prueba con ejercicios https://openlogicproject.org/

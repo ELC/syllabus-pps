@@ -1,4 +1,4 @@
-@import url("./austral-tokens.css");
+﻿@import url("./austral-tokens.css");
 
 html {
   height: 100%;
@@ -134,7 +134,8 @@ body.dashboard-body {
   flex-shrink: 0;
 }
 
-.dashboard-main > .graph-panel {
+.dashboard-main > .graph-panel,
+.dashboard-main > .roadmap-shell {
   flex: 1;
   min-height: 0;
   margin-top: 1rem;

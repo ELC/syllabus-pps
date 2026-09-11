@@ -4,6 +4,7 @@ import { join, resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const siteDist = join(root, "apps/site/dist");
 const cmsDist = join(root, "apps/cms/dist");
+const roadmapDist = join(root, "apps/roadmap/dist");
 const combinedDist = join(root, "dist");
 const generatedDir = join(root, "pps-analytics/_generated");
 
@@ -17,6 +18,11 @@ if (existsSync(siteDist)) {
 if (existsSync(cmsDist)) {
   mkdirSync(join(combinedDist, "cms"), { recursive: true });
   cpSync(cmsDist, join(combinedDist, "cms"), { recursive: true });
+}
+
+if (existsSync(roadmapDist)) {
+  mkdirSync(join(combinedDist, "roadmap"), { recursive: true });
+  cpSync(roadmapDist, join(combinedDist, "roadmap"), { recursive: true });
 }
 
 if (existsSync(generatedDir)) {

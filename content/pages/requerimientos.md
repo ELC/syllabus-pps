@@ -1,6 +1,7 @@
 ---
 title: requerimientos
 kind: concept
+dependsOn: []
 ---
 - Un requerimiento describe una necesidad o restricción que el sistema debe cumplir; la Wikipedia en español distingue funcionales, no funcionales y casos de uso https://es.wikipedia.org/wiki/Requisito
 - El libro abierto Software Engineering en Wikibooks dedica capítulos a requerimientos funcionales, no funcionales y trazabilidad https://en.wikibooks.org/wiki/Software_Engineering

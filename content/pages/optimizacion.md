@@ -1,6 +1,8 @@
 ---
 title: optimización
 kind: concept
+dependsOn:
+  - demostraciones
 ---
 - La optimización busca máximos, mínimos o mejores soluciones bajo restricciones; la Wikipedia en español conecta cálculo, programación lineal y condiciones de optimalidad https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica
 - Este video muestra cómo usar Desmos para graficar funciones, derivadas y puntos críticos al resolver problemas de optimización https://www.youtube.com/watch?v=trdab2TO820

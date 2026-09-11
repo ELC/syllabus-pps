@@ -1,6 +1,8 @@
 ---
 title: ACID
 kind: concept
+dependsOn:
+  - transacciones
 ---
 - ACID resume atomicidad, consistencia, aislamiento y durabilidad; la Wikipedia en español define cada propiedad y por qué importan cuando varias operaciones comparten una base de datos https://es.wikipedia.org/wiki/ACID
 - DB Fiddle permite ejecutar SQL en el navegador y experimentar con transacciones, constraints e integridad en esquemas de ejemplo https://www.db-fiddle.com/

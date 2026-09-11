@@ -1,6 +1,8 @@
 ---
 title: sql
 kind: concept
+dependsOn:
+  - álgebra relacional
 ---
 - SQL es el lenguaje declarativo para definir, consultar y modificar datos relacionales; la Wikipedia en español resume DDL, DML y consultas https://es.wikipedia.org/wiki/SQL
 - SQLBolt enseña SELECT, JOIN, agregación e inserción con ejercicios interactivos en el navegador https://sqlbolt.com/

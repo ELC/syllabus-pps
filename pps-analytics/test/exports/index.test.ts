@@ -2,8 +2,12 @@ import { describe, expect, it } from "vitest";
 import { exportToCytoscape } from "@pps/core";
 import { buildFixtureGraph } from "../support/fixtures";
 
-function uniqueEdgeCount(graph: ReturnType<typeof buildFixtureGraph>): number {
-  return new Set(graph.edges.map((edge) => `${edge.source}::${edge.target}::${edge.kind}`)).size;
+function uniqueEdgeCount(
+  graph: ReturnType<typeof buildFixtureGraph>,
+  kinds?: Array<ReturnType<typeof buildFixtureGraph>["edges"][number]["kind"]>,
+): number {
+  const edges = kinds ? graph.edges.filter((edge) => kinds.includes(edge.kind)) : graph.edges;
+  return new Set(edges.map((edge) => `${edge.source}::${edge.target}::${edge.kind}`)).size;
 }
 
 describe("exportToCytoscape", () => {
@@ -13,7 +17,9 @@ describe("exportToCytoscape", () => {
 
     expect(exported.elements.nodes.length).toBe(graph.pages.length);
     expect(graph.edges.length).toBeGreaterThan(uniqueEdgeCount(graph));
-    expect(exported.elements.edges.length).toBe(uniqueEdgeCount(graph));
+    expect(exported.elements.edges.length).toBe(
+      uniqueEdgeCount(graph, ["page-ref", "concept-tag"]),
+    );
     expect(exported.elements.nodes[0]?.data.slug).toBeTruthy();
   });
 
@@ -30,6 +36,23 @@ describe("exportToCytoscape", () => {
     const exported = exportToCytoscape(graph);
 
     expect(exported.elements.edges.some((edge) => edge.data.target === "nonexistent course")).toBe(
+      false,
+    );
+  });
+
+  it("omits concept-dependency edges used by the roadmap view", () => {
+    const graph = buildFixtureGraph();
+    graph.edges.push({
+      source: "algoritmos",
+      target: "programación i",
+      kind: "concept-dependency",
+      rawTarget: "algoritmos",
+      line: 0,
+    });
+
+    const exported = exportToCytoscape(graph);
+
+    expect(exported.elements.edges.some((edge) => edge.data.kind === "concept-dependency")).toBe(
       false,
     );
   });

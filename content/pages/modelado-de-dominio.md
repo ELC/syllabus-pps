@@ -1,6 +1,8 @@
 ---
 title: modelado de dominio
 kind: concept
+dependsOn:
+  - requerimientos
 ---
 - El modelado de dominio captura conceptos, reglas y relaciones del negocio en un lenguaje compartido; la Wikipedia en inglés resume entidades, agregados y servicios de dominio https://en.wikipedia.org/wiki/Domain-driven_design
 - DDD Quickly de InfoQ es un libro breve de acceso libre que resume entidades, value objects, agregados y bounded contexts https://www.infoq.com/minibooks/domain-driven-design-quickly/

@@ -1,6 +1,9 @@
 ---
 title: programación orientada a objetos
 kind: concept
+dependsOn:
+  - python
+  - algoritmos
 ---
 - La programación orientada a objetos organiza software en objetos que combinan estado y comportamiento; la Wikipedia en español resume encapsulación, herencia, polimorfismo y abstracción https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos
 - Este video de EuroPython contrasta programación estructurada y orientada a objetos sin atarse a un lenguaje concreto https://www.youtube.com/watch?v=M1XL65qj2dU

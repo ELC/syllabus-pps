@@ -11,3 +11,11 @@ export {
   summarizeSourceCoverageRows,
   type SourceCoverageRow,
 } from "./source-coverage";
+export {
+  kindRankForRoadmap,
+  listCareerPages,
+  projectAllDegreeRoadmaps,
+  projectDegreeRoadmap,
+  type DegreeRoadmap,
+  type DegreeRoadmapConcept,
+} from "./degree-roadmap";

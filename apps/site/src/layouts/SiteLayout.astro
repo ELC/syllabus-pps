@@ -1,7 +1,7 @@
 ---
 interface Props {
   title: string;
-  activeNav: "home" | "analytics" | "graph" | "cms";
+  activeNav: "home" | "analytics" | "graph" | "roadmap" | "cms";
 }
 
 const { title, activeNav } = Astro.props;
@@ -37,6 +37,9 @@ const cmsBase = `${base}cms/`;
           </a>
           <a class:list={["nav-link", { active: activeNav === "graph" }]} href={`${base}analytics/graph/`}>
             Graph explorer
+          </a>
+          <a class:list={["nav-link", { active: activeNav === "roadmap" }]} href={`${base}roadmap/`}>
+            Roadmaps
           </a>
           <a class:list={["nav-link", { active: activeNav === "cms" }]} href={cmsBase}>CMS</a>
         </nav>

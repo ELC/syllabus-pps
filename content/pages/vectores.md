@@ -1,6 +1,7 @@
 ---
 title: vectores
 kind: concept
+dependsOn: []
 ---
 - Un vector representa magnitud y dirección en el plano y el espacio; la Wikipedia en español conecta la noción geométrica con suma, escalar y base https://es.wikipedia.org/wiki/Vector
 - El libro College Algebra (2.ª ed.) de OpenStax es de acceso libre y repasa magnitudes, direcciones y operaciones con vectores en el plano https://openstax.org/details/books/college-algebra-2e

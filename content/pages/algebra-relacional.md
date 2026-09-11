@@ -1,6 +1,8 @@
 ---
 title: álgebra relacional
 kind: concept
+dependsOn:
+  - modelo entidad-relación
 ---
 - El álgebra relacional define operaciones sobre relaciones como selección, proyección y unión; la Wikipedia en español presenta operadores primitivos y equivalencias https://es.wikipedia.org/wiki/%C3%81lgebra_relacional
 - RelaX es una calculadora interactiva que ejecuta selección, proyección, join, unión y diferencia sobre relaciones de ejemplo y muestra el árbol de operadores https://relax.mad.uom.gr/

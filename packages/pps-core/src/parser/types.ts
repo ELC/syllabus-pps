@@ -18,6 +18,10 @@ export interface RawPage {
   normalizedTitle: string;
   path: string;
   frontmatterKind?: PageKind;
+  /** Raw dependsOn value from frontmatter; undefined when absent. */
+  dependsOnRaw?: unknown;
+  /** Parsed string targets from frontmatter dependsOn. */
+  dependsOnTargets?: string[];
   blocks: ZettelBlock[];
   nonBulletLines: number[];
 }

@@ -1,6 +1,8 @@
 ---
 title: python
 kind: concept
+dependsOn:
+  - algoritmos
 ---
 - Python es un lenguaje de propósito general con sintaxis legible y tipado dinámico; la Wikipedia en español resume historia, paradigmas y ecosistema https://es.wikipedia.org/wiki/Python
 - La documentación oficial en español enseña tipos básicos, control de flujo, funciones y módulos con ejemplos ejecutables https://docs.python.org/es/3/tutorial/

@@ -9,6 +9,10 @@ import {
   conceptMissingKind,
   conceptNotesWithoutLinks,
 } from "./concepts";
+import {
+  conceptDependsOnCycleDiagnostics,
+  conceptDependsOnDiagnostics,
+} from "./dependencies";
 import { courseWithoutConceptLinks, courseYearDiagnostics } from "./courses";
 import { missingExpectedPages } from "./expected";
 import {
@@ -42,6 +46,8 @@ export function collectDiagnostics(graph: CurriculumGraph): Diagnostic[] {
   diagnostics.push(...nonBulletContentDiagnostics(graph));
   diagnostics.push(...courseWithoutConceptLinks(graph));
   diagnostics.push(...conceptMissingKind(graph));
+  diagnostics.push(...conceptDependsOnDiagnostics(graph));
+  diagnostics.push(...conceptDependsOnCycleDiagnostics(graph));
   diagnostics.push(...conceptNotesWithoutLinks(graph));
   diagnostics.push(...conceptInsufficientSources(graph));
   diagnostics.push(...conceptMissingBookSource(graph));

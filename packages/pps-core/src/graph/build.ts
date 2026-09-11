@@ -50,7 +50,25 @@ export function buildGraphFromPages(input: {
 export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
   const pageKindByTitle = new Map(pages.map((page) => [page.title, page.kind]));
 
+  const titleSet = new Set(pages.map((page) => page.title));
+
   const edges = pages.flatMap((page) => [
+    ...(page.kind === "concept" ? (page.dependsOn ?? []) : []).flatMap((dep) => {
+      const prerequisite = dep.resolvedTarget ?? dep.target;
+      if (!titleSet.has(prerequisite)) {
+        return [];
+      }
+
+      return [
+        {
+          source: prerequisite,
+          target: page.title,
+          kind: "concept-dependency" as const,
+          rawTarget: dep.target,
+          line: 0,
+        },
+      ];
+    }),
     ...page.refs.map((ref) => {
       const target = ref.resolvedTarget ?? ref.target;
       const direction = canonicalStructuralEdgeDirection(page.title, target, pageKindByTitle);

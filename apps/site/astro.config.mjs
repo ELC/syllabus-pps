@@ -20,6 +20,7 @@ export default defineConfig({
     resolve: {
       alias: {
         "@pps/core": resolve(rootDir, "../../packages/pps-core/src/index.ts"),
+        "@pps/shell": resolve(rootDir, "../../packages/pps-shell/src"),
       },
     },
     optimizeDeps: {

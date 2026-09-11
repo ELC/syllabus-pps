@@ -1,6 +1,8 @@
 ---
 title: estructuras de datos
 kind: concept
+dependsOn:
+  - algoritmos
 ---
 - Una estructura de datos organiza información para acceder y modificarla con eficiencia; la Wikipedia en español compara arrays, listas, pilas, colas, árboles y grafos https://es.wikipedia.org/wiki/Estructura_de_datos
 - VisuAlgo anima inserciones, búsquedas y recorridos en estructuras clásicas y muestra pseudocódigo junto a la animación https://visualgo.net/en

@@ -1,6 +1,8 @@
 ---
 title: transacciones
 kind: concept
+dependsOn:
+  - sql
 ---
 - Una transacción agrupa operaciones de base de datos que deben completarse como una unidad; la Wikipedia en español describe commit, rollback y estados https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos
 - La documentación de PostgreSQL muestra BEGIN, COMMIT y ROLLBACK con ejemplos de transferencias entre cuentas https://www.postgresql.org/docs/current/tutorial-transactions.html

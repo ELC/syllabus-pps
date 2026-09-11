@@ -1,6 +1,8 @@
 ---
 title: demostraciones
 kind: concept
+dependsOn:
+  - lógica
 ---
 - Una demostración establece la verdad de un enunciado mediante una cadena lógica de pasos; la Wikipedia en español distingue directa, contradicción, contrapositiva e inducción https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica
 - El libro Book of Proof (3.ª ed., 2024) de Hammack es de acceso libre y enseña a redactar demostraciones con ejemplos de conjuntos, funciones y combinatoria https://richardhammack.github.io/BookOfProof/Main.pdf

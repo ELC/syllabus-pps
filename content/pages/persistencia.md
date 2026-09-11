@@ -1,6 +1,9 @@
 ---
 title: persistencia
 kind: concept
+dependsOn:
+  - python
+  - programación orientada a objetos
 ---
 - La persistencia guarda el estado de una aplicación más allá de la ejecución del programa; la Wikipedia en español distingue archivos, bases de datos y serialización https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica)
 - La documentación de Python explica persistencia con archivos de texto, JSON y el módulo sqlite3 para almacenamiento local https://docs.python.org/es/3/tutorial/inputoutput.html

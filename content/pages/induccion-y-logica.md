@@ -1,6 +1,8 @@
 ---
 title: lógica
 kind: concept
+dependsOn:
+  - pensamiento matemático
 ---
 - La lógica formal estudia cómo evaluar enunciados con conectivos, cuantificadores y reglas de inferencia; la Wikipedia en español introduce proposiciones, tablas de verdad y argumentos válidos https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional
 - El Open Logic Project es un libro abierto de lógica formal con capítulos sobre deducción natural, cuantificadores y métodos de prueba https://openlogicproject.org/

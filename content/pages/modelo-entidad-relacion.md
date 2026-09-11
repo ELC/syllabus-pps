@@ -1,6 +1,7 @@
 ---
 title: modelo entidad-relación
 kind: concept
+dependsOn: []
 ---
 - Un modelo entidad-relación representa entidades, atributos y relaciones de un dominio; la Wikipedia en español explica cardinalidad y claves https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n
 - Draw.io documenta diagramas entidad-relación con notación crow's foot, claves primarias y foráneas en una herramienta gratuita https://www.drawio.com/docs/diagram-types/entity-relationship-tables/

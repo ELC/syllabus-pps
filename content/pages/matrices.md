@@ -1,6 +1,8 @@
 ---
 title: matrices
 kind: concept
+dependsOn:
+  - vectores
 ---
 - Una matriz ordena datos en filas y columnas para operar sobre ellos; la Wikipedia en español presenta suma, producto y aplicaciones básicas https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas)
 - Interactive Linear Algebra de Georgia Tech introduce matrices como transformaciones lineales con ejemplos y ejercicios https://textbooks.math.gatech.edu/ila/matrix-transformations.html

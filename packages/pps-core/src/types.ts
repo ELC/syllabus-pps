@@ -10,7 +10,7 @@ export const pageKinds = [
 
 export type PageKind = (typeof pageKinds)[number];
 
-export const edgeKinds = ["page-ref", "concept-tag"] as const;
+export const edgeKinds = ["page-ref", "concept-tag", "concept-dependency"] as const;
 
 export type EdgeKind = (typeof edgeKinds)[number];
 
@@ -40,6 +40,12 @@ export const diagnosticCodes = [
   "uuid-tag-resolved",
   "uuid-tag-unresolved",
   "non-bullet-content",
+  "concept-missing-depends-on",
+  "concept-depends-on-invalid",
+  "concept-depends-on-unresolved",
+  "concept-depends-on-non-concept",
+  "concept-depends-on-self",
+  "concept-depends-on-cycle",
 ] as const;
 
 export type DiagnosticCode = (typeof diagnosticCodes)[number];
@@ -76,6 +82,13 @@ export interface ZettelBlock {
   urls: UrlLink[];
 }
 
+export interface ConceptDependency {
+  raw: string;
+  target: string;
+  normalizedTarget: string;
+  resolvedTarget?: string;
+}
+
 export interface PageFrontmatter {
   title?: string;
   slug?: string;
@@ -83,6 +96,8 @@ export interface PageFrontmatter {
   id?: string;
   version?: number;
   updatedAt?: string;
+  /** Direct prerequisite concept titles for kind: concept pages. */
+  dependsOn: string[];
 }
 
 export interface ZettelPage {
@@ -98,6 +113,10 @@ export interface ZettelPage {
   tags: ConceptTag[];
   urls: UrlLink[];
   nonBulletLines?: number[];
+  /** Parsed from frontmatter; undefined when the field is absent. */
+  dependsOn?: ConceptDependency[];
+  /** True when frontmatter dependsOn is present but malformed. */
+  dependsOnInvalid?: boolean;
 }
 
 export interface GraphEdge {

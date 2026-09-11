@@ -1,6 +1,9 @@
 ---
 title: sistemas lineales
 kind: concept
+dependsOn:
+  - matrices
+  - vectores
 ---
 - Un sistema lineal combina ecuaciones lineales con incógnitas compartidas; la Wikipedia en español describe métodos de solución y tipos de compatibilidad https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales
 - Interactive Linear Algebra de Georgia Tech presenta eliminación gaussiana, matrices aumentadas y formas escalonadas con el algoritmo de reducción https://textbooks.math.gatech.edu/ila/row-reduction.html
