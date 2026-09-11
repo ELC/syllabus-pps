@@ -62,6 +62,49 @@ export interface ConceptSourceRow {
   note: string;
 }
 
+export const MINIMUM_CONCEPT_SOURCES = 3;
+
+const BOOK_URL_PATTERN =
+  /\b(db-book\.com|bookofproof\.org|opendatastructures\.org|mitpress\.mit\.edu|oreilly\.com\/library\/view|linear\.axler\.net|ehmatthes\.github\.io\/pcc|manning\.com|link\.springer\.com\/book|openstax\.org\/details\/books)\b/i;
+
+export function isBookSource(text: string, url?: string): boolean {
+  const value = `${text} ${url ?? ""}`.toLocaleLowerCase("es-AR");
+
+  if (/\b(bibliograf[ií]a|libro|textbook|texto|isbn|edici[oó]n|\bed\.|\d{4}\))\b/.test(value)) {
+    return true;
+  }
+
+  if (url && BOOK_URL_PATTERN.test(url)) {
+    return true;
+  }
+
+  return classifySourceType(text, url) === "bibliography";
+}
+
+export function collectPageBookSources(
+  page: ZettelPage,
+  curriculumTitles: ReadonlySet<string>,
+): string[] {
+  return uniqueSorted(
+    page.blocks.flatMap((block) => {
+      const sources = collectSourcesForBlock(page, block, curriculumTitles);
+      return sources.filter((source) => {
+        const url = block.urls.find((entry) => entry.target === source)?.target;
+        return isBookSource(block.text, url ?? (source.startsWith("http") ? source : undefined));
+      });
+    }),
+  );
+}
+
+export function collectPageSources(
+  page: ZettelPage,
+  curriculumTitles: ReadonlySet<string>,
+): string[] {
+  return uniqueSorted(
+    page.blocks.flatMap((block) => collectSourcesForBlock(page, block, curriculumTitles)),
+  );
+}
+
 export function collectConceptSources(
   page: ZettelPage,
   curriculumTitles: ReadonlySet<string>,

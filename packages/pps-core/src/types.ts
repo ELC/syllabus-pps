@@ -23,6 +23,9 @@ export const diagnosticCodes = [
   "concept-links-to-non-concept",
   "concept-low-course-coverage",
   "concept-note-without-link",
+  "concept-missing-kind",
+  "concept-insufficient-sources",
+  "concept-missing-book-source",
   "concept-note-without-source-link",
   "course-without-concept-links",
   "course-without-year-link",
@@ -89,6 +92,7 @@ export interface ZettelPage {
   normalizedTitle: string;
   path: string;
   kind: PageKind;
+  declaredKind?: PageKind;
   blocks: ZettelBlock[];
   refs: PageRef[];
   tags: ConceptTag[];

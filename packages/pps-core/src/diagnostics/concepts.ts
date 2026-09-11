@@ -2,6 +2,17 @@ import { buildCurriculumIndexes, isSourceReference } from "../analysis";
 import { normalizeTitle } from "../normalize";
 import { CurriculumGraph, Diagnostic } from "../types";
 
+export function conceptMissingKind(graph: CurriculumGraph): Diagnostic[] {
+  return graph.pages
+    .filter((page) => page.kind === "concept" && page.declaredKind !== "concept")
+    .map((page) => ({
+      severity: "error" as const,
+      code: "concept-missing-kind",
+      message: `Concept page "${page.title}" must declare kind: concept in frontmatter.`,
+      page: page.title,
+    }));
+}
+
 export function conceptNotesWithoutLinks(graph: CurriculumGraph): Diagnostic[] {
   return graph.pages
     .filter((page) => page.kind === "concept")

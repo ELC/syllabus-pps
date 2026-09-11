@@ -3,7 +3,12 @@ import { incomingEdgeCounts } from "../graph";
 import { normalizeTitle } from "../normalize";
 import { CurriculumGraph, Diagnostic } from "../types";
 import { compareDiagnostics } from "./compare";
-import { conceptLinksToNonConceptPages, conceptLowCourseCoverage, conceptNotesWithoutLinks } from "./concepts";
+import {
+  conceptLinksToNonConceptPages,
+  conceptLowCourseCoverage,
+  conceptMissingKind,
+  conceptNotesWithoutLinks,
+} from "./concepts";
 import { courseWithoutConceptLinks, courseYearDiagnostics } from "./courses";
 import { missingExpectedPages } from "./expected";
 import {
@@ -13,7 +18,11 @@ import {
   nonBulletContentDiagnostics,
   selfLinkDiagnostics,
 } from "./pages";
-import { conceptNotesWithoutSourceLinks } from "./sources";
+import {
+  conceptInsufficientSources,
+  conceptMissingBookSource,
+  conceptNotesWithoutSourceLinks,
+} from "./sources";
 import { uuidReferenceDiagnostics } from "./uuid";
 
 export { compareDiagnostics } from "./compare";
@@ -32,7 +41,10 @@ export function collectDiagnostics(graph: CurriculumGraph): Diagnostic[] {
   diagnostics.push(...selfLinkDiagnostics(graph));
   diagnostics.push(...nonBulletContentDiagnostics(graph));
   diagnostics.push(...courseWithoutConceptLinks(graph));
+  diagnostics.push(...conceptMissingKind(graph));
   diagnostics.push(...conceptNotesWithoutLinks(graph));
+  diagnostics.push(...conceptInsufficientSources(graph));
+  diagnostics.push(...conceptMissingBookSource(graph));
   diagnostics.push(...conceptNotesWithoutSourceLinks(graph));
   diagnostics.push(...conceptLinksToNonConceptPages(graph));
   diagnostics.push(...conceptLowCourseCoverage(graph));

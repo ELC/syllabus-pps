@@ -3,8 +3,12 @@ export {
   blockHasSourceLink,
   classifySourceType,
   collectConceptSources,
+  collectPageBookSources,
+  collectPageSources,
   collectSourcesForBlock,
+  MINIMUM_CONCEPT_SOURCES,
   type ConceptSourceRow,
   hasSourceCue,
+  isBookSource,
   isSourceReference,
 } from "./sources";

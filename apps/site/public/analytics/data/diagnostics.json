@@ -1,5 +1,31 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"diagnostics","generatedAt":"2026-09-10T19:04:49.917Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"diagnostics","generatedAt":"2026-09-10T20:40:18.430Z","docs":"../../README.md"}
 [
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"ACID\" is referenced by 1 course(s); target is at least 3.",
+    "page": "ACID",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "bases de datos"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"álgebra relacional\" is referenced by 1 course(s); target is at least 3.",
+    "page": "álgebra relacional",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "bases de datos"
+      ]
+    }
+  },
   {
     "severity": "warning",
     "code": "concept-low-course-coverage",
@@ -16,79 +42,280 @@
   },
   {
     "severity": "warning",
-    "code": "concept-note-without-source-link",
-    "message": "Concept page \"algoritmos\" has a note without a source link.",
-    "page": "algoritmos",
-    "line": 1,
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"casos de uso\" is referenced by 1 course(s); target is at least 3.",
+    "page": "casos de uso",
     "details": {
-      "text": "[[algoritmos]]"
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "análisis de sistemas"
+      ]
     }
   },
   {
     "severity": "warning",
-    "code": "course-without-year-link",
-    "message": "Course \"programación i\" is not referenced by an expected year page.",
-    "page": "programación i"
-  },
-  {
-    "severity": "warning",
-    "code": "self-link",
-    "message": "Page \"algoritmos\" links to itself.",
-    "page": "algoritmos",
-    "line": 1,
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"complejidad algorítmica\" is referenced by 1 course(s); target is at least 3.",
+    "page": "complejidad algorítmica",
     "details": {
-      "target": "algoritmos"
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "algoritmos y estructuras de datos"
+      ]
     }
   },
   {
     "severity": "warning",
-    "code": "self-link",
-    "message": "Page \"algoritmos y estructuras de datos\" links to itself.",
-    "page": "algoritmos y estructuras de datos",
-    "line": 1,
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"criterios de aceptación\" is referenced by 1 course(s); target is at least 3.",
+    "page": "criterios de aceptación",
     "details": {
-      "target": "algoritmos y estructuras de datos"
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "análisis de sistemas"
+      ]
     }
   },
   {
     "severity": "warning",
-    "code": "self-link",
-    "message": "Page \"año 1\" links to itself.",
-    "page": "año 1",
-    "line": 1,
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"demostraciones\" is referenced by 1 course(s); target is at least 3.",
+    "page": "demostraciones",
     "details": {
-      "target": "año 1"
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "análisis matemático i"
+      ]
     }
   },
   {
     "severity": "warning",
-    "code": "self-link",
-    "message": "Page \"LDS\" links to itself.",
-    "page": "LDS",
-    "line": 1,
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"estructuras de datos\" is referenced by 1 course(s); target is at least 3.",
+    "page": "estructuras de datos",
     "details": {
-      "target": "LDS"
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "algoritmos y estructuras de datos"
+      ]
     }
   },
   {
     "severity": "warning",
-    "code": "self-link",
-    "message": "Page \"programación i\" links to itself.",
-    "page": "programación i",
-    "line": 1,
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"inducción y lógica\" is referenced by 1 course(s); target is at least 3.",
+    "page": "inducción y lógica",
     "details": {
-      "target": "programación i"
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "análisis matemático i"
+      ]
     }
   },
   {
     "severity": "warning",
-    "code": "uuid-ref-resolved",
-    "message": "UUID reference in \"algoritmos y estructuras de datos\" resolves to \"programación i\".",
-    "page": "algoritmos y estructuras de datos",
-    "line": 3,
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"matrices\" is referenced by 1 course(s); target is at least 3.",
+    "page": "matrices",
     "details": {
-      "target": "44444444-4444-4444-8444-444444444444",
-      "resolvedTarget": "programación i"
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "álgebra y geometría"
+      ]
     }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"modelado de dominio\" is referenced by 1 course(s); target is at least 3.",
+    "page": "modelado de dominio",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "análisis de sistemas"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"modelo entidad-relación\" is referenced by 1 course(s); target is at least 3.",
+    "page": "modelo entidad-relación",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "bases de datos"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"nassi-shneiderman\" is referenced by 1 course(s); target is at least 3.",
+    "page": "nassi-shneiderman",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "algoritmos y estructuras de datos"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"normalización\" is referenced by 1 course(s); target is at least 3.",
+    "page": "normalización",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "bases de datos"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"optimización\" is referenced by 1 course(s); target is at least 3.",
+    "page": "optimización",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "análisis matemático i"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"persistencia\" is referenced by 1 course(s); target is at least 3.",
+    "page": "persistencia",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "programación i"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"programación orientada a objetos\" is referenced by 1 course(s); target is at least 3.",
+    "page": "programación orientada a objetos",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "programación i"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"python\" is referenced by 1 course(s); target is at least 3.",
+    "page": "python",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "programación i"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"requerimientos\" is referenced by 1 course(s); target is at least 3.",
+    "page": "requerimientos",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "análisis de sistemas"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"sistemas lineales\" is referenced by 1 course(s); target is at least 3.",
+    "page": "sistemas lineales",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "álgebra y geometría"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"sql\" is referenced by 1 course(s); target is at least 3.",
+    "page": "sql",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "bases de datos"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"transacciones\" is referenced by 1 course(s); target is at least 3.",
+    "page": "transacciones",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "bases de datos"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "concept-low-course-coverage",
+    "message": "Concept \"vectores\" is referenced by 1 course(s); target is at least 3.",
+    "page": "vectores",
+    "details": {
+      "courseCount": 1,
+      "minimumCourses": 3,
+      "courses": [
+        "álgebra y geometría"
+      ]
+    }
+  },
+  {
+    "severity": "warning",
+    "code": "course-without-concept-links",
+    "message": "Course \"antropología\" has no links to concepts.",
+    "page": "antropología"
+  },
+  {
+    "severity": "warning",
+    "code": "course-without-concept-links",
+    "message": "Course \"filosofía\" has no links to concepts.",
+    "page": "filosofía"
+  },
+  {
+    "severity": "warning",
+    "code": "course-without-concept-links",
+    "message": "Course \"técnicas de comunicación y storytelling\" has no links to concepts.",
+    "page": "técnicas de comunicación y storytelling"
   }
 ]

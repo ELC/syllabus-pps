@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  collectPageSources,
   collectSourcesForBlock,
   hasSourceCue,
   buildCurriculumIndexes,
@@ -60,5 +61,45 @@ describe("collectSourcesForBlock", () => {
     // Assert
     expect(hasSourceCue(block.text)).toBe(true);
     expect(sources).toEqual(["docs", "https://example.com"]);
+  });
+});
+
+describe("collectPageSources", () => {
+  it("deduplicates source links across all blocks on a page", () => {
+    const page: ZettelPage = {
+      slug: "algoritmos",
+      title: "algoritmos",
+      normalizedTitle: "algoritmos",
+      path: "algoritmos.md",
+      kind: "concept",
+      declaredKind: "concept",
+      blocks: [
+        {
+          line: 1,
+          text: "referencia https://es.wikipedia.org/wiki/Algoritmo",
+          refs: [],
+          tags: [],
+          urls: [{ raw: "https://es.wikipedia.org/wiki/Algoritmo", target: "https://es.wikipedia.org/wiki/Algoritmo", line: 1 }],
+        },
+        {
+          line: 2,
+          text: "según https://example.com/intro y https://example.com/intro",
+          refs: [],
+          tags: [],
+          urls: [
+            { raw: "https://example.com/intro", target: "https://example.com/intro", line: 2 },
+            { raw: "https://example.com/intro", target: "https://example.com/intro", line: 2 },
+          ],
+        },
+      ],
+      refs: [],
+      tags: [],
+      urls: [],
+    };
+
+    expect(collectPageSources(page, new Set())).toEqual([
+      "https://es.wikipedia.org/wiki/Algoritmo",
+      "https://example.com/intro",
+    ]);
   });
 });

@@ -31,7 +31,6 @@ export const expectedPageKinds: Array<[string, string]> = [
 ];
 
 export const expectedEdges: Array<[string, string, string]> = [
-  ["algoritmos", "algoritmos", "page-ref"],
   ["algoritmos y estructuras de datos", "algoritmos", "concept-tag"],
   ["algoritmos y estructuras de datos", "algoritmos y estructuras de datos", "page-ref"],
   ["algoritmos y estructuras de datos", "programación i", "page-ref"],
@@ -53,18 +52,8 @@ export const expectedDiagnosticSummaries: DiagnosticSummary[] = [
   },
   {
     severity: "warning",
-    code: "concept-note-without-source-link",
-    page: "algoritmos",
-  },
-  {
-    severity: "warning",
     code: "course-without-year-link",
     page: "programación i",
-  },
-  {
-    severity: "warning",
-    code: "self-link",
-    page: "algoritmos",
   },
   {
     severity: "warning",

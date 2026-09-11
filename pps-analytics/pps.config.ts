@@ -5,7 +5,17 @@ const config = {
   years: [
     {
       title: "año 1",
-      courses: ["algoritmos y estructuras de datos", "programación i"],
+      courses: [
+        "álgebra y geometría",
+        "algoritmos y estructuras de datos",
+        "análisis de sistemas",
+        "técnicas de comunicación y storytelling",
+        "bases de datos",
+        "análisis matemático i",
+        "antropología",
+        "programación i",
+        "filosofía",
+      ],
     },
   ],
 } satisfies ExpectedCurriculum;

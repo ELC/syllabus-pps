@@ -1,6 +1,6 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"dashboards","generatedAt":"2026-09-10T19:04:49.917Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"dashboards","generatedAt":"2026-09-10T20:40:18.430Z","docs":"../../README.md"}
 {
-  "generatedAt": "2026-09-10T19:04:49.917Z",
+  "generatedAt": "2026-09-10T20:40:18.430Z",
   "dashboards": [
     {
       "id": "quality",
@@ -10,19 +10,19 @@
         {
           "name": "Pages",
           "description": "Total parsed pages. Use this as a quick check that content is being read.",
-          "value": 5,
+          "value": 35,
           "format": ",.0f"
         },
         {
           "name": "Edges",
           "description": "Total explicit links and hashtags. Higher values indicate a denser zettelkasten graph.",
-          "value": 12,
+          "value": 64,
           "format": ",.0f"
         },
         {
           "name": "Expected Courses",
           "description": "Courses declared in pps.config.ts. Compare this with course pages and diagnostics.",
-          "value": 2,
+          "value": 9,
           "format": ",.0f"
         },
         {
@@ -34,19 +34,19 @@
         {
           "name": "Warnings",
           "description": "Non-blocking issues that still deserve review. Filter the table below by code or page.",
-          "value": 9,
+          "value": 26,
           "format": ",.0f"
         },
         {
           "name": "Concept Pages",
           "description": "Pages classified as concepts. These should contain source links and connect course content.",
-          "value": 1,
+          "value": 24,
           "format": ",.0f"
         },
         {
           "name": "Course Pages",
           "description": "Pages classified as courses. These are expected to link forward into concept pages.",
-          "value": 2,
+          "value": 9,
           "format": ",.0f"
         },
         {
@@ -73,10 +73,7 @@
           "options": [
             "All",
             "concept-low-course-coverage",
-            "concept-note-without-source-link",
-            "course-without-year-link",
-            "self-link",
-            "uuid-ref-resolved"
+            "course-without-concept-links"
           ]
         },
         {
@@ -85,11 +82,32 @@
           "defaultValue": "All",
           "options": [
             "All",
+            "ACID",
+            "álgebra relacional",
             "algoritmos",
-            "algoritmos y estructuras de datos",
-            "año 1",
-            "LDS",
-            "programación i"
+            "antropología",
+            "casos de uso",
+            "complejidad algorítmica",
+            "criterios de aceptación",
+            "demostraciones",
+            "estructuras de datos",
+            "filosofía",
+            "inducción y lógica",
+            "matrices",
+            "modelado de dominio",
+            "modelo entidad-relación",
+            "nassi-shneiderman",
+            "normalización",
+            "optimización",
+            "persistencia",
+            "programación orientada a objetos",
+            "python",
+            "requerimientos",
+            "sistemas lineales",
+            "sql",
+            "técnicas de comunicación y storytelling",
+            "transacciones",
+            "vectores"
           ]
         }
       ],
@@ -123,65 +141,184 @@
             {
               "severity": "warning",
               "code": "concept-low-course-coverage",
+              "page": "ACID",
+              "line": "",
+              "message": "Concept \"ACID\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "álgebra relacional",
+              "line": "",
+              "message": "Concept \"álgebra relacional\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
               "page": "algoritmos",
               "line": "",
               "message": "Concept \"algoritmos\" is referenced by 2 course(s); target is at least 3."
             },
             {
               "severity": "warning",
-              "code": "concept-note-without-source-link",
-              "page": "algoritmos",
-              "line": 1,
-              "message": "Concept page \"algoritmos\" has a note without a source link."
-            },
-            {
-              "severity": "warning",
-              "code": "course-without-year-link",
-              "page": "programación i",
+              "code": "concept-low-course-coverage",
+              "page": "casos de uso",
               "line": "",
-              "message": "Course \"programación i\" is not referenced by an expected year page."
+              "message": "Concept \"casos de uso\" is referenced by 1 course(s); target is at least 3."
             },
             {
               "severity": "warning",
-              "code": "self-link",
-              "page": "algoritmos",
-              "line": 1,
-              "message": "Page \"algoritmos\" links to itself."
+              "code": "concept-low-course-coverage",
+              "page": "complejidad algorítmica",
+              "line": "",
+              "message": "Concept \"complejidad algorítmica\" is referenced by 1 course(s); target is at least 3."
             },
             {
               "severity": "warning",
-              "code": "self-link",
-              "page": "algoritmos y estructuras de datos",
-              "line": 1,
-              "message": "Page \"algoritmos y estructuras de datos\" links to itself."
+              "code": "concept-low-course-coverage",
+              "page": "criterios de aceptación",
+              "line": "",
+              "message": "Concept \"criterios de aceptación\" is referenced by 1 course(s); target is at least 3."
             },
             {
               "severity": "warning",
-              "code": "self-link",
-              "page": "año 1",
-              "line": 1,
-              "message": "Page \"año 1\" links to itself."
+              "code": "concept-low-course-coverage",
+              "page": "demostraciones",
+              "line": "",
+              "message": "Concept \"demostraciones\" is referenced by 1 course(s); target is at least 3."
             },
             {
               "severity": "warning",
-              "code": "self-link",
-              "page": "LDS",
-              "line": 1,
-              "message": "Page \"LDS\" links to itself."
+              "code": "concept-low-course-coverage",
+              "page": "estructuras de datos",
+              "line": "",
+              "message": "Concept \"estructuras de datos\" is referenced by 1 course(s); target is at least 3."
             },
             {
               "severity": "warning",
-              "code": "self-link",
-              "page": "programación i",
-              "line": 1,
-              "message": "Page \"programación i\" links to itself."
+              "code": "concept-low-course-coverage",
+              "page": "inducción y lógica",
+              "line": "",
+              "message": "Concept \"inducción y lógica\" is referenced by 1 course(s); target is at least 3."
             },
             {
               "severity": "warning",
-              "code": "uuid-ref-resolved",
-              "page": "algoritmos y estructuras de datos",
-              "line": 3,
-              "message": "UUID reference in \"algoritmos y estructuras de datos\" resolves to \"programación i\"."
+              "code": "concept-low-course-coverage",
+              "page": "matrices",
+              "line": "",
+              "message": "Concept \"matrices\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "modelado de dominio",
+              "line": "",
+              "message": "Concept \"modelado de dominio\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "modelo entidad-relación",
+              "line": "",
+              "message": "Concept \"modelo entidad-relación\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "nassi-shneiderman",
+              "line": "",
+              "message": "Concept \"nassi-shneiderman\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "normalización",
+              "line": "",
+              "message": "Concept \"normalización\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "optimización",
+              "line": "",
+              "message": "Concept \"optimización\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "persistencia",
+              "line": "",
+              "message": "Concept \"persistencia\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "programación orientada a objetos",
+              "line": "",
+              "message": "Concept \"programación orientada a objetos\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "python",
+              "line": "",
+              "message": "Concept \"python\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "requerimientos",
+              "line": "",
+              "message": "Concept \"requerimientos\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "sistemas lineales",
+              "line": "",
+              "message": "Concept \"sistemas lineales\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "sql",
+              "line": "",
+              "message": "Concept \"sql\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "transacciones",
+              "line": "",
+              "message": "Concept \"transacciones\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "concept-low-course-coverage",
+              "page": "vectores",
+              "line": "",
+              "message": "Concept \"vectores\" is referenced by 1 course(s); target is at least 3."
+            },
+            {
+              "severity": "warning",
+              "code": "course-without-concept-links",
+              "page": "antropología",
+              "line": "",
+              "message": "Course \"antropología\" has no links to concepts."
+            },
+            {
+              "severity": "warning",
+              "code": "course-without-concept-links",
+              "page": "filosofía",
+              "line": "",
+              "message": "Course \"filosofía\" has no links to concepts."
+            },
+            {
+              "severity": "warning",
+              "code": "course-without-concept-links",
+              "page": "técnicas de comunicación y storytelling",
+              "line": "",
+              "message": "Course \"técnicas de comunicación y storytelling\" has no links to concepts."
             }
           ]
         }
@@ -195,13 +332,13 @@
         {
           "name": "Course Notes",
           "description": "Total note blocks found in course pages. This is the denominator for concept coverage.",
-          "value": 6,
+          "value": 28,
           "format": ",.0f"
         },
         {
           "name": "Notes With Concepts",
           "description": "Course notes that link to at least one concept through a hashtag or concept page link.",
-          "value": 2,
+          "value": 24,
           "format": ",.0f"
         },
         {
@@ -213,7 +350,7 @@
         {
           "name": "Coverage Percent",
           "description": "Share of course notes that have at least one concept link. Higher is better.",
-          "value": 33.3,
+          "value": 85.7,
           "format": ".1f"
         }
       ],
@@ -247,10 +384,10 @@
           "rows": [
             {
               "year": "año 1",
-              "notes": "6",
-              "covered": "2",
+              "notes": "28",
+              "covered": "24",
               "missing": "4",
-              "coverage_percent": "33.3"
+              "coverage_percent": "85.7"
             }
           ]
         },
@@ -281,18 +418,67 @@
           ],
           "rows": [
             {
+              "course": "álgebra y geometría",
+              "notes": "3",
+              "covered": "3",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
               "course": "algoritmos y estructuras de datos",
               "notes": "4",
-              "covered": "1",
-              "missing": "3",
-              "coverage_percent": "25.0"
+              "covered": "4",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "course": "análisis de sistemas",
+              "notes": "4",
+              "covered": "4",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "course": "análisis matemático i",
+              "notes": "4",
+              "covered": "4",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "course": "antropología",
+              "notes": "1",
+              "covered": "0",
+              "missing": "1",
+              "coverage_percent": "0.0"
+            },
+            {
+              "course": "bases de datos",
+              "notes": "6",
+              "covered": "5",
+              "missing": "1",
+              "coverage_percent": "83.3"
+            },
+            {
+              "course": "filosofía",
+              "notes": "1",
+              "covered": "0",
+              "missing": "1",
+              "coverage_percent": "0.0"
             },
             {
               "course": "programación i",
-              "notes": "2",
-              "covered": "1",
+              "notes": "4",
+              "covered": "4",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "course": "técnicas de comunicación y storytelling",
+              "notes": "1",
+              "covered": "0",
               "missing": "1",
-              "coverage_percent": "50.0"
+              "coverage_percent": "0.0"
             }
           ]
         },
@@ -315,24 +501,24 @@
           ],
           "rows": [
             {
-              "course": "algoritmos y estructuras de datos",
+              "course": "antropología",
               "line": "1",
-              "note": "[[algoritmos y estructuras de datos]]"
+              "note": "formación humanística sobre la condición humana y la cultura en el contexto de la carrera"
             },
             {
-              "course": "algoritmos y estructuras de datos",
-              "line": "3",
-              "note": "[[44444444-4444-4444-8444-444444444444]]"
+              "course": "bases de datos",
+              "line": "6",
+              "note": "[[matemática discreta]] profundiza estructuras discretas que sustentan modelado relacional y consultas"
             },
             {
-              "course": "algoritmos y estructuras de datos",
-              "line": "4",
-              "note": "[[programación i]]"
-            },
-            {
-              "course": "programación i",
+              "course": "filosofía",
               "line": "1",
-              "note": "[[programación i]]"
+              "note": "formación filosófica sobre fundamentos del conocimiento, la ética y el pensamiento crítico"
+            },
+            {
+              "course": "técnicas de comunicación y storytelling",
+              "line": "1",
+              "note": "desarrolla comunicación profesional, escritura y presentación para el trabajo en equipos de software"
             }
           ]
         },
@@ -359,16 +545,148 @@
           ],
           "rows": [
             {
+              "course": "álgebra y geometría",
+              "line": "1",
+              "concept_links": "matrices, vectores",
+              "note": "las #matrices y los #vectores modelan datos, transformaciones y gráficos en productos de software"
+            },
+            {
+              "course": "álgebra y geometría",
+              "line": "2",
+              "concept_links": "matrices, sistemas lineales, vectores",
+              "note": "un #sistemas-lineales expresa restricciones con #matrices y #vectores antes de pasar a [[análisis matemático i]]"
+            },
+            {
+              "course": "álgebra y geometría",
+              "line": "3",
+              "concept_links": "pensamiento matemático",
+              "note": "el #pensamiento-matematico de esta materia prepara [[análisis matemático i]] y [[matemática discreta]] más adelante"
+            },
+            {
+              "course": "algoritmos y estructuras de datos",
+              "line": "1",
+              "concept_links": "algoritmos, nassi-shneiderman",
+              "note": "los #algoritmos se diseñan con #nassi-shneiderman antes de implementarlos en [[programación i]]"
+            },
+            {
               "course": "algoritmos y estructuras de datos",
               "line": "2",
-              "concept_links": "algoritmos",
-              "note": "#algoritmos"
+              "concept_links": "estructuras de datos",
+              "note": "las #estructuras-de-datos organizan listas, pilas, colas y árboles dentro del diseño algorítmico"
+            },
+            {
+              "course": "algoritmos y estructuras de datos",
+              "line": "3",
+              "concept_links": "algoritmos, complejidad algorítmica",
+              "note": "la #complejidad-algoritmica introduce órdenes de crecimiento y trazas para validar #algoritmos en [[programación i]]"
+            },
+            {
+              "course": "algoritmos y estructuras de datos",
+              "line": "4",
+              "concept_links": "algoritmos, pensamiento matemático",
+              "note": "el #pensamiento-matematico guía el diseño de #algoritmos antes de escribir código en [[programación i]]"
+            },
+            {
+              "course": "análisis de sistemas",
+              "line": "1",
+              "concept_links": "requerimientos",
+              "note": "los #requerimientos traducen necesidades de negocio en comportamiento verificable para [[programación i]]"
+            },
+            {
+              "course": "análisis de sistemas",
+              "line": "2",
+              "concept_links": "casos de uso, modelado de dominio",
+              "note": "los #casos-de-uso describen interacciones entre actores y el sistema en el #modelado-de-dominio"
+            },
+            {
+              "course": "análisis de sistemas",
+              "line": "3",
+              "concept_links": "modelado de dominio",
+              "note": "el #modelado-de-dominio define entidades, reglas y alcance antes de implementar en [[programación i]]"
+            },
+            {
+              "course": "análisis de sistemas",
+              "line": "4",
+              "concept_links": "criterios de aceptación, requerimiento",
+              "note": "los #criterios-de-aceptacion expresan cuándo un #requerimiento queda satisfecho en [[programación i]]"
+            },
+            {
+              "course": "análisis matemático i",
+              "line": "1",
+              "concept_links": "pensamiento matemático",
+              "note": "el #pensamiento-matematico extiende [[álgebra y geometría]] hacia funciones, límites y derivadas con rigor formal"
+            },
+            {
+              "course": "análisis matemático i",
+              "line": "2",
+              "concept_links": "inducción y lógica",
+              "note": "la #induccion-y-logica introduce razonamiento deductivo que reaparece en [[matemática discreta]]"
+            },
+            {
+              "course": "análisis matemático i",
+              "line": "3",
+              "concept_links": "demostraciones",
+              "note": "las #demostraciones validan propiedades de funciones, límites y derivadas con argumentos formales"
+            },
+            {
+              "course": "análisis matemático i",
+              "line": "4",
+              "concept_links": "optimización",
+              "note": "la #optimizacion aplica cálculo diferencial a performance, crecimiento y [[estadística i]] más adelante"
+            },
+            {
+              "course": "bases de datos",
+              "line": "1",
+              "concept_links": "modelo entidad-relación",
+              "note": "el #modelo-entidad-relacion describe entidades y relaciones antes de implementar persistencia en [[programación i]]"
+            },
+            {
+              "course": "bases de datos",
+              "line": "2",
+              "concept_links": "álgebra relacional, sql",
+              "note": "la #algebra-relacional formaliza consultas sobre relaciones antes de escribir #sql"
+            },
+            {
+              "course": "bases de datos",
+              "line": "3",
+              "concept_links": "normalización",
+              "note": "la #normalizacion reduce redundancia en esquemas relacionales"
+            },
+            {
+              "course": "bases de datos",
+              "line": "4",
+              "concept_links": "ACID, transacciones",
+              "note": "las #transacciones aplican propiedades #acid para mantener consistencia con [[programación i]]"
+            },
+            {
+              "course": "bases de datos",
+              "line": "5",
+              "concept_links": "sql",
+              "note": "el #sql expresa consultas y cambios sobre datos persistentes para productos de software"
+            },
+            {
+              "course": "programación i",
+              "line": "1",
+              "concept_links": "algoritmos, python",
+              "note": "#python implementa #algoritmos diseñados en [[algoritmos y estructuras de datos]] con control de flujo, funciones y módulos"
             },
             {
               "course": "programación i",
               "line": "2",
-              "concept_links": "algoritmos",
-              "note": "#algoritmos"
+              "concept_links": "python",
+              "note": "los entregables de [[análisis de sistemas]] se implementan en #python como producto funcional de cierre del año"
+            },
+            {
+              "course": "programación i",
+              "line": "3",
+              "concept_links": "programación orientada a objetos",
+              "note": "la #programacion-orientada-a-objetos organiza el código en tipos reutilizables dentro de ese producto"
+            },
+            {
+              "course": "programación i",
+              "line": "4",
+              "concept_links": "persistencia",
+              "note": "la #persistencia básica conecta el producto con [[bases de datos]] sin duplicar su alcance"
             }
           ]
         }
@@ -388,19 +706,19 @@
         {
           "name": "Expected Courses",
           "description": "Number of configured courses across all years.",
-          "value": 2,
+          "value": 9,
           "format": ",.0f"
         },
         {
           "name": "Unique Linked Concepts",
           "description": "Distinct concepts linked from all course pages.",
-          "value": 1,
+          "value": 25,
           "format": ",.0f"
         },
         {
           "name": "All Pages",
           "description": "Total parsed pages in the mirror, including years, courses, concepts, and other page kinds.",
-          "value": 5,
+          "value": 35,
           "format": ",.0f"
         }
       ],
@@ -420,8 +738,15 @@
           "defaultValue": "All",
           "options": [
             "All",
+            "álgebra y geometría",
             "algoritmos y estructuras de datos",
-            "programación i"
+            "análisis de sistemas",
+            "análisis matemático i",
+            "antropología",
+            "bases de datos",
+            "filosofía",
+            "programación i",
+            "técnicas de comunicación y storytelling"
           ]
         },
         {
@@ -430,7 +755,32 @@
           "defaultValue": "All",
           "options": [
             "All",
-            "algoritmos"
+            "(no concept links)",
+            "ACID",
+            "álgebra relacional",
+            "algoritmos",
+            "casos de uso",
+            "complejidad algorítmica",
+            "criterios de aceptación",
+            "demostraciones",
+            "estructuras de datos",
+            "inducción y lógica",
+            "matrices",
+            "modelado de dominio",
+            "modelo entidad-relación",
+            "nassi-shneiderman",
+            "normalización",
+            "optimización",
+            "pensamiento matemático",
+            "persistencia",
+            "programación orientada a objetos",
+            "python",
+            "requerimiento",
+            "requerimientos",
+            "sistemas lineales",
+            "sql",
+            "transacciones",
+            "vectores"
           ]
         }
       ],
@@ -455,13 +805,158 @@
           "rows": [
             {
               "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "matrices"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "pensamiento matemático"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "sistemas lineales"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "vectores"
+            },
+            {
+              "year": "año 1",
               "course": "algoritmos y estructuras de datos",
               "concept": "algoritmos"
             },
             {
               "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "complejidad algorítmica"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "estructuras de datos"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "nassi-shneiderman"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "pensamiento matemático"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "casos de uso"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "criterios de aceptación"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "modelado de dominio"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "requerimiento"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "requerimientos"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "demostraciones"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "inducción y lógica"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "pensamiento matemático"
+            },
+            {
+              "year": "año 1",
+              "course": "antropología",
+              "concept": "(no concept links)"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "ACID"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "álgebra relacional"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "modelo entidad-relación"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "normalización"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "sql"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "transacciones"
+            },
+            {
+              "year": "año 1",
+              "course": "filosofía",
+              "concept": "(no concept links)"
+            },
+            {
+              "year": "año 1",
               "course": "programación i",
               "concept": "algoritmos"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "persistencia"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "programación orientada a objetos"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "python"
+            },
+            {
+              "year": "año 1",
+              "course": "técnicas de comunicación y storytelling",
+              "concept": "(no concept links)"
             }
           ]
         }
@@ -475,25 +970,25 @@
         {
           "name": "Linked Concept Notes",
           "description": "Distinct concept note blocks reachable from all course-linked concepts.",
-          "value": 1,
+          "value": 121,
           "format": ",.0f"
         },
         {
           "name": "Notes With Sources",
           "description": "Reachable concept notes that include at least one detected source link.",
-          "value": 0,
+          "value": 121,
           "format": ",.0f"
         },
         {
           "name": "Missing Source Links",
           "description": "Reachable concept notes without a detected source link.",
-          "value": 1,
+          "value": 0,
           "format": ",.0f"
         },
         {
           "name": "Source Coverage Percent",
           "description": "Share of reachable concept notes that have source links. Higher is better.",
-          "value": 0,
+          "value": 100,
           "format": ".1f"
         }
       ],
@@ -527,10 +1022,10 @@
           "rows": [
             {
               "year": "año 1",
-              "concept_notes": "1",
-              "sourced": "0",
-              "missing": "1",
-              "coverage_percent": "0.0"
+              "concept_notes": "121",
+              "sourced": "121",
+              "missing": "0",
+              "coverage_percent": "100.0"
             }
           ]
         },
@@ -566,18 +1061,74 @@
           "rows": [
             {
               "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept_notes": "20",
+              "sourced": "20",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "year": "año 1",
               "course": "algoritmos y estructuras de datos",
-              "concept_notes": "1",
+              "concept_notes": "25",
+              "sourced": "25",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept_notes": "20",
+              "sourced": "20",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept_notes": "21",
+              "sourced": "21",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "year": "año 1",
+              "course": "antropología",
+              "concept_notes": "0",
               "sourced": "0",
-              "missing": "1",
+              "missing": "0",
+              "coverage_percent": "0.0"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept_notes": "30",
+              "sourced": "30",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "year": "año 1",
+              "course": "filosofía",
+              "concept_notes": "0",
+              "sourced": "0",
+              "missing": "0",
               "coverage_percent": "0.0"
             },
             {
               "year": "año 1",
               "course": "programación i",
-              "concept_notes": "1",
+              "concept_notes": "20",
+              "sourced": "20",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "year": "año 1",
+              "course": "técnicas de comunicación y storytelling",
+              "concept_notes": "0",
               "sourced": "0",
-              "missing": "1",
+              "missing": "0",
               "coverage_percent": "0.0"
             }
           ]
@@ -618,21 +1169,1227 @@
           "rows": [
             {
               "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "matrices",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas",
+              "note": "una matriz ordena datos en filas y columnas para operaciones algebraicas; referencia https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas)"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "matrices",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix",
+              "note": "repaso breve según https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "matrices",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "note": "curso extenso según https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "matrices",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "note": "video corto según https://www.youtube.com/watch?v=fNk_zzaMoSs"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "matrices",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "pensamiento matemático",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
+              "note": "el pensamiento matemático articula abstracción, razonamiento y modelado formal; referencia https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "pensamiento matemático",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://brilliant.org/wiki/mathematical-reasoning/",
+              "note": "repaso breve según https://brilliant.org/wiki/mathematical-reasoning/"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "pensamiento matemático",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://bookofproof.org/",
+              "note": "curso extenso según https://bookofproof.org/"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "pensamiento matemático",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "note": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "pensamiento matemático",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "sistemas lineales",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
+              "note": "un sistema lineal combina ecuaciones lineales con incógnitas compartidas; referencia https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "sistemas lineales",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations",
+              "note": "repaso breve según https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "sistemas lineales",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "note": "curso extenso según https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "sistemas lineales",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=Jsiy4TxjXh0",
+              "note": "video corto según https://www.youtube.com/watch?v=Jsiy4TxjXh0"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "sistemas lineales",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "vectores",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Vector",
+              "note": "un vector representa magnitud y dirección en el plano y el espacio; referencia https://es.wikipedia.org/wiki/Vector"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "vectores",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors",
+              "note": "repaso breve según https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "vectores",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "note": "curso extenso según https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "vectores",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "note": "video corto según https://www.youtube.com/watch?v=fNk_zzaMoSs"
+            },
+            {
+              "year": "año 1",
+              "course": "álgebra y geometría",
+              "concept": "vectores",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y"
+            },
+            {
+              "year": "año 1",
               "course": "algoritmos y estructuras de datos",
               "concept": "algoritmos",
               "line": "1",
-              "has_source": "no",
-              "source_links": "",
-              "note": "[[algoritmos]]"
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Algoritmo",
+              "note": "un algoritmo es un procedimiento finito y bien definido para resolver un problema; referencia https://es.wikipedia.org/wiki/Algoritmo"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "algoritmos",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
+              "note": "introducción breve según https://developer.mozilla.org/es/docs/Glossary/Algorithm"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "algoritmos",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://opendatastructures.org/ods-es/",
+              "note": "libro introductorio según https://opendatastructures.org/ods-es/"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "algoritmos",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=8hly31xKLi0",
+              "note": "video corto según https://www.youtube.com/watch?v=8hly31xKLi0"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "algoritmos",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "complejidad algorítmica",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/ComplejidadComputacional",
+              "note": "la complejidad algorítmica describe cómo crece el costo de un algoritmo con el tamaño de la entrada; referencia https://es.wikipedia.org/wiki/ComplejidadComputacional"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "complejidad algorítmica",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.bigocheatsheet.com/",
+              "note": "guía breve según https://www.bigocheatsheet.com/"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "complejidad algorítmica",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html",
+              "note": "curso extenso según https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "complejidad algorítmica",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=Mo4vesaut8g",
+              "note": "video corto según https://www.youtube.com/watch?v=Mo4vesaut8g"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "complejidad algorítmica",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "estructuras de datos",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Estructura_de_datos",
+              "note": "una estructura de datos organiza información para acceder y modificarla con eficiencia; referencia https://es.wikipedia.org/wiki/Estructura_de_datos"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "estructuras de datos",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://visualgo.net/en",
+              "note": "visualización interactiva breve según https://visualgo.net/en"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "estructuras de datos",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://opendatastructures.org/ods-es/",
+              "note": "libro introductorio según https://opendatastructures.org/ods-es/"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "estructuras de datos",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=9RHfkFEZLPQ",
+              "note": "video corto según https://www.youtube.com/watch?v=9RHfkFEZLPQ"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "estructuras de datos",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "nassi-shneiderman",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
+              "note": "un diagrama de Nassi-Shneiderman representa algoritmos con cajas estructuradas sin flechas de flujo; referencia https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "nassi-shneiderman",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.programiz.com/dsa/nassi-shneiderman-diagram",
+              "note": "tutorial breve según https://www.programiz.com/dsa/nassi-shneiderman-diagram"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "nassi-shneiderman",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html",
+              "note": "guía extensa según https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "nassi-shneiderman",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=3T3j3Yv3k5A",
+              "note": "video corto según https://www.youtube.com/watch?v=3T3j3Yv3k5A"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "nassi-shneiderman",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "pensamiento matemático",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
+              "note": "el pensamiento matemático articula abstracción, razonamiento y modelado formal; referencia https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "pensamiento matemático",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://brilliant.org/wiki/mathematical-reasoning/",
+              "note": "repaso breve según https://brilliant.org/wiki/mathematical-reasoning/"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "pensamiento matemático",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://bookofproof.org/",
+              "note": "curso extenso según https://bookofproof.org/"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "pensamiento matemático",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "note": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "pensamiento matemático",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "casos de uso",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Caso_de_uso",
+              "note": "un caso de uso describe una interacción entre un actor y el sistema para lograr un objetivo; referencia https://es.wikipedia.org/wiki/Caso_de_uso"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "casos de uso",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.atlassian.com/agile/use-cases",
+              "note": "guía breve según https://www.atlassian.com/agile/use-cases"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "casos de uso",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://www.coursera.org/learn/uml",
+              "note": "curso extenso según https://www.coursera.org/learn/uml"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "casos de uso",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=OZ4XmlNIHT4",
+              "note": "video corto según https://www.youtube.com/watch?v=OZ4XmlNIHT4"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "casos de uso",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "criterios de aceptación",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n",
+              "note": "un criterio de aceptación define condiciones observables para considerar satisfecho un requerimiento; referencia https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "criterios de aceptación",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+              "note": "guía breve según https://www.atlassian.com/work-management/project-management/acceptance-criteria"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "criterios de aceptación",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://www.coursera.org/learn/requirements-writing",
+              "note": "curso extenso según https://www.coursera.org/learn/requirements-writing"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "criterios de aceptación",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=Ez9sHj0X_HU",
+              "note": "video corto según https://www.youtube.com/watch?v=Ez9sHj0X_HU"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "criterios de aceptación",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "modelado de dominio",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Modelado_de_dominio",
+              "note": "el modelado de dominio representa entidades, reglas y relaciones del problema a resolver; referencia https://es.wikipedia.org/wiki/Modelado_de_dominio"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "modelado de dominio",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+              "note": "artículo breve según https://martinfowler.com/bliki/DomainDrivenDesign.html"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "modelado de dominio",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://www.domainlanguage.com/ddd/reference/",
+              "note": "guía extensa según https://www.domainlanguage.com/ddd/reference/"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "modelado de dominio",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=pMuiVWNimyY",
+              "note": "video corto según https://www.youtube.com/watch?v=pMuiVWNimyY"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "modelado de dominio",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "requerimientos",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Requisito_de_software",
+              "note": "un requerimiento describe qué debe hacer el sistema para satisfacer una necesidad; referencia https://es.wikipedia.org/wiki/Requisito_de_software"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "requerimientos",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.atlassian.com/agile/requirements",
+              "note": "guía breve según https://www.atlassian.com/agile/requirements"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "requerimientos",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://www.coursera.org/learn/requirements-writing",
+              "note": "curso extenso según https://www.coursera.org/learn/requirements-writing"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "requerimientos",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=FFrNP5q9SxY",
+              "note": "video corto según https://www.youtube.com/watch?v=FFrNP5q9SxY"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "requerimientos",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "demostraciones",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
+              "note": "una demostración establece la verdad de un enunciado mediante una cadena lógica de pasos; referencia https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "demostraciones",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://bookofproof.org/Chapter1/ch_sec_proofs.html",
+              "note": "repaso breve según https://bookofproof.org/Chapter1/ch_sec_proofs.html"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "demostraciones",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://bookofproof.org/",
+              "note": "curso extenso según https://bookofproof.org/"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "demostraciones",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+              "note": "video corto según https://www.youtube.com/watch?v=8DrbcYOcts0"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "demostraciones",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "inducción y lógica",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+              "note": "la inducción y la lógica formalizan razonamiento deductivo sobre proposiciones y estructuras matemáticas; referencia https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "inducción y lógica",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html",
+              "note": "repaso breve según https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "inducción y lógica",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://tudelft-citg.github.io/learn-probability/intro_in_toc.html",
+              "note": "curso extenso según https://tudelft-citg.github.io/learn-probability/intro_in_toc.html"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "inducción y lógica",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://betanalpha.github.io/assets/case_studies/probability_theory.html",
+              "note": "estudio de caso según https://betanalpha.github.io/assets/case_studies/probability_theory.html"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "inducción y lógica",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+              "note": "video corto según https://www.youtube.com/watch?v=8DrbcYOcts0"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "inducción y lógica",
+              "line": "6",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica",
+              "note": "la optimización busca el mejor valor de una función objetivo sujeta a restricciones; referencia https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica)"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx",
+              "note": "repaso breve según https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",
+              "note": "curso extenso según https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "note": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "pensamiento matemático",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
+              "note": "el pensamiento matemático articula abstracción, razonamiento y modelado formal; referencia https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "pensamiento matemático",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://brilliant.org/wiki/mathematical-reasoning/",
+              "note": "repaso breve según https://brilliant.org/wiki/mathematical-reasoning/"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "pensamiento matemático",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://bookofproof.org/",
+              "note": "curso extenso según https://bookofproof.org/"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "pensamiento matemático",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "note": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "pensamiento matemático",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "ACID",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/ACID",
+              "note": "ACID resume atomicidad, consistencia, aislamiento y durabilidad en transacciones de base de datos; referencia https://es.wikipedia.org/wiki/ACID"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "ACID",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.mongodb.com/resources/basics/databases/acid-transactions",
+              "note": "guía breve según https://www.mongodb.com/resources/basics/databases/acid-transactions"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "ACID",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://db-book.com/",
+              "note": "curso extenso según https://db-book.com/"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "ACID",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=yaQ5YMWORd4",
+              "note": "video corto según https://www.youtube.com/watch?v=yaQ5YMWORd4"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "ACID",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "álgebra relacional",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
+              "note": "el álgebra relacional define operaciones sobre relaciones como selección, proyección y unión; referencia https://es.wikipedia.org/wiki/%C3%81lgebra_relacional"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "álgebra relacional",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql",
+              "note": "repaso breve según https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "álgebra relacional",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://db-book.com/",
+              "note": "curso extenso según https://db-book.com/"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "álgebra relacional",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=OqjJjpjDRLc",
+              "note": "video corto según https://www.youtube.com/watch?v=OqjJjpjDRLc"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "álgebra relacional",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "modelo entidad-relación",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
+              "note": "un modelo entidad-relación representa entidades, atributos y relaciones de un dominio; referencia https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "modelo entidad-relación",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion",
+              "note": "tutorial breve según https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "modelo entidad-relación",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://db-book.com/",
+              "note": "curso extenso según https://db-book.com/"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "modelo entidad-relación",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=QpdhBUYk7Kk",
+              "note": "video corto según https://www.youtube.com/watch?v=QpdhBUYk7Kk"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "modelo entidad-relación",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "normalización",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
+              "note": "la normalización reorganiza un esquema relacional para reducir redundancia y anomalías; referencia https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "normalización",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.guru99.com/database-normalization.html",
+              "note": "guía breve según https://www.guru99.com/database-normalization.html"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "normalización",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://db-book.com/",
+              "note": "curso extenso según https://db-book.com/"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "normalización",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=GFQaEYEc8_8",
+              "note": "video corto según https://www.youtube.com/watch?v=GFQaEYEc8_8"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "normalización",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "sql",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/SQL",
+              "note": "SQL es el lenguaje declarativo para definir, consultar y modificar datos relacionales; referencia https://es.wikipedia.org/wiki/SQL"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "sql",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://sqlbolt.com/",
+              "note": "tutorial breve según https://sqlbolt.com/"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "sql",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://www.w3schools.com/sql/",
+              "note": "curso extenso según https://www.w3schools.com/sql/"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "sql",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+              "note": "video corto según https://www.youtube.com/watch?v=7S_tz1z_5bA"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "sql",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "transacciones",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos",
+              "note": "una transacción agrupa operaciones de base de datos que deben completarse como una unidad; referencia https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos)"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "transacciones",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.postgresql.org/docs/current/tutorial-transactions.html",
+              "note": "guía breve según https://www.postgresql.org/docs/current/tutorial-transactions.html"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "transacciones",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://db-book.com/",
+              "note": "curso extenso según https://db-book.com/"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "transacciones",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=wHUOeX2xs08",
+              "note": "video corto según https://www.youtube.com/watch?v=wHUOeX2xs08"
+            },
+            {
+              "year": "año 1",
+              "course": "bases de datos",
+              "concept": "transacciones",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
             },
             {
               "year": "año 1",
               "course": "programación i",
               "concept": "algoritmos",
               "line": "1",
-              "has_source": "no",
-              "source_links": "",
-              "note": "[[algoritmos]]"
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Algoritmo",
+              "note": "un algoritmo es un procedimiento finito y bien definido para resolver un problema; referencia https://es.wikipedia.org/wiki/Algoritmo"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "algoritmos",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
+              "note": "introducción breve según https://developer.mozilla.org/es/docs/Glossary/Algorithm"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "algoritmos",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://opendatastructures.org/ods-es/",
+              "note": "libro introductorio según https://opendatastructures.org/ods-es/"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "algoritmos",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=8hly31xKLi0",
+              "note": "video corto según https://www.youtube.com/watch?v=8hly31xKLi0"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "algoritmos",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "persistencia",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica",
+              "note": "la persistencia conserva datos más allá de la ejecución de un programa; referencia https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica)"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "persistencia",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB",
+              "note": "guía breve según https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "persistencia",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://db-book.com/",
+              "note": "curso extenso según https://db-book.com/"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "persistencia",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+              "note": "video corto según https://www.youtube.com/watch?v=7S_tz1z_5bA"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "persistencia",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "programación orientada a objetos",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
+              "note": "la programación orientada a objetos organiza programas en objetos con estado y comportamiento; referencia https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "programación orientada a objetos",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://realpython.com/python3-object-oriented-programming/",
+              "note": "guía breve según https://realpython.com/python3-object-oriented-programming/"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "programación orientada a objetos",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://docs.python.org/3/tutorial/classes.html",
+              "note": "curso extenso según https://docs.python.org/3/tutorial/classes.html"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "programación orientada a objetos",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=Ej_02ICOIgs",
+              "note": "video corto según https://www.youtube.com/watch?v=Ej_02ICOIgs"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "programación orientada a objetos",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "python",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Python",
+              "note": "Python es un lenguaje de programación de alto nivel usado para implementar algoritmos y productos de software; referencia https://es.wikipedia.org/wiki/Python"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "python",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://docs.python.org/3/tutorial/",
+              "note": "tutorial breve según https://docs.python.org/3/tutorial/"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "python",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://www.w3schools.com/python/",
+              "note": "curso extenso según https://www.w3schools.com/python/"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "python",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+              "note": "video corto según https://www.youtube.com/watch?v=rfscVS0vtbw"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "python",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi"
             }
           ]
         }
@@ -646,25 +2403,25 @@
         {
           "name": "Concepts",
           "description": "Total concept pages.",
-          "value": 1,
+          "value": 24,
           "format": ",.0f"
         },
         {
           "name": "Concepts With Sources",
           "description": "Concepts where at least one source link was detected in the prose.",
-          "value": 0,
+          "value": 24,
           "format": ",.0f"
         },
         {
           "name": "Concepts Missing Sources",
           "description": "Concepts with no detected source.",
-          "value": 1,
+          "value": 0,
           "format": ",.0f"
         },
         {
           "name": "Source Links",
           "description": "Total source rows found across concept pages.",
-          "value": 0,
+          "value": 121,
           "format": ",.0f"
         }
       ],
@@ -675,7 +2432,10 @@
           "defaultValue": "All",
           "options": [
             "All",
-            "(missing)"
+            "article",
+            "bibliography",
+            "documentation",
+            "url"
           ]
         }
       ],
@@ -703,10 +2463,730 @@
           ],
           "rows": [
             {
+              "concept": "ACID",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/ACID",
+              "line": "1"
+            },
+            {
+              "concept": "ACID",
+              "source_type": "url",
+              "source": "https://www.mongodb.com/resources/basics/databases/acid-transactions",
+              "line": "2"
+            },
+            {
+              "concept": "ACID",
+              "source_type": "bibliography",
+              "source": "https://db-book.com/",
+              "line": "3"
+            },
+            {
+              "concept": "ACID",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=yaQ5YMWORd4",
+              "line": "4"
+            },
+            {
+              "concept": "ACID",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "álgebra relacional",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
+              "line": "1"
+            },
+            {
+              "concept": "álgebra relacional",
+              "source_type": "url",
+              "source": "https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql",
+              "line": "2"
+            },
+            {
+              "concept": "álgebra relacional",
+              "source_type": "bibliography",
+              "source": "https://db-book.com/",
+              "line": "3"
+            },
+            {
+              "concept": "álgebra relacional",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=OqjJjpjDRLc",
+              "line": "4"
+            },
+            {
+              "concept": "álgebra relacional",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
               "concept": "algoritmos",
-              "source_type": "(missing)",
-              "source": "(missing)",
-              "line": ""
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Algoritmo",
+              "line": "1"
+            },
+            {
+              "concept": "algoritmos",
+              "source_type": "documentation",
+              "source": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
+              "line": "2"
+            },
+            {
+              "concept": "algoritmos",
+              "source_type": "bibliography",
+              "source": "https://opendatastructures.org/ods-es/",
+              "line": "3"
+            },
+            {
+              "concept": "algoritmos",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=8hly31xKLi0",
+              "line": "4"
+            },
+            {
+              "concept": "algoritmos",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "line": "5"
+            },
+            {
+              "concept": "casos de uso",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Caso_de_uso",
+              "line": "1"
+            },
+            {
+              "concept": "casos de uso",
+              "source_type": "url",
+              "source": "https://www.atlassian.com/agile/use-cases",
+              "line": "2"
+            },
+            {
+              "concept": "casos de uso",
+              "source_type": "url",
+              "source": "https://www.coursera.org/learn/uml",
+              "line": "3"
+            },
+            {
+              "concept": "casos de uso",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=OZ4XmlNIHT4",
+              "line": "4"
+            },
+            {
+              "concept": "casos de uso",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "complejidad algorítmica",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/ComplejidadComputacional",
+              "line": "1"
+            },
+            {
+              "concept": "complejidad algorítmica",
+              "source_type": "url",
+              "source": "https://www.bigocheatsheet.com/",
+              "line": "2"
+            },
+            {
+              "concept": "complejidad algorítmica",
+              "source_type": "url",
+              "source": "https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html",
+              "line": "3"
+            },
+            {
+              "concept": "complejidad algorítmica",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=Mo4vesaut8g",
+              "line": "4"
+            },
+            {
+              "concept": "complejidad algorítmica",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "line": "5"
+            },
+            {
+              "concept": "criterios de aceptación",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n",
+              "line": "1"
+            },
+            {
+              "concept": "criterios de aceptación",
+              "source_type": "url",
+              "source": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+              "line": "2"
+            },
+            {
+              "concept": "criterios de aceptación",
+              "source_type": "url",
+              "source": "https://www.coursera.org/learn/requirements-writing",
+              "line": "3"
+            },
+            {
+              "concept": "criterios de aceptación",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=Ez9sHj0X_HU",
+              "line": "4"
+            },
+            {
+              "concept": "criterios de aceptación",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "demostraciones",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
+              "line": "1"
+            },
+            {
+              "concept": "demostraciones",
+              "source_type": "url",
+              "source": "https://bookofproof.org/Chapter1/ch_sec_proofs.html",
+              "line": "2"
+            },
+            {
+              "concept": "demostraciones",
+              "source_type": "url",
+              "source": "https://bookofproof.org/",
+              "line": "3"
+            },
+            {
+              "concept": "demostraciones",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+              "line": "4"
+            },
+            {
+              "concept": "demostraciones",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "line": "5"
+            },
+            {
+              "concept": "estructuras de datos",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Estructura_de_datos",
+              "line": "1"
+            },
+            {
+              "concept": "estructuras de datos",
+              "source_type": "url",
+              "source": "https://visualgo.net/en",
+              "line": "2"
+            },
+            {
+              "concept": "estructuras de datos",
+              "source_type": "bibliography",
+              "source": "https://opendatastructures.org/ods-es/",
+              "line": "3"
+            },
+            {
+              "concept": "estructuras de datos",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=9RHfkFEZLPQ",
+              "line": "4"
+            },
+            {
+              "concept": "estructuras de datos",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "line": "5"
+            },
+            {
+              "concept": "inducción y lógica",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+              "line": "1"
+            },
+            {
+              "concept": "inducción y lógica",
+              "source_type": "url",
+              "source": "https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html",
+              "line": "2"
+            },
+            {
+              "concept": "inducción y lógica",
+              "source_type": "url",
+              "source": "https://tudelft-citg.github.io/learn-probability/intro_in_toc.html",
+              "line": "3"
+            },
+            {
+              "concept": "inducción y lógica",
+              "source_type": "url",
+              "source": "https://betanalpha.github.io/assets/case_studies/probability_theory.html",
+              "line": "4"
+            },
+            {
+              "concept": "inducción y lógica",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+              "line": "5"
+            },
+            {
+              "concept": "inducción y lógica",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "line": "6"
+            },
+            {
+              "concept": "matrices",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas",
+              "line": "1"
+            },
+            {
+              "concept": "matrices",
+              "source_type": "url",
+              "source": "https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix",
+              "line": "2"
+            },
+            {
+              "concept": "matrices",
+              "source_type": "url",
+              "source": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "line": "3"
+            },
+            {
+              "concept": "matrices",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "line": "4"
+            },
+            {
+              "concept": "matrices",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "line": "5"
+            },
+            {
+              "concept": "modelado de dominio",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Modelado_de_dominio",
+              "line": "1"
+            },
+            {
+              "concept": "modelado de dominio",
+              "source_type": "article",
+              "source": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+              "line": "2"
+            },
+            {
+              "concept": "modelado de dominio",
+              "source_type": "url",
+              "source": "https://www.domainlanguage.com/ddd/reference/",
+              "line": "3"
+            },
+            {
+              "concept": "modelado de dominio",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=pMuiVWNimyY",
+              "line": "4"
+            },
+            {
+              "concept": "modelado de dominio",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "modelo entidad-relación",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
+              "line": "1"
+            },
+            {
+              "concept": "modelo entidad-relación",
+              "source_type": "url",
+              "source": "https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion",
+              "line": "2"
+            },
+            {
+              "concept": "modelo entidad-relación",
+              "source_type": "bibliography",
+              "source": "https://db-book.com/",
+              "line": "3"
+            },
+            {
+              "concept": "modelo entidad-relación",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=QpdhBUYk7Kk",
+              "line": "4"
+            },
+            {
+              "concept": "modelo entidad-relación",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "nassi-shneiderman",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
+              "line": "1"
+            },
+            {
+              "concept": "nassi-shneiderman",
+              "source_type": "url",
+              "source": "https://www.programiz.com/dsa/nassi-shneiderman-diagram",
+              "line": "2"
+            },
+            {
+              "concept": "nassi-shneiderman",
+              "source_type": "url",
+              "source": "https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html",
+              "line": "3"
+            },
+            {
+              "concept": "nassi-shneiderman",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=3T3j3Yv3k5A",
+              "line": "4"
+            },
+            {
+              "concept": "nassi-shneiderman",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "line": "5"
+            },
+            {
+              "concept": "normalización",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
+              "line": "1"
+            },
+            {
+              "concept": "normalización",
+              "source_type": "url",
+              "source": "https://www.guru99.com/database-normalization.html",
+              "line": "2"
+            },
+            {
+              "concept": "normalización",
+              "source_type": "bibliography",
+              "source": "https://db-book.com/",
+              "line": "3"
+            },
+            {
+              "concept": "normalización",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=GFQaEYEc8_8",
+              "line": "4"
+            },
+            {
+              "concept": "normalización",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "optimización",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica",
+              "line": "1"
+            },
+            {
+              "concept": "optimización",
+              "source_type": "url",
+              "source": "https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx",
+              "line": "2"
+            },
+            {
+              "concept": "optimización",
+              "source_type": "url",
+              "source": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",
+              "line": "3"
+            },
+            {
+              "concept": "optimización",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "line": "4"
+            },
+            {
+              "concept": "optimización",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "line": "5"
+            },
+            {
+              "concept": "pensamiento matemático",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
+              "line": "1"
+            },
+            {
+              "concept": "pensamiento matemático",
+              "source_type": "url",
+              "source": "https://brilliant.org/wiki/mathematical-reasoning/",
+              "line": "2"
+            },
+            {
+              "concept": "pensamiento matemático",
+              "source_type": "url",
+              "source": "https://bookofproof.org/",
+              "line": "3"
+            },
+            {
+              "concept": "pensamiento matemático",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "line": "4"
+            },
+            {
+              "concept": "pensamiento matemático",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "line": "5"
+            },
+            {
+              "concept": "persistencia",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica",
+              "line": "1"
+            },
+            {
+              "concept": "persistencia",
+              "source_type": "documentation",
+              "source": "https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB",
+              "line": "2"
+            },
+            {
+              "concept": "persistencia",
+              "source_type": "bibliography",
+              "source": "https://db-book.com/",
+              "line": "3"
+            },
+            {
+              "concept": "persistencia",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+              "line": "4"
+            },
+            {
+              "concept": "persistencia",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "programación orientada a objetos",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
+              "line": "1"
+            },
+            {
+              "concept": "programación orientada a objetos",
+              "source_type": "url",
+              "source": "https://realpython.com/python3-object-oriented-programming/",
+              "line": "2"
+            },
+            {
+              "concept": "programación orientada a objetos",
+              "source_type": "documentation",
+              "source": "https://docs.python.org/3/tutorial/classes.html",
+              "line": "3"
+            },
+            {
+              "concept": "programación orientada a objetos",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=Ej_02ICOIgs",
+              "line": "4"
+            },
+            {
+              "concept": "programación orientada a objetos",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+              "line": "5"
+            },
+            {
+              "concept": "python",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Python",
+              "line": "1"
+            },
+            {
+              "concept": "python",
+              "source_type": "documentation",
+              "source": "https://docs.python.org/3/tutorial/",
+              "line": "2"
+            },
+            {
+              "concept": "python",
+              "source_type": "url",
+              "source": "https://www.w3schools.com/python/",
+              "line": "3"
+            },
+            {
+              "concept": "python",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+              "line": "4"
+            },
+            {
+              "concept": "python",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+              "line": "5"
+            },
+            {
+              "concept": "requerimientos",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Requisito_de_software",
+              "line": "1"
+            },
+            {
+              "concept": "requerimientos",
+              "source_type": "url",
+              "source": "https://www.atlassian.com/agile/requirements",
+              "line": "2"
+            },
+            {
+              "concept": "requerimientos",
+              "source_type": "url",
+              "source": "https://www.coursera.org/learn/requirements-writing",
+              "line": "3"
+            },
+            {
+              "concept": "requerimientos",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=FFrNP5q9SxY",
+              "line": "4"
+            },
+            {
+              "concept": "requerimientos",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "sistemas lineales",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
+              "line": "1"
+            },
+            {
+              "concept": "sistemas lineales",
+              "source_type": "url",
+              "source": "https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations",
+              "line": "2"
+            },
+            {
+              "concept": "sistemas lineales",
+              "source_type": "url",
+              "source": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "line": "3"
+            },
+            {
+              "concept": "sistemas lineales",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=Jsiy4TxjXh0",
+              "line": "4"
+            },
+            {
+              "concept": "sistemas lineales",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "line": "5"
+            },
+            {
+              "concept": "sql",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/SQL",
+              "line": "1"
+            },
+            {
+              "concept": "sql",
+              "source_type": "url",
+              "source": "https://sqlbolt.com/",
+              "line": "2"
+            },
+            {
+              "concept": "sql",
+              "source_type": "url",
+              "source": "https://www.w3schools.com/sql/",
+              "line": "3"
+            },
+            {
+              "concept": "sql",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+              "line": "4"
+            },
+            {
+              "concept": "sql",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "transacciones",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos",
+              "line": "1"
+            },
+            {
+              "concept": "transacciones",
+              "source_type": "documentation",
+              "source": "https://www.postgresql.org/docs/current/tutorial-transactions.html",
+              "line": "2"
+            },
+            {
+              "concept": "transacciones",
+              "source_type": "bibliography",
+              "source": "https://db-book.com/",
+              "line": "3"
+            },
+            {
+              "concept": "transacciones",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=wHUOeX2xs08",
+              "line": "4"
+            },
+            {
+              "concept": "transacciones",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "line": "5"
+            },
+            {
+              "concept": "vectores",
+              "source_type": "url",
+              "source": "https://es.wikipedia.org/wiki/Vector",
+              "line": "1"
+            },
+            {
+              "concept": "vectores",
+              "source_type": "url",
+              "source": "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors",
+              "line": "2"
+            },
+            {
+              "concept": "vectores",
+              "source_type": "url",
+              "source": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "line": "3"
+            },
+            {
+              "concept": "vectores",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "line": "4"
+            },
+            {
+              "concept": "vectores",
+              "source_type": "url",
+              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "line": "5"
             }
           ]
         }

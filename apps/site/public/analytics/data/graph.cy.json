@@ -1,7 +1,34 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"graph-cy","generatedAt":"2026-09-10T19:04:49.917Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"graph-cy","generatedAt":"2026-09-10T20:40:18.430Z","docs":"../../README.md"}
 {
   "elements": {
     "nodes": [
+      {
+        "data": {
+          "id": "ACID",
+          "label": "ACID",
+          "kind": "concept",
+          "slug": "acid",
+          "path": "acid.md"
+        }
+      },
+      {
+        "data": {
+          "id": "álgebra relacional",
+          "label": "álgebra relacional",
+          "kind": "concept",
+          "slug": "algebra-relacional",
+          "path": "algebra-relacional.md"
+        }
+      },
+      {
+        "data": {
+          "id": "álgebra y geometría",
+          "label": "álgebra y geometría",
+          "kind": "course",
+          "slug": "algebra-y-geometria",
+          "path": "algebra-y-geometria.md"
+        }
+      },
       {
         "data": {
           "id": "algoritmos",
@@ -22,11 +49,110 @@
       },
       {
         "data": {
+          "id": "análisis de sistemas",
+          "label": "análisis de sistemas",
+          "kind": "course",
+          "slug": "analisis-de-sistemas",
+          "path": "analisis-de-sistemas.md"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis matemático i",
+          "label": "análisis matemático i",
+          "kind": "course",
+          "slug": "analisis-matematico-i",
+          "path": "analisis-matematico-i.md"
+        }
+      },
+      {
+        "data": {
+          "id": "antropología",
+          "label": "antropología",
+          "kind": "course",
+          "slug": "antropologia",
+          "path": "antropologia.md"
+        }
+      },
+      {
+        "data": {
           "id": "año 1",
           "label": "año 1",
           "kind": "year",
           "slug": "ano-1",
           "path": "ano-1.md"
+        }
+      },
+      {
+        "data": {
+          "id": "bases de datos",
+          "label": "bases de datos",
+          "kind": "course",
+          "slug": "bases-de-datos",
+          "path": "bases-de-datos.md"
+        }
+      },
+      {
+        "data": {
+          "id": "casos de uso",
+          "label": "casos de uso",
+          "kind": "concept",
+          "slug": "casos-de-uso",
+          "path": "casos-de-uso.md"
+        }
+      },
+      {
+        "data": {
+          "id": "complejidad algorítmica",
+          "label": "complejidad algorítmica",
+          "kind": "concept",
+          "slug": "complejidad-algoritmica",
+          "path": "complejidad-algoritmica.md"
+        }
+      },
+      {
+        "data": {
+          "id": "criterios de aceptación",
+          "label": "criterios de aceptación",
+          "kind": "concept",
+          "slug": "criterios-de-aceptacion",
+          "path": "criterios-de-aceptacion.md"
+        }
+      },
+      {
+        "data": {
+          "id": "demostraciones",
+          "label": "demostraciones",
+          "kind": "concept",
+          "slug": "demostraciones",
+          "path": "demostraciones.md"
+        }
+      },
+      {
+        "data": {
+          "id": "estructuras de datos",
+          "label": "estructuras de datos",
+          "kind": "concept",
+          "slug": "estructuras-de-datos",
+          "path": "estructuras-de-datos.md"
+        }
+      },
+      {
+        "data": {
+          "id": "filosofía",
+          "label": "filosofía",
+          "kind": "course",
+          "slug": "filosofia",
+          "path": "filosofia.md"
+        }
+      },
+      {
+        "data": {
+          "id": "inducción y lógica",
+          "label": "inducción y lógica",
+          "kind": "concept",
+          "slug": "induccion-y-logica",
+          "path": "induccion-y-logica.md"
         }
       },
       {
@@ -40,22 +166,211 @@
       },
       {
         "data": {
+          "id": "matrices",
+          "label": "matrices",
+          "kind": "concept",
+          "slug": "matrices",
+          "path": "matrices.md"
+        }
+      },
+      {
+        "data": {
+          "id": "modelado de dominio",
+          "label": "modelado de dominio",
+          "kind": "concept",
+          "slug": "modelado-de-dominio",
+          "path": "modelado-de-dominio.md"
+        }
+      },
+      {
+        "data": {
+          "id": "modelo entidad-relación",
+          "label": "modelo entidad-relación",
+          "kind": "concept",
+          "slug": "modelo-entidad-relacion",
+          "path": "modelo-entidad-relacion.md"
+        }
+      },
+      {
+        "data": {
+          "id": "nassi-shneiderman",
+          "label": "nassi-shneiderman",
+          "kind": "concept",
+          "slug": "nassi-shneiderman",
+          "path": "nassi-shneiderman.md"
+        }
+      },
+      {
+        "data": {
+          "id": "normalización",
+          "label": "normalización",
+          "kind": "concept",
+          "slug": "normalizacion",
+          "path": "normalizacion.md"
+        }
+      },
+      {
+        "data": {
+          "id": "optimización",
+          "label": "optimización",
+          "kind": "concept",
+          "slug": "optimizacion",
+          "path": "optimizacion.md"
+        }
+      },
+      {
+        "data": {
+          "id": "pensamiento matemático",
+          "label": "pensamiento matemático",
+          "kind": "concept",
+          "slug": "pensamiento-matematico",
+          "path": "pensamiento-matematico.md"
+        }
+      },
+      {
+        "data": {
+          "id": "persistencia",
+          "label": "persistencia",
+          "kind": "concept",
+          "slug": "persistencia",
+          "path": "persistencia.md"
+        }
+      },
+      {
+        "data": {
           "id": "programación i",
           "label": "programación i",
           "kind": "course",
           "slug": "programacion-i",
           "path": "programacion-i.md"
         }
+      },
+      {
+        "data": {
+          "id": "programación orientada a objetos",
+          "label": "programación orientada a objetos",
+          "kind": "concept",
+          "slug": "programacion-orientada-a-objetos",
+          "path": "programacion-orientada-a-objetos.md"
+        }
+      },
+      {
+        "data": {
+          "id": "python",
+          "label": "python",
+          "kind": "concept",
+          "slug": "python",
+          "path": "python.md"
+        }
+      },
+      {
+        "data": {
+          "id": "requerimientos",
+          "label": "requerimientos",
+          "kind": "concept",
+          "slug": "requerimientos",
+          "path": "requerimientos.md"
+        }
+      },
+      {
+        "data": {
+          "id": "sistemas lineales",
+          "label": "sistemas lineales",
+          "kind": "concept",
+          "slug": "sistemas-lineales",
+          "path": "sistemas-lineales.md"
+        }
+      },
+      {
+        "data": {
+          "id": "sql",
+          "label": "sql",
+          "kind": "concept",
+          "slug": "sql",
+          "path": "sql.md"
+        }
+      },
+      {
+        "data": {
+          "id": "técnicas de comunicación y storytelling",
+          "label": "técnicas de comunicación y storytelling",
+          "kind": "course",
+          "slug": "tecnicas-de-comunicacion-y-storytelling",
+          "path": "tecnicas-de-comunicacion-y-storytelling.md"
+        }
+      },
+      {
+        "data": {
+          "id": "transacciones",
+          "label": "transacciones",
+          "kind": "concept",
+          "slug": "transacciones",
+          "path": "transacciones.md"
+        }
+      },
+      {
+        "data": {
+          "id": "vectores",
+          "label": "vectores",
+          "kind": "concept",
+          "slug": "vectores",
+          "path": "vectores.md"
+        }
       }
     ],
     "edges": [
       {
         "data": {
-          "id": "algoritmos::algoritmos::page-ref",
-          "source": "algoritmos",
-          "target": "algoritmos",
+          "id": "álgebra y geometría::análisis matemático i::page-ref",
+          "source": "álgebra y geometría",
+          "target": "análisis matemático i",
           "kind": "page-ref",
           "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "álgebra y geometría::matemática discreta::page-ref",
+          "source": "álgebra y geometría",
+          "target": "matemática discreta",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "álgebra y geometría::matrices::concept-tag",
+          "source": "álgebra y geometría",
+          "target": "matrices",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "álgebra y geometría::pensamiento matemático::concept-tag",
+          "source": "álgebra y geometría",
+          "target": "pensamiento matemático",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "álgebra y geometría::sistemas lineales::concept-tag",
+          "source": "álgebra y geometría",
+          "target": "sistemas lineales",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "álgebra y geometría::vectores::concept-tag",
+          "source": "álgebra y geometría",
+          "target": "vectores",
+          "kind": "concept-tag",
+          "label": "concept-tag"
         }
       },
       {
@@ -69,11 +384,38 @@
       },
       {
         "data": {
-          "id": "algoritmos y estructuras de datos::algoritmos y estructuras de datos::page-ref",
+          "id": "algoritmos y estructuras de datos::complejidad algorítmica::concept-tag",
           "source": "algoritmos y estructuras de datos",
-          "target": "algoritmos y estructuras de datos",
-          "kind": "page-ref",
-          "label": "page-ref"
+          "target": "complejidad algorítmica",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "algoritmos y estructuras de datos::estructuras de datos::concept-tag",
+          "source": "algoritmos y estructuras de datos",
+          "target": "estructuras de datos",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "algoritmos y estructuras de datos::nassi-shneiderman::concept-tag",
+          "source": "algoritmos y estructuras de datos",
+          "target": "nassi-shneiderman",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "algoritmos y estructuras de datos::pensamiento matemático::concept-tag",
+          "source": "algoritmos y estructuras de datos",
+          "target": "pensamiento matemático",
+          "kind": "concept-tag",
+          "label": "concept-tag"
         }
       },
       {
@@ -81,6 +423,132 @@
           "id": "algoritmos y estructuras de datos::programación i::page-ref",
           "source": "algoritmos y estructuras de datos",
           "target": "programación i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis de sistemas::casos de uso::concept-tag",
+          "source": "análisis de sistemas",
+          "target": "casos de uso",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis de sistemas::criterios de aceptación::concept-tag",
+          "source": "análisis de sistemas",
+          "target": "criterios de aceptación",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis de sistemas::modelado de dominio::concept-tag",
+          "source": "análisis de sistemas",
+          "target": "modelado de dominio",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis de sistemas::programación i::page-ref",
+          "source": "análisis de sistemas",
+          "target": "programación i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis de sistemas::requerimiento::concept-tag",
+          "source": "análisis de sistemas",
+          "target": "requerimiento",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis de sistemas::requerimientos::concept-tag",
+          "source": "análisis de sistemas",
+          "target": "requerimientos",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis matemático i::álgebra y geometría::page-ref",
+          "source": "análisis matemático i",
+          "target": "álgebra y geometría",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis matemático i::demostraciones::concept-tag",
+          "source": "análisis matemático i",
+          "target": "demostraciones",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis matemático i::estadística i::page-ref",
+          "source": "análisis matemático i",
+          "target": "estadística i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis matemático i::inducción y lógica::concept-tag",
+          "source": "análisis matemático i",
+          "target": "inducción y lógica",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis matemático i::matemática discreta::page-ref",
+          "source": "análisis matemático i",
+          "target": "matemática discreta",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis matemático i::optimización::concept-tag",
+          "source": "análisis matemático i",
+          "target": "optimización",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "análisis matemático i::pensamiento matemático::concept-tag",
+          "source": "análisis matemático i",
+          "target": "pensamiento matemático",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1::álgebra y geometría::page-ref",
+          "source": "año 1",
+          "target": "álgebra y geometría",
           "kind": "page-ref",
           "label": "page-ref"
         }
@@ -96,11 +564,137 @@
       },
       {
         "data": {
-          "id": "año 1::año 1::page-ref",
+          "id": "año 1::análisis de sistemas::page-ref",
           "source": "año 1",
-          "target": "año 1",
+          "target": "análisis de sistemas",
           "kind": "page-ref",
           "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1::análisis matemático i::page-ref",
+          "source": "año 1",
+          "target": "análisis matemático i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1::antropología::page-ref",
+          "source": "año 1",
+          "target": "antropología",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1::bases de datos::page-ref",
+          "source": "año 1",
+          "target": "bases de datos",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1::filosofía::page-ref",
+          "source": "año 1",
+          "target": "filosofía",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1::programación i::page-ref",
+          "source": "año 1",
+          "target": "programación i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "año 1::técnicas de comunicación y storytelling::page-ref",
+          "source": "año 1",
+          "target": "técnicas de comunicación y storytelling",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "bases de datos::ACID::concept-tag",
+          "source": "bases de datos",
+          "target": "ACID",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "bases de datos::álgebra relacional::concept-tag",
+          "source": "bases de datos",
+          "target": "álgebra relacional",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "bases de datos::matemática discreta::page-ref",
+          "source": "bases de datos",
+          "target": "matemática discreta",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "bases de datos::modelo entidad-relación::concept-tag",
+          "source": "bases de datos",
+          "target": "modelo entidad-relación",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "bases de datos::normalización::concept-tag",
+          "source": "bases de datos",
+          "target": "normalización",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "bases de datos::programación i::page-ref",
+          "source": "bases de datos",
+          "target": "programación i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "bases de datos::sql::concept-tag",
+          "source": "bases de datos",
+          "target": "sql",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "bases de datos::transacciones::concept-tag",
+          "source": "bases de datos",
+          "target": "transacciones",
+          "kind": "concept-tag",
+          "label": "concept-tag"
         }
       },
       {
@@ -123,15 +717,6 @@
       },
       {
         "data": {
-          "id": "LDS::LDS::page-ref",
-          "source": "LDS",
-          "target": "LDS",
-          "kind": "page-ref",
-          "label": "page-ref"
-        }
-      },
-      {
-        "data": {
           "id": "programación i::algoritmos::concept-tag",
           "source": "programación i",
           "target": "algoritmos",
@@ -141,11 +726,56 @@
       },
       {
         "data": {
-          "id": "programación i::programación i::page-ref",
+          "id": "programación i::algoritmos y estructuras de datos::page-ref",
           "source": "programación i",
-          "target": "programación i",
+          "target": "algoritmos y estructuras de datos",
           "kind": "page-ref",
           "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "programación i::análisis de sistemas::page-ref",
+          "source": "programación i",
+          "target": "análisis de sistemas",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "programación i::bases de datos::page-ref",
+          "source": "programación i",
+          "target": "bases de datos",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "programación i::persistencia::concept-tag",
+          "source": "programación i",
+          "target": "persistencia",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "programación i::programación orientada a objetos::concept-tag",
+          "source": "programación i",
+          "target": "programación orientada a objetos",
+          "kind": "concept-tag",
+          "label": "concept-tag"
+        }
+      },
+      {
+        "data": {
+          "id": "programación i::python::concept-tag",
+          "source": "programación i",
+          "target": "python",
+          "kind": "concept-tag",
+          "label": "concept-tag"
         }
       }
     ]

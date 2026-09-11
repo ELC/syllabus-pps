@@ -43,6 +43,7 @@ export function parsePages(sources: PageSource[], options: ParseOptions = {}): Z
       title: page.title,
       normalizedTitle: page.normalizedTitle,
       path: page.path,
+      declaredKind: page.frontmatterKind,
       kind: classifyPage(page, page.tags, options, conceptTitles),
       blocks: page.blocks,
       refs: page.refs,
