@@ -16,6 +16,7 @@ Curriculum content lives in `content/pages/` as repo-native Markdown with YAML f
 - Write concept notes as prose bullets; each bullet should carry at least one source URL and briefly explain what that source covers. Avoid placeholder phrasing such as "curso extenso" or "video corto".
 - Prefer interactive, video, and rich web formats over plain-text notes when choosing non-book sources; verify that linked titles and content match the bullet, not just HTTP status.
 - Prefer videos published within the last five years; replace stale lecture captures when a recent equivalent exists.
+- When citing MIT courses, name the course code and term/year in prose (e.g. `MIT 6.1200J (primavera 2024)`).
 
 ## Page Format
 

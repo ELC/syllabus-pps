@@ -1,0 +1,120 @@
+{
+  "repo_notes": [
+    {
+      "author": "PPS authors",
+      "content": "Generate this wiki ONLY from curriculum notes under content/ (canonical files: content/pages/*.md). Do not document apps/, packages/, pps-analytics/, generated artifacts, CMS/site implementation, CI, or TypeScript. This wiki is an agentic authoring interface: it should help humans and agents edit notes reliably, not explain the software stack.\n\nThe zettelkasten is a graph of small connected notes, not a database of records. Hierarchy is career (LDS) → year (año 1) → course → concept. Expected year-1 courses are: álgebra y geometría, algoritmos y estructuras de datos, análisis de sistemas, técnicas de comunicación y storytelling, bases de datos, análisis matemático i, antropología, programación i, filosofía.\n\nPage files use slug filenames and YAML frontmatter (title, kind). Bodies are bullet-only (`- ` lines). Course notes use inline #hashtags and [[wikilinks]] to concepts and sibling courses. Concept notes are sourced prose bullets with URLs. Do not invent administrative index pages, source-document pages, or artifact pages. Prefer describing what already exists in content/pages and how to extend it without breaking the graph."
+    }
+  ],
+  "pages": [
+    {
+      "title": "Curriculum zettelkasten",
+      "purpose": "Explain content/pages as the only source of truth for this wiki: one Markdown file per note, YAML frontmatter, slug filename, kinds career/year/course/concept, and the graph career → year → course → concept. State that this wiki exists so authors and agents can edit notes reliably. Ignore all non-content directories.",
+      "parent": null,
+      "page_notes": [
+        {
+          "content": "Start from content/pages/lds.md (career LDS) and content/pages/ano-1.md (año 1). List kinds and typical page sizes from real files. Do not summarize the monorepo."
+        }
+      ]
+    },
+    {
+      "title": "Authoring contract",
+      "purpose": "Document how to create and edit files in content/pages: required frontmatter (title, kind), slug filenames, bullet-only bodies, wikilink resolution (title then slug then normalized match), hashtags vs [[wikilinks]], no self-links, and that the page title already identifies the note.",
+      "parent": "Curriculum zettelkasten",
+      "page_notes": [
+        {
+          "content": "Mirror AGENTS.md page format using real examples from content/pages (programación i as course, algoritmos as concept). CMS blocks error/warning diagnostics; mention that only `- ` bullets are parsed (non-bullet-content)."
+        }
+      ]
+    },
+    {
+      "title": "Reliable edits and quality bar",
+      "purpose": "Give agents a checklist for safe edits in content/: keep notes small and connected; course pages must link concepts; concept pages need at least three mixed sources (Wikipedia, written, video) plus one recent book named in prose; each concept bullet needs a source URL; prefer recent videos and interactive/web resources; do not add empty, orphan, administrative, or self-linked pages.",
+      "parent": "Curriculum zettelkasten",
+      "page_notes": [
+        {
+          "content": "Ground the checklist in existing concept pages such as content/pages/algoritmos.md. Flag thin course pages (antropología, filosofía, técnicas de comunicación y storytelling) as incomplete relative to courses that already link concepts. Do not document diagnostic code internals; describe author-facing rules only."
+        }
+      ]
+    },
+    {
+      "title": "Career and year map",
+      "purpose": "Document the LDS career page and año 1 year page in content/pages: what they link, how expected courses attach to the year, and how an agent should add a new course without breaking the year map.",
+      "parent": "Curriculum zettelkasten"
+    },
+    {
+      "title": "Año 1 courses",
+      "purpose": "Overview of every year-1 course note in content/pages: which files exist, which already link concepts, and which still lack concept coverage. Point to child pages for each course.",
+      "parent": "Career and year map"
+    },
+    {
+      "title": "Álgebra y geometría",
+      "purpose": "Document content/pages/algebra-y-geometria.md: course bullets, linked concepts (matrices, vectores, sistemas lineales, pensamiento matemático), and downstream wikilinks to análisis matemático i and matemática discreta.",
+      "parent": "Año 1 courses"
+    },
+    {
+      "title": "Algoritmos y estructuras de datos",
+      "purpose": "Document content/pages/algoritmos-y-estructuras-de-datos.md: how the course designs algorithms with Nassi-Shneiderman, data structures, complexity, and mathematical thinking before implementación in programación i.",
+      "parent": "Año 1 courses"
+    },
+    {
+      "title": "Análisis de sistemas",
+      "purpose": "Document content/pages/analisis-de-sistemas.md: requirements, use cases, domain modeling, and acceptance criteria as the analysis path into programación i.",
+      "parent": "Año 1 courses"
+    },
+    {
+      "title": "Técnicas de comunicación y storytelling",
+      "purpose": "Document content/pages/tecnicas-de-comunicacion-y-storytelling.md as a thin course note (professional communication) and what a reliable edit would add: concept links without turning it into an index page.",
+      "parent": "Año 1 courses"
+    },
+    {
+      "title": "Bases de datos",
+      "purpose": "Document content/pages/bases-de-datos.md: entity-relationship modeling, relational algebra, SQL, normalization, transactions/ACID, and how the course connects to programación i and matemática discreta.",
+      "parent": "Año 1 courses"
+    },
+    {
+      "title": "Análisis matemático i",
+      "purpose": "Document content/pages/analisis-matematico-i.md: pensamiento matemático, inducción y lógica, demostraciones, and optimización, including wikilinks to álgebra y geometría and later courses that may not exist yet.",
+      "parent": "Año 1 courses"
+    },
+    {
+      "title": "Antropología",
+      "purpose": "Document content/pages/antropologia.md as a humanistic course note that currently has no concept links, and how to extend it reliably if authors add concepts.",
+      "parent": "Año 1 courses"
+    },
+    {
+      "title": "Programación i",
+      "purpose": "Document content/pages/programacion-i.md as the implementation course: Python, algorithms from algoritmos y estructuras de datos, OOP, persistencia, and deliverables from análisis de sistemas / bases de datos.",
+      "parent": "Año 1 courses"
+    },
+    {
+      "title": "Filosofía",
+      "purpose": "Document content/pages/filosofia.md as a thin humanistic course note and how agents should edit it without inventing administrative structure.",
+      "parent": "Año 1 courses"
+    },
+    {
+      "title": "Concept notes",
+      "purpose": "Explain concept pages in content/pages (kind: concept): sourced prose bullets, mix of Wikipedia / written / video / book, no self-links, links to other concepts only (not to courses except as source references). Cluster existing concepts for authors; do not dump every URL unless it illustrates the sourcing pattern.",
+      "parent": "Curriculum zettelkasten"
+    },
+    {
+      "title": "Programming and algorithms concepts",
+      "purpose": "Document concept files algoritmos, nassi-shneiderman, estructuras-de-datos, complejidad-algoritmica, python, programacion-orientada-a-objetos, and persistencia: what each note covers, how courses tag them, and the source mix authors should preserve or improve.",
+      "parent": "Concept notes"
+    },
+    {
+      "title": "Database concepts",
+      "purpose": "Document concept files modelo-entidad-relacion, algebra-relacional, sql, normalizacion, transacciones, and acid: how bases de datos links them and how sourced bullets should stay complementary rather than duplicated.",
+      "parent": "Concept notes"
+    },
+    {
+      "title": "Systems analysis concepts",
+      "purpose": "Document concept files requerimientos, casos-de-uso, modelado-de-dominio, and criterios-de-aceptacion: how análisis de sistemas uses them and how to keep notes small and linked.",
+      "parent": "Concept notes"
+    },
+    {
+      "title": "Mathematics concepts",
+      "purpose": "Document concept files matrices, vectores, sistemas-lineales, pensamiento-matematico, induccion-y-logica, demostraciones, and optimizacion: how álgebra y geometría and análisis matemático i reference them, including forward links to courses that may still be missing.",
+      "parent": "Concept notes"
+    }
+  ]
+}

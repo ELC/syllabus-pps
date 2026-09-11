@@ -7,3 +7,4 @@ kind: concept
 - El libro Linear Algebra Done Right (4.ª ed., 2024) de Axler está disponible en PDF abierto y desarrolla matrices, operadores lineales y diagonalización https://linear.axler.net/LADR4e.pdf
 - Interactive Linear Algebra de Georgia Tech conecta ecuaciones matriciales con combinaciones lineales de columnas https://textbooks.math.gatech.edu/ila/matrix-equations.html
 - Esta playlist Essence of linear algebra de 3Blue1Brown muestra matrices como transformaciones del plano y composición de operaciones lineales https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab
+- La especialización Linear Algebra from Elementary to Advanced de Johns Hopkins en Coursera recorre sistemas lineales, determinantes, autovalores y diagonalización con énfasis geométrico y algebraico https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced
