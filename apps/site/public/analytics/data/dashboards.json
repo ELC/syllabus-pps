@@ -1,6 +1,6 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"dashboards","generatedAt":"2026-09-11T15:41:03.133Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"dashboards","generatedAt":"2026-09-11T17:01:10.838Z","docs":"../../README.md"}
 {
-  "generatedAt": "2026-09-11T15:41:03.133Z",
+  "generatedAt": "2026-09-11T17:01:10.838Z",
   "dashboards": [
     {
       "id": "quality",
@@ -10,19 +10,19 @@
         {
           "name": "Pages",
           "description": "Total parsed pages. Use this as a quick check that content is being read.",
-          "value": 37,
+          "value": 38,
           "format": ",.0f"
         },
         {
           "name": "Edges",
           "description": "Total explicit links and hashtags. Higher values indicate a denser zettelkasten graph.",
-          "value": 71,
+          "value": 73,
           "format": ",.0f"
         },
         {
           "name": "Expected Courses",
           "description": "Courses declared in pps.config.ts. Compare this with course pages and diagnostics.",
-          "value": 9,
+          "value": 11,
           "format": ",.0f"
         },
         {
@@ -52,7 +52,7 @@
         {
           "name": "Year Pages",
           "description": "Pages classified as curriculum years. These should reference their expected courses.",
-          "value": 1,
+          "value": 2,
           "format": ",.0f"
         }
       ],
@@ -383,18 +383,18 @@
           ],
           "rows": [
             {
-              "year": "(unmapped)",
-              "notes": "4",
-              "covered": "2",
-              "missing": "2",
-              "coverage_percent": "50.0"
-            },
-            {
               "year": "año 1",
               "notes": "28",
               "covered": "24",
               "missing": "4",
               "coverage_percent": "85.7"
+            },
+            {
+              "year": "año 2",
+              "notes": "4",
+              "covered": "2",
+              "missing": "2",
+              "coverage_percent": "50.0"
             }
           ]
         },
@@ -743,13 +743,13 @@
         {
           "name": "Expected Years",
           "description": "Number of curriculum years configured for validation.",
-          "value": 1,
+          "value": 2,
           "format": ",.0f"
         },
         {
           "name": "Expected Courses",
           "description": "Number of configured courses across all years.",
-          "value": 9,
+          "value": 11,
           "format": ",.0f"
         },
         {
@@ -761,7 +761,7 @@
         {
           "name": "All Pages",
           "description": "Total parsed pages in the mirror, including years, courses, concepts, and other page kinds.",
-          "value": 37,
+          "value": 38,
           "format": ",.0f"
         }
       ],
@@ -772,7 +772,8 @@
           "defaultValue": "All",
           "options": [
             "All",
-            "año 1"
+            "año 1",
+            "año 2"
           ]
         },
         {
@@ -787,7 +788,9 @@
             "análisis matemático i",
             "antropología",
             "bases de datos",
+            "estadística i",
             "filosofía",
+            "matemática discreta",
             "programación i",
             "técnicas de comunicación y storytelling"
           ]
@@ -846,21 +849,6 @@
             }
           ],
           "rows": [
-            {
-              "year": "",
-              "course": "estadística i",
-              "concept": "optimización"
-            },
-            {
-              "year": "",
-              "course": "matemática discreta",
-              "concept": "lógica"
-            },
-            {
-              "year": "",
-              "course": "matemática discreta",
-              "concept": "pensamiento matemático"
-            },
             {
               "year": "año 1",
               "course": "álgebra y geometría",
@@ -1015,6 +1003,21 @@
               "year": "año 1",
               "course": "técnicas de comunicación y storytelling",
               "concept": "(no concept links)"
+            },
+            {
+              "year": "año 2",
+              "course": "estadística i",
+              "concept": "optimización"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "lógica"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "pensamiento matemático"
             }
           ]
         }
@@ -1079,16 +1082,16 @@
           ],
           "rows": [
             {
-              "year": "(unmapped)",
-              "concept_notes": "16",
-              "sourced": "16",
+              "year": "año 1",
+              "concept_notes": "131",
+              "sourced": "131",
               "missing": "0",
               "coverage_percent": "100.0"
             },
             {
-              "year": "año 1",
-              "concept_notes": "131",
-              "sourced": "131",
+              "year": "año 2",
+              "concept_notes": "16",
+              "sourced": "16",
               "missing": "0",
               "coverage_percent": "100.0"
             }
@@ -1124,22 +1127,6 @@
             }
           ],
           "rows": [
-            {
-              "year": "(unmapped)",
-              "course": "estadística i",
-              "concept_notes": "6",
-              "sourced": "6",
-              "missing": "0",
-              "coverage_percent": "100.0"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept_notes": "10",
-              "sourced": "10",
-              "missing": "0",
-              "coverage_percent": "100.0"
-            },
             {
               "year": "año 1",
               "course": "álgebra y geometría",
@@ -1211,6 +1198,22 @@
               "sourced": "0",
               "missing": "0",
               "coverage_percent": "0.0"
+            },
+            {
+              "year": "año 2",
+              "course": "estadística i",
+              "concept_notes": "6",
+              "sourced": "6",
+              "missing": "0",
+              "coverage_percent": "100.0"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept_notes": "10",
+              "sourced": "10",
+              "missing": "0",
+              "coverage_percent": "100.0"
             }
           ]
         },
@@ -1248,150 +1251,6 @@
             }
           ],
           "rows": [
-            {
-              "year": "(unmapped)",
-              "course": "estadística i",
-              "concept": "optimización",
-              "line": "1",
-              "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
-              "note": "La optimización busca máximos, mínimos o mejores soluciones bajo restricciones; la Wikipedia en español conecta cálculo, programación lineal y condiciones de optimalidad https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "estadística i",
-              "concept": "optimización",
-              "line": "2",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=trdab2TO820",
-              "note": "Este video muestra cómo usar Desmos para graficar funciones, derivadas y puntos críticos al resolver problemas de optimización https://www.youtube.com/watch?v=trdab2TO820"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "estadística i",
-              "concept": "optimización",
-              "line": "3",
-              "has_source": "yes",
-              "source_links": "https://activecalculus.org/",
-              "note": "Active Calculus (edición 2024) de Matt Boelkins es un libro abierto que trata derivadas, criterios de extremos y modelado con ejercicios https://activecalculus.org/"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "estadística i",
-              "concept": "optimización",
-              "line": "4",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=0vIZdyjoubE",
-              "note": "Este video recorre tres problemas de optimización con criterios de la derivada y el teorema del valor extremo https://www.youtube.com/watch?v=0vIZdyjoubE"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "estadística i",
-              "concept": "optimización",
-              "line": "5",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "note": "Esta playlist Essence of calculus de 3Blue1Brown construye intuición sobre límites, derivadas e interpretación geométrica de la optimización https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "estadística i",
-              "concept": "optimización",
-              "line": "6",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=dam16G6cZ8k",
-              "note": "Este video de Khan Academy maximiza la ganancia de una fábrica modelando ingresos y costos con derivadas https://www.youtube.com/watch?v=dam16G6cZ8k"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "lógica",
-              "line": "1",
-              "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
-              "note": "La lógica formal estudia cómo evaluar enunciados con conectivos, cuantificadores y reglas de inferencia; la Wikipedia en español introduce proposiciones, tablas de verdad y argumentos válidos https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "lógica",
-              "line": "2",
-              "has_source": "yes",
-              "source_links": "https://openlogicproject.org/",
-              "note": "El Open Logic Project es un libro abierto de lógica formal con capítulos sobre deducción natural, cuantificadores y métodos de prueba https://openlogicproject.org/"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "lógica",
-              "line": "3",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
-              "note": "Esta playlist de MIT 6.042J (primavera 2015) recorre lógica proposicional, conectivos, cuantificadores y métodos de prueba https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "lógica",
-              "line": "4",
-              "has_source": "yes",
-              "source_links": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
-              "note": "La especialización Introduction to Logic and Critical Thinking de Duke (Think Again) en Coursera recorre argumentos deductivos e inductivos, tablas de verdad y falacias en cuatro cursos https://www.coursera.org/specializations/logic-critical-thinking-duke"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "lógica",
-              "line": "5",
-              "has_source": "yes",
-              "source_links": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
-              "note": "La especialización Critical Thinking and Logical Reasoning de Pearson en Coursera practica mapeo de argumentos, evaluación de evidencia y razonamiento empírico en ocho módulos cortos https://www.coursera.org/specializations/critical-thinking-logical-reasoning"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "pensamiento matemático",
-              "line": "1",
-              "has_source": "yes",
-              "source_links": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
-              "note": "El pensamiento matemático combina abstracción, razonamiento lógico y argumentación rigurosa; la Wikipedia en inglés distingue demostración, modelado y resolución de problemas https://en.wikipedia.org/wiki/Mathematical_reasoning"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "pensamiento matemático",
-              "line": "2",
-              "has_source": "yes",
-              "source_links": "https://openlogicproject.org/",
-              "note": "El Open Logic Project es un libro abierto que recorre lógica proposicional, cuantificadores y métodos de prueba con ejercicios https://openlogicproject.org/"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "pensamiento matemático",
-              "line": "3",
-              "has_source": "yes",
-              "source_links": "https://www.coursera.org/learn/mathematical-thinking",
-              "note": "El curso Introduction to Mathematical Thinking de Keith Devlin en Coursera contrasta matemática escolar con razonamiento formal y resolución de problemas abiertos https://www.coursera.org/learn/mathematical-thinking"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "pensamiento matemático",
-              "line": "4",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
-              "note": "Esta playlist de MIT 6.1200J (primavera 2024) recorre demostraciones, proposiciones y deducciones lógicas como base del razonamiento matemático https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d"
-            },
-            {
-              "year": "(unmapped)",
-              "course": "matemática discreta",
-              "concept": "pensamiento matemático",
-              "line": "5",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
-              "note": "Esta playlist de MIT 18.090 (primavera 2024) recorre razonamiento matemático, conjuntos, funciones y escritura de demostraciones formales https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu"
-            },
             {
               "year": "año 1",
               "course": "álgebra y geometría",
@@ -2723,6 +2582,150 @@
               "has_source": "yes",
               "source_links": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
               "note": "Esta playlist de CS Dojo recorre fundamentos de Python con variables, funciones, listas y diccionarios en videos cortos https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE"
+            },
+            {
+              "year": "año 2",
+              "course": "estadística i",
+              "concept": "optimización",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
+              "note": "La optimización busca máximos, mínimos o mejores soluciones bajo restricciones; la Wikipedia en español conecta cálculo, programación lineal y condiciones de optimalidad https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica"
+            },
+            {
+              "year": "año 2",
+              "course": "estadística i",
+              "concept": "optimización",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=trdab2TO820",
+              "note": "Este video muestra cómo usar Desmos para graficar funciones, derivadas y puntos críticos al resolver problemas de optimización https://www.youtube.com/watch?v=trdab2TO820"
+            },
+            {
+              "year": "año 2",
+              "course": "estadística i",
+              "concept": "optimización",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://activecalculus.org/",
+              "note": "Active Calculus (edición 2024) de Matt Boelkins es un libro abierto que trata derivadas, criterios de extremos y modelado con ejercicios https://activecalculus.org/"
+            },
+            {
+              "year": "año 2",
+              "course": "estadística i",
+              "concept": "optimización",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=0vIZdyjoubE",
+              "note": "Este video recorre tres problemas de optimización con criterios de la derivada y el teorema del valor extremo https://www.youtube.com/watch?v=0vIZdyjoubE"
+            },
+            {
+              "year": "año 2",
+              "course": "estadística i",
+              "concept": "optimización",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "note": "Esta playlist Essence of calculus de 3Blue1Brown construye intuición sobre límites, derivadas e interpretación geométrica de la optimización https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+            },
+            {
+              "year": "año 2",
+              "course": "estadística i",
+              "concept": "optimización",
+              "line": "6",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+              "note": "Este video de Khan Academy maximiza la ganancia de una fábrica modelando ingresos y costos con derivadas https://www.youtube.com/watch?v=dam16G6cZ8k"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "lógica",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+              "note": "La lógica formal estudia cómo evaluar enunciados con conectivos, cuantificadores y reglas de inferencia; la Wikipedia en español introduce proposiciones, tablas de verdad y argumentos válidos https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "lógica",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://openlogicproject.org/",
+              "note": "El Open Logic Project es un libro abierto de lógica formal con capítulos sobre deducción natural, cuantificadores y métodos de prueba https://openlogicproject.org/"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "lógica",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+              "note": "Esta playlist de MIT 6.042J (primavera 2015) recorre lógica proposicional, conectivos, cuantificadores y métodos de prueba https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "lógica",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+              "note": "La especialización Introduction to Logic and Critical Thinking de Duke (Think Again) en Coursera recorre argumentos deductivos e inductivos, tablas de verdad y falacias en cuatro cursos https://www.coursera.org/specializations/logic-critical-thinking-duke"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "lógica",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+              "note": "La especialización Critical Thinking and Logical Reasoning de Pearson en Coursera practica mapeo de argumentos, evaluación de evidencia y razonamiento empírico en ocho módulos cortos https://www.coursera.org/specializations/critical-thinking-logical-reasoning"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "pensamiento matemático",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+              "note": "El pensamiento matemático combina abstracción, razonamiento lógico y argumentación rigurosa; la Wikipedia en inglés distingue demostración, modelado y resolución de problemas https://en.wikipedia.org/wiki/Mathematical_reasoning"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "pensamiento matemático",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://openlogicproject.org/",
+              "note": "El Open Logic Project es un libro abierto que recorre lógica proposicional, cuantificadores y métodos de prueba con ejercicios https://openlogicproject.org/"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "pensamiento matemático",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://www.coursera.org/learn/mathematical-thinking",
+              "note": "El curso Introduction to Mathematical Thinking de Keith Devlin en Coursera contrasta matemática escolar con razonamiento formal y resolución de problemas abiertos https://www.coursera.org/learn/mathematical-thinking"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "pensamiento matemático",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
+              "note": "Esta playlist de MIT 6.1200J (primavera 2024) recorre demostraciones, proposiciones y deducciones lógicas como base del razonamiento matemático https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d"
+            },
+            {
+              "year": "año 2",
+              "course": "matemática discreta",
+              "concept": "pensamiento matemático",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+              "note": "Esta playlist de MIT 18.090 (primavera 2024) recorre razonamiento matemático, conjuntos, funciones y escritura de demostraciones formales https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu"
             }
           ]
         }

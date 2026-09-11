@@ -1,6 +1,32 @@
 import { LoadedConfig } from "../config/loaded-config";
 import { parsePages, PageSource } from "../parser";
-import { CurriculumGraph, GraphEdge, ZettelPage } from "../types";
+import { CurriculumGraph, GraphEdge, PageKind, ZettelPage } from "../types";
+
+const STRUCTURAL_KIND_RANK: Partial<Record<PageKind, number>> = {
+  career: 0,
+  year: 1,
+  course: 2,
+};
+
+export function canonicalStructuralEdgeDirection(
+  source: string,
+  target: string,
+  pageKindByTitle: ReadonlyMap<string, PageKind>,
+): { source: string; target: string } {
+  const sourceKind = pageKindByTitle.get(source);
+  const targetKind = pageKindByTitle.get(target);
+  if (!sourceKind || !targetKind) {
+    return { source, target };
+  }
+
+  const sourceRank = STRUCTURAL_KIND_RANK[sourceKind];
+  const targetRank = STRUCTURAL_KIND_RANK[targetKind];
+  if (sourceRank === undefined || targetRank === undefined || sourceRank <= targetRank) {
+    return { source, target };
+  }
+
+  return { source: target, target: source };
+}
 
 export function buildGraphFromPages(input: {
   sources: PageSource[];
@@ -22,14 +48,21 @@ export function buildGraphFromPages(input: {
 }
 
 export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
+  const pageKindByTitle = new Map(pages.map((page) => [page.title, page.kind]));
+
   const edges = pages.flatMap((page) => [
-    ...page.refs.map((ref) => ({
-      source: page.title,
-      target: ref.resolvedTarget ?? ref.target,
-      kind: "page-ref" as const,
-      rawTarget: ref.target,
-      line: ref.line,
-    })),
+    ...page.refs.map((ref) => {
+      const target = ref.resolvedTarget ?? ref.target;
+      const direction = canonicalStructuralEdgeDirection(page.title, target, pageKindByTitle);
+
+      return {
+        source: direction.source,
+        target: direction.target,
+        kind: "page-ref" as const,
+        rawTarget: ref.target,
+        line: ref.line,
+      };
+    }),
     ...page.tags.map((tag) => ({
       source: page.title,
       target: tag.resolvedTarget ?? tag.target,

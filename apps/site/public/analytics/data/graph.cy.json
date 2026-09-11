@@ -1,4 +1,4 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"graph-cy","generatedAt":"2026-09-11T15:41:03.133Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"graph-cy","generatedAt":"2026-09-11T17:01:10.838Z","docs":"../../README.md"}
 {
   "elements": {
     "nodes": [
@@ -81,6 +81,15 @@
           "kind": "year",
           "slug": "ano-1",
           "path": "ano-1.md"
+        }
+      },
+      {
+        "data": {
+          "id": "año 2",
+          "label": "año 2",
+          "kind": "year",
+          "slug": "ano-2",
+          "path": "ano-2.md"
         }
       },
       {
@@ -636,6 +645,24 @@
       },
       {
         "data": {
+          "id": "año 2::estadística i::page-ref",
+          "source": "año 2",
+          "target": "estadística i",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
+          "id": "año 2::matemática discreta::page-ref",
+          "source": "año 2",
+          "target": "matemática discreta",
+          "kind": "page-ref",
+          "label": "page-ref"
+        }
+      },
+      {
+        "data": {
           "id": "bases de datos::ACID::concept-tag",
           "source": "bases de datos",
           "target": "ACID",
@@ -726,18 +753,18 @@
       },
       {
         "data": {
-          "id": "LDS::algoritmos y estructuras de datos::page-ref",
+          "id": "LDS::año 1::page-ref",
           "source": "LDS",
-          "target": "algoritmos y estructuras de datos",
+          "target": "año 1",
           "kind": "page-ref",
           "label": "page-ref"
         }
       },
       {
         "data": {
-          "id": "LDS::año 1::page-ref",
+          "id": "LDS::año 2::page-ref",
           "source": "LDS",
-          "target": "año 1",
+          "target": "año 2",
           "kind": "page-ref",
           "label": "page-ref"
         }

@@ -1,6 +1,6 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-11T15:41:03.133Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-11T17:01:10.838Z","docs":"../../README.md"}
 {
-  "generatedAt": "2026-09-11T15:41:03.133Z",
+  "generatedAt": "2026-09-11T17:01:10.838Z",
   "pages": [
     {
       "slug": "acid",
@@ -1361,6 +1361,69 @@
       "nonBulletLines": []
     },
     {
+      "slug": "ano-2",
+      "title": "año 2",
+      "normalizedTitle": "año 2",
+      "path": "ano-2.md",
+      "declaredKind": "year",
+      "kind": "year",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "[[estadística i]]",
+          "refs": [
+            {
+              "raw": "[[estadística i]]",
+              "target": "estadística i",
+              "normalizedTarget": "estadística i",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "estadística i"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "[[matemática discreta]]",
+          "refs": [
+            {
+              "raw": "[[matemática discreta]]",
+              "target": "matemática discreta",
+              "normalizedTarget": "matemática discreta",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "matemática discreta"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[estadística i]]",
+          "target": "estadística i",
+          "normalizedTarget": "estadística i",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "estadística i"
+        },
+        {
+          "raw": "[[matemática discreta]]",
+          "target": "matemática discreta",
+          "normalizedTarget": "matemática discreta",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "matemática discreta"
+        }
+      ],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": []
+    },
+    {
       "slug": "bases-de-datos",
       "title": "bases de datos",
       "normalizedTitle": "bases de datos",
@@ -2296,22 +2359,6 @@
       "blocks": [
         {
           "line": 1,
-          "text": "[[algoritmos y estructuras de datos]]",
-          "refs": [
-            {
-              "raw": "[[algoritmos y estructuras de datos]]",
-              "target": "algoritmos y estructuras de datos",
-              "normalizedTarget": "algoritmos y estructuras de datos",
-              "isUuid": false,
-              "line": 1,
-              "resolvedTarget": "algoritmos y estructuras de datos"
-            }
-          ],
-          "tags": [],
-          "urls": []
-        },
-        {
-          "line": 2,
           "text": "[[año 1]]",
           "refs": [
             {
@@ -2319,8 +2366,24 @@
               "target": "año 1",
               "normalizedTarget": "año 1",
               "isUuid": false,
-              "line": 2,
+              "line": 1,
               "resolvedTarget": "año 1"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "[[año 2]]",
+          "refs": [
+            {
+              "raw": "[[año 2]]",
+              "target": "año 2",
+              "normalizedTarget": "año 2",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "año 2"
             }
           ],
           "tags": [],
@@ -2329,20 +2392,20 @@
       ],
       "refs": [
         {
-          "raw": "[[algoritmos y estructuras de datos]]",
-          "target": "algoritmos y estructuras de datos",
-          "normalizedTarget": "algoritmos y estructuras de datos",
-          "isUuid": false,
-          "line": 1,
-          "resolvedTarget": "algoritmos y estructuras de datos"
-        },
-        {
           "raw": "[[año 1]]",
           "target": "año 1",
           "normalizedTarget": "año 1",
           "isUuid": false,
-          "line": 2,
+          "line": 1,
           "resolvedTarget": "año 1"
+        },
+        {
+          "raw": "[[año 2]]",
+          "target": "año 2",
+          "normalizedTarget": "año 2",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "año 2"
         }
       ],
       "tags": [],
@@ -4725,6 +4788,20 @@
       "line": 4
     },
     {
+      "source": "año 2",
+      "target": "estadística i",
+      "kind": "page-ref",
+      "rawTarget": "estadística i",
+      "line": 1
+    },
+    {
+      "source": "año 2",
+      "target": "matemática discreta",
+      "kind": "page-ref",
+      "rawTarget": "matemática discreta",
+      "line": 2
+    },
+    {
       "source": "bases de datos",
       "target": "ACID",
       "kind": "concept-tag",
@@ -4810,16 +4887,16 @@
     },
     {
       "source": "LDS",
-      "target": "algoritmos y estructuras de datos",
+      "target": "año 1",
       "kind": "page-ref",
-      "rawTarget": "algoritmos y estructuras de datos",
+      "rawTarget": "año 1",
       "line": 1
     },
     {
       "source": "LDS",
-      "target": "año 1",
+      "target": "año 2",
       "kind": "page-ref",
-      "rawTarget": "año 1",
+      "rawTarget": "año 2",
       "line": 2
     },
     {
@@ -4929,6 +5006,13 @@
           "antropología",
           "programación i",
           "filosofía"
+        ]
+      },
+      {
+        "title": "año 2",
+        "courses": [
+          "estadística i",
+          "matemática discreta"
         ]
       }
     ]
