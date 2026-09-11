@@ -489,6 +489,13 @@ body.dashboard-body {
   font-size: 0.8125rem;
 }
 
+/* The native dropdown renders on a light surface, so options cannot inherit the
+   sidebar's white text. */
+.graph-sidebar-filters .filter-field select option {
+  background: var(--dash-surface);
+  color: var(--dash-text);
+}
+
 .graph-sidebar-filters .filter-field select:hover {
   border-color: rgba(255, 255, 255, 0.35);
 }
