@@ -1,6 +1,6 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-11T00:33:55.447Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-11T15:39:19.318Z","docs":"../../README.md"}
 {
-  "generatedAt": "2026-09-11T00:33:55.447Z",
+  "generatedAt": "2026-09-11T15:39:19.318Z",
   "pages": [
     {
       "slug": "acid",
@@ -473,14 +473,27 @@
         },
         {
           "line": 6,
-          "text": "Esta clase de MIT 6.006 introduce algoritmos y computación con análisis de eficiencia y estructuras de datos https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+          "text": "Esta playlist de MIT 6.006 (primavera 2020) introduce algoritmos y computación con análisis de eficiencia y estructuras de datos https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
-              "target": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
               "line": 6
+            }
+          ]
+        },
+        {
+          "line": 7,
+          "text": "La especialización Algorithms de Tim Roughgarden (Stanford) en Coursera cubre divide and conquer, grafos, greedy, programación dinámica y NP-completitud con tareas de programación semanales https://www.coursera.org/specializations/algorithms",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/algorithms",
+              "target": "https://www.coursera.org/specializations/algorithms",
+              "line": 7
             }
           ]
         }
@@ -514,9 +527,14 @@
           "line": 5
         },
         {
-          "raw": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
-          "target": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
           "line": 6
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/algorithms",
+          "target": "https://www.coursera.org/specializations/algorithms",
+          "line": 7
         }
       ],
       "nonBulletLines": []
@@ -962,7 +980,7 @@
         },
         {
           "line": 2,
-          "text": "la #induccion-y-logica introduce razonamiento deductivo que reaparece en [[matemática discreta]]",
+          "text": "la #induccion-y-logica introduce lógica formal y razonamiento deductivo que reaparece en [[matemática discreta]]",
           "refs": [
             {
               "raw": "[[matemática discreta]]",
@@ -977,10 +995,10 @@
             {
               "raw": "#induccion-y-logica",
               "target": "induccion-y-logica",
-              "normalizedTarget": "inducción y lógica",
+              "normalizedTarget": "lógica",
               "isUuid": false,
               "line": 2,
-              "resolvedTarget": "inducción y lógica"
+              "resolvedTarget": "lógica"
             }
           ],
           "urls": []
@@ -1065,10 +1083,10 @@
         {
           "raw": "#induccion-y-logica",
           "target": "induccion-y-logica",
-          "normalizedTarget": "inducción y lógica",
+          "normalizedTarget": "lógica",
           "isUuid": false,
           "line": 2,
-          "resolvedTarget": "inducción y lógica"
+          "resolvedTarget": "lógica"
         },
         {
           "raw": "#demostraciones",
@@ -1906,19 +1924,6 @@
         },
         {
           "line": 2,
-          "text": "Esta clase de MIT OpenCourseWare introduce inducción matemática y métodos de prueba con ejemplos guiados https://www.youtube.com/watch?v=LY7YmuDbuW0",
-          "refs": [],
-          "tags": [],
-          "urls": [
-            {
-              "raw": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
-              "target": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
-              "line": 2
-            }
-          ]
-        },
-        {
-          "line": 3,
           "text": "El libro Book of Proof (3.ª ed., 2024) de Hammack es de acceso libre y enseña a redactar demostraciones con ejemplos de conjuntos, funciones y combinatoria https://richardhammack.github.io/BookOfProof/Main.pdf",
           "refs": [],
           "tags": [],
@@ -1926,26 +1931,39 @@
             {
               "raw": "https://richardhammack.github.io/BookOfProof/Main.pdf",
               "target": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El curso Mathematical Proofs de Daniel Solow en Coursera enseña a leer y construir demostraciones con técnicas sistemáticas como construcción, contradicción, inducción y contraposición https://www.coursera.org/learn/mathematical-proofs",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/learn/mathematical-proofs",
+              "target": "https://www.coursera.org/learn/mathematical-proofs",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "Este video recorre demostración directa asumiendo la hipótesis y deduciendo la conclusión paso a paso https://www.youtube.com/watch?v=01b3KjgPhfI",
+          "text": "La inducción matemática prueba propiedades para todo n natural a partir de un caso base y un paso inductivo; la Wikipedia en español muestra el esquema y ejemplos clásicos https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=01b3KjgPhfI",
-              "target": "https://www.youtube.com/watch?v=01b3KjgPhfI",
+              "raw": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+              "target": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "Esta playlist de MIT OpenCourseWare recorre sucesiones, continuidad e integración con énfasis en construir demostraciones formales https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
+          "text": "Esta playlist de MIT 18.100A (otoño 2020) introduce inducción matemática y métodos de prueba con ejemplos guiados https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
           "refs": [],
           "tags": [],
           "urls": [
@@ -1958,6 +1976,32 @@
         },
         {
           "line": 6,
+          "text": "Esta playlist de MIT 6.042J (otoño 2010) recorre el esquema de inducción con caso base, hipótesis inductiva y paso inductivo https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
+              "target": "https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
+              "line": 6
+            }
+          ]
+        },
+        {
+          "line": 7,
+          "text": "Esta playlist recorre demostración directa asumiendo la hipótesis y deduciendo la conclusión paso a paso https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
+              "target": "https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
+              "line": 7
+            }
+          ]
+        },
+        {
+          "line": 8,
           "text": "Este video recorre demostración por contradicción asumiendo lo contrario del enunciado y llegando a una inconsistencia https://www.youtube.com/watch?v=YYgepDY3rHw",
           "refs": [],
           "tags": [],
@@ -1965,20 +2009,20 @@
             {
               "raw": "https://www.youtube.com/watch?v=YYgepDY3rHw",
               "target": "https://www.youtube.com/watch?v=YYgepDY3rHw",
-              "line": 6
+              "line": 8
             }
           ]
         },
         {
-          "line": 7,
-          "text": "Este video muestra demostración por contrapositiva reformulando la implicación y probando su negación https://www.youtube.com/watch?v=ce4Jc0QmjOI",
+          "line": 9,
+          "text": "Esta playlist muestra demostración por contrapositiva reformulando la implicación y probando su negación https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
-              "target": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
-              "line": 7
+              "raw": "https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
+              "target": "https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
+              "line": 9
             }
           ]
         }
@@ -1992,18 +2036,18 @@
           "line": 1
         },
         {
-          "raw": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
-          "target": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
+          "raw": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+          "target": "https://richardhammack.github.io/BookOfProof/Main.pdf",
           "line": 2
         },
         {
-          "raw": "https://richardhammack.github.io/BookOfProof/Main.pdf",
-          "target": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+          "raw": "https://www.coursera.org/learn/mathematical-proofs",
+          "target": "https://www.coursera.org/learn/mathematical-proofs",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=01b3KjgPhfI",
-          "target": "https://www.youtube.com/watch?v=01b3KjgPhfI",
+          "raw": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+          "target": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
           "line": 4
         },
         {
@@ -2012,14 +2056,24 @@
           "line": 5
         },
         {
-          "raw": "https://www.youtube.com/watch?v=YYgepDY3rHw",
-          "target": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+          "raw": "https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
+          "target": "https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
           "line": 6
         },
         {
-          "raw": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
-          "target": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
+          "raw": "https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
+          "target": "https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
           "line": 7
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+          "target": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+          "line": 8
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
+          "target": "https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
+          "line": 9
         }
       ],
       "nonBulletLines": []
@@ -2096,6 +2150,19 @@
               "line": 5
             }
           ]
+        },
+        {
+          "line": 6,
+          "text": "La especialización Data Structures and Algorithms de UC San Diego en Coursera combina teoría e implementación con puzzles algorítmicos, grafos, cadenas y proyectos sobre redes y ensamblado genómico https://www.coursera.org/specializations/data-structures-algorithms",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/data-structures-algorithms",
+              "target": "https://www.coursera.org/specializations/data-structures-algorithms",
+              "line": 6
+            }
+          ]
         }
       ],
       "refs": [],
@@ -2125,6 +2192,11 @@
           "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
           "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
           "line": 5
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/data-structures-algorithms",
+          "target": "https://www.coursera.org/specializations/data-structures-algorithms",
+          "line": 6
         }
       ],
       "nonBulletLines": []
@@ -2148,111 +2220,6 @@
       "refs": [],
       "tags": [],
       "urls": [],
-      "nonBulletLines": []
-    },
-    {
-      "slug": "induccion-y-logica",
-      "title": "inducción y lógica",
-      "normalizedTitle": "inducción y lógica",
-      "path": "induccion-y-logica.md",
-      "declaredKind": "concept",
-      "kind": "concept",
-      "blocks": [
-        {
-          "line": 1,
-          "text": "La inducción matemática prueba propiedades para todo n natural a partir de un caso base y un paso inductivo; la Wikipedia en español muestra el esquema y ejemplos clásicos https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
-          "refs": [],
-          "tags": [],
-          "urls": [
-            {
-              "raw": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
-              "target": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
-              "line": 1
-            }
-          ]
-        },
-        {
-          "line": 2,
-          "text": "El Open Logic Project es un libro abierto de lógica formal con capítulos sobre deducción natural, cuantificadores y métodos de prueba https://openlogicproject.org/",
-          "refs": [],
-          "tags": [],
-          "urls": [
-            {
-              "raw": "https://openlogicproject.org/",
-              "target": "https://openlogicproject.org/",
-              "line": 2
-            }
-          ]
-        },
-        {
-          "line": 3,
-          "text": "Este video de MIT recorre el esquema de inducción con caso base, hipótesis inductiva y paso inductivo en ejemplos numéricos https://www.youtube.com/watch?v=wblW_M_HVQ8",
-          "refs": [],
-          "tags": [],
-          "urls": [
-            {
-              "raw": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
-              "target": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
-              "line": 3
-            }
-          ]
-        },
-        {
-          "line": 4,
-          "text": "Este video de la Universidad de Edimburgo demuestra inducción sobre números naturales y listas con demostraciones formales https://www.youtube.com/watch?v=_Vg10FD5ULk",
-          "refs": [],
-          "tags": [],
-          "urls": [
-            {
-              "raw": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
-              "target": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
-              "line": 4
-            }
-          ]
-        },
-        {
-          "line": 5,
-          "text": "Esta playlist de MIT 6.042 recorre lógica proposicional, conectivos, cuantificadores y métodos de prueba https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
-          "refs": [],
-          "tags": [],
-          "urls": [
-            {
-              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
-              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
-              "line": 5
-            }
-          ]
-        }
-      ],
-      "refs": [],
-      "tags": [],
-      "urls": [
-        {
-          "raw": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
-          "target": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
-          "line": 1
-        },
-        {
-          "raw": "https://openlogicproject.org/",
-          "target": "https://openlogicproject.org/",
-          "line": 2
-        },
-        {
-          "raw": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
-          "target": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
-          "line": 3
-        },
-        {
-          "raw": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
-          "target": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
-          "line": 4
-        },
-        {
-          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
-          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
-          "line": 5
-        }
-      ],
       "nonBulletLines": []
     },
     {
@@ -2316,6 +2283,111 @@
       ],
       "tags": [],
       "urls": [],
+      "nonBulletLines": []
+    },
+    {
+      "slug": "induccion-y-logica",
+      "title": "lógica",
+      "normalizedTitle": "lógica",
+      "path": "induccion-y-logica.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "La lógica formal estudia cómo evaluar enunciados con conectivos, cuantificadores y reglas de inferencia; la Wikipedia en español introduce proposiciones, tablas de verdad y argumentos válidos https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+              "target": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "El Open Logic Project es un libro abierto de lógica formal con capítulos sobre deducción natural, cuantificadores y métodos de prueba https://openlogicproject.org/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://openlogicproject.org/",
+              "target": "https://openlogicproject.org/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "Esta playlist de MIT 6.042J (primavera 2015) recorre lógica proposicional, conectivos, cuantificadores y métodos de prueba https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "La especialización Introduction to Logic and Critical Thinking de Duke (Think Again) en Coursera recorre argumentos deductivos e inductivos, tablas de verdad y falacias en cuatro cursos https://www.coursera.org/specializations/logic-critical-thinking-duke",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+              "target": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "La especialización Critical Thinking and Logical Reasoning de Pearson en Coursera practica mapeo de argumentos, evaluación de evidencia y razonamiento empírico en ocho módulos cortos https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+              "target": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+          "target": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+          "line": 1
+        },
+        {
+          "raw": "https://openlogicproject.org/",
+          "target": "https://openlogicproject.org/",
+          "line": 2
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+          "line": 3
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+          "target": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+          "line": 4
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+          "target": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+          "line": 5
+        }
+      ],
       "nonBulletLines": []
     },
     {
@@ -2390,6 +2462,19 @@
               "line": 5
             }
           ]
+        },
+        {
+          "line": 6,
+          "text": "La especialización Linear Algebra from Elementary to Advanced de Johns Hopkins en Coursera recorre sistemas lineales, determinantes, autovalores y diagonalización con énfasis geométrico y algebraico https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+              "target": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+              "line": 6
+            }
+          ]
         }
       ],
       "refs": [],
@@ -2419,6 +2504,11 @@
           "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
           "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
           "line": 5
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "target": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "line": 6
         }
       ],
       "nonBulletLines": []
@@ -3015,20 +3105,20 @@
         },
         {
           "line": 4,
-          "text": "Esta clase de MIT introduce qué es una demostración, proposiciones y deducciones lógicas como base del razonamiento matemático https://www.youtube.com/watch?v=sbpCTjmw85g",
+          "text": "Esta playlist de MIT 6.1200J (primavera 2024) recorre demostraciones, proposiciones y deducciones lógicas como base del razonamiento matemático https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=sbpCTjmw85g",
-              "target": "https://www.youtube.com/watch?v=sbpCTjmw85g",
+              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
+              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "Esta playlist de MIT recorre razonamiento matemático, conjuntos, funciones y escritura de demostraciones formales https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+          "text": "Esta playlist de MIT 18.090 (primavera 2024) recorre razonamiento matemático, conjuntos, funciones y escritura de demostraciones formales https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
           "refs": [],
           "tags": [],
           "urls": [
@@ -3059,8 +3149,8 @@
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=sbpCTjmw85g",
-          "target": "https://www.youtube.com/watch?v=sbpCTjmw85g",
+          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
+          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
           "line": 4
         },
         {
@@ -3760,6 +3850,19 @@
               "line": 5
             }
           ]
+        },
+        {
+          "line": 6,
+          "text": "La especialización Linear Algebra from Elementary to Advanced de Johns Hopkins en Coursera empieza por ecuaciones lineales y métodos matriciales antes de pasar a autovalores y formas cuadráticas https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+              "target": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+              "line": 6
+            }
+          ]
         }
       ],
       "refs": [],
@@ -3789,6 +3892,11 @@
           "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
           "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
           "line": 5
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "target": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "line": 6
         }
       ],
       "nonBulletLines": []
@@ -4350,7 +4458,7 @@
     },
     {
       "source": "análisis matemático i",
-      "target": "inducción y lógica",
+      "target": "lógica",
       "kind": "concept-tag",
       "rawTarget": "induccion-y-logica",
       "line": 2

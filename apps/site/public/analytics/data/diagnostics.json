@@ -1,4 +1,4 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"diagnostics","generatedAt":"2026-09-11T00:33:55.447Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"diagnostics","generatedAt":"2026-09-11T15:39:19.318Z","docs":"../../README.md"}
 [
   {
     "severity": "warning",
@@ -108,8 +108,8 @@
   {
     "severity": "warning",
     "code": "concept-low-course-coverage",
-    "message": "Concept \"inducción y lógica\" is referenced by 1 course(s); target is at least 3.",
-    "page": "inducción y lógica",
+    "message": "Concept \"lógica\" is referenced by 1 course(s); target is at least 3.",
+    "page": "lógica",
     "details": {
       "courseCount": 1,
       "minimumCourses": 3,

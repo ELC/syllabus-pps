@@ -1,4 +1,4 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"graph-cy","generatedAt":"2026-09-11T00:33:55.447Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"graph-cy","generatedAt":"2026-09-11T15:39:19.318Z","docs":"../../README.md"}
 {
   "elements": {
     "nodes": [
@@ -148,20 +148,20 @@
       },
       {
         "data": {
-          "id": "inducción y lógica",
-          "label": "inducción y lógica",
-          "kind": "concept",
-          "slug": "induccion-y-logica",
-          "path": "induccion-y-logica.md"
-        }
-      },
-      {
-        "data": {
           "id": "LDS",
           "label": "LDS",
           "kind": "career",
           "slug": "lds",
           "path": "lds.md"
+        }
+      },
+      {
+        "data": {
+          "id": "lógica",
+          "label": "lógica",
+          "kind": "concept",
+          "slug": "induccion-y-logica",
+          "path": "induccion-y-logica.md"
         }
       },
       {
@@ -510,9 +510,9 @@
       },
       {
         "data": {
-          "id": "análisis matemático i::inducción y lógica::concept-tag",
+          "id": "análisis matemático i::lógica::concept-tag",
           "source": "análisis matemático i",
-          "target": "inducción y lógica",
+          "target": "lógica",
           "kind": "concept-tag",
           "label": "concept-tag"
         }
