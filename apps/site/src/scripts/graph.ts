@@ -7,14 +7,18 @@ import {
   mountConceptPanel,
 } from "./graph-concept-panel";
 import {
+  AUSTRAL,
+  expansionShadesForBase,
+  kindStyleForKind,
+} from "./austral-tokens";
+import {
   capitalizeWords,
-  EXPANSION_EDGE_COLORS,
   formatGraphNodeLabel,
   GRAPH_FILTER_KINDS,
   GRAPH_NODE_KINDS,
 } from "./graph-styles";
 
-export { EXPANSION_EDGE_COLORS, GRAPH_FILTER_KINDS, GRAPH_NODE_KINDS };
+export { GRAPH_FILTER_KINDS, GRAPH_NODE_KINDS };
 
 cytoscape.use(fcose);
 
@@ -342,20 +346,21 @@ function applyElementVisibility(cy: cytoscape.Core, viewState: GraphViewState): 
   return cy.elements().not(".filtered-out");
 }
 
-function expansionEdgeColor(index: number): string {
-  return EXPANSION_EDGE_COLORS[index % EXPANSION_EDGE_COLORS.length];
-}
-
-function assignExpansionAnchorColor(viewState: GraphViewState, anchorId: string): string {
+function assignExpansionAnchorColor(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  anchorId: string,
+): string {
   const existing = viewState.expansionAnchorColors.get(anchorId);
   if (existing) {
     return existing;
   }
 
+  const anchor = cy.getElementById(anchorId);
+  const { base } = kindStyleForKind(String(anchor.data("kind") ?? ""));
   const usedColors = new Set(viewState.expansionAnchorColors.values());
   const nextColor =
-    EXPANSION_EDGE_COLORS.find((color) => !usedColors.has(color)) ??
-    expansionEdgeColor(viewState.expansionAnchorColors.size);
+    expansionShadesForBase(base).find((color) => !usedColors.has(color)) ?? base;
 
   viewState.expansionAnchorColors.set(anchorId, nextColor);
   return nextColor;
@@ -397,9 +402,8 @@ function fitVisibleGraph(cy: cytoscape.Core, padding = 48): void {
   }
 }
 
-function kindStyle(kind: string): { fill: string; border: string } {
-  const match = GRAPH_NODE_KINDS.find((item) => item.kind === kind);
-  return match ?? { fill: "#e2e8f0", border: "#64748b" };
+function kindStyle(kind: string) {
+  return kindStyleForKind(kind);
 }
 
 function nodeTitle(node: cytoscape.SingularElementArgument, fallback: string): string {
@@ -447,7 +451,8 @@ function updateExpansionListUI(
     const chip = document.createElement("div");
     chip.className = "graph-expansion-chip";
     chip.style.borderColor =
-      viewState.expansionAnchorColors.get(nodeId) ?? expansionEdgeColor(0);
+      viewState.expansionAnchorColors.get(nodeId) ??
+      kindStyle(String(node.data("kind"))).border;
     if (nodeId === viewState.focusedNodeId) {
       chip.classList.add("active");
     }
@@ -459,7 +464,7 @@ function updateExpansionListUI(
     const swatch = document.createElement("span");
     const style = kindStyle(String(node.data("kind")));
     swatch.className = "graph-expansion-swatch";
-    swatch.style.background = style.fill;
+    swatch.style.background = style.swatchFill;
     swatch.style.borderColor = style.border;
 
     const text = document.createElement("span");
@@ -648,7 +653,7 @@ function updateSearchResultsUI(
     const swatch = document.createElement("span");
     const style = kindStyle(String(node.data("kind")));
     swatch.className = "graph-search-result-swatch";
-    swatch.style.background = style.fill;
+    swatch.style.background = style.swatchFill;
     swatch.style.borderColor = style.border;
 
     const label = document.createElement("span");
@@ -938,7 +943,7 @@ function focusOrExpandNeighborhood(
 
   const expansionNodeIds = inFocus ? [...viewState.expansionNodeIds!, nodeId] : [nodeId];
   if (!viewState.expansionNodeIds?.includes(nodeId)) {
-    assignExpansionAnchorColor(viewState, nodeId);
+    assignExpansionAnchorColor(cy, viewState, nodeId);
   }
   viewState.expansionNodeIds = expansionNodeIds;
 
@@ -1154,6 +1159,7 @@ export async function mountGraph(
   ]);
 
   const payload = parseGeneratedPayload<{ elements: cytoscape.ElementsDefinition }>(graphText);
+  const defaultNodeStyle = kindStyleForKind("");
 
   const cy = cytoscape({
     container,
@@ -1169,16 +1175,16 @@ export async function mountGraph(
           "text-valign": "center",
           "text-halign": "center",
           "font-size": 7,
-          "font-family": "Roboto, sans-serif",
+          "font-family": "Montserrat, sans-serif",
           "font-weight": 700,
           "text-wrap": "wrap",
-          "text-max-width": 52,
+          "text-max-width": 42,
           width: 58,
           height: 58,
-          "background-color": "#e2e8f0",
-          "border-width": 2,
-          "border-color": "#64748b",
-          color: "#111827",
+          "background-opacity": 0,
+          "border-width": 3,
+          "border-color": defaultNodeStyle.border,
+          color: AUSTRAL.text,
           cursor: "grab",
         },
       },
@@ -1191,47 +1197,41 @@ export async function mountGraph(
       {
         selector: "node[kind = 'career']",
         style: {
-          "background-color": "#ddd6fe",
-          "border-color": "#7c3aed",
+          "border-color": kindStyle("career").border,
         },
       },
       {
         selector: "node[kind = 'year']",
         style: {
-          "background-color": "#fde68a",
-          "border-color": "#d97706",
+          "border-color": kindStyle("year").border,
         },
       },
       {
         selector: "node[kind = 'course']",
         style: {
-          "background-color": "#bbf7d0",
-          "border-color": "#059669",
+          "border-color": kindStyle("course").border,
           width: 76,
           height: 76,
           "font-size": 8,
-          "text-max-width": 70,
-          "line-height": 1.15,
+          "text-max-width": 58,
         },
       },
       {
         selector: "node[kind = 'concept']",
         style: {
-          "background-color": "#bfdbfe",
-          "border-color": "#2563eb",
-          width: 42,
-          height: 42,
+          "border-color": kindStyle("concept").border,
+          width: 48,
+          height: 48,
           "font-size": 6,
-          "text-max-width": 36,
-          "font-family": "Roboto, sans-serif",
+          "text-max-width": 34,
+          "font-family": "Montserrat, sans-serif",
           "font-weight": 700,
         },
       },
       {
         selector: "node.focused",
         style: {
-          "border-width": 3,
-          "border-color": "#f59e0b",
+          "border-width": 4.5,
         },
       },
       {
@@ -1244,8 +1244,8 @@ export async function mountGraph(
         selector: "edge",
         style: {
           width: 1.5,
-          "line-color": "#94a3b8",
-          "target-arrow-color": "#94a3b8",
+          "line-color": AUSTRAL.edgeStructural,
+          "target-arrow-color": AUSTRAL.edgeStructural,
           "target-arrow-shape": "triangle",
           "curve-style": "bezier",
         },

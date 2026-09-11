@@ -18,15 +18,18 @@ const cmsBase = `${base}cms/`;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href={`${base}styles/austral-tokens.css`} />
     <link rel="stylesheet" href={`${base}styles/dashboard.css`} />
   </head>
   <body class="dashboard-body">
     <div class="dashboard-app">
       <aside class="dashboard-sidebar">
-        <a class="dashboard-brand" href={base}>PPS</a>
+        <a class="dashboard-brand" href={base} aria-label="Universidad Austral — PPS Curriculum">
+          <img src={`${base}brand/logo-horizontal-blanco.png`} alt="Universidad Austral" />
+        </a>
         <nav class="dashboard-nav" aria-label="Site">
           <a class:list={["nav-link", { active: activeNav === "home" }]} href={base}>Home</a>
           <a class:list={["nav-link", { active: activeNav === "analytics" }]} href={`${base}analytics/`}>
