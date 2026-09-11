@@ -12,6 +12,8 @@ pps-analytics/_generated
 !**/TUP/.gitkeep
 **/degrees/*.docx
 brand
+!apps/site/public/brand/
+!apps/site/public/brand/**
 *.pdf
 
 .astro
