@@ -1,0 +1,103 @@
+/*
+ * Universidad Austral — Manual de marca 2024
+ *
+ * Institutional (confirmed):
+ *   Azul Primario  #2E3092  Pantone 2736 C  RGB 24 37 170
+ *   Blanco         #FFFFFF
+ *
+ * Secondary / comunicación general:
+ *   Azul claro     #5599DB  Pantone 2925 C  RGB 85 153 219
+ *
+ * Comunicación interna:
+ *   Celeste suave  #D4EBFA  (web background tint, ~20% from azul claro)
+ *
+ * Ingeniería graph accents (azul-family tints per manual web tint guidance):
+ *   ing-primary    #5599DB
+ *   ing-secondary  #7EB8E8
+ *   ing-tertiary   #A8D0F0
+ *
+ * Graph (Okabe–Ito base hues — analytics only):
+ *   One base per kind; graph nodes are hollow (transparent fill), borders/edges are shades of base.
+ *   Carrera #2E3092  Año #9D4470  Materia #D97706  Concepto #009E73
+ */
+
+:root {
+  --austral-azul-primario: #2e3092;
+  --austral-azul-hover: #2429aa;
+  --austral-azul-soft: rgba(255, 255, 255, 0.12);
+  --austral-azul-muted: rgba(255, 255, 255, 0.72);
+  --austral-blanco: #ffffff;
+  --austral-text: #1e293b;
+  --austral-muted: #64748b;
+  --austral-border: #d8e0ef;
+  --austral-bg: #f5f7fb;
+  --austral-surface: #ffffff;
+  --austral-table-head: #f3f6fb;
+  --austral-edge: #9ca3af;
+
+  --austral-azul-claro: #5599db;
+  --austral-celeste-suave: #d4ebfa;
+  --austral-ing-primary: #5599db;
+  --austral-ing-secondary: #7eb8e8;
+  --austral-ing-tertiary: #a8d0f0;
+
+  --austral-graph-career-base: #2e3092;
+  --austral-graph-year-base: #9d4470;
+  --austral-graph-course-base: #d97706;
+  --austral-graph-concept-base: #009e73;
+  --austral-graph-node-default-base: #64748b;
+  --austral-graph-career-border: var(--austral-graph-career-base);
+  --austral-graph-year-border: var(--austral-graph-year-base);
+  --austral-graph-course-border: var(--austral-graph-course-base);
+  --austral-graph-concept-border: var(--austral-graph-concept-base);
+  --austral-graph-node-default-border: var(--austral-graph-node-default-base);
+  --austral-graph-career-swatch: color-mix(in srgb, var(--austral-graph-career-base) 22%, white);
+  --austral-graph-year-swatch: color-mix(in srgb, var(--austral-graph-year-base) 22%, white);
+  --austral-graph-course-swatch: color-mix(in srgb, var(--austral-graph-course-base) 22%, white);
+  --austral-graph-concept-swatch: color-mix(in srgb, var(--austral-graph-concept-base) 22%, white);
+
+  --austral-badge-video-bg: #fde8ea;
+  --austral-badge-video-fg: #c41e3a;
+  --austral-badge-wikipedia-bg: #eef1f8;
+  --austral-badge-wikipedia-fg: #2e3092;
+  --austral-badge-book-bg: #eef6e8;
+  --austral-badge-book-fg: #3d7a36;
+  --austral-badge-interactive-bg: #e8f0fa;
+  --austral-badge-interactive-fg: #5599db;
+  --austral-badge-text-bg: #dde1f5;
+  --austral-badge-text-fg: #2e3092;
+
+  --austral-severity-error: #c41e3a;
+  --austral-severity-warning: #b45309;
+
+  --dash-bg: var(--austral-bg);
+  --dash-sidebar: var(--austral-azul-primario);
+  --dash-sidebar-text: var(--austral-blanco);
+  --dash-sidebar-muted: var(--austral-azul-muted);
+  --dash-sidebar-active: var(--austral-azul-soft);
+  --dash-accent: var(--austral-azul-primario);
+  --dash-surface: var(--austral-surface);
+  --dash-border: var(--austral-border);
+  --dash-text: var(--austral-text);
+  --dash-muted: var(--austral-muted);
+  --dash-metric-bg: var(--austral-surface);
+  --dash-table-head: var(--austral-table-head);
+  --dash-severity-error: var(--austral-severity-error);
+  --dash-severity-warning: var(--austral-severity-warning);
+
+  --font-heading: "Montserrat", system-ui, sans-serif;
+  --font-body: "Open Sans", system-ui, sans-serif;
+
+  --dash-header-title-size: 1.75rem;
+  --dash-header-title-weight: 700;
+  --dash-header-lead-size: inherit;
+  --dash-header-lead-line-height: 1.5;
+
+  --dash-scrollbar-size: 0.625rem;
+  --dash-scrollbar-track: var(--austral-celeste-suave);
+  --dash-scrollbar-thumb: var(--austral-ing-secondary);
+  --dash-scrollbar-thumb-hover: var(--austral-ing-primary);
+  --dash-scrollbar-sidebar-track: rgba(255, 255, 255, 0.1);
+  --dash-scrollbar-sidebar-thumb: rgba(255, 255, 255, 0.38);
+  --dash-scrollbar-sidebar-thumb-hover: rgba(255, 255, 255, 0.58);
+}

@@ -1,0 +1,9 @@
+html,
+body {
+  height: 100%;
+}
+
+/* CMS mounts SiteShell inside a bare #root; Roadmap uses #root as .dashboard-main. */
+#root:not(.dashboard-main) {
+  display: contents;
+}

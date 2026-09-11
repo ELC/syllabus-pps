@@ -1,0 +1,20 @@
+---
+import { siteRootFromEnv } from "@pps/shell/site-root";
+
+const target = `${siteRootFromEnv(import.meta.env.BASE_URL)}network/`;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>Redirect to Network</title>
+  </head>
+  <body>
+    <p>
+      The graph explorer moved to <a href={target}>Network</a>.
+    </p>
+  </body>
+</html>

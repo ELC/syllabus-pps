@@ -1,0 +1,5401 @@
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-11T23:03:24.257Z","docs":"../../README.md"}
+{
+  "generatedAt": "2026-09-11T23:03:24.257Z",
+  "pages": [
+    {
+      "slug": "acid",
+      "title": "ACID",
+      "normalizedTitle": "acid",
+      "path": "acid.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "ACID resume atomicidad, consistencia, aislamiento y durabilidad; la Wikipedia en español define cada propiedad y por qué importan cuando varias operaciones comparten una base de datos https://es.wikipedia.org/wiki/ACID",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/ACID",
+              "target": "https://es.wikipedia.org/wiki/ACID",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "DB Fiddle permite ejecutar SQL en el navegador y experimentar con transacciones, constraints e integridad en esquemas de ejemplo https://www.db-fiddle.com/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.db-fiddle.com/",
+              "target": "https://www.db-fiddle.com/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre transacciones, concurrencia y recuperación en acceso libre http://www.redbook.io/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video recorre las cuatro propiedades con ejemplos de transferencias y niveles de aislamiento https://www.youtube.com/watch?v=GAe5oB742dw",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=GAe5oB742dw",
+              "target": "https://www.youtube.com/watch?v=GAe5oB742dw",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de Neso Academy sitúa transacciones, SQL y diseño relacional dentro de un curso de bases de datos actualizado https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/ACID",
+          "target": "https://es.wikipedia.org/wiki/ACID",
+          "line": 1
+        },
+        {
+          "raw": "https://www.db-fiddle.com/",
+          "target": "https://www.db-fiddle.com/",
+          "line": 2
+        },
+        {
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=GAe5oB742dw",
+          "target": "https://www.youtube.com/watch?v=GAe5oB742dw",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "transacciones",
+          "target": "transacciones",
+          "normalizedTarget": "transacciones"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "algebra-relacional",
+      "title": "álgebra relacional",
+      "normalizedTitle": "álgebra relacional",
+      "path": "algebra-relacional.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "El álgebra relacional define operaciones sobre relaciones como selección, proyección y unión; la Wikipedia en español presenta operadores primitivos y equivalencias https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
+              "target": "https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "RelaX es una calculadora interactiva que ejecuta selección, proyección, join, unión y diferencia sobre relaciones de ejemplo y muestra el árbol de operadores https://relax.mad.uom.gr/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://relax.mad.uom.gr/",
+              "target": "https://relax.mad.uom.gr/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre modelos relacionales, consultas y sistemas en acceso libre http://www.redbook.io/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video de Neso Academy recorre operaciones unarias de álgebra relacional —selección, proyección y renombre— con ejemplos resueltos https://www.youtube.com/watch?v=8PJGw123zeE",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=8PJGw123zeE",
+              "target": "https://www.youtube.com/watch?v=8PJGw123zeE",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de Neso Academy recorre modelo relacional, álgebra, SQL y diseño con lecciones publicadas desde 2021 https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
+          "target": "https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
+          "line": 1
+        },
+        {
+          "raw": "https://relax.mad.uom.gr/",
+          "target": "https://relax.mad.uom.gr/",
+          "line": 2
+        },
+        {
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=8PJGw123zeE",
+          "target": "https://www.youtube.com/watch?v=8PJGw123zeE",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "modelo entidad-relación",
+          "target": "modelo entidad-relación",
+          "normalizedTarget": "modelo entidad-relación"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "algebra-y-geometria",
+      "title": "álgebra y geometría",
+      "normalizedTitle": "álgebra y geometría",
+      "path": "algebra-y-geometria.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "las #matrices y los #vectores modelan datos, transformaciones y gráficos en productos de software",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#matrices",
+              "target": "matrices",
+              "normalizedTarget": "matrices",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "matrices"
+            },
+            {
+              "raw": "#vectores",
+              "target": "vectores",
+              "normalizedTarget": "vectores",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "vectores"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "un #sistemas-lineales expresa restricciones con #matrices y #vectores antes de pasar a [[análisis matemático i]]",
+          "refs": [
+            {
+              "raw": "[[análisis matemático i]]",
+              "target": "análisis matemático i",
+              "normalizedTarget": "análisis matemático i",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "análisis matemático i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#sistemas-lineales",
+              "target": "sistemas-lineales",
+              "normalizedTarget": "sistemas lineales",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "sistemas lineales"
+            },
+            {
+              "raw": "#matrices",
+              "target": "matrices",
+              "normalizedTarget": "matrices",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "matrices"
+            },
+            {
+              "raw": "#vectores",
+              "target": "vectores",
+              "normalizedTarget": "vectores",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "vectores"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 3,
+          "text": "el #pensamiento-matematico de esta materia prepara [[análisis matemático i]] y [[matemática discreta]] más adelante",
+          "refs": [
+            {
+              "raw": "[[análisis matemático i]]",
+              "target": "análisis matemático i",
+              "normalizedTarget": "análisis matemático i",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "análisis matemático i"
+            },
+            {
+              "raw": "[[matemática discreta]]",
+              "target": "matemática discreta",
+              "normalizedTarget": "matemática discreta",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "matemática discreta"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#pensamiento-matematico",
+              "target": "pensamiento-matematico",
+              "normalizedTarget": "pensamiento matemático",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "pensamiento matemático"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[análisis matemático i]]",
+          "target": "análisis matemático i",
+          "normalizedTarget": "análisis matemático i",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "análisis matemático i"
+        },
+        {
+          "raw": "[[análisis matemático i]]",
+          "target": "análisis matemático i",
+          "normalizedTarget": "análisis matemático i",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "análisis matemático i"
+        },
+        {
+          "raw": "[[matemática discreta]]",
+          "target": "matemática discreta",
+          "normalizedTarget": "matemática discreta",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "matemática discreta"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#matrices",
+          "target": "matrices",
+          "normalizedTarget": "matrices",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "matrices"
+        },
+        {
+          "raw": "#vectores",
+          "target": "vectores",
+          "normalizedTarget": "vectores",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "vectores"
+        },
+        {
+          "raw": "#sistemas-lineales",
+          "target": "sistemas-lineales",
+          "normalizedTarget": "sistemas lineales",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "sistemas lineales"
+        },
+        {
+          "raw": "#matrices",
+          "target": "matrices",
+          "normalizedTarget": "matrices",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "matrices"
+        },
+        {
+          "raw": "#vectores",
+          "target": "vectores",
+          "normalizedTarget": "vectores",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "vectores"
+        },
+        {
+          "raw": "#pensamiento-matematico",
+          "target": "pensamiento-matematico",
+          "normalizedTarget": "pensamiento matemático",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "pensamiento matemático"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "algoritmos",
+      "title": "algoritmos",
+      "normalizedTitle": "algoritmos",
+      "path": "algoritmos.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Un algoritmo es un procedimiento finito y bien definido para resolver un problema; la Wikipedia en español distingue algoritmo, programa e implementación https://es.wikipedia.org/wiki/Algoritmo",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Algoritmo",
+              "target": "https://es.wikipedia.org/wiki/Algoritmo",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "CS50x recorre búsqueda lineal y binaria, ordenamiento, recursión y notación O con pseudocódigo y código en C https://cs50.harvard.edu/x/notes/3/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://cs50.harvard.edu/x/notes/3/",
+              "target": "https://cs50.harvard.edu/x/notes/3/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Algorithms (1.ª ed., 2019) de Erickson es de acceso libre bajo licencia Creative Commons y cubre diseño, correctitud y análisis con ejercicios https://jeffe.cs.illinois.edu/teaching/algorithms/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+              "target": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video de CS50 introduce algoritmos con búsqueda, ordenamiento y análisis de eficiencia en ejemplos concretos https://www.youtube.com/watch?v=jZzyERW7h1A",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+              "target": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de CS50x recorre fundamentos de computación, estructuras y algoritmos en clases completas https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "Esta playlist de MIT 6.006 (primavera 2020) introduce algoritmos y computación con análisis de eficiencia y estructuras de datos https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+              "line": 6
+            }
+          ]
+        },
+        {
+          "line": 7,
+          "text": "La especialización Algorithms de Tim Roughgarden (Stanford) en Coursera cubre divide and conquer, grafos, greedy, programación dinámica y NP-completitud con tareas de programación semanales https://www.coursera.org/specializations/algorithms",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/algorithms",
+              "target": "https://www.coursera.org/specializations/algorithms",
+              "line": 7
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Algoritmo",
+          "target": "https://es.wikipedia.org/wiki/Algoritmo",
+          "line": 1
+        },
+        {
+          "raw": "https://cs50.harvard.edu/x/notes/3/",
+          "target": "https://cs50.harvard.edu/x/notes/3/",
+          "line": 2
+        },
+        {
+          "raw": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+          "target": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+          "target": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "line": 5
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+          "line": 6
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/algorithms",
+          "target": "https://www.coursera.org/specializations/algorithms",
+          "line": 7
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "algoritmos-y-estructuras-de-datos",
+      "title": "algoritmos y estructuras de datos",
+      "normalizedTitle": "algoritmos y estructuras de datos",
+      "path": "algoritmos-y-estructuras-de-datos.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "los #algoritmos se diseñan con #nassi-shneiderman antes de implementarlos en [[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#algoritmos",
+              "target": "algoritmos",
+              "normalizedTarget": "algoritmos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "algoritmos"
+            },
+            {
+              "raw": "#nassi-shneiderman",
+              "target": "nassi-shneiderman",
+              "normalizedTarget": "nassi-shneiderman",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "nassi-shneiderman"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "las #estructuras-de-datos organizan listas, pilas, colas y árboles dentro del diseño algorítmico",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#estructuras-de-datos",
+              "target": "estructuras-de-datos",
+              "normalizedTarget": "estructuras de datos",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "estructuras de datos"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 3,
+          "text": "la #complejidad-algoritmica introduce órdenes de crecimiento y trazas para validar #algoritmos en [[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#complejidad-algoritmica",
+              "target": "complejidad-algoritmica",
+              "normalizedTarget": "complejidad algorítmica",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "complejidad algorítmica"
+            },
+            {
+              "raw": "#algoritmos",
+              "target": "algoritmos",
+              "normalizedTarget": "algoritmos",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "algoritmos"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 4,
+          "text": "el #pensamiento-matematico guía el diseño de #algoritmos antes de escribir código en [[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#pensamiento-matematico",
+              "target": "pensamiento-matematico",
+              "normalizedTarget": "pensamiento matemático",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "pensamiento matemático"
+            },
+            {
+              "raw": "#algoritmos",
+              "target": "algoritmos",
+              "normalizedTarget": "algoritmos",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "algoritmos"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "programación i"
+        },
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "programación i"
+        },
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "programación i"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "algoritmos"
+        },
+        {
+          "raw": "#nassi-shneiderman",
+          "target": "nassi-shneiderman",
+          "normalizedTarget": "nassi-shneiderman",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "nassi-shneiderman"
+        },
+        {
+          "raw": "#estructuras-de-datos",
+          "target": "estructuras-de-datos",
+          "normalizedTarget": "estructuras de datos",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "estructuras de datos"
+        },
+        {
+          "raw": "#complejidad-algoritmica",
+          "target": "complejidad-algoritmica",
+          "normalizedTarget": "complejidad algorítmica",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "complejidad algorítmica"
+        },
+        {
+          "raw": "#algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "algoritmos"
+        },
+        {
+          "raw": "#pensamiento-matematico",
+          "target": "pensamiento-matematico",
+          "normalizedTarget": "pensamiento matemático",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "pensamiento matemático"
+        },
+        {
+          "raw": "#algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "algoritmos"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "analisis-de-sistemas",
+      "title": "análisis de sistemas",
+      "normalizedTitle": "análisis de sistemas",
+      "path": "analisis-de-sistemas.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "los #requerimientos traducen necesidades de negocio en comportamiento verificable para [[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#requerimientos",
+              "target": "requerimientos",
+              "normalizedTarget": "requerimientos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "requerimientos"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "los #casos-de-uso describen interacciones entre actores y el sistema en el #modelado-de-dominio",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#casos-de-uso",
+              "target": "casos-de-uso",
+              "normalizedTarget": "casos de uso",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "casos de uso"
+            },
+            {
+              "raw": "#modelado-de-dominio",
+              "target": "modelado-de-dominio",
+              "normalizedTarget": "modelado de dominio",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "modelado de dominio"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 3,
+          "text": "el #modelado-de-dominio define entidades, reglas y alcance antes de implementar en [[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#modelado-de-dominio",
+              "target": "modelado-de-dominio",
+              "normalizedTarget": "modelado de dominio",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "modelado de dominio"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 4,
+          "text": "los #criterios-de-aceptacion expresan cuándo un #requerimiento queda satisfecho en [[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#criterios-de-aceptacion",
+              "target": "criterios-de-aceptacion",
+              "normalizedTarget": "criterios de aceptación",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "criterios de aceptación"
+            },
+            {
+              "raw": "#requerimiento",
+              "target": "requerimiento",
+              "normalizedTarget": "requerimiento",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "requerimiento"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "programación i"
+        },
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "programación i"
+        },
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "programación i"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#requerimientos",
+          "target": "requerimientos",
+          "normalizedTarget": "requerimientos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "requerimientos"
+        },
+        {
+          "raw": "#casos-de-uso",
+          "target": "casos-de-uso",
+          "normalizedTarget": "casos de uso",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "casos de uso"
+        },
+        {
+          "raw": "#modelado-de-dominio",
+          "target": "modelado-de-dominio",
+          "normalizedTarget": "modelado de dominio",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "modelado de dominio"
+        },
+        {
+          "raw": "#modelado-de-dominio",
+          "target": "modelado-de-dominio",
+          "normalizedTarget": "modelado de dominio",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "modelado de dominio"
+        },
+        {
+          "raw": "#criterios-de-aceptacion",
+          "target": "criterios-de-aceptacion",
+          "normalizedTarget": "criterios de aceptación",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "criterios de aceptación"
+        },
+        {
+          "raw": "#requerimiento",
+          "target": "requerimiento",
+          "normalizedTarget": "requerimiento",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "requerimiento"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "analisis-matematico-i",
+      "title": "análisis matemático i",
+      "normalizedTitle": "análisis matemático i",
+      "path": "analisis-matematico-i.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "el #pensamiento-matematico extiende [[álgebra y geometría]] hacia funciones, límites y derivadas con rigor formal",
+          "refs": [
+            {
+              "raw": "[[álgebra y geometría]]",
+              "target": "álgebra y geometría",
+              "normalizedTarget": "álgebra y geometría",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "álgebra y geometría"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#pensamiento-matematico",
+              "target": "pensamiento-matematico",
+              "normalizedTarget": "pensamiento matemático",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "pensamiento matemático"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "la #induccion-y-logica introduce lógica formal y razonamiento deductivo que reaparece en [[matemática discreta]]",
+          "refs": [
+            {
+              "raw": "[[matemática discreta]]",
+              "target": "matemática discreta",
+              "normalizedTarget": "matemática discreta",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "matemática discreta"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#induccion-y-logica",
+              "target": "induccion-y-logica",
+              "normalizedTarget": "lógica",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "lógica"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 3,
+          "text": "las #demostraciones validan propiedades de funciones, límites y derivadas con argumentos formales",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#demostraciones",
+              "target": "demostraciones",
+              "normalizedTarget": "demostraciones",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "demostraciones"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 4,
+          "text": "la #optimizacion aplica cálculo diferencial a performance, crecimiento y [[estadística i]] más adelante",
+          "refs": [
+            {
+              "raw": "[[estadística i]]",
+              "target": "estadística i",
+              "normalizedTarget": "estadística i",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "estadística i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#optimizacion",
+              "target": "optimizacion",
+              "normalizedTarget": "optimización",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "optimización"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[álgebra y geometría]]",
+          "target": "álgebra y geometría",
+          "normalizedTarget": "álgebra y geometría",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "álgebra y geometría"
+        },
+        {
+          "raw": "[[matemática discreta]]",
+          "target": "matemática discreta",
+          "normalizedTarget": "matemática discreta",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "matemática discreta"
+        },
+        {
+          "raw": "[[estadística i]]",
+          "target": "estadística i",
+          "normalizedTarget": "estadística i",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "estadística i"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#pensamiento-matematico",
+          "target": "pensamiento-matematico",
+          "normalizedTarget": "pensamiento matemático",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "pensamiento matemático"
+        },
+        {
+          "raw": "#induccion-y-logica",
+          "target": "induccion-y-logica",
+          "normalizedTarget": "lógica",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "lógica"
+        },
+        {
+          "raw": "#demostraciones",
+          "target": "demostraciones",
+          "normalizedTarget": "demostraciones",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "demostraciones"
+        },
+        {
+          "raw": "#optimizacion",
+          "target": "optimizacion",
+          "normalizedTarget": "optimización",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "optimización"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "antropologia",
+      "title": "antropología",
+      "normalizedTitle": "antropología",
+      "path": "antropologia.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "formación humanística sobre la condición humana y la cultura en el contexto de la carrera",
+          "refs": [],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "ano-1",
+      "title": "año 1",
+      "normalizedTitle": "año 1",
+      "path": "ano-1.md",
+      "declaredKind": "year",
+      "kind": "year",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "[[álgebra y geometría]]",
+          "refs": [
+            {
+              "raw": "[[álgebra y geometría]]",
+              "target": "álgebra y geometría",
+              "normalizedTarget": "álgebra y geometría",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "álgebra y geometría"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "[[algoritmos y estructuras de datos]]",
+          "refs": [
+            {
+              "raw": "[[algoritmos y estructuras de datos]]",
+              "target": "algoritmos y estructuras de datos",
+              "normalizedTarget": "algoritmos y estructuras de datos",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "algoritmos y estructuras de datos"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 3,
+          "text": "[[análisis de sistemas]]",
+          "refs": [
+            {
+              "raw": "[[análisis de sistemas]]",
+              "target": "análisis de sistemas",
+              "normalizedTarget": "análisis de sistemas",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "análisis de sistemas"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 4,
+          "text": "[[técnicas de comunicación y storytelling]]",
+          "refs": [
+            {
+              "raw": "[[técnicas de comunicación y storytelling]]",
+              "target": "técnicas de comunicación y storytelling",
+              "normalizedTarget": "técnicas de comunicación y storytelling",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "técnicas de comunicación y storytelling"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 5,
+          "text": "[[bases de datos]]",
+          "refs": [
+            {
+              "raw": "[[bases de datos]]",
+              "target": "bases de datos",
+              "normalizedTarget": "bases de datos",
+              "isUuid": false,
+              "line": 5,
+              "resolvedTarget": "bases de datos"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 6,
+          "text": "[[análisis matemático i]]",
+          "refs": [
+            {
+              "raw": "[[análisis matemático i]]",
+              "target": "análisis matemático i",
+              "normalizedTarget": "análisis matemático i",
+              "isUuid": false,
+              "line": 6,
+              "resolvedTarget": "análisis matemático i"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 7,
+          "text": "[[antropología]]",
+          "refs": [
+            {
+              "raw": "[[antropología]]",
+              "target": "antropología",
+              "normalizedTarget": "antropología",
+              "isUuid": false,
+              "line": 7,
+              "resolvedTarget": "antropología"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 8,
+          "text": "[[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 8,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 9,
+          "text": "[[filosofía]]",
+          "refs": [
+            {
+              "raw": "[[filosofía]]",
+              "target": "filosofía",
+              "normalizedTarget": "filosofía",
+              "isUuid": false,
+              "line": 9,
+              "resolvedTarget": "filosofía"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[álgebra y geometría]]",
+          "target": "álgebra y geometría",
+          "normalizedTarget": "álgebra y geometría",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "álgebra y geometría"
+        },
+        {
+          "raw": "[[algoritmos y estructuras de datos]]",
+          "target": "algoritmos y estructuras de datos",
+          "normalizedTarget": "algoritmos y estructuras de datos",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "algoritmos y estructuras de datos"
+        },
+        {
+          "raw": "[[análisis de sistemas]]",
+          "target": "análisis de sistemas",
+          "normalizedTarget": "análisis de sistemas",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "análisis de sistemas"
+        },
+        {
+          "raw": "[[técnicas de comunicación y storytelling]]",
+          "target": "técnicas de comunicación y storytelling",
+          "normalizedTarget": "técnicas de comunicación y storytelling",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "técnicas de comunicación y storytelling"
+        },
+        {
+          "raw": "[[bases de datos]]",
+          "target": "bases de datos",
+          "normalizedTarget": "bases de datos",
+          "isUuid": false,
+          "line": 5,
+          "resolvedTarget": "bases de datos"
+        },
+        {
+          "raw": "[[análisis matemático i]]",
+          "target": "análisis matemático i",
+          "normalizedTarget": "análisis matemático i",
+          "isUuid": false,
+          "line": 6,
+          "resolvedTarget": "análisis matemático i"
+        },
+        {
+          "raw": "[[antropología]]",
+          "target": "antropología",
+          "normalizedTarget": "antropología",
+          "isUuid": false,
+          "line": 7,
+          "resolvedTarget": "antropología"
+        },
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 8,
+          "resolvedTarget": "programación i"
+        },
+        {
+          "raw": "[[filosofía]]",
+          "target": "filosofía",
+          "normalizedTarget": "filosofía",
+          "isUuid": false,
+          "line": 9,
+          "resolvedTarget": "filosofía"
+        }
+      ],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "ano-2",
+      "title": "año 2",
+      "normalizedTitle": "año 2",
+      "path": "ano-2.md",
+      "declaredKind": "year",
+      "kind": "year",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "[[estadística i]]",
+          "refs": [
+            {
+              "raw": "[[estadística i]]",
+              "target": "estadística i",
+              "normalizedTarget": "estadística i",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "estadística i"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "[[matemática discreta]]",
+          "refs": [
+            {
+              "raw": "[[matemática discreta]]",
+              "target": "matemática discreta",
+              "normalizedTarget": "matemática discreta",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "matemática discreta"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[estadística i]]",
+          "target": "estadística i",
+          "normalizedTarget": "estadística i",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "estadística i"
+        },
+        {
+          "raw": "[[matemática discreta]]",
+          "target": "matemática discreta",
+          "normalizedTarget": "matemática discreta",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "matemática discreta"
+        }
+      ],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "bases-de-datos",
+      "title": "bases de datos",
+      "normalizedTitle": "bases de datos",
+      "path": "bases-de-datos.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "el #modelo-entidad-relacion describe entidades y relaciones antes de implementar persistencia en [[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#modelo-entidad-relacion",
+              "target": "modelo-entidad-relacion",
+              "normalizedTarget": "modelo entidad-relación",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "modelo entidad-relación"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "la #algebra-relacional formaliza consultas sobre relaciones antes de escribir #sql",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#algebra-relacional",
+              "target": "algebra-relacional",
+              "normalizedTarget": "álgebra relacional",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "álgebra relacional"
+            },
+            {
+              "raw": "#sql",
+              "target": "sql",
+              "normalizedTarget": "sql",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "sql"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 3,
+          "text": "la #normalizacion reduce redundancia en esquemas relacionales",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#normalizacion",
+              "target": "normalizacion",
+              "normalizedTarget": "normalización",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "normalización"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 4,
+          "text": "las #transacciones aplican propiedades #acid para mantener consistencia con [[programación i]]",
+          "refs": [
+            {
+              "raw": "[[programación i]]",
+              "target": "programación i",
+              "normalizedTarget": "programación i",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "programación i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#transacciones",
+              "target": "transacciones",
+              "normalizedTarget": "transacciones",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "transacciones"
+            },
+            {
+              "raw": "#acid",
+              "target": "acid",
+              "normalizedTarget": "acid",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "ACID"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 5,
+          "text": "el #sql expresa consultas y cambios sobre datos persistentes para productos de software",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#sql",
+              "target": "sql",
+              "normalizedTarget": "sql",
+              "isUuid": false,
+              "line": 5,
+              "resolvedTarget": "sql"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 6,
+          "text": "[[matemática discreta]] profundiza estructuras discretas que sustentan modelado relacional y consultas",
+          "refs": [
+            {
+              "raw": "[[matemática discreta]]",
+              "target": "matemática discreta",
+              "normalizedTarget": "matemática discreta",
+              "isUuid": false,
+              "line": 6,
+              "resolvedTarget": "matemática discreta"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "programación i"
+        },
+        {
+          "raw": "[[programación i]]",
+          "target": "programación i",
+          "normalizedTarget": "programación i",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "programación i"
+        },
+        {
+          "raw": "[[matemática discreta]]",
+          "target": "matemática discreta",
+          "normalizedTarget": "matemática discreta",
+          "isUuid": false,
+          "line": 6,
+          "resolvedTarget": "matemática discreta"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#modelo-entidad-relacion",
+          "target": "modelo-entidad-relacion",
+          "normalizedTarget": "modelo entidad-relación",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "modelo entidad-relación"
+        },
+        {
+          "raw": "#algebra-relacional",
+          "target": "algebra-relacional",
+          "normalizedTarget": "álgebra relacional",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "álgebra relacional"
+        },
+        {
+          "raw": "#sql",
+          "target": "sql",
+          "normalizedTarget": "sql",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "sql"
+        },
+        {
+          "raw": "#normalizacion",
+          "target": "normalizacion",
+          "normalizedTarget": "normalización",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "normalización"
+        },
+        {
+          "raw": "#transacciones",
+          "target": "transacciones",
+          "normalizedTarget": "transacciones",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "transacciones"
+        },
+        {
+          "raw": "#acid",
+          "target": "acid",
+          "normalizedTarget": "acid",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "ACID"
+        },
+        {
+          "raw": "#sql",
+          "target": "sql",
+          "normalizedTarget": "sql",
+          "isUuid": false,
+          "line": 5,
+          "resolvedTarget": "sql"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "casos-de-uso",
+      "title": "casos de uso",
+      "normalizedTitle": "casos de uso",
+      "path": "casos-de-uso.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Un caso de uso describe una interacción entre un actor y el sistema para lograr un objetivo; la Wikipedia en español relaciona actores, escenarios y extensiones https://es.wikipedia.org/wiki/Caso_de_uso",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Caso_de_uso",
+              "target": "https://es.wikipedia.org/wiki/Caso_de_uso",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "Visual Paradigm explica actores, casos de uso, límites del sistema y relaciones include, extend y generalización con ejemplos UML https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
+              "target": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro abierto Software Engineering en Wikibooks dedica una sección a casos de uso, escenarios y su vínculo con requerimientos funcionales https://en.wikibooks.org/wiki/Software_Engineering",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "target": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video de Passionate Business Analyst construye un diagrama de casos de uso paso a paso con actores, sistema y relaciones https://www.youtube.com/watch?v=qFaSEMbiWaI",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+              "target": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Este video de Lucidchart modela actores, casos de uso y relaciones include/extend con un ejemplo de sistema bancario https://www.youtube.com/watch?v=zid-MVo7M-E",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+              "target": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Caso_de_uso",
+          "target": "https://es.wikipedia.org/wiki/Caso_de_uso",
+          "line": 1
+        },
+        {
+          "raw": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
+          "target": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
+          "line": 2
+        },
+        {
+          "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+          "target": "https://en.wikibooks.org/wiki/Software_Engineering",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+          "target": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+          "target": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "modelado de dominio",
+          "target": "modelado de dominio",
+          "normalizedTarget": "modelado de dominio"
+        },
+        {
+          "raw": "requerimientos",
+          "target": "requerimientos",
+          "normalizedTarget": "requerimientos"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "complejidad-algoritmica",
+      "title": "complejidad algorítmica",
+      "normalizedTitle": "complejidad algorítmica",
+      "path": "complejidad-algoritmica.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "La complejidad algorítmica describe cómo crece el costo de un algoritmo con el tamaño de la entrada; la Wikipedia en español introduce notación O y análisis de eficiencia https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
+              "target": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "CS50x dedica una sección a tiempo de ejecución, notación O, Ω y Θ con búsqueda y ordenamiento https://cs50.harvard.edu/x/notes/3/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://cs50.harvard.edu/x/notes/3/",
+              "target": "https://cs50.harvard.edu/x/notes/3/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Algorithms (1.ª ed., 2019) de Erickson es de acceso libre y dedica capítulos a notación asintótica, recurrencias y límites inferiores https://jeffe.cs.illinois.edu/teaching/algorithms/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+              "target": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video de CS50 introduce notación O comparando búsqueda lineal, binaria y distintos métodos de ordenamiento https://www.youtube.com/watch?v=jZzyERW7h1A",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+              "target": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de CS50x incluye clases sobre algoritmos, estructuras y análisis de eficiencia https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
+          "target": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
+          "line": 1
+        },
+        {
+          "raw": "https://cs50.harvard.edu/x/notes/3/",
+          "target": "https://cs50.harvard.edu/x/notes/3/",
+          "line": 2
+        },
+        {
+          "raw": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+          "target": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+          "target": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos"
+        },
+        {
+          "raw": "estructuras de datos",
+          "target": "estructuras de datos",
+          "normalizedTarget": "estructuras de datos"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "criterios-de-aceptacion",
+      "title": "criterios de aceptación",
+      "normalizedTitle": "criterios de aceptación",
+      "path": "criterios-de-aceptacion.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Un criterio de aceptación define condiciones observables para considerar satisfecho un requerimiento; la Wikipedia en inglés lo distingue de especificación técnica y pruebas de aceptación https://en.wikipedia.org/wiki/Acceptance_criteria",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://en.wikipedia.org/wiki/Acceptance_criteria",
+              "target": "https://en.wikipedia.org/wiki/Acceptance_criteria",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "Atlassian muestra cómo escribir criterios en formato dado-cuando-entonces, vincularlos a historias de usuario y evitar ambigüedad https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+              "target": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro abierto Software Engineering en Wikibooks conecta requerimientos, casos de uso y pruebas de aceptación en el ciclo de desarrollo https://en.wikibooks.org/wiki/Software_Engineering",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "target": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Agile Alliance explica qué es una prueba de aceptación y por qué los criterios deben ser verificables y automatizables https://www.agilealliance.org/glossary/acceptance-test/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.agilealliance.org/glossary/acceptance-test/",
+              "target": "https://www.agilealliance.org/glossary/acceptance-test/",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Este video recorre user stories y criterios de aceptación en formato reglas y escenarios dado-cuando-entonces https://www.youtube.com/watch?v=q26147zlcMU",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=q26147zlcMU",
+              "target": "https://www.youtube.com/watch?v=q26147zlcMU",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://en.wikipedia.org/wiki/Acceptance_criteria",
+          "target": "https://en.wikipedia.org/wiki/Acceptance_criteria",
+          "line": 1
+        },
+        {
+          "raw": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+          "target": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+          "line": 2
+        },
+        {
+          "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+          "target": "https://en.wikibooks.org/wiki/Software_Engineering",
+          "line": 3
+        },
+        {
+          "raw": "https://www.agilealliance.org/glossary/acceptance-test/",
+          "target": "https://www.agilealliance.org/glossary/acceptance-test/",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=q26147zlcMU",
+          "target": "https://www.youtube.com/watch?v=q26147zlcMU",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "requerimientos",
+          "target": "requerimientos",
+          "normalizedTarget": "requerimientos"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "demostraciones",
+      "title": "demostraciones",
+      "normalizedTitle": "demostraciones",
+      "path": "demostraciones.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Una demostración establece la verdad de un enunciado mediante una cadena lógica de pasos; la Wikipedia en español distingue directa, contradicción, contrapositiva e inducción https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
+              "target": "https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "El libro Book of Proof (3.ª ed., 2024) de Hammack es de acceso libre y enseña a redactar demostraciones con ejemplos de conjuntos, funciones y combinatoria https://richardhammack.github.io/BookOfProof/Main.pdf",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+              "target": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El curso Mathematical Proofs de Daniel Solow en Coursera enseña a leer y construir demostraciones con técnicas sistemáticas como construcción, contradicción, inducción y contraposición https://www.coursera.org/learn/mathematical-proofs",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/learn/mathematical-proofs",
+              "target": "https://www.coursera.org/learn/mathematical-proofs",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "La inducción matemática prueba propiedades para todo n natural a partir de un caso base y un paso inductivo; la Wikipedia en español muestra el esquema y ejemplos clásicos https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+              "target": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de MIT 18.100A (otoño 2020) introduce inducción matemática y métodos de prueba con ejemplos guiados https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
+              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
+              "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "Esta playlist de MIT 6.042J (otoño 2010) recorre el esquema de inducción con caso base, hipótesis inductiva y paso inductivo https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
+              "target": "https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
+              "line": 6
+            }
+          ]
+        },
+        {
+          "line": 7,
+          "text": "Esta playlist recorre demostración directa asumiendo la hipótesis y deduciendo la conclusión paso a paso https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
+              "target": "https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
+              "line": 7
+            }
+          ]
+        },
+        {
+          "line": 8,
+          "text": "Este video recorre demostración por contradicción asumiendo lo contrario del enunciado y llegando a una inconsistencia https://www.youtube.com/watch?v=YYgepDY3rHw",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+              "target": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+              "line": 8
+            }
+          ]
+        },
+        {
+          "line": 9,
+          "text": "Esta playlist muestra demostración por contrapositiva reformulando la implicación y probando su negación https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
+              "target": "https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
+              "line": 9
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
+          "target": "https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
+          "line": 1
+        },
+        {
+          "raw": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+          "target": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+          "line": 2
+        },
+        {
+          "raw": "https://www.coursera.org/learn/mathematical-proofs",
+          "target": "https://www.coursera.org/learn/mathematical-proofs",
+          "line": 3
+        },
+        {
+          "raw": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+          "target": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
+          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
+          "line": 5
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
+          "target": "https://www.youtube.com/playlist?list=PLB7540DEDD482705B",
+          "line": 6
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
+          "target": "https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR",
+          "line": 7
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+          "target": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+          "line": 8
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
+          "target": "https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF",
+          "line": 9
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "lógica",
+          "target": "lógica",
+          "normalizedTarget": "lógica"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "estadistica-i",
+      "title": "estadística i",
+      "normalizedTitle": "estadística i",
+      "path": "estadistica-i.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "inicia lectura cuantitativa de datos para productos y decisiones a partir de [[análisis matemático i]]",
+          "refs": [
+            {
+              "raw": "[[análisis matemático i]]",
+              "target": "análisis matemático i",
+              "normalizedTarget": "análisis matemático i",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "análisis matemático i"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "conecta cálculo y #optimizacion con métricas, experimentos e inferencia estadística",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#optimizacion",
+              "target": "optimizacion",
+              "normalizedTarget": "optimización",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "optimización"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[análisis matemático i]]",
+          "target": "análisis matemático i",
+          "normalizedTarget": "análisis matemático i",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "análisis matemático i"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#optimizacion",
+          "target": "optimizacion",
+          "normalizedTarget": "optimización",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "optimización"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "estructuras-de-datos",
+      "title": "estructuras de datos",
+      "normalizedTitle": "estructuras de datos",
+      "path": "estructuras-de-datos.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Una estructura de datos organiza información para acceder y modificarla con eficiencia; la Wikipedia en español compara arrays, listas, pilas, colas, árboles y grafos https://es.wikipedia.org/wiki/Estructura_de_datos",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Estructura_de_datos",
+              "target": "https://es.wikipedia.org/wiki/Estructura_de_datos",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "VisuAlgo anima inserciones, búsquedas y recorridos en estructuras clásicas y muestra pseudocódigo junto a la animación https://visualgo.net/en",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://visualgo.net/en",
+              "target": "https://visualgo.net/en",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Open Data Structures (edición en línea, 2020) de Morin implementa listas, tablas hash, árboles y grafos con análisis de costo por operación https://opendatastructures.org/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://opendatastructures.org/",
+              "target": "https://opendatastructures.org/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este curso en video de freeCodeCamp recorre arrays, listas, pilas, colas, árboles, grafos y tablas hash con implementaciones https://www.youtube.com/watch?v=CBYHwZcbD-s",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
+              "target": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de CS50x recorre arrays, listas enlazadas, pilas, colas, árboles, tablas hash y tries https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "La especialización Data Structures and Algorithms de UC San Diego en Coursera combina teoría e implementación con puzzles algorítmicos, grafos, cadenas y proyectos sobre redes y ensamblado genómico https://www.coursera.org/specializations/data-structures-algorithms",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/data-structures-algorithms",
+              "target": "https://www.coursera.org/specializations/data-structures-algorithms",
+              "line": 6
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Estructura_de_datos",
+          "target": "https://es.wikipedia.org/wiki/Estructura_de_datos",
+          "line": 1
+        },
+        {
+          "raw": "https://visualgo.net/en",
+          "target": "https://visualgo.net/en",
+          "line": 2
+        },
+        {
+          "raw": "https://opendatastructures.org/",
+          "target": "https://opendatastructures.org/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
+          "target": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "line": 5
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/data-structures-algorithms",
+          "target": "https://www.coursera.org/specializations/data-structures-algorithms",
+          "line": 6
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "filosofia",
+      "title": "filosofía",
+      "normalizedTitle": "filosofía",
+      "path": "filosofia.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "formación filosófica sobre fundamentos del conocimiento, la ética y el pensamiento crítico",
+          "refs": [],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "lds",
+      "title": "LDS",
+      "normalizedTitle": "lds",
+      "path": "lds.md",
+      "declaredKind": "career",
+      "kind": "career",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "[[año 1]]",
+          "refs": [
+            {
+              "raw": "[[año 1]]",
+              "target": "año 1",
+              "normalizedTarget": "año 1",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "año 1"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "[[año 2]]",
+          "refs": [
+            {
+              "raw": "[[año 2]]",
+              "target": "año 2",
+              "normalizedTarget": "año 2",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "año 2"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[año 1]]",
+          "target": "año 1",
+          "normalizedTarget": "año 1",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "año 1"
+        },
+        {
+          "raw": "[[año 2]]",
+          "target": "año 2",
+          "normalizedTarget": "año 2",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "año 2"
+        }
+      ],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "induccion-y-logica",
+      "title": "lógica",
+      "normalizedTitle": "lógica",
+      "path": "induccion-y-logica.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "La lógica formal estudia cómo evaluar enunciados con conectivos, cuantificadores y reglas de inferencia; la Wikipedia en español introduce proposiciones, tablas de verdad y argumentos válidos https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+              "target": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "El Open Logic Project es un libro abierto de lógica formal con capítulos sobre deducción natural, cuantificadores y métodos de prueba https://openlogicproject.org/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://openlogicproject.org/",
+              "target": "https://openlogicproject.org/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "Esta playlist de MIT 6.042J (primavera 2015) recorre lógica proposicional, conectivos, cuantificadores y métodos de prueba https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "La especialización Introduction to Logic and Critical Thinking de Duke (Think Again) en Coursera recorre argumentos deductivos e inductivos, tablas de verdad y falacias en cuatro cursos https://www.coursera.org/specializations/logic-critical-thinking-duke",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+              "target": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "La especialización Critical Thinking and Logical Reasoning de Pearson en Coursera practica mapeo de argumentos, evaluación de evidencia y razonamiento empírico en ocho módulos cortos https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+              "target": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+          "target": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional",
+          "line": 1
+        },
+        {
+          "raw": "https://openlogicproject.org/",
+          "target": "https://openlogicproject.org/",
+          "line": 2
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+          "line": 3
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+          "target": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+          "line": 4
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+          "target": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "pensamiento matemático",
+          "target": "pensamiento matemático",
+          "normalizedTarget": "pensamiento matemático"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "matematica-discreta",
+      "title": "matemática discreta",
+      "normalizedTitle": "matemática discreta",
+      "path": "matematica-discreta.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "formaliza estructuras discretas usadas por algoritmos y programación, conectando conjuntos, relaciones y grafos con [[bases de datos]] y [[algoritmos y estructuras de datos]]",
+          "refs": [
+            {
+              "raw": "[[bases de datos]]",
+              "target": "bases de datos",
+              "normalizedTarget": "bases de datos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "bases de datos"
+            },
+            {
+              "raw": "[[algoritmos y estructuras de datos]]",
+              "target": "algoritmos y estructuras de datos",
+              "normalizedTarget": "algoritmos y estructuras de datos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "algoritmos y estructuras de datos"
+            }
+          ],
+          "tags": [],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "continúa el #pensamiento-matematico y la #induccion-y-logica de [[análisis matemático i]] hacia razonamiento sobre estructuras finitas",
+          "refs": [
+            {
+              "raw": "[[análisis matemático i]]",
+              "target": "análisis matemático i",
+              "normalizedTarget": "análisis matemático i",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "análisis matemático i"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#pensamiento-matematico",
+              "target": "pensamiento-matematico",
+              "normalizedTarget": "pensamiento matemático",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "pensamiento matemático"
+            },
+            {
+              "raw": "#induccion-y-logica",
+              "target": "induccion-y-logica",
+              "normalizedTarget": "lógica",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "lógica"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[bases de datos]]",
+          "target": "bases de datos",
+          "normalizedTarget": "bases de datos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "bases de datos"
+        },
+        {
+          "raw": "[[algoritmos y estructuras de datos]]",
+          "target": "algoritmos y estructuras de datos",
+          "normalizedTarget": "algoritmos y estructuras de datos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "algoritmos y estructuras de datos"
+        },
+        {
+          "raw": "[[análisis matemático i]]",
+          "target": "análisis matemático i",
+          "normalizedTarget": "análisis matemático i",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "análisis matemático i"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#pensamiento-matematico",
+          "target": "pensamiento-matematico",
+          "normalizedTarget": "pensamiento matemático",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "pensamiento matemático"
+        },
+        {
+          "raw": "#induccion-y-logica",
+          "target": "induccion-y-logica",
+          "normalizedTarget": "lógica",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "lógica"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "matrices",
+      "title": "matrices",
+      "normalizedTitle": "matrices",
+      "path": "matrices.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Una matriz ordena datos en filas y columnas para operar sobre ellos; la Wikipedia en español presenta suma, producto y aplicaciones básicas https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas)",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas",
+              "target": "https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "Interactive Linear Algebra de Georgia Tech introduce matrices como transformaciones lineales con ejemplos y ejercicios https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
+              "target": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Linear Algebra Done Right (4.ª ed., 2024) de Axler está disponible en PDF abierto y desarrolla matrices, operadores lineales y diagonalización https://linear.axler.net/LADR4e.pdf",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://linear.axler.net/LADR4e.pdf",
+              "target": "https://linear.axler.net/LADR4e.pdf",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Interactive Linear Algebra de Georgia Tech conecta ecuaciones matriciales con combinaciones lineales de columnas https://textbooks.math.gatech.edu/ila/matrix-equations.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
+              "target": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist Essence of linear algebra de 3Blue1Brown muestra matrices como transformaciones del plano y composición de operaciones lineales https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+              "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "La especialización Linear Algebra from Elementary to Advanced de Johns Hopkins en Coursera recorre sistemas lineales, determinantes, autovalores y diagonalización con énfasis geométrico y algebraico https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+              "target": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+              "line": 6
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas",
+          "target": "https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas",
+          "line": 1
+        },
+        {
+          "raw": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
+          "target": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
+          "line": 2
+        },
+        {
+          "raw": "https://linear.axler.net/LADR4e.pdf",
+          "target": "https://linear.axler.net/LADR4e.pdf",
+          "line": 3
+        },
+        {
+          "raw": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
+          "target": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+          "line": 5
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "target": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "line": 6
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "vectores",
+          "target": "vectores",
+          "normalizedTarget": "vectores"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "modelado-de-dominio",
+      "title": "modelado de dominio",
+      "normalizedTitle": "modelado de dominio",
+      "path": "modelado-de-dominio.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "El modelado de dominio captura conceptos, reglas y relaciones del negocio en un lenguaje compartido; la Wikipedia en inglés resume entidades, agregados y servicios de dominio https://en.wikipedia.org/wiki/Domain-driven_design",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://en.wikipedia.org/wiki/Domain-driven_design",
+              "target": "https://en.wikipedia.org/wiki/Domain-driven_design",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "DDD Quickly de InfoQ es un libro breve de acceso libre que resume entidades, value objects, agregados y bounded contexts https://www.infoq.com/minibooks/domain-driven-design-quickly/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
+              "target": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El artículo de Martin Fowler sobre el lenguaje ubicuo explica cómo alinear términos del negocio con el diseño del software https://martinfowler.com/bliki/UbiquitousLanguage.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
+              "target": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video de DDD Europe 2019 con Eric Evans recorre bounded contexts, lenguaje ubicuo y colaboración entre equipos https://www.youtube.com/watch?v=pMuiVlnGqjk",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
+              "target": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "El artículo de Martin Fowler sobre domain-driven design resume el enfoque, el lenguaje ubicuo y la colaboración con expertos del dominio https://martinfowler.com/bliki/DomainDrivenDesign.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+              "target": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://en.wikipedia.org/wiki/Domain-driven_design",
+          "target": "https://en.wikipedia.org/wiki/Domain-driven_design",
+          "line": 1
+        },
+        {
+          "raw": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
+          "target": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
+          "line": 2
+        },
+        {
+          "raw": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
+          "target": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
+          "target": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
+          "line": 4
+        },
+        {
+          "raw": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+          "target": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "requerimientos",
+          "target": "requerimientos",
+          "normalizedTarget": "requerimientos"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "modelo-entidad-relacion",
+      "title": "modelo entidad-relación",
+      "normalizedTitle": "modelo entidad-relación",
+      "path": "modelo-entidad-relacion.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Un modelo entidad-relación representa entidades, atributos y relaciones de un dominio; la Wikipedia en español explica cardinalidad y claves https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
+              "target": "https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "Draw.io documenta diagramas entidad-relación con notación crow's foot, claves primarias y foráneas en una herramienta gratuita https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
+              "target": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre modelado de datos y diseño relacional en acceso libre http://www.redbook.io/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "La documentación de Mermaid muestra cómo escribir diagramas ER como texto con entidades, relaciones y cardinalidad https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
+              "target": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Este tutorial de Lucidchart construye un diagrama ER con entidades, atributos, relaciones y cardinalidad paso a paso https://www.youtube.com/watch?v=zid-MVo7M-E",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+              "target": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
+          "target": "https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
+          "line": 1
+        },
+        {
+          "raw": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
+          "target": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
+          "line": 2
+        },
+        {
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
+          "line": 3
+        },
+        {
+          "raw": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
+          "target": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+          "target": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "nassi-shneiderman",
+      "title": "nassi-shneiderman",
+      "normalizedTitle": "nassi-shneiderman",
+      "path": "nassi-shneiderman.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Un diagrama de Nassi-Shneiderman representa algoritmos con cajas estructuradas sin flechas de flujo; la Wikipedia en español muestra secuencia, selección e iteración anidadas https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
+              "target": "https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "Ben Shneiderman recorre la historia de los diagramas NS, sus símbolos y su relación con la programación estructurada https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
+              "target": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Open Data Structures (edición en línea, 2020) de Morin presenta pseudocódigo estructurado con secuencia, selección e iteración antes de implementar estructuras https://opendatastructures.org/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://opendatastructures.org/",
+              "target": "https://opendatastructures.org/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video recorre cómo crear diagramas Nassi-Shneiderman con Structorizer, incluyendo secuencia, decisión e iteración https://www.youtube.com/watch?v=_GSFmwaErFc",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=_GSFmwaErFc",
+              "target": "https://www.youtube.com/watch?v=_GSFmwaErFc",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "La guía de Structorizer documenta bloques de proceso, decisión, repetición y casos en diagramas NS https://help.structorizer.fisch.lu/index.php?menu=49",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://help.structorizer.fisch.lu/index.php?menu=49",
+              "target": "https://help.structorizer.fisch.lu/index.php?menu=49",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
+          "target": "https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
+          "line": 1
+        },
+        {
+          "raw": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
+          "target": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
+          "line": 2
+        },
+        {
+          "raw": "https://opendatastructures.org/",
+          "target": "https://opendatastructures.org/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=_GSFmwaErFc",
+          "target": "https://www.youtube.com/watch?v=_GSFmwaErFc",
+          "line": 4
+        },
+        {
+          "raw": "https://help.structorizer.fisch.lu/index.php?menu=49",
+          "target": "https://help.structorizer.fisch.lu/index.php?menu=49",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "normalizacion",
+      "title": "normalización",
+      "normalizedTitle": "normalización",
+      "path": "normalizacion.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "La normalización reorganiza un esquema relacional para reducir redundancia y anomalías; la Wikipedia en español recorre formas normales 1NF a BCNF https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
+              "target": "https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "DB Fiddle permite crear esquemas en el navegador y comparar tablas desnormalizadas con descomposiciones en formas normales https://www.db-fiddle.com/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.db-fiddle.com/",
+              "target": "https://www.db-fiddle.com/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre diseño relacional y descomposición de esquemas en acceso libre http://www.redbook.io/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video normaliza una tabla de pedidos mostrando inserción, actualización y borrado anómalos https://www.youtube.com/watch?v=GFQaEYEc8_8",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=GFQaEYEc8_8",
+              "target": "https://www.youtube.com/watch?v=GFQaEYEc8_8",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de Neso Academy conecta diseño relacional, SQL y consultas con lecciones publicadas desde 2021 https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
+          "target": "https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
+          "line": 1
+        },
+        {
+          "raw": "https://www.db-fiddle.com/",
+          "target": "https://www.db-fiddle.com/",
+          "line": 2
+        },
+        {
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=GFQaEYEc8_8",
+          "target": "https://www.youtube.com/watch?v=GFQaEYEc8_8",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "modelo entidad-relación",
+          "target": "modelo entidad-relación",
+          "normalizedTarget": "modelo entidad-relación"
+        },
+        {
+          "raw": "álgebra relacional",
+          "target": "álgebra relacional",
+          "normalizedTarget": "álgebra relacional"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "optimizacion",
+      "title": "optimización",
+      "normalizedTitle": "optimización",
+      "path": "optimizacion.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "La optimización busca máximos, mínimos o mejores soluciones bajo restricciones; la Wikipedia en español conecta cálculo, programación lineal y condiciones de optimalidad https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
+              "target": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "Este video muestra cómo usar Desmos para graficar funciones, derivadas y puntos críticos al resolver problemas de optimización https://www.youtube.com/watch?v=trdab2TO820",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=trdab2TO820",
+              "target": "https://www.youtube.com/watch?v=trdab2TO820",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "Active Calculus (edición 2024) de Matt Boelkins es un libro abierto que trata derivadas, criterios de extremos y modelado con ejercicios https://activecalculus.org/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://activecalculus.org/",
+              "target": "https://activecalculus.org/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video recorre tres problemas de optimización con criterios de la derivada y el teorema del valor extremo https://www.youtube.com/watch?v=0vIZdyjoubE",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=0vIZdyjoubE",
+              "target": "https://www.youtube.com/watch?v=0vIZdyjoubE",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist Essence of calculus de 3Blue1Brown construye intuición sobre límites, derivadas e interpretación geométrica de la optimización https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "Este video de Khan Academy maximiza la ganancia de una fábrica modelando ingresos y costos con derivadas https://www.youtube.com/watch?v=dam16G6cZ8k",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+              "target": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+              "line": 6
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
+          "target": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
+          "line": 1
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=trdab2TO820",
+          "target": "https://www.youtube.com/watch?v=trdab2TO820",
+          "line": 2
+        },
+        {
+          "raw": "https://activecalculus.org/",
+          "target": "https://activecalculus.org/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=0vIZdyjoubE",
+          "target": "https://www.youtube.com/watch?v=0vIZdyjoubE",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+          "line": 5
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+          "target": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+          "line": 6
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "demostraciones",
+          "target": "demostraciones",
+          "normalizedTarget": "demostraciones"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "pensamiento-matematico",
+      "title": "pensamiento matemático",
+      "normalizedTitle": "pensamiento matemático",
+      "path": "pensamiento-matematico.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "El pensamiento matemático combina abstracción, razonamiento lógico y argumentación rigurosa; la Wikipedia en inglés distingue demostración, modelado y resolución de problemas https://en.wikipedia.org/wiki/Mathematical_reasoning",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+              "target": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "El Open Logic Project es un libro abierto que recorre lógica proposicional, cuantificadores y métodos de prueba con ejercicios https://openlogicproject.org/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://openlogicproject.org/",
+              "target": "https://openlogicproject.org/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El curso Introduction to Mathematical Thinking de Keith Devlin en Coursera contrasta matemática escolar con razonamiento formal y resolución de problemas abiertos https://www.coursera.org/learn/mathematical-thinking",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/learn/mathematical-thinking",
+              "target": "https://www.coursera.org/learn/mathematical-thinking",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Esta playlist de MIT 6.1200J (primavera 2024) recorre demostraciones, proposiciones y deducciones lógicas como base del razonamiento matemático https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
+              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de MIT 18.090 (primavera 2024) recorre razonamiento matemático, conjuntos, funciones y escritura de demostraciones formales https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+              "target": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+          "target": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+          "line": 1
+        },
+        {
+          "raw": "https://openlogicproject.org/",
+          "target": "https://openlogicproject.org/",
+          "line": 2
+        },
+        {
+          "raw": "https://www.coursera.org/learn/mathematical-thinking",
+          "target": "https://www.coursera.org/learn/mathematical-thinking",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
+          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+          "target": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "persistencia",
+      "title": "persistencia",
+      "normalizedTitle": "persistencia",
+      "path": "persistencia.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "La persistencia guarda el estado de una aplicación más allá de la ejecución del programa; la Wikipedia en español distingue archivos, bases de datos y serialización https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica)",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica",
+              "target": "https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "La documentación de Python explica persistencia con archivos de texto, JSON y el módulo sqlite3 para almacenamiento local https://docs.python.org/es/3/tutorial/inputoutput.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://docs.python.org/es/3/tutorial/inputoutput.html",
+              "target": "https://docs.python.org/es/3/tutorial/inputoutput.html",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre almacenamiento, transacciones y sistemas de datos en acceso libre http://www.redbook.io/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video compara persistencia en archivos de texto, JSON y pickle con guardado y carga entre ejecuciones https://www.youtube.com/watch?v=GN23Baj63sk",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=GN23Baj63sk",
+              "target": "https://www.youtube.com/watch?v=GN23Baj63sk",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Este curso en video de freeCodeCamp enseña PostgreSQL con tablas, consultas SQL y transacciones para almacenamiento persistente https://www.youtube.com/watch?v=SpfIwlAYaKk",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+              "target": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+              "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "Este video recorre SQLite con Python: crear tablas, insertar datos y consultar un archivo de base de datos local https://www.youtube.com/watch?v=byHcYRpMgI4",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+              "target": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+              "line": 6
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica",
+          "target": "https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica",
+          "line": 1
+        },
+        {
+          "raw": "https://docs.python.org/es/3/tutorial/inputoutput.html",
+          "target": "https://docs.python.org/es/3/tutorial/inputoutput.html",
+          "line": 2
+        },
+        {
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=GN23Baj63sk",
+          "target": "https://www.youtube.com/watch?v=GN23Baj63sk",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+          "target": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+          "line": 5
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+          "target": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+          "line": 6
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "python",
+          "target": "python",
+          "normalizedTarget": "python"
+        },
+        {
+          "raw": "programación orientada a objetos",
+          "target": "programación orientada a objetos",
+          "normalizedTarget": "programación orientada a objetos"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "programacion-i",
+      "title": "programación i",
+      "normalizedTitle": "programación i",
+      "path": "programacion-i.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "#python implementa #algoritmos diseñados en [[algoritmos y estructuras de datos]] con control de flujo, funciones y módulos",
+          "refs": [
+            {
+              "raw": "[[algoritmos y estructuras de datos]]",
+              "target": "algoritmos y estructuras de datos",
+              "normalizedTarget": "algoritmos y estructuras de datos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "algoritmos y estructuras de datos"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#python",
+              "target": "python",
+              "normalizedTarget": "python",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "python"
+            },
+            {
+              "raw": "#algoritmos",
+              "target": "algoritmos",
+              "normalizedTarget": "algoritmos",
+              "isUuid": false,
+              "line": 1,
+              "resolvedTarget": "algoritmos"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 2,
+          "text": "los entregables de [[análisis de sistemas]] se implementan en #python como producto funcional de cierre del año",
+          "refs": [
+            {
+              "raw": "[[análisis de sistemas]]",
+              "target": "análisis de sistemas",
+              "normalizedTarget": "análisis de sistemas",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "análisis de sistemas"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#python",
+              "target": "python",
+              "normalizedTarget": "python",
+              "isUuid": false,
+              "line": 2,
+              "resolvedTarget": "python"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 3,
+          "text": "la #programacion-orientada-a-objetos organiza el código en tipos reutilizables dentro de ese producto",
+          "refs": [],
+          "tags": [
+            {
+              "raw": "#programacion-orientada-a-objetos",
+              "target": "programacion-orientada-a-objetos",
+              "normalizedTarget": "programación orientada a objetos",
+              "isUuid": false,
+              "line": 3,
+              "resolvedTarget": "programación orientada a objetos"
+            }
+          ],
+          "urls": []
+        },
+        {
+          "line": 4,
+          "text": "la #persistencia básica conecta el producto con [[bases de datos]] sin duplicar su alcance",
+          "refs": [
+            {
+              "raw": "[[bases de datos]]",
+              "target": "bases de datos",
+              "normalizedTarget": "bases de datos",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "bases de datos"
+            }
+          ],
+          "tags": [
+            {
+              "raw": "#persistencia",
+              "target": "persistencia",
+              "normalizedTarget": "persistencia",
+              "isUuid": false,
+              "line": 4,
+              "resolvedTarget": "persistencia"
+            }
+          ],
+          "urls": []
+        }
+      ],
+      "refs": [
+        {
+          "raw": "[[algoritmos y estructuras de datos]]",
+          "target": "algoritmos y estructuras de datos",
+          "normalizedTarget": "algoritmos y estructuras de datos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "algoritmos y estructuras de datos"
+        },
+        {
+          "raw": "[[análisis de sistemas]]",
+          "target": "análisis de sistemas",
+          "normalizedTarget": "análisis de sistemas",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "análisis de sistemas"
+        },
+        {
+          "raw": "[[bases de datos]]",
+          "target": "bases de datos",
+          "normalizedTarget": "bases de datos",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "bases de datos"
+        }
+      ],
+      "tags": [
+        {
+          "raw": "#python",
+          "target": "python",
+          "normalizedTarget": "python",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "python"
+        },
+        {
+          "raw": "#algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos",
+          "isUuid": false,
+          "line": 1,
+          "resolvedTarget": "algoritmos"
+        },
+        {
+          "raw": "#python",
+          "target": "python",
+          "normalizedTarget": "python",
+          "isUuid": false,
+          "line": 2,
+          "resolvedTarget": "python"
+        },
+        {
+          "raw": "#programacion-orientada-a-objetos",
+          "target": "programacion-orientada-a-objetos",
+          "normalizedTarget": "programación orientada a objetos",
+          "isUuid": false,
+          "line": 3,
+          "resolvedTarget": "programación orientada a objetos"
+        },
+        {
+          "raw": "#persistencia",
+          "target": "persistencia",
+          "normalizedTarget": "persistencia",
+          "isUuid": false,
+          "line": 4,
+          "resolvedTarget": "persistencia"
+        }
+      ],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "programacion-orientada-a-objetos",
+      "title": "programación orientada a objetos",
+      "normalizedTitle": "programación orientada a objetos",
+      "path": "programacion-orientada-a-objetos.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "La programación orientada a objetos organiza software en objetos que combinan estado y comportamiento; la Wikipedia en español resume encapsulación, herencia, polimorfismo y abstracción https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
+              "target": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "Este video de EuroPython contrasta programación estructurada y orientada a objetos sin atarse a un lenguaje concreto https://www.youtube.com/watch?v=M1XL65qj2dU",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=M1XL65qj2dU",
+              "target": "https://www.youtube.com/watch?v=M1XL65qj2dU",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Principles of Object-Oriented Programming de Baloian es de acceso libre y recorre clases, herencia, polimorfismo y diseño con UML https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
+              "target": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este curso en video de freeCodeCamp recorre encapsulación, abstracción, herencia y polimorfismo sin depender de un lenguaje concreto https://www.youtube.com/watch?v=SiBw7os-_zI",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=SiBw7os-_zI",
+              "target": "https://www.youtube.com/watch?v=SiBw7os-_zI",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Este artículo de freeCodeCamp resume los cuatro pilares de la POO con ejemplos conceptuales y buenas prácticas de diseño https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
+              "target": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
+          "target": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
+          "line": 1
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=M1XL65qj2dU",
+          "target": "https://www.youtube.com/watch?v=M1XL65qj2dU",
+          "line": 2
+        },
+        {
+          "raw": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
+          "target": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=SiBw7os-_zI",
+          "target": "https://www.youtube.com/watch?v=SiBw7os-_zI",
+          "line": 4
+        },
+        {
+          "raw": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
+          "target": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "python",
+          "target": "python",
+          "normalizedTarget": "python"
+        },
+        {
+          "raw": "algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "python",
+      "title": "python",
+      "normalizedTitle": "python",
+      "path": "python.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Python es un lenguaje de propósito general con sintaxis legible y tipado dinámico; la Wikipedia en español resume historia, paradigmas y ecosistema https://es.wikipedia.org/wiki/Python",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Python",
+              "target": "https://es.wikipedia.org/wiki/Python",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "La documentación oficial en español enseña tipos básicos, control de flujo, funciones y módulos con ejemplos ejecutables https://docs.python.org/es/3/tutorial/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://docs.python.org/es/3/tutorial/",
+              "target": "https://docs.python.org/es/3/tutorial/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Python Crash Course (3.ª ed., 2023) de Matthes es de acceso libre en su sitio y guía desde variables hasta proyectos con archivos, APIs y visualización https://ehmatthes.github.io/pcc/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://ehmatthes.github.io/pcc/",
+              "target": "https://ehmatthes.github.io/pcc/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este curso en video de freeCodeCamp introduce Python desde cero con funciones, estructuras de datos y mini-proyectos https://www.youtube.com/watch?v=H2EJuAcrZYU",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
+              "target": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de CS Dojo recorre fundamentos de Python con variables, funciones, listas y diccionarios en videos cortos https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
+              "target": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Python",
+          "target": "https://es.wikipedia.org/wiki/Python",
+          "line": 1
+        },
+        {
+          "raw": "https://docs.python.org/es/3/tutorial/",
+          "target": "https://docs.python.org/es/3/tutorial/",
+          "line": 2
+        },
+        {
+          "raw": "https://ehmatthes.github.io/pcc/",
+          "target": "https://ehmatthes.github.io/pcc/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
+          "target": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
+          "target": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "algoritmos",
+          "target": "algoritmos",
+          "normalizedTarget": "algoritmos"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "requerimientos",
+      "title": "requerimientos",
+      "normalizedTitle": "requerimientos",
+      "path": "requerimientos.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Un requerimiento describe una necesidad o restricción que el sistema debe cumplir; la Wikipedia en español distingue funcionales, no funcionales y casos de uso https://es.wikipedia.org/wiki/Requisito",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Requisito",
+              "target": "https://es.wikipedia.org/wiki/Requisito",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "El libro abierto Software Engineering en Wikibooks dedica capítulos a requerimientos funcionales, no funcionales y trazabilidad https://en.wikibooks.org/wiki/Software_Engineering",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "target": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El artículo de Martin Fowler sobre user stories resume el formato como cliente, necesidad y beneficio https://martinfowler.com/bliki/UserStory.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://martinfowler.com/bliki/UserStory.html",
+              "target": "https://martinfowler.com/bliki/UserStory.html",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video de Mike Cohn contrasta user stories, criterios de aceptación y definition of done con ejemplos ágiles https://www.youtube.com/watch?v=Hq9O7mnUNM4",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
+              "target": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Este video de Passionate BA modela actores, casos de uso y relaciones include/extend con ejemplos de un sistema real https://www.youtube.com/watch?v=qFaSEMbiWaI",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+              "target": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Requisito",
+          "target": "https://es.wikipedia.org/wiki/Requisito",
+          "line": 1
+        },
+        {
+          "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+          "target": "https://en.wikibooks.org/wiki/Software_Engineering",
+          "line": 2
+        },
+        {
+          "raw": "https://martinfowler.com/bliki/UserStory.html",
+          "target": "https://martinfowler.com/bliki/UserStory.html",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
+          "target": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+          "target": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "sistemas-lineales",
+      "title": "sistemas lineales",
+      "normalizedTitle": "sistemas lineales",
+      "path": "sistemas-lineales.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Un sistema lineal combina ecuaciones lineales con incógnitas compartidas; la Wikipedia en español describe métodos de solución y tipos de compatibilidad https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
+              "target": "https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "Interactive Linear Algebra de Georgia Tech presenta eliminación gaussiana, matrices aumentadas y formas escalonadas con el algoritmo de reducción https://textbooks.math.gatech.edu/ila/row-reduction.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
+              "target": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro College Algebra (2.ª ed.) de OpenStax es de acceso libre y repasa ecuaciones lineales, sistemas y métodos de solución algebraica https://openstax.org/details/books/college-algebra-2e",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://openstax.org/details/books/college-algebra-2e",
+              "target": "https://openstax.org/details/books/college-algebra-2e",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "El libro Linear Algebra Done Right (4.ª ed., 2024) de Axler está disponible en PDF abierto y conecta sistemas lineales con espacio columna, nulo y rango https://linear.axler.net/LADR4e.pdf",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://linear.axler.net/LADR4e.pdf",
+              "target": "https://linear.axler.net/LADR4e.pdf",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist Essence of linear algebra de 3Blue1Brown muestra cómo interpretar sistemas como intersecciones de transformaciones lineales https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+              "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "La especialización Linear Algebra from Elementary to Advanced de Johns Hopkins en Coursera empieza por ecuaciones lineales y métodos matriciales antes de pasar a autovalores y formas cuadráticas https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+              "target": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+              "line": 6
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
+          "target": "https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
+          "line": 1
+        },
+        {
+          "raw": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
+          "target": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
+          "line": 2
+        },
+        {
+          "raw": "https://openstax.org/details/books/college-algebra-2e",
+          "target": "https://openstax.org/details/books/college-algebra-2e",
+          "line": 3
+        },
+        {
+          "raw": "https://linear.axler.net/LADR4e.pdf",
+          "target": "https://linear.axler.net/LADR4e.pdf",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+          "line": 5
+        },
+        {
+          "raw": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "target": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+          "line": 6
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "matrices",
+          "target": "matrices",
+          "normalizedTarget": "matrices"
+        },
+        {
+          "raw": "vectores",
+          "target": "vectores",
+          "normalizedTarget": "vectores"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "sql",
+      "title": "sql",
+      "normalizedTitle": "sql",
+      "path": "sql.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "SQL es el lenguaje declarativo para definir, consultar y modificar datos relacionales; la Wikipedia en español resume DDL, DML y consultas https://es.wikipedia.org/wiki/SQL",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/SQL",
+              "target": "https://es.wikipedia.org/wiki/SQL",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "SQLBolt enseña SELECT, JOIN, agregación e inserción con ejercicios interactivos en el navegador https://sqlbolt.com/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://sqlbolt.com/",
+              "target": "https://sqlbolt.com/",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre lenguajes de consulta y sistemas relacionales en acceso libre http://www.redbook.io/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este curso en video de freeCodeCamp introduce SQL con PostgreSQL, CRUD, joins, subconsultas y agregación https://www.youtube.com/watch?v=SpfIwlAYaKk",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+              "target": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de Neso Academy recorre modelo relacional, álgebra, SQL y diseño con lecciones publicadas desde 2021 https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/SQL",
+          "target": "https://es.wikipedia.org/wiki/SQL",
+          "line": 1
+        },
+        {
+          "raw": "https://sqlbolt.com/",
+          "target": "https://sqlbolt.com/",
+          "line": 2
+        },
+        {
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+          "target": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "álgebra relacional",
+          "target": "álgebra relacional",
+          "normalizedTarget": "álgebra relacional"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "tecnicas-de-comunicacion-y-storytelling",
+      "title": "técnicas de comunicación y storytelling",
+      "normalizedTitle": "técnicas de comunicación y storytelling",
+      "path": "tecnicas-de-comunicacion-y-storytelling.md",
+      "declaredKind": "course",
+      "kind": "course",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "desarrolla comunicación profesional, escritura y presentación para el trabajo en equipos de software",
+          "refs": [],
+          "tags": [],
+          "urls": []
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [],
+      "nonBulletLines": [],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "transacciones",
+      "title": "transacciones",
+      "normalizedTitle": "transacciones",
+      "path": "transacciones.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Una transacción agrupa operaciones de base de datos que deben completarse como una unidad; la Wikipedia en español describe commit, rollback y estados https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
+              "target": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "La documentación de PostgreSQL muestra BEGIN, COMMIT y ROLLBACK con ejemplos de transferencias entre cuentas https://www.postgresql.org/docs/current/tutorial-transactions.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.postgresql.org/docs/current/tutorial-transactions.html",
+              "target": "https://www.postgresql.org/docs/current/tutorial-transactions.html",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre transacciones, bloqueos y recuperación en acceso libre http://www.redbook.io/",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Este video explica atomicidad, consistencia, aislamiento y durabilidad con transferencias bancarias https://www.youtube.com/watch?v=DtlV5JTnlh4",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
+              "target": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Esta playlist de Neso Academy sitúa transacciones, SQL y diseño relacional dentro de un curso de bases de datos actualizado https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
+          "target": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
+          "line": 1
+        },
+        {
+          "raw": "https://www.postgresql.org/docs/current/tutorial-transactions.html",
+          "target": "https://www.postgresql.org/docs/current/tutorial-transactions.html",
+          "line": 2
+        },
+        {
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
+          "target": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [
+        {
+          "raw": "sql",
+          "target": "sql",
+          "normalizedTarget": "sql"
+        }
+      ],
+      "dependsOnInvalid": false
+    },
+    {
+      "slug": "vectores",
+      "title": "vectores",
+      "normalizedTitle": "vectores",
+      "path": "vectores.md",
+      "declaredKind": "concept",
+      "kind": "concept",
+      "blocks": [
+        {
+          "line": 1,
+          "text": "Un vector representa magnitud y dirección en el plano y el espacio; la Wikipedia en español conecta la noción geométrica con suma, escalar y base https://es.wikipedia.org/wiki/Vector",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://es.wikipedia.org/wiki/Vector",
+              "target": "https://es.wikipedia.org/wiki/Vector",
+              "line": 1
+            }
+          ]
+        },
+        {
+          "line": 2,
+          "text": "El libro College Algebra (2.ª ed.) de OpenStax es de acceso libre y repasa magnitudes, direcciones y operaciones con vectores en el plano https://openstax.org/details/books/college-algebra-2e",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://openstax.org/details/books/college-algebra-2e",
+              "target": "https://openstax.org/details/books/college-algebra-2e",
+              "line": 2
+            }
+          ]
+        },
+        {
+          "line": 3,
+          "text": "Este video de 3Blue1Brown introduce vectores como flechas en el plano y el espacio con suma y producto escalar https://www.youtube.com/watch?v=fNk_zzaMoSs",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "target": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Interactive Linear Algebra de Georgia Tech introduce vectores, suma, combinaciones lineales y cambios de base con visualizaciones https://textbooks.math.gatech.edu/ila/vectors.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://textbooks.math.gatech.edu/ila/vectors.html",
+              "target": "https://textbooks.math.gatech.edu/ila/vectors.html",
+              "line": 4
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "text": "Este video de Khan Academy descompone vectores en componentes horizontal y vertical a partir de magnitud y dirección https://www.youtube.com/watch?v=6Kw2nIwWYL0",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
+              "target": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
+              "line": 5
+            }
+          ]
+        }
+      ],
+      "refs": [],
+      "tags": [],
+      "urls": [
+        {
+          "raw": "https://es.wikipedia.org/wiki/Vector",
+          "target": "https://es.wikipedia.org/wiki/Vector",
+          "line": 1
+        },
+        {
+          "raw": "https://openstax.org/details/books/college-algebra-2e",
+          "target": "https://openstax.org/details/books/college-algebra-2e",
+          "line": 2
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+          "target": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+          "line": 3
+        },
+        {
+          "raw": "https://textbooks.math.gatech.edu/ila/vectors.html",
+          "target": "https://textbooks.math.gatech.edu/ila/vectors.html",
+          "line": 4
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
+          "target": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
+          "line": 5
+        }
+      ],
+      "nonBulletLines": [],
+      "dependsOn": [],
+      "dependsOnInvalid": false
+    }
+  ],
+  "edges": [
+    {
+      "source": "álgebra relacional",
+      "target": "normalización",
+      "kind": "concept-dependency",
+      "rawTarget": "álgebra relacional",
+      "line": 0
+    },
+    {
+      "source": "álgebra relacional",
+      "target": "sql",
+      "kind": "concept-dependency",
+      "rawTarget": "álgebra relacional",
+      "line": 0
+    },
+    {
+      "source": "álgebra y geometría",
+      "target": "análisis matemático i",
+      "kind": "page-ref",
+      "rawTarget": "análisis matemático i",
+      "line": 2
+    },
+    {
+      "source": "álgebra y geometría",
+      "target": "análisis matemático i",
+      "kind": "page-ref",
+      "rawTarget": "análisis matemático i",
+      "line": 3
+    },
+    {
+      "source": "álgebra y geometría",
+      "target": "matemática discreta",
+      "kind": "page-ref",
+      "rawTarget": "matemática discreta",
+      "line": 3
+    },
+    {
+      "source": "álgebra y geometría",
+      "target": "matrices",
+      "kind": "concept-tag",
+      "rawTarget": "matrices",
+      "line": 1
+    },
+    {
+      "source": "álgebra y geometría",
+      "target": "matrices",
+      "kind": "concept-tag",
+      "rawTarget": "matrices",
+      "line": 2
+    },
+    {
+      "source": "álgebra y geometría",
+      "target": "pensamiento matemático",
+      "kind": "concept-tag",
+      "rawTarget": "pensamiento-matematico",
+      "line": 3
+    },
+    {
+      "source": "álgebra y geometría",
+      "target": "sistemas lineales",
+      "kind": "concept-tag",
+      "rawTarget": "sistemas-lineales",
+      "line": 2
+    },
+    {
+      "source": "álgebra y geometría",
+      "target": "vectores",
+      "kind": "concept-tag",
+      "rawTarget": "vectores",
+      "line": 1
+    },
+    {
+      "source": "álgebra y geometría",
+      "target": "vectores",
+      "kind": "concept-tag",
+      "rawTarget": "vectores",
+      "line": 2
+    },
+    {
+      "source": "algoritmos",
+      "target": "complejidad algorítmica",
+      "kind": "concept-dependency",
+      "rawTarget": "algoritmos",
+      "line": 0
+    },
+    {
+      "source": "algoritmos",
+      "target": "estructuras de datos",
+      "kind": "concept-dependency",
+      "rawTarget": "algoritmos",
+      "line": 0
+    },
+    {
+      "source": "algoritmos",
+      "target": "nassi-shneiderman",
+      "kind": "concept-dependency",
+      "rawTarget": "algoritmos",
+      "line": 0
+    },
+    {
+      "source": "algoritmos",
+      "target": "programación orientada a objetos",
+      "kind": "concept-dependency",
+      "rawTarget": "algoritmos",
+      "line": 0
+    },
+    {
+      "source": "algoritmos",
+      "target": "python",
+      "kind": "concept-dependency",
+      "rawTarget": "algoritmos",
+      "line": 0
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "algoritmos",
+      "kind": "concept-tag",
+      "rawTarget": "algoritmos",
+      "line": 1
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "algoritmos",
+      "kind": "concept-tag",
+      "rawTarget": "algoritmos",
+      "line": 3
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "algoritmos",
+      "kind": "concept-tag",
+      "rawTarget": "algoritmos",
+      "line": 4
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "complejidad algorítmica",
+      "kind": "concept-tag",
+      "rawTarget": "complejidad-algoritmica",
+      "line": 3
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "estructuras de datos",
+      "kind": "concept-tag",
+      "rawTarget": "estructuras-de-datos",
+      "line": 2
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "nassi-shneiderman",
+      "kind": "concept-tag",
+      "rawTarget": "nassi-shneiderman",
+      "line": 1
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "pensamiento matemático",
+      "kind": "concept-tag",
+      "rawTarget": "pensamiento-matematico",
+      "line": 4
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 1
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 3
+    },
+    {
+      "source": "algoritmos y estructuras de datos",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 4
+    },
+    {
+      "source": "análisis de sistemas",
+      "target": "casos de uso",
+      "kind": "concept-tag",
+      "rawTarget": "casos-de-uso",
+      "line": 2
+    },
+    {
+      "source": "análisis de sistemas",
+      "target": "criterios de aceptación",
+      "kind": "concept-tag",
+      "rawTarget": "criterios-de-aceptacion",
+      "line": 4
+    },
+    {
+      "source": "análisis de sistemas",
+      "target": "modelado de dominio",
+      "kind": "concept-tag",
+      "rawTarget": "modelado-de-dominio",
+      "line": 2
+    },
+    {
+      "source": "análisis de sistemas",
+      "target": "modelado de dominio",
+      "kind": "concept-tag",
+      "rawTarget": "modelado-de-dominio",
+      "line": 3
+    },
+    {
+      "source": "análisis de sistemas",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 1
+    },
+    {
+      "source": "análisis de sistemas",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 3
+    },
+    {
+      "source": "análisis de sistemas",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 4
+    },
+    {
+      "source": "análisis de sistemas",
+      "target": "requerimiento",
+      "kind": "concept-tag",
+      "rawTarget": "requerimiento",
+      "line": 4
+    },
+    {
+      "source": "análisis de sistemas",
+      "target": "requerimientos",
+      "kind": "concept-tag",
+      "rawTarget": "requerimientos",
+      "line": 1
+    },
+    {
+      "source": "análisis matemático i",
+      "target": "álgebra y geometría",
+      "kind": "page-ref",
+      "rawTarget": "álgebra y geometría",
+      "line": 1
+    },
+    {
+      "source": "análisis matemático i",
+      "target": "demostraciones",
+      "kind": "concept-tag",
+      "rawTarget": "demostraciones",
+      "line": 3
+    },
+    {
+      "source": "análisis matemático i",
+      "target": "estadística i",
+      "kind": "page-ref",
+      "rawTarget": "estadística i",
+      "line": 4
+    },
+    {
+      "source": "análisis matemático i",
+      "target": "lógica",
+      "kind": "concept-tag",
+      "rawTarget": "induccion-y-logica",
+      "line": 2
+    },
+    {
+      "source": "análisis matemático i",
+      "target": "matemática discreta",
+      "kind": "page-ref",
+      "rawTarget": "matemática discreta",
+      "line": 2
+    },
+    {
+      "source": "análisis matemático i",
+      "target": "optimización",
+      "kind": "concept-tag",
+      "rawTarget": "optimizacion",
+      "line": 4
+    },
+    {
+      "source": "análisis matemático i",
+      "target": "pensamiento matemático",
+      "kind": "concept-tag",
+      "rawTarget": "pensamiento-matematico",
+      "line": 1
+    },
+    {
+      "source": "año 1",
+      "target": "álgebra y geometría",
+      "kind": "page-ref",
+      "rawTarget": "álgebra y geometría",
+      "line": 1
+    },
+    {
+      "source": "año 1",
+      "target": "algoritmos y estructuras de datos",
+      "kind": "page-ref",
+      "rawTarget": "algoritmos y estructuras de datos",
+      "line": 2
+    },
+    {
+      "source": "año 1",
+      "target": "análisis de sistemas",
+      "kind": "page-ref",
+      "rawTarget": "análisis de sistemas",
+      "line": 3
+    },
+    {
+      "source": "año 1",
+      "target": "análisis matemático i",
+      "kind": "page-ref",
+      "rawTarget": "análisis matemático i",
+      "line": 6
+    },
+    {
+      "source": "año 1",
+      "target": "antropología",
+      "kind": "page-ref",
+      "rawTarget": "antropología",
+      "line": 7
+    },
+    {
+      "source": "año 1",
+      "target": "bases de datos",
+      "kind": "page-ref",
+      "rawTarget": "bases de datos",
+      "line": 5
+    },
+    {
+      "source": "año 1",
+      "target": "filosofía",
+      "kind": "page-ref",
+      "rawTarget": "filosofía",
+      "line": 9
+    },
+    {
+      "source": "año 1",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 8
+    },
+    {
+      "source": "año 1",
+      "target": "técnicas de comunicación y storytelling",
+      "kind": "page-ref",
+      "rawTarget": "técnicas de comunicación y storytelling",
+      "line": 4
+    },
+    {
+      "source": "año 2",
+      "target": "estadística i",
+      "kind": "page-ref",
+      "rawTarget": "estadística i",
+      "line": 1
+    },
+    {
+      "source": "año 2",
+      "target": "matemática discreta",
+      "kind": "page-ref",
+      "rawTarget": "matemática discreta",
+      "line": 2
+    },
+    {
+      "source": "bases de datos",
+      "target": "ACID",
+      "kind": "concept-tag",
+      "rawTarget": "acid",
+      "line": 4
+    },
+    {
+      "source": "bases de datos",
+      "target": "álgebra relacional",
+      "kind": "concept-tag",
+      "rawTarget": "algebra-relacional",
+      "line": 2
+    },
+    {
+      "source": "bases de datos",
+      "target": "matemática discreta",
+      "kind": "page-ref",
+      "rawTarget": "matemática discreta",
+      "line": 6
+    },
+    {
+      "source": "bases de datos",
+      "target": "modelo entidad-relación",
+      "kind": "concept-tag",
+      "rawTarget": "modelo-entidad-relacion",
+      "line": 1
+    },
+    {
+      "source": "bases de datos",
+      "target": "normalización",
+      "kind": "concept-tag",
+      "rawTarget": "normalizacion",
+      "line": 3
+    },
+    {
+      "source": "bases de datos",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 1
+    },
+    {
+      "source": "bases de datos",
+      "target": "programación i",
+      "kind": "page-ref",
+      "rawTarget": "programación i",
+      "line": 4
+    },
+    {
+      "source": "bases de datos",
+      "target": "sql",
+      "kind": "concept-tag",
+      "rawTarget": "sql",
+      "line": 2
+    },
+    {
+      "source": "bases de datos",
+      "target": "sql",
+      "kind": "concept-tag",
+      "rawTarget": "sql",
+      "line": 5
+    },
+    {
+      "source": "bases de datos",
+      "target": "transacciones",
+      "kind": "concept-tag",
+      "rawTarget": "transacciones",
+      "line": 4
+    },
+    {
+      "source": "demostraciones",
+      "target": "optimización",
+      "kind": "concept-dependency",
+      "rawTarget": "demostraciones",
+      "line": 0
+    },
+    {
+      "source": "estadística i",
+      "target": "análisis matemático i",
+      "kind": "page-ref",
+      "rawTarget": "análisis matemático i",
+      "line": 1
+    },
+    {
+      "source": "estadística i",
+      "target": "optimización",
+      "kind": "concept-tag",
+      "rawTarget": "optimizacion",
+      "line": 2
+    },
+    {
+      "source": "estructuras de datos",
+      "target": "complejidad algorítmica",
+      "kind": "concept-dependency",
+      "rawTarget": "estructuras de datos",
+      "line": 0
+    },
+    {
+      "source": "LDS",
+      "target": "año 1",
+      "kind": "page-ref",
+      "rawTarget": "año 1",
+      "line": 1
+    },
+    {
+      "source": "LDS",
+      "target": "año 2",
+      "kind": "page-ref",
+      "rawTarget": "año 2",
+      "line": 2
+    },
+    {
+      "source": "lógica",
+      "target": "demostraciones",
+      "kind": "concept-dependency",
+      "rawTarget": "lógica",
+      "line": 0
+    },
+    {
+      "source": "matemática discreta",
+      "target": "algoritmos y estructuras de datos",
+      "kind": "page-ref",
+      "rawTarget": "algoritmos y estructuras de datos",
+      "line": 1
+    },
+    {
+      "source": "matemática discreta",
+      "target": "análisis matemático i",
+      "kind": "page-ref",
+      "rawTarget": "análisis matemático i",
+      "line": 2
+    },
+    {
+      "source": "matemática discreta",
+      "target": "bases de datos",
+      "kind": "page-ref",
+      "rawTarget": "bases de datos",
+      "line": 1
+    },
+    {
+      "source": "matemática discreta",
+      "target": "lógica",
+      "kind": "concept-tag",
+      "rawTarget": "induccion-y-logica",
+      "line": 2
+    },
+    {
+      "source": "matemática discreta",
+      "target": "pensamiento matemático",
+      "kind": "concept-tag",
+      "rawTarget": "pensamiento-matematico",
+      "line": 2
+    },
+    {
+      "source": "matrices",
+      "target": "sistemas lineales",
+      "kind": "concept-dependency",
+      "rawTarget": "matrices",
+      "line": 0
+    },
+    {
+      "source": "modelado de dominio",
+      "target": "casos de uso",
+      "kind": "concept-dependency",
+      "rawTarget": "modelado de dominio",
+      "line": 0
+    },
+    {
+      "source": "modelo entidad-relación",
+      "target": "álgebra relacional",
+      "kind": "concept-dependency",
+      "rawTarget": "modelo entidad-relación",
+      "line": 0
+    },
+    {
+      "source": "modelo entidad-relación",
+      "target": "normalización",
+      "kind": "concept-dependency",
+      "rawTarget": "modelo entidad-relación",
+      "line": 0
+    },
+    {
+      "source": "pensamiento matemático",
+      "target": "lógica",
+      "kind": "concept-dependency",
+      "rawTarget": "pensamiento matemático",
+      "line": 0
+    },
+    {
+      "source": "programación i",
+      "target": "algoritmos",
+      "kind": "concept-tag",
+      "rawTarget": "algoritmos",
+      "line": 1
+    },
+    {
+      "source": "programación i",
+      "target": "algoritmos y estructuras de datos",
+      "kind": "page-ref",
+      "rawTarget": "algoritmos y estructuras de datos",
+      "line": 1
+    },
+    {
+      "source": "programación i",
+      "target": "análisis de sistemas",
+      "kind": "page-ref",
+      "rawTarget": "análisis de sistemas",
+      "line": 2
+    },
+    {
+      "source": "programación i",
+      "target": "bases de datos",
+      "kind": "page-ref",
+      "rawTarget": "bases de datos",
+      "line": 4
+    },
+    {
+      "source": "programación i",
+      "target": "persistencia",
+      "kind": "concept-tag",
+      "rawTarget": "persistencia",
+      "line": 4
+    },
+    {
+      "source": "programación i",
+      "target": "programación orientada a objetos",
+      "kind": "concept-tag",
+      "rawTarget": "programacion-orientada-a-objetos",
+      "line": 3
+    },
+    {
+      "source": "programación i",
+      "target": "python",
+      "kind": "concept-tag",
+      "rawTarget": "python",
+      "line": 1
+    },
+    {
+      "source": "programación i",
+      "target": "python",
+      "kind": "concept-tag",
+      "rawTarget": "python",
+      "line": 2
+    },
+    {
+      "source": "programación orientada a objetos",
+      "target": "persistencia",
+      "kind": "concept-dependency",
+      "rawTarget": "programación orientada a objetos",
+      "line": 0
+    },
+    {
+      "source": "python",
+      "target": "persistencia",
+      "kind": "concept-dependency",
+      "rawTarget": "python",
+      "line": 0
+    },
+    {
+      "source": "python",
+      "target": "programación orientada a objetos",
+      "kind": "concept-dependency",
+      "rawTarget": "python",
+      "line": 0
+    },
+    {
+      "source": "requerimientos",
+      "target": "casos de uso",
+      "kind": "concept-dependency",
+      "rawTarget": "requerimientos",
+      "line": 0
+    },
+    {
+      "source": "requerimientos",
+      "target": "criterios de aceptación",
+      "kind": "concept-dependency",
+      "rawTarget": "requerimientos",
+      "line": 0
+    },
+    {
+      "source": "requerimientos",
+      "target": "modelado de dominio",
+      "kind": "concept-dependency",
+      "rawTarget": "requerimientos",
+      "line": 0
+    },
+    {
+      "source": "sql",
+      "target": "transacciones",
+      "kind": "concept-dependency",
+      "rawTarget": "sql",
+      "line": 0
+    },
+    {
+      "source": "transacciones",
+      "target": "ACID",
+      "kind": "concept-dependency",
+      "rawTarget": "transacciones",
+      "line": 0
+    },
+    {
+      "source": "vectores",
+      "target": "matrices",
+      "kind": "concept-dependency",
+      "rawTarget": "vectores",
+      "line": 0
+    },
+    {
+      "source": "vectores",
+      "target": "sistemas lineales",
+      "kind": "concept-dependency",
+      "rawTarget": "vectores",
+      "line": 0
+    }
+  ],
+  "expected": {
+    "contentDir": "../../content/pages",
+    "years": [
+      {
+        "title": "año 1",
+        "courses": [
+          "álgebra y geometría",
+          "algoritmos y estructuras de datos",
+          "análisis de sistemas",
+          "técnicas de comunicación y storytelling",
+          "bases de datos",
+          "análisis matemático i",
+          "antropología",
+          "programación i",
+          "filosofía"
+        ]
+      },
+      {
+        "title": "año 2",
+        "courses": [
+          "estadística i",
+          "matemática discreta"
+        ]
+      }
+    ]
+  }
+}

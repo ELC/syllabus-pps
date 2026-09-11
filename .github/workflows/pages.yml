@@ -21,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SITE_BASE: /syllabus-pps/
+      ANALYTICS_BASE: /syllabus-pps/analytics/
+      NETWORK_BASE: /syllabus-pps/network/
+      ROADMAP_BASE: /syllabus-pps/roadmap/
       CMS_BASE: /syllabus-pps/cms/
     steps:
       - uses: actions/checkout@v4
@@ -44,15 +47,12 @@ jobs:
         run: |
           if [ -n "$SUPABASE_URL" ]; then
             pnpm build:core
-            pnpm --filter pps-analytics build
-            pnpm --filter pps-analytics exec node dist/src/cli/bin/cli.js sync-pull
+            pnpm --filter @pps/analytics-cli build
+            pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-pull
           fi
         continue-on-error: true
 
-      - run: pnpm build:content
-      - run: pnpm --filter @pps/cms build
-      - run: pnpm --filter @pps/site build
-      - run: node scripts/build-pages.mjs
+      - run: pnpm build:pages
 
       - uses: actions/upload-pages-artifact@v3
         with:

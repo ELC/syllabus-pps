@@ -4,8 +4,8 @@ Curriculum content lives in `content/pages/` as repo-native Markdown with YAML f
 
 ## Working With Content
 
-- Edit local files in `content/pages/` for agent workflows, or use the CMS (`apps/cms`) for authors.
-- Run `pnpm --filter pps-analytics exec node dist/src/cli/bin/cli.js sync --push` when local edits should update Supabase.
+- Edit local files in `content/pages/` for agent workflows, or use the CMS (`workspaces/cms`) for authors.
+- Run `pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync --push` when local edits should update Supabase.
 - Keep notes zettelkasten-style: small connected ideas, not Notion-like database records.
 - Use bullet-only bodies (`- ` lines). Non-bullet lines trigger `non-bullet-content` diagnostics.
 - Do not link a page to itself; the title already identifies the page.
@@ -48,10 +48,10 @@ kind: concept
 
 ## PPS Analytics And DAC
 
-Shared business logic lives in `packages/pps-core` (parser, graph, diagnostics, projections). The CLI in `pps-analytics` reads `content/pages/`, writes `_generated/`, and assembles Bruin DAC locally.
+Shared business logic lives in `workspaces/pps-core` (parser, graph, diagnostics, projections). The CLI in `workspaces/pps-analytics` (`@pps/analytics-cli`) reads `content/pages/`, writes `_generated/`, and assembles Bruin DAC locally.
 
-- Do not edit generated files under `pps-analytics/_generated/` by hand.
-- Expected years/courses stay in `pps-analytics/pps.config.ts` via `contentDir`.
+- Do not edit generated files under `workspaces/pps-analytics/_generated/` by hand.
+- Expected years/courses stay in `workspaces/pps-analytics/pps.config.ts` via `contentDir`.
 - CMS blocks saves on diagnostics with severity `error` or `warning`. CI fails on `error` only.
 
 Useful commands from the repository root:
@@ -71,8 +71,8 @@ After changing TypeScript analytics code, run typecheck, tests, and rebuild:
 pnpm typecheck
 pnpm test
 pnpm build:content
-dac validate --dir pps-analytics/_generated/dac
-dac check --dir pps-analytics/_generated/dac
+dac validate --dir workspaces/pps-analytics/_generated/dac
+dac check --dir workspaces/pps-analytics/_generated/dac
 ```
 
 ## Logseq Migration

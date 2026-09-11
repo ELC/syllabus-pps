@@ -2,7 +2,7 @@
   "repo_notes": [
     {
       "author": "PPS",
-      "content": "READ ONLY content/pages/*.md. This wiki is NOT software documentation. Do not read, cite, summarize, or mention AGENTS.md, README.md, pps.config.ts, package.json, or anything under apps/, packages/, pps-analytics/, scripts/, degrees/, .github/. Never describe the monorepo, pnpm workspaces, the parser, the graph engine, diagnostics, the CLI, generated artifacts, dashboards, Supabase sync, the CMS, the Astro site, builds, CI, or tests. If a page cannot be written from curriculum notes alone, do not write it."
+      "content": "READ ONLY content/pages/*.md. This wiki is NOT software documentation. Do not read, cite, summarize, or mention AGENTS.md, README.md, pps.config.ts, package.json, or anything under workspaces/, scripts/, degrees/, .github/. Never describe the monorepo, pnpm workspaces, the parser, the graph engine, diagnostics, the CLI, generated artifacts, dashboards, Supabase sync, the CMS, the public sites, builds, CI, or tests. If a page cannot be written from curriculum notes alone, do not write it."
     },
     {
       "author": "PPS",

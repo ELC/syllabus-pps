@@ -1,0 +1,115 @@
+.cms-workspace {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cms-workspace > .dashboard-header,
+.cms-workspace > .cms-loading,
+.cms-workspace > .cms-error,
+.cms-workspace > .cms-editor-panel,
+.cms-workspace > .cms-actions,
+.cms-workspace > .cms-hint {
+  flex-shrink: 0;
+}
+
+.cms-workspace > .dashboard-table-section {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cms-workspace > .dashboard-table-section .table-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.cms-editor-panel {
+  margin-top: 1.5rem;
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.cms-editor {
+  display: block;
+  width: 100%;
+  min-height: 24rem;
+  border: 0;
+  padding: 1rem 1.1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  resize: vertical;
+  background: transparent;
+  color: inherit;
+}
+
+.cms-editor:focus {
+  outline: none;
+}
+
+.cms-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-shrink: 0;
+}
+
+.cms-button {
+  appearance: none;
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--dash-accent);
+  color: var(--austral-blanco);
+  font-family: var(--font-heading);
+  font: inherit;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+}
+
+.cms-button:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.cms-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cms-status,
+.cms-hint {
+  color: var(--dash-muted);
+  font-size: 0.875rem;
+}
+
+.cms-hint {
+  margin: 0;
+}
+
+.cms-error {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--dash-severity-error);
+  background: color-mix(in srgb, var(--dash-severity-error) 8%, var(--dash-surface));
+  color: var(--dash-text);
+}
+
+.cms-error code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+}
+
+.cms-loading {
+  margin-top: 1rem;
+  color: var(--dash-muted);
+}

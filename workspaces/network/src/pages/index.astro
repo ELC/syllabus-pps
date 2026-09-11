@@ -1,0 +1,114 @@
+---
+import ShellLayout from "@pps/shell/ShellLayout.astro";
+import { GRAPH_NODE_KINDS } from "../scripts/graph-styles";
+import networkCss from "../styles/network.css?url";
+---
+
+<ShellLayout title="PPS Network" activeNav="network">
+  <link slot="head" rel="stylesheet" href={networkCss} />
+  <div slot="sidebar" class="graph-sidebar-filters dashboard-nav-sub">
+    <button
+      id="graph-refresh-layout"
+      type="button"
+      class="graph-sidebar-refresh-button"
+      title="Recomputar el layout del grafo visible"
+    >
+      ↻ Reordenar
+    </button>
+    <p class="dashboard-nav-label">Filtros</p>
+    <p class="graph-filters-help">
+      Cada filtro muestra el nodo elegido y todos los que tienen un camino dirigido hacia él. No
+      es lo mismo que hacer clic en el grafo, que expande el vecindario de un nodo.
+    </p>
+    <div id="graph-filters" class="graph-sidebar-filters-list"></div>
+    <button
+      id="graph-reset-filters"
+      type="button"
+      class="graph-sidebar-reset-filters-button"
+      title="Quitar todos los filtros del sidebar"
+    >
+      Limpiar filtros
+    </button>
+  </div>
+
+  <header class="dashboard-header">
+    <h1>Curriculum network</h1>
+    <p>
+      Use the sidebar filters or search bar to narrow the graph. Click a node to focus its
+      neighborhood; clicking a concept also opens its notes. Remove an expansion with the × on its
+      chip. Double-click to open in the CMS. Click the background to show all nodes again.
+    </p>
+    <div class="graph-header-meta">
+      <ul class="graph-legend" aria-label="Tipos de nodo">
+        {
+          GRAPH_NODE_KINDS.map((item) => (
+            <li class="graph-legend-item">
+              <span
+                class="graph-legend-swatch"
+                style={`background:${item.swatchFill};border-color:${item.border}`}
+              />
+              {item.label}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="graph-search-combobox">
+        <label class="visually-hidden" for="graph-search">Buscar</label>
+        <input
+          id="graph-search"
+          type="search"
+          placeholder="Filtrar nodos por nombre..."
+          autocomplete="off"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="graph-search-results"
+          aria-autocomplete="list"
+        />
+        <div id="graph-search-results" class="graph-search-dropdown" role="listbox"></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="graph-panel">
+    <div id="graph-expansion-list" class="graph-expansion-list" hidden></div>
+    <div id="cy"></div>
+  </section>
+
+  <aside id="graph-concept-panel" class="graph-concept-panel" aria-hidden="true">
+    <div class="graph-concept-panel-backdrop"></div>
+    <div
+      class="graph-concept-panel-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="graph-concept-panel-title"
+    >
+      <header class="graph-concept-panel-header">
+        <h2 id="graph-concept-panel-title"></h2>
+        <button type="button" class="graph-concept-panel-close" aria-label="Cerrar">×</button>
+      </header>
+      <div id="graph-concept-panel-notes" class="graph-concept-panel-body"></div>
+    </div>
+  </aside>
+
+  <script>
+    import { mountGraph } from "../scripts/graph";
+
+    mountGraph("cy", "./data/graph.cy.json", {
+      filtersRootId: "graph-filters",
+      searchInputId: "graph-search",
+      searchResultsId: "graph-search-results",
+      expansionListId: "graph-expansion-list",
+      refreshButtonId: "graph-refresh-layout",
+      resetFiltersButtonId: "graph-reset-filters",
+      conceptPanelId: "graph-concept-panel",
+      conceptNotesUrl: "./data/curriculum-graph.json",
+    }).catch((error) => {
+      console.error(error);
+      const container = document.getElementById("cy");
+      if (container) {
+        container.textContent =
+          "Failed to load graph. Run pnpm build:content and sync artifacts into workspaces/network/public/data/.";
+      }
+    });
+  </script>
+</ShellLayout>

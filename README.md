@@ -2,7 +2,17 @@
 
 Curriculum notes and analytics for the PPS zettelkasten, stored as repo-native Markdown.
 
-Source pages live in [`content/pages/`](content/pages/). Shared parsing, diagnostics, and projections live in [`packages/pps-core/`](packages/pps-core/). The CLI in [`pps-analytics/`](pps-analytics/) builds `_generated/` artifacts and Bruin DAC locally. Authors use [`apps/cms/`](apps/cms/) (Vite + inline validation). The public shell is [`apps/site/`](apps/site/) (Astro).
+Source pages live in [`content/pages/`](content/pages/). Shared parsing, diagnostics, and projections live in [`workspaces/pps-core/`](workspaces/pps-core/). The CLI in [`workspaces/pps-analytics/`](workspaces/pps-analytics/) builds `_generated/` artifacts and Bruin DAC locally. Public sites live under [`workspaces/`](workspaces/):
+
+| Workspace | URL (local) |
+|-----------|-------------|
+| `@pps/site` | `http://localhost:4321/` |
+| `@pps/analytics` | `http://localhost:4323/analytics/` |
+| `@pps/network` | `http://localhost:4324/network/` |
+| `@pps/roadmap` | `http://localhost:4322/roadmap/` (Vite) |
+| `@pps/cms` | `http://localhost:5173/cms/` (Vite) |
+
+Shared chrome lives in [`workspaces/shell/`](workspaces/shell/) (`@pps/shell`).
 
 Agent-oriented conventions live in [AGENTS.md](AGENTS.md).
 
@@ -27,37 +37,43 @@ Requirements:
 pnpm typecheck
 pnpm test
 pnpm build:content
-pnpm dev       # single dev server at http://localhost:4321/ (site, analytics, graph, CMS)
-pnpm build:pages
+pnpm dev              # host + CMS at http://localhost:4321/ and /cms/
+pnpm dev:analytics
+pnpm dev:network
+pnpm dev:roadmap
+pnpm dev:cms
+pnpm build:pages      # combined GitHub Pages dist/
 pnpm inspect
 ```
 
-Content directory defaults to `content/pages/` via `pps-analytics/pps.config.ts`. Override with `--content` or `PPS_CONTENT_DIR`.
+Content directory defaults to `content/pages/` via `workspaces/pps-analytics/pps.config.ts`. Override with `--content` or `PPS_CONTENT_DIR`.
 
 ## Outputs
 
-`pnpm build:content` writes under `pps-analytics/_generated/`:
+`pnpm build:content` writes under `workspaces/pps-analytics/_generated/`:
 
 - `curriculum-graph.json` — full domain graph
 - `graph.cy.json` — Cytoscape.js elements for visualization
-- `dashboards.json` — static snapshot of all DAC dashboards for the site UI
+- `dashboards.json` — static snapshot of all DAC dashboards for the analytics UI
 - `diagnostics.json`
 - `summary.md`
 - `dac/` — Bruin DAC project (local dev)
 
+Artifacts sync into each app's `public/data/` via `scripts/sync-analytics-data.mjs`.
+
 ## GitHub Pages
 
-`pnpm build:pages` builds the Astro site, CMS bundle, and copies analytics artifacts into a combined `dist/` tree for GitHub Pages (`/`, `/cms/`, `/analytics/`).
+`pnpm build:pages` builds all five sites and merges them into `dist/` for GitHub Pages (`/`, `/analytics/`, `/network/`, `/roadmap/`, `/cms/`).
 
 Daily cron workflow: `.github/workflows/pages.yml` (optional Supabase pull → build → deploy).
 
 ## Supabase sync
 
 ```sh
-pnpm --filter pps-analytics build
-node pps-analytics/dist/src/cli/bin/cli.js sync-pull
-node pps-analytics/dist/src/cli/bin/cli.js sync-push
-node pps-analytics/dist/src/cli/bin/cli.js sync-status
+pnpm --filter @pps/analytics-cli build
+pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-pull
+pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-push
+pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-status
 ```
 
 Set `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and optionally `SUPABASE_STORAGE_BUCKET`.

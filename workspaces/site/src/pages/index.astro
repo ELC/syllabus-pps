@@ -1,0 +1,51 @@
+---
+import ShellLayout from "@pps/shell/ShellLayout.astro";
+import { siteRootFromEnv } from "@pps/shell/site-root";
+import siteCss from "../styles/site.css?url";
+
+const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
+
+const links = [
+  {
+    href: `${siteRoot}analytics/`,
+    title: "Analytics",
+    description: "Quality, coverage, and curriculum dashboards generated from content/pages.",
+  },
+  {
+    href: `${siteRoot}network/`,
+    title: "Network",
+    description: "Interactive curriculum graph. Click to focus related nodes; double-click to open in the CMS.",
+  },
+  {
+    href: `${siteRoot}roadmap/`,
+    title: "Roadmaps",
+    description: "Self-paced degree roadmaps ordered by concept prerequisites.",
+  },
+  {
+    href: `${siteRoot}cms/`,
+    title: "CMS",
+    description: "Edit repo-native Markdown with inline diagnostics.",
+  },
+];
+---
+
+<ShellLayout title="PPS Curriculum" activeNav="home">
+  <link slot="head" rel="stylesheet" href={siteCss} />
+  <header class="dashboard-header">
+    <h1>PPS Curriculum</h1>
+    <p>
+      Repo-native curriculum notes, analytics, and authoring tools for the PPS zettelkasten.
+    </p>
+  </header>
+
+  <section class="site-card-grid">
+    {
+      links.map((link) => (
+        <a class="site-card" href={link.href}>
+          <h2>{link.title}</h2>
+          <p>{link.description}</p>
+        </a>
+      ))
+    }
+  </section>
+</ShellLayout>

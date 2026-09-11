@@ -1,7 +1,7 @@
 logs/queries
 node_modules
 dist
-pps-analytics/_generated
+workspaces/pps-analytics/_generated
 **/LCD/*
 !**/LCD/.gitkeep
 **/LDS/*
@@ -12,8 +12,6 @@ pps-analytics/_generated
 !**/TUP/.gitkeep
 **/degrees/*.docx
 brand
-!apps/site/public/brand/
-!apps/site/public/brand/**
 *.pdf
 
 .astro

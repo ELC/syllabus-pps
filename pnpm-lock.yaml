@@ -8,14 +8,27 @@ importers:
 
   .: {}
 
-  apps/cms:
+  workspaces/analytics:
+    dependencies:
+      '@pps/shell':
+        specifier: workspace:*
+        version: link:../shell
+      astro:
+        specifier: ^5.5.2
+        version: 5.18.2(@types/node@24.13.4)(rollup@4.63.1)(typescript@5.9.3)
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  workspaces/cms:
     dependencies:
       '@pps/core':
         specifier: workspace:*
-        version: link:../../packages/pps-core
+        version: link:../pps-core
       '@pps/shell':
         specifier: workspace:*
-        version: link:../../packages/pps-shell
+        version: link:../shell
       '@supabase/supabase-js':
         specifier: ^2.49.1
         version: 2.116.0
@@ -42,14 +55,80 @@ importers:
         specifier: ^6.2.0
         version: 6.4.3(@types/node@24.13.4)
 
-  apps/roadmap:
+  workspaces/network:
     dependencies:
       '@pps/core':
         specifier: workspace:*
-        version: link:../../packages/pps-core
+        version: link:../pps-core
       '@pps/shell':
         specifier: workspace:*
-        version: link:../../packages/pps-shell
+        version: link:../shell
+      astro:
+        specifier: ^5.5.2
+        version: 5.18.2(@types/node@24.13.4)(rollup@4.63.1)(typescript@5.9.3)
+      cytoscape:
+        specifier: ^3.30.4
+        version: 3.34.3
+      cytoscape-dagre:
+        specifier: ^4.0.1
+        version: 4.0.1(cytoscape@3.34.3)
+      cytoscape-fcose:
+        specifier: ^2.2.0
+        version: 2.2.0(cytoscape@3.34.3)
+      dagre:
+        specifier: ^0.8.5
+        version: 0.8.5
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  workspaces/pps-analytics:
+    dependencies:
+      '@pps/core':
+        specifier: workspace:*
+        version: link:../pps-core
+      '@stricli/core':
+        specifier: ^1.3.0
+        version: 1.3.0
+      '@supabase/supabase-js':
+        specifier: ^2.49.1
+        version: 2.116.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.4
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.7(@types/debug@4.1.13)(@types/node@24.13.4)
+
+  workspaces/pps-core:
+    dependencies:
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.3.2
+    devDependencies:
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.4
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  workspaces/roadmap:
+    dependencies:
+      '@pps/core':
+        specifier: workspace:*
+        version: link:../pps-core
+      '@pps/shell':
+        specifier: workspace:*
+        version: link:../shell
       '@xyflow/react':
         specifier: ^12.11.6
         version: 12.11.6(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -79,102 +158,43 @@ importers:
         specifier: ^6.2.0
         version: 6.4.3(@types/node@24.13.4)
 
-  apps/site:
+  workspaces/shell:
     dependencies:
-      '@pps/cms':
+      react:
+        specifier: ^19.0.0
+        version: 19.3.0
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.10
+        version: 19.3.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  workspaces/site:
+    dependencies:
+      '@pps/shell':
         specifier: workspace:*
-        version: link:../cms
-      '@pps/core':
-        specifier: workspace:*
-        version: link:../../packages/pps-core
-      '@pps/roadmap':
-        specifier: workspace:*
-        version: link:../roadmap
+        version: link:../shell
       astro:
         specifier: ^5.5.2
         version: 5.18.2(@types/node@24.13.4)(rollup@4.63.1)(typescript@5.9.3)
-      cytoscape:
-        specifier: ^3.30.4
-        version: 3.34.3
-      cytoscape-dagre:
-        specifier: ^4.0.1
-        version: 4.0.1(cytoscape@3.34.3)
-      cytoscape-fcose:
-        specifier: ^2.2.0
-        version: 2.2.0(cytoscape@3.34.3)
-      dagre:
-        specifier: ^0.8.5
-        version: 0.8.5
+    devDependencies:
+      '@pps/cms':
+        specifier: workspace:*
+        version: link:../cms
       react:
         specifier: ^19.0.0
         version: 19.3.0
       react-dom:
         specifier: ^19.0.0
         version: 19.3.0(react@19.3.0)
-    devDependencies:
-      '@types/react':
-        specifier: ^19.0.10
-        version: 19.3.0
-      '@types/react-dom':
-        specifier: ^19.0.4
-        version: 19.3.0(@types/react@19.3.0)
-      '@vitejs/plugin-react':
-        specifier: ^4.3.4
-        version: 4.7.0(vite@6.4.3(@types/node@24.13.4))
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-
-  packages/pps-core:
-    dependencies:
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.3.2
-    devDependencies:
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
-      '@types/node':
-        specifier: ^24.10.1
-        version: 24.13.4
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/pps-shell:
-    dependencies:
-      react:
-        specifier: ^19.0.0
-        version: 19.3.0
-    devDependencies:
-      '@types/react':
-        specifier: ^19.0.10
-        version: 19.3.0
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  pps-analytics:
-    dependencies:
-      '@pps/core':
-        specifier: workspace:*
-        version: link:../packages/pps-core
-      '@stricli/core':
-        specifier: ^1.3.0
-        version: 1.3.0
-      '@supabase/supabase-js':
-        specifier: ^2.49.1
-        version: 2.116.0
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-    devDependencies:
-      '@types/node':
-        specifier: ^24.10.1
-        version: 24.13.4
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.7(@types/debug@4.1.13)(@types/node@24.13.4)
+      vite:
+        specifier: ^6.2.0
+        version: 6.4.3(@types/node@24.13.4)
 
 packages:
 
