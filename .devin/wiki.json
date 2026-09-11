@@ -1,120 +1,137 @@
 {
   "repo_notes": [
     {
-      "author": "PPS authors",
-      "content": "Generate this wiki ONLY from curriculum notes under content/ (canonical files: content/pages/*.md). Do not document apps/, packages/, pps-analytics/, generated artifacts, CMS/site implementation, CI, or TypeScript. This wiki is an agentic authoring interface: it should help humans and agents edit notes reliably, not explain the software stack.\n\nThe zettelkasten is a graph of small connected notes, not a database of records. Hierarchy is career (LDS) → year (año 1) → course → concept. Expected year-1 courses are: álgebra y geometría, algoritmos y estructuras de datos, análisis de sistemas, técnicas de comunicación y storytelling, bases de datos, análisis matemático i, antropología, programación i, filosofía.\n\nPage files use slug filenames and YAML frontmatter (title, kind). Bodies are bullet-only (`- ` lines). Course notes use inline #hashtags and [[wikilinks]] to concepts and sibling courses. Concept notes are sourced prose bullets with URLs. Do not invent administrative index pages, source-document pages, or artifact pages. Prefer describing what already exists in content/pages and how to extend it without breaking the graph."
+      "author": "PPS",
+      "content": "READ ONLY content/pages/*.md. This wiki is NOT software documentation. Do not read, cite, summarize, or mention AGENTS.md, README.md, pps.config.ts, package.json, or anything under apps/, packages/, pps-analytics/, scripts/, degrees/, .github/. Never describe the monorepo, pnpm workspaces, the parser, the graph engine, diagnostics, the CLI, generated artifacts, dashboards, Supabase sync, the CMS, the Astro site, builds, CI, or tests. If a page cannot be written from curriculum notes alone, do not write it."
+    },
+    {
+      "author": "PPS",
+      "content": "Audience: students and teachers exploring a university computer-science curriculum (Licenciatura en Desarrollo de Software, UTN). They want to understand what each course teaches, what each concept means, how topics connect, and what to study next. Write like a study guide or course catalog: explain the subject matter itself. Never explain how the notes are stored, what frontmatter is, what `kind` means, what wikilinks or hashtags are, or how files are named. Those are implementation details of the notebook, not curriculum knowledge."
+    },
+    {
+      "author": "PPS",
+      "content": "Style: write in Spanish, matching the notes. Keep course and concept names exactly as written (\"análisis matemático i\", \"complejidad algorítmica\"). Prose and short lists only. No code blocks, no file paths, no architecture diagrams, no directory trees. Diagrams are allowed only when they show relationships between courses and concepts, such as prerequisite flow or which course covers which topic. Each page should answer the kind of question a student would actually ask, and should end pointing to related courses or concepts so the wiki can be browsed by curiosity."
+    },
+    {
+      "author": "PPS",
+      "content": "The curriculum: the career is LDS. Año 1 covers álgebra y geometría, algoritmos y estructuras de datos, análisis de sistemas, técnicas de comunicación y storytelling, bases de datos, análisis matemático i, antropología, programación i, and filosofía. Two further courses are already drafted: matemática discreta and estadística i. Concept notes carry curated study sources (Wikipedia, tutorials, open-access books, videos and playlists); surface those as recommended resources with a short note on what each covers, never as a raw link dump."
     }
   ],
   "pages": [
     {
-      "title": "Curriculum zettelkasten",
-      "purpose": "Explain content/pages as the only source of truth for this wiki: one Markdown file per note, YAML frontmatter, slug filename, kinds career/year/course/concept, and the graph career → year → course → concept. State that this wiki exists so authors and agents can edit notes reliably. Ignore all non-content directories.",
+      "title": "La carrera en un vistazo",
+      "purpose": "Presentar la carrera LDS: qué se estudia, cómo se agrupan las materias por año y qué grandes áreas la componen (programación, datos, matemática, análisis de sistemas, formación humanística). Servir de punto de entrada para explorar materias y conceptos, y responder la pregunta '¿de qué se trata esta carrera?'.",
       "parent": null,
       "page_notes": [
         {
-          "content": "Start from content/pages/lds.md (career LDS) and content/pages/ano-1.md (año 1). List kinds and typical page sizes from real files. Do not summarize the monorepo."
+          "content": "Panorama del contenido curricular, no del repositorio. Nada sobre archivos, formatos ni herramientas."
         }
       ]
     },
     {
-      "title": "Authoring contract",
-      "purpose": "Document how to create and edit files in content/pages: required frontmatter (title, kind), slug filenames, bullet-only bodies, wikilink resolution (title then slug then normalized match), hashtags vs [[wikilinks]], no self-links, and that the page title already identifies the note.",
-      "parent": "Curriculum zettelkasten",
-      "page_notes": [
-        {
-          "content": "Mirror AGENTS.md page format using real examples from content/pages (programación i as course, algoritmos as concept). CMS blocks error/warning diagnostics; mention that only `- ` bullets are parsed (non-bullet-content)."
-        }
-      ]
+      "title": "Año 1: qué vas a cursar",
+      "purpose": "Recorrer las nueve materias de año 1 explicando en una o dos frases de qué trata cada una, qué aporta al perfil profesional y cómo se apoyan entre sí durante el año. Incluir una guía de qué esperar del año completo.",
+      "parent": "La carrera en un vistazo"
     },
     {
-      "title": "Reliable edits and quality bar",
-      "purpose": "Give agents a checklist for safe edits in content/: keep notes small and connected; course pages must link concepts; concept pages need at least three mixed sources (Wikipedia, written, video) plus one recent book named in prose; each concept bullet needs a source URL; prefer recent videos and interactive/web resources; do not add empty, orphan, administrative, or self-linked pages.",
-      "parent": "Curriculum zettelkasten",
-      "page_notes": [
-        {
-          "content": "Ground the checklist in existing concept pages such as content/pages/algoritmos.md. Flag thin course pages (antropología, filosofía, técnicas de comunicación y storytelling) as incomplete relative to courses that already link concepts. Do not document diagnostic code internals; describe author-facing rules only."
-        }
-      ]
+      "title": "Cómo se conectan las materias",
+      "purpose": "Explicar los recorridos de aprendizaje: qué materia prepara a cuál, qué temas se retoman más adelante y en qué orden conviene profundizar. Cubrir cadenas como álgebra y geometría hacia análisis matemático i, análisis matemático i hacia matemática discreta y estadística i, y algoritmos y estructuras de datos con análisis de sistemas y bases de datos convergiendo en programación i. Un diagrama de dependencias entre materias es bienvenido.",
+      "parent": "La carrera en un vistazo"
     },
     {
-      "title": "Career and year map",
-      "purpose": "Document the LDS career page and año 1 year page in content/pages: what they link, how expected courses attach to the year, and how an agent should add a new course without breaking the year map.",
-      "parent": "Curriculum zettelkasten"
+      "title": "Guía de estudio y recursos",
+      "purpose": "Reunir los recursos recomendados que aparecen en las notas de conceptos, organizados por área y por formato: libros de acceso abierto, tutoriales, videos y playlists. Indicar para cada recurso qué cubre y para qué momento del estudio sirve, para que alguien pueda armarse un plan de lectura.",
+      "parent": "La carrera en un vistazo"
     },
     {
-      "title": "Año 1 courses",
-      "purpose": "Overview of every year-1 course note in content/pages: which files exist, which already link concepts, and which still lack concept coverage. Point to child pages for each course.",
-      "parent": "Career and year map"
+      "title": "Preguntas frecuentes",
+      "purpose": "Responder preguntas típicas de estudiantes usando el contenido curricular: qué materia enseña determinado tema, dónde se ve un concepto por primera vez, qué conviene repasar antes de una materia, qué diferencia hay entre conceptos parecidos (por ejemplo álgebra relacional y SQL, o requerimientos y criterios de aceptación), y qué materias son más teóricas o más prácticas.",
+      "parent": "La carrera en un vistazo"
+    },
+    {
+      "title": "Glosario de conceptos",
+      "purpose": "Definir en una o dos frases cada concepto del plan, ordenado alfabéticamente, indicando en qué materias aparece. Pensado para consulta rápida mientras se cursa.",
+      "parent": "La carrera en un vistazo"
+    },
+    {
+      "title": "Materias de año 1",
+      "purpose": "Índice navegable de las materias del primer año con una descripción breve de cada una y los conceptos centrales que trabaja, para elegir por dónde seguir explorando.",
+      "parent": "La carrera en un vistazo"
     },
     {
       "title": "Álgebra y geometría",
-      "purpose": "Document content/pages/algebra-y-geometria.md: course bullets, linked concepts (matrices, vectores, sistemas lineales, pensamiento matemático), and downstream wikilinks to análisis matemático i and matemática discreta.",
-      "parent": "Año 1 courses"
+      "purpose": "Explicar qué se estudia en la materia: matrices, vectores y sistemas lineales como herramientas para modelar datos, transformaciones y gráficos en software, y el pensamiento matemático que prepara para análisis matemático i y matemática discreta.",
+      "parent": "Materias de año 1"
     },
     {
       "title": "Algoritmos y estructuras de datos",
-      "purpose": "Document content/pages/algoritmos-y-estructuras-de-datos.md: how the course designs algorithms with Nassi-Shneiderman, data structures, complexity, and mathematical thinking before implementación in programación i.",
-      "parent": "Año 1 courses"
+      "purpose": "Explicar el diseño de algoritmos, su representación con diagramas Nassi-Shneiderman, las estructuras de datos (listas, pilas, colas, árboles) y el análisis de complejidad algorítmica, y cómo todo eso se implementa después en programación i.",
+      "parent": "Materias de año 1"
     },
     {
       "title": "Análisis de sistemas",
-      "purpose": "Document content/pages/analisis-de-sistemas.md: requirements, use cases, domain modeling, and acceptance criteria as the analysis path into programación i.",
-      "parent": "Año 1 courses"
+      "purpose": "Explicar cómo se traducen necesidades de negocio en software: requerimientos, casos de uso, modelado de dominio y criterios de aceptación, y cómo esos entregables alimentan la implementación en programación i.",
+      "parent": "Materias de año 1"
     },
     {
       "title": "Técnicas de comunicación y storytelling",
-      "purpose": "Document content/pages/tecnicas-de-comunicacion-y-storytelling.md as a thin course note (professional communication) and what a reliable edit would add: concept links without turning it into an index page.",
-      "parent": "Año 1 courses"
+      "purpose": "Explicar el objetivo de la materia: comunicación profesional, escritura y presentación para el trabajo en equipos de software, y por qué es relevante para quien desarrolla.",
+      "parent": "Materias de año 1"
     },
     {
       "title": "Bases de datos",
-      "purpose": "Document content/pages/bases-de-datos.md: entity-relationship modeling, relational algebra, SQL, normalization, transactions/ACID, and how the course connects to programación i and matemática discreta.",
-      "parent": "Año 1 courses"
+      "purpose": "Explicar el recorrido de la materia: modelo entidad-relación, álgebra relacional, SQL, normalización, transacciones y propiedades ACID, y cómo se relaciona con la persistencia que se implementa en programación i y con matemática discreta.",
+      "parent": "Materias de año 1"
     },
     {
       "title": "Análisis matemático i",
-      "purpose": "Document content/pages/analisis-matematico-i.md: pensamiento matemático, inducción y lógica, demostraciones, and optimización, including wikilinks to álgebra y geometría and later courses that may not exist yet.",
-      "parent": "Año 1 courses"
+      "purpose": "Explicar funciones, límites y derivadas con rigor formal, el papel de la inducción y la lógica, las demostraciones y la optimización, y cómo la materia se proyecta hacia matemática discreta y estadística i.",
+      "parent": "Materias de año 1"
     },
     {
       "title": "Antropología",
-      "purpose": "Document content/pages/antropologia.md as a humanistic course note that currently has no concept links, and how to extend it reliably if authors add concepts.",
-      "parent": "Año 1 courses"
+      "purpose": "Explicar el aporte de la formación humanística sobre la condición humana y la cultura dentro de una carrera de desarrollo de software.",
+      "parent": "Materias de año 1"
     },
     {
       "title": "Programación i",
-      "purpose": "Document content/pages/programacion-i.md as the implementation course: Python, algorithms from algoritmos y estructuras de datos, OOP, persistencia, and deliverables from análisis de sistemas / bases de datos.",
-      "parent": "Año 1 courses"
+      "purpose": "Explicar la materia donde converge el año: Python como lenguaje, la implementación de algoritmos diseñados en algoritmos y estructuras de datos, la programación orientada a objetos, la persistencia básica hacia bases de datos y el producto funcional que cierra el año a partir de análisis de sistemas.",
+      "parent": "Materias de año 1"
     },
     {
       "title": "Filosofía",
-      "purpose": "Document content/pages/filosofia.md as a thin humanistic course note and how agents should edit it without inventing administrative structure.",
-      "parent": "Año 1 courses"
+      "purpose": "Explicar el aporte de la materia: fundamentos del conocimiento, ética y pensamiento crítico aplicados al ejercicio profesional.",
+      "parent": "Materias de año 1"
     },
     {
-      "title": "Concept notes",
-      "purpose": "Explain concept pages in content/pages (kind: concept): sourced prose bullets, mix of Wikipedia / written / video / book, no self-links, links to other concepts only (not to courses except as source references). Cluster existing concepts for authors; do not dump every URL unless it illustrates the sourcing pattern.",
-      "parent": "Curriculum zettelkasten"
+      "title": "Matemática discreta",
+      "purpose": "Explicar la materia ya esbozada en las notas: conjuntos, relaciones y grafos como estructuras discretas que sustentan algoritmos y bases de datos, y su continuidad con el pensamiento matemático e inducción y lógica de análisis matemático i.",
+      "parent": "Materias de año 1"
     },
     {
-      "title": "Programming and algorithms concepts",
-      "purpose": "Document concept files algoritmos, nassi-shneiderman, estructuras-de-datos, complejidad-algoritmica, python, programacion-orientada-a-objetos, and persistencia: what each note covers, how courses tag them, and the source mix authors should preserve or improve.",
-      "parent": "Concept notes"
+      "title": "Estadística i",
+      "purpose": "Explicar la materia ya esbozada en las notas: lectura cuantitativa de datos para productos y decisiones, y la conexión entre cálculo, optimización, métricas, experimentos e inferencia estadística.",
+      "parent": "Materias de año 1"
     },
     {
-      "title": "Database concepts",
-      "purpose": "Document concept files modelo-entidad-relacion, algebra-relacional, sql, normalizacion, transacciones, and acid: how bases de datos links them and how sourced bullets should stay complementary rather than duplicated.",
-      "parent": "Concept notes"
+      "title": "Conceptos de programación",
+      "purpose": "Explicar los conceptos de programación del plan: algoritmos, diagramas Nassi-Shneiderman, estructuras de datos, complejidad algorítmica, Python, programación orientada a objetos y persistencia. Para cada uno, qué es, por qué importa, en qué materias aparece y qué recursos conviene usar para estudiarlo.",
+      "parent": "Glosario de conceptos"
     },
     {
-      "title": "Systems analysis concepts",
-      "purpose": "Document concept files requerimientos, casos-de-uso, modelado-de-dominio, and criterios-de-aceptacion: how análisis de sistemas uses them and how to keep notes small and linked.",
-      "parent": "Concept notes"
+      "title": "Conceptos de bases de datos",
+      "purpose": "Explicar modelo entidad-relación, álgebra relacional, SQL, normalización, transacciones y ACID: qué resuelve cada uno, cómo se encadenan del modelado a la consulta y a la consistencia, y qué recursos usar para profundizar.",
+      "parent": "Glosario de conceptos"
     },
     {
-      "title": "Mathematics concepts",
-      "purpose": "Document concept files matrices, vectores, sistemas-lineales, pensamiento-matematico, induccion-y-logica, demostraciones, and optimizacion: how álgebra y geometría and análisis matemático i reference them, including forward links to courses that may still be missing.",
-      "parent": "Concept notes"
+      "title": "Conceptos de análisis de sistemas",
+      "purpose": "Explicar requerimientos, casos de uso, modelado de dominio y criterios de aceptación: qué aporta cada artefacto conceptual, en qué se diferencian y cómo se usan juntos para definir un sistema antes de programarlo.",
+      "parent": "Glosario de conceptos"
+    },
+    {
+      "title": "Conceptos de matemática",
+      "purpose": "Explicar matrices, vectores, sistemas lineales, pensamiento matemático, inducción y lógica, demostraciones y optimización: qué significan, qué intuición conviene construir, en qué materias se usan y qué recursos ayudan a estudiarlos.",
+      "parent": "Glosario de conceptos"
     }
   ]
 }
