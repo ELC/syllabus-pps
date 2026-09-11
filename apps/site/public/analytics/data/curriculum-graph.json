@@ -1,6 +1,6 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-10T20:40:18.430Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"curriculum-graph","generatedAt":"2026-09-11T00:33:55.447Z","docs":"../../README.md"}
 {
-  "generatedAt": "2026-09-10T20:40:18.430Z",
+  "generatedAt": "2026-09-11T00:33:55.447Z",
   "pages": [
     {
       "slug": "acid",
@@ -12,7 +12,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "ACID resume atomicidad, consistencia, aislamiento y durabilidad en transacciones de base de datos; referencia https://es.wikipedia.org/wiki/ACID",
+          "text": "ACID resume atomicidad, consistencia, aislamiento y durabilidad; la Wikipedia en español define cada propiedad y por qué importan cuando varias operaciones comparten una base de datos https://es.wikipedia.org/wiki/ACID",
           "refs": [],
           "tags": [],
           "urls": [
@@ -25,52 +25,52 @@
         },
         {
           "line": 2,
-          "text": "guía breve según https://www.mongodb.com/resources/basics/databases/acid-transactions",
+          "text": "DB Fiddle permite ejecutar SQL en el navegador y experimentar con transacciones, constraints e integridad en esquemas de ejemplo https://www.db-fiddle.com/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.mongodb.com/resources/basics/databases/acid-transactions",
-              "target": "https://www.mongodb.com/resources/basics/databases/acid-transactions",
+              "raw": "https://www.db-fiddle.com/",
+              "target": "https://www.db-fiddle.com/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://db-book.com/",
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre transacciones, concurrencia y recuperación en acceso libre http://www.redbook.io/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://db-book.com/",
-              "target": "https://db-book.com/",
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=yaQ5YMWORd4",
+          "text": "Este video recorre las cuatro propiedades con ejemplos de transferencias y niveles de aislamiento https://www.youtube.com/watch?v=GAe5oB742dw",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=yaQ5YMWORd4",
-              "target": "https://www.youtube.com/watch?v=yaQ5YMWORd4",
+              "raw": "https://www.youtube.com/watch?v=GAe5oB742dw",
+              "target": "https://www.youtube.com/watch?v=GAe5oB742dw",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Esta playlist de Neso Academy sitúa transacciones, SQL y diseño relacional dentro de un curso de bases de datos actualizado https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": 5
             }
           ]
@@ -85,23 +85,23 @@
           "line": 1
         },
         {
-          "raw": "https://www.mongodb.com/resources/basics/databases/acid-transactions",
-          "target": "https://www.mongodb.com/resources/basics/databases/acid-transactions",
+          "raw": "https://www.db-fiddle.com/",
+          "target": "https://www.db-fiddle.com/",
           "line": 2
         },
         {
-          "raw": "https://db-book.com/",
-          "target": "https://db-book.com/",
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=yaQ5YMWORd4",
-          "target": "https://www.youtube.com/watch?v=yaQ5YMWORd4",
+          "raw": "https://www.youtube.com/watch?v=GAe5oB742dw",
+          "target": "https://www.youtube.com/watch?v=GAe5oB742dw",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "line": 5
         }
       ],
@@ -117,7 +117,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "el álgebra relacional define operaciones sobre relaciones como selección, proyección y unión; referencia https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
+          "text": "El álgebra relacional define operaciones sobre relaciones como selección, proyección y unión; la Wikipedia en español presenta operadores primitivos y equivalencias https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
           "refs": [],
           "tags": [],
           "urls": [
@@ -130,52 +130,52 @@
         },
         {
           "line": 2,
-          "text": "repaso breve según https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql",
+          "text": "RelaX es una calculadora interactiva que ejecuta selección, proyección, join, unión y diferencia sobre relaciones de ejemplo y muestra el árbol de operadores https://relax.mad.uom.gr/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql",
-              "target": "https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql",
+              "raw": "https://relax.mad.uom.gr/",
+              "target": "https://relax.mad.uom.gr/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://db-book.com/",
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre modelos relacionales, consultas y sistemas en acceso libre http://www.redbook.io/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://db-book.com/",
-              "target": "https://db-book.com/",
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=OqjJjpjDRLc",
+          "text": "Este video de Neso Academy recorre operaciones unarias de álgebra relacional —selección, proyección y renombre— con ejemplos resueltos https://www.youtube.com/watch?v=8PJGw123zeE",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=OqjJjpjDRLc",
-              "target": "https://www.youtube.com/watch?v=OqjJjpjDRLc",
+              "raw": "https://www.youtube.com/watch?v=8PJGw123zeE",
+              "target": "https://www.youtube.com/watch?v=8PJGw123zeE",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Esta playlist de Neso Academy recorre modelo relacional, álgebra, SQL y diseño con lecciones publicadas desde 2021 https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": 5
             }
           ]
@@ -190,23 +190,23 @@
           "line": 1
         },
         {
-          "raw": "https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql",
-          "target": "https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql",
+          "raw": "https://relax.mad.uom.gr/",
+          "target": "https://relax.mad.uom.gr/",
           "line": 2
         },
         {
-          "raw": "https://db-book.com/",
-          "target": "https://db-book.com/",
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=OqjJjpjDRLc",
-          "target": "https://www.youtube.com/watch?v=OqjJjpjDRLc",
+          "raw": "https://www.youtube.com/watch?v=8PJGw123zeE",
+          "target": "https://www.youtube.com/watch?v=8PJGw123zeE",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "line": 5
         }
       ],
@@ -408,7 +408,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "un algoritmo es un procedimiento finito y bien definido para resolver un problema; referencia https://es.wikipedia.org/wiki/Algoritmo",
+          "text": "Un algoritmo es un procedimiento finito y bien definido para resolver un problema; la Wikipedia en español distingue algoritmo, programa e implementación https://es.wikipedia.org/wiki/Algoritmo",
           "refs": [],
           "tags": [],
           "urls": [
@@ -421,53 +421,66 @@
         },
         {
           "line": 2,
-          "text": "introducción breve según https://developer.mozilla.org/es/docs/Glossary/Algorithm",
+          "text": "CS50x recorre búsqueda lineal y binaria, ordenamiento, recursión y notación O con pseudocódigo y código en C https://cs50.harvard.edu/x/notes/3/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
-              "target": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
+              "raw": "https://cs50.harvard.edu/x/notes/3/",
+              "target": "https://cs50.harvard.edu/x/notes/3/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "libro introductorio según https://opendatastructures.org/ods-es/",
+          "text": "El libro Algorithms (1.ª ed., 2019) de Erickson es de acceso libre bajo licencia Creative Commons y cubre diseño, correctitud y análisis con ejercicios https://jeffe.cs.illinois.edu/teaching/algorithms/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://opendatastructures.org/ods-es/",
-              "target": "https://opendatastructures.org/ods-es/",
+              "raw": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+              "target": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=8hly31xKLi0",
+          "text": "Este video de CS50 introduce algoritmos con búsqueda, ordenamiento y análisis de eficiencia en ejemplos concretos https://www.youtube.com/watch?v=jZzyERW7h1A",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=8hly31xKLi0",
-              "target": "https://www.youtube.com/watch?v=8hly31xKLi0",
+              "raw": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+              "target": "https://www.youtube.com/watch?v=jZzyERW7h1A",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+          "text": "Esta playlist de CS50x recorre fundamentos de computación, estructuras y algoritmos en clases completas https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-              "target": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
               "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "Esta clase de MIT 6.006 introduce algoritmos y computación con análisis de eficiencia y estructuras de datos https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+              "target": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+              "line": 6
             }
           ]
         }
@@ -481,24 +494,29 @@
           "line": 1
         },
         {
-          "raw": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
-          "target": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
+          "raw": "https://cs50.harvard.edu/x/notes/3/",
+          "target": "https://cs50.harvard.edu/x/notes/3/",
           "line": 2
         },
         {
-          "raw": "https://opendatastructures.org/ods-es/",
-          "target": "https://opendatastructures.org/ods-es/",
+          "raw": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+          "target": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=8hly31xKLi0",
-          "target": "https://www.youtube.com/watch?v=8hly31xKLi0",
+          "raw": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+          "target": "https://www.youtube.com/watch?v=jZzyERW7h1A",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-          "target": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+          "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
           "line": 5
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+          "target": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+          "line": 6
         }
       ],
       "nonBulletLines": []
@@ -1560,7 +1578,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "un caso de uso describe una interacción entre un actor y el sistema para lograr un objetivo; referencia https://es.wikipedia.org/wiki/Caso_de_uso",
+          "text": "Un caso de uso describe una interacción entre un actor y el sistema para lograr un objetivo; la Wikipedia en español relaciona actores, escenarios y extensiones https://es.wikipedia.org/wiki/Caso_de_uso",
           "refs": [],
           "tags": [],
           "urls": [
@@ -1573,52 +1591,52 @@
         },
         {
           "line": 2,
-          "text": "guía breve según https://www.atlassian.com/agile/use-cases",
+          "text": "Visual Paradigm explica actores, casos de uso, límites del sistema y relaciones include, extend y generalización con ejemplos UML https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.atlassian.com/agile/use-cases",
-              "target": "https://www.atlassian.com/agile/use-cases",
+              "raw": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
+              "target": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://www.coursera.org/learn/uml",
+          "text": "El libro abierto Software Engineering en Wikibooks dedica una sección a casos de uso, escenarios y su vínculo con requerimientos funcionales https://en.wikibooks.org/wiki/Software_Engineering",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.coursera.org/learn/uml",
-              "target": "https://www.coursera.org/learn/uml",
+              "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "target": "https://en.wikibooks.org/wiki/Software_Engineering",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=OZ4XmlNIHT4",
+          "text": "Este video de Passionate Business Analyst construye un diagrama de casos de uso paso a paso con actores, sistema y relaciones https://www.youtube.com/watch?v=qFaSEMbiWaI",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=OZ4XmlNIHT4",
-              "target": "https://www.youtube.com/watch?v=OZ4XmlNIHT4",
+              "raw": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+              "target": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Este video de Lucidchart modela actores, casos de uso y relaciones include/extend con un ejemplo de sistema bancario https://www.youtube.com/watch?v=zid-MVo7M-E",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+              "target": "https://www.youtube.com/watch?v=zid-MVo7M-E",
               "line": 5
             }
           ]
@@ -1633,23 +1651,23 @@
           "line": 1
         },
         {
-          "raw": "https://www.atlassian.com/agile/use-cases",
-          "target": "https://www.atlassian.com/agile/use-cases",
+          "raw": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
+          "target": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
           "line": 2
         },
         {
-          "raw": "https://www.coursera.org/learn/uml",
-          "target": "https://www.coursera.org/learn/uml",
+          "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+          "target": "https://en.wikibooks.org/wiki/Software_Engineering",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=OZ4XmlNIHT4",
-          "target": "https://www.youtube.com/watch?v=OZ4XmlNIHT4",
+          "raw": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+          "target": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+          "target": "https://www.youtube.com/watch?v=zid-MVo7M-E",
           "line": 5
         }
       ],
@@ -1665,65 +1683,65 @@
       "blocks": [
         {
           "line": 1,
-          "text": "la complejidad algorítmica describe cómo crece el costo de un algoritmo con el tamaño de la entrada; referencia https://es.wikipedia.org/wiki/ComplejidadComputacional",
+          "text": "La complejidad algorítmica describe cómo crece el costo de un algoritmo con el tamaño de la entrada; la Wikipedia en español introduce notación O y análisis de eficiencia https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://es.wikipedia.org/wiki/ComplejidadComputacional",
-              "target": "https://es.wikipedia.org/wiki/ComplejidadComputacional",
+              "raw": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
+              "target": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
               "line": 1
             }
           ]
         },
         {
           "line": 2,
-          "text": "guía breve según https://www.bigocheatsheet.com/",
+          "text": "CS50x dedica una sección a tiempo de ejecución, notación O, Ω y Θ con búsqueda y ordenamiento https://cs50.harvard.edu/x/notes/3/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.bigocheatsheet.com/",
-              "target": "https://www.bigocheatsheet.com/",
+              "raw": "https://cs50.harvard.edu/x/notes/3/",
+              "target": "https://cs50.harvard.edu/x/notes/3/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html",
+          "text": "El libro Algorithms (1.ª ed., 2019) de Erickson es de acceso libre y dedica capítulos a notación asintótica, recurrencias y límites inferiores https://jeffe.cs.illinois.edu/teaching/algorithms/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html",
-              "target": "https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html",
+              "raw": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+              "target": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=Mo4vesaut8g",
+          "text": "Este video de CS50 introduce notación O comparando búsqueda lineal, binaria y distintos métodos de ordenamiento https://www.youtube.com/watch?v=jZzyERW7h1A",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=Mo4vesaut8g",
-              "target": "https://www.youtube.com/watch?v=Mo4vesaut8g",
+              "raw": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+              "target": "https://www.youtube.com/watch?v=jZzyERW7h1A",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+          "text": "Esta playlist de CS50x incluye clases sobre algoritmos, estructuras y análisis de eficiencia https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-              "target": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
               "line": 5
             }
           ]
@@ -1733,28 +1751,28 @@
       "tags": [],
       "urls": [
         {
-          "raw": "https://es.wikipedia.org/wiki/ComplejidadComputacional",
-          "target": "https://es.wikipedia.org/wiki/ComplejidadComputacional",
+          "raw": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
+          "target": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
           "line": 1
         },
         {
-          "raw": "https://www.bigocheatsheet.com/",
-          "target": "https://www.bigocheatsheet.com/",
+          "raw": "https://cs50.harvard.edu/x/notes/3/",
+          "target": "https://cs50.harvard.edu/x/notes/3/",
           "line": 2
         },
         {
-          "raw": "https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html",
-          "target": "https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html",
+          "raw": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+          "target": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=Mo4vesaut8g",
-          "target": "https://www.youtube.com/watch?v=Mo4vesaut8g",
+          "raw": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+          "target": "https://www.youtube.com/watch?v=jZzyERW7h1A",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-          "target": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+          "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
           "line": 5
         }
       ],
@@ -1770,20 +1788,20 @@
       "blocks": [
         {
           "line": 1,
-          "text": "un criterio de aceptación define condiciones observables para considerar satisfecho un requerimiento; referencia https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n",
+          "text": "Un criterio de aceptación define condiciones observables para considerar satisfecho un requerimiento; la Wikipedia en inglés lo distingue de especificación técnica y pruebas de aceptación https://en.wikipedia.org/wiki/Acceptance_criteria",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n",
-              "target": "https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n",
+              "raw": "https://en.wikipedia.org/wiki/Acceptance_criteria",
+              "target": "https://en.wikipedia.org/wiki/Acceptance_criteria",
               "line": 1
             }
           ]
         },
         {
           "line": 2,
-          "text": "guía breve según https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+          "text": "Atlassian muestra cómo escribir criterios en formato dado-cuando-entonces, vincularlos a historias de usuario y evitar ambigüedad https://www.atlassian.com/work-management/project-management/acceptance-criteria",
           "refs": [],
           "tags": [],
           "urls": [
@@ -1796,39 +1814,39 @@
         },
         {
           "line": 3,
-          "text": "curso extenso según https://www.coursera.org/learn/requirements-writing",
+          "text": "El libro abierto Software Engineering en Wikibooks conecta requerimientos, casos de uso y pruebas de aceptación en el ciclo de desarrollo https://en.wikibooks.org/wiki/Software_Engineering",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.coursera.org/learn/requirements-writing",
-              "target": "https://www.coursera.org/learn/requirements-writing",
+              "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "target": "https://en.wikibooks.org/wiki/Software_Engineering",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=Ez9sHj0X_HU",
+          "text": "Agile Alliance explica qué es una prueba de aceptación y por qué los criterios deben ser verificables y automatizables https://www.agilealliance.org/glossary/acceptance-test/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=Ez9sHj0X_HU",
-              "target": "https://www.youtube.com/watch?v=Ez9sHj0X_HU",
+              "raw": "https://www.agilealliance.org/glossary/acceptance-test/",
+              "target": "https://www.agilealliance.org/glossary/acceptance-test/",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Este video recorre user stories y criterios de aceptación en formato reglas y escenarios dado-cuando-entonces https://www.youtube.com/watch?v=q26147zlcMU",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/watch?v=q26147zlcMU",
+              "target": "https://www.youtube.com/watch?v=q26147zlcMU",
               "line": 5
             }
           ]
@@ -1838,8 +1856,8 @@
       "tags": [],
       "urls": [
         {
-          "raw": "https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n",
-          "target": "https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n",
+          "raw": "https://en.wikipedia.org/wiki/Acceptance_criteria",
+          "target": "https://en.wikipedia.org/wiki/Acceptance_criteria",
           "line": 1
         },
         {
@@ -1848,18 +1866,18 @@
           "line": 2
         },
         {
-          "raw": "https://www.coursera.org/learn/requirements-writing",
-          "target": "https://www.coursera.org/learn/requirements-writing",
+          "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+          "target": "https://en.wikibooks.org/wiki/Software_Engineering",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=Ez9sHj0X_HU",
-          "target": "https://www.youtube.com/watch?v=Ez9sHj0X_HU",
+          "raw": "https://www.agilealliance.org/glossary/acceptance-test/",
+          "target": "https://www.agilealliance.org/glossary/acceptance-test/",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/watch?v=q26147zlcMU",
+          "target": "https://www.youtube.com/watch?v=q26147zlcMU",
           "line": 5
         }
       ],
@@ -1875,7 +1893,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "una demostración establece la verdad de un enunciado mediante una cadena lógica de pasos; referencia https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
+          "text": "Una demostración establece la verdad de un enunciado mediante una cadena lógica de pasos; la Wikipedia en español distingue directa, contradicción, contrapositiva e inducción https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
           "refs": [],
           "tags": [],
           "urls": [
@@ -1888,53 +1906,79 @@
         },
         {
           "line": 2,
-          "text": "repaso breve según https://bookofproof.org/Chapter1/ch_sec_proofs.html",
+          "text": "Esta clase de MIT OpenCourseWare introduce inducción matemática y métodos de prueba con ejemplos guiados https://www.youtube.com/watch?v=LY7YmuDbuW0",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://bookofproof.org/Chapter1/ch_sec_proofs.html",
-              "target": "https://bookofproof.org/Chapter1/ch_sec_proofs.html",
+              "raw": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
+              "target": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://bookofproof.org/",
+          "text": "El libro Book of Proof (3.ª ed., 2024) de Hammack es de acceso libre y enseña a redactar demostraciones con ejemplos de conjuntos, funciones y combinatoria https://richardhammack.github.io/BookOfProof/Main.pdf",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://bookofproof.org/",
-              "target": "https://bookofproof.org/",
+              "raw": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+              "target": "https://richardhammack.github.io/BookOfProof/Main.pdf",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=8DrbcYOcts0",
+          "text": "Este video recorre demostración directa asumiendo la hipótesis y deduciendo la conclusión paso a paso https://www.youtube.com/watch?v=01b3KjgPhfI",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=8DrbcYOcts0",
-              "target": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+              "raw": "https://www.youtube.com/watch?v=01b3KjgPhfI",
+              "target": "https://www.youtube.com/watch?v=01b3KjgPhfI",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+          "text": "Esta playlist de MIT OpenCourseWare recorre sucesiones, continuidad e integración con énfasis en construir demostraciones formales https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
+              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
               "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "Este video recorre demostración por contradicción asumiendo lo contrario del enunciado y llegando a una inconsistencia https://www.youtube.com/watch?v=YYgepDY3rHw",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+              "target": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+              "line": 6
+            }
+          ]
+        },
+        {
+          "line": 7,
+          "text": "Este video muestra demostración por contrapositiva reformulando la implicación y probando su negación https://www.youtube.com/watch?v=ce4Jc0QmjOI",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
+              "target": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
+              "line": 7
             }
           ]
         }
@@ -1948,24 +1992,34 @@
           "line": 1
         },
         {
-          "raw": "https://bookofproof.org/Chapter1/ch_sec_proofs.html",
-          "target": "https://bookofproof.org/Chapter1/ch_sec_proofs.html",
+          "raw": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
+          "target": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
           "line": 2
         },
         {
-          "raw": "https://bookofproof.org/",
-          "target": "https://bookofproof.org/",
+          "raw": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+          "target": "https://richardhammack.github.io/BookOfProof/Main.pdf",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=8DrbcYOcts0",
-          "target": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+          "raw": "https://www.youtube.com/watch?v=01b3KjgPhfI",
+          "target": "https://www.youtube.com/watch?v=01b3KjgPhfI",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
+          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
           "line": 5
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+          "target": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+          "line": 6
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
+          "target": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
+          "line": 7
         }
       ],
       "nonBulletLines": []
@@ -1980,7 +2034,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "una estructura de datos organiza información para acceder y modificarla con eficiencia; referencia https://es.wikipedia.org/wiki/Estructura_de_datos",
+          "text": "Una estructura de datos organiza información para acceder y modificarla con eficiencia; la Wikipedia en español compara arrays, listas, pilas, colas, árboles y grafos https://es.wikipedia.org/wiki/Estructura_de_datos",
           "refs": [],
           "tags": [],
           "urls": [
@@ -1993,7 +2047,7 @@
         },
         {
           "line": 2,
-          "text": "visualización interactiva breve según https://visualgo.net/en",
+          "text": "VisuAlgo anima inserciones, búsquedas y recorridos en estructuras clásicas y muestra pseudocódigo junto a la animación https://visualgo.net/en",
           "refs": [],
           "tags": [],
           "urls": [
@@ -2006,39 +2060,39 @@
         },
         {
           "line": 3,
-          "text": "libro introductorio según https://opendatastructures.org/ods-es/",
+          "text": "El libro Open Data Structures (edición en línea, 2020) de Morin implementa listas, tablas hash, árboles y grafos con análisis de costo por operación https://opendatastructures.org/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://opendatastructures.org/ods-es/",
-              "target": "https://opendatastructures.org/ods-es/",
+              "raw": "https://opendatastructures.org/",
+              "target": "https://opendatastructures.org/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=9RHfkFEZLPQ",
+          "text": "Este curso en video de freeCodeCamp recorre arrays, listas, pilas, colas, árboles, grafos y tablas hash con implementaciones https://www.youtube.com/watch?v=CBYHwZcbD-s",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=9RHfkFEZLPQ",
-              "target": "https://www.youtube.com/watch?v=9RHfkFEZLPQ",
+              "raw": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
+              "target": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+          "text": "Esta playlist de CS50x recorre arrays, listas enlazadas, pilas, colas, árboles, tablas hash y tries https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-              "target": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
               "line": 5
             }
           ]
@@ -2058,18 +2112,18 @@
           "line": 2
         },
         {
-          "raw": "https://opendatastructures.org/ods-es/",
-          "target": "https://opendatastructures.org/ods-es/",
+          "raw": "https://opendatastructures.org/",
+          "target": "https://opendatastructures.org/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=9RHfkFEZLPQ",
-          "target": "https://www.youtube.com/watch?v=9RHfkFEZLPQ",
+          "raw": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
+          "target": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-          "target": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+          "raw": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+          "target": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
           "line": 5
         }
       ],
@@ -2106,7 +2160,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "la inducción y la lógica formalizan razonamiento deductivo sobre proposiciones y estructuras matemáticas; referencia https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
+          "text": "La inducción matemática prueba propiedades para todo n natural a partir de un caso base y un paso inductivo; la Wikipedia en español muestra el esquema y ejemplos clásicos https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
           "refs": [],
           "tags": [],
           "urls": [
@@ -2119,66 +2173,53 @@
         },
         {
           "line": 2,
-          "text": "repaso breve según https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html",
+          "text": "El Open Logic Project es un libro abierto de lógica formal con capítulos sobre deducción natural, cuantificadores y métodos de prueba https://openlogicproject.org/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html",
-              "target": "https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html",
+              "raw": "https://openlogicproject.org/",
+              "target": "https://openlogicproject.org/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://tudelft-citg.github.io/learn-probability/intro_in_toc.html",
+          "text": "Este video de MIT recorre el esquema de inducción con caso base, hipótesis inductiva y paso inductivo en ejemplos numéricos https://www.youtube.com/watch?v=wblW_M_HVQ8",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://tudelft-citg.github.io/learn-probability/intro_in_toc.html",
-              "target": "https://tudelft-citg.github.io/learn-probability/intro_in_toc.html",
+              "raw": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
+              "target": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "estudio de caso según https://betanalpha.github.io/assets/case_studies/probability_theory.html",
+          "text": "Este video de la Universidad de Edimburgo demuestra inducción sobre números naturales y listas con demostraciones formales https://www.youtube.com/watch?v=_Vg10FD5ULk",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://betanalpha.github.io/assets/case_studies/probability_theory.html",
-              "target": "https://betanalpha.github.io/assets/case_studies/probability_theory.html",
+              "raw": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
+              "target": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "video corto según https://www.youtube.com/watch?v=8DrbcYOcts0",
+          "text": "Esta playlist de MIT 6.042 recorre lógica proposicional, conectivos, cuantificadores y métodos de prueba https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=8DrbcYOcts0",
-              "target": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+              "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+              "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
               "line": 5
-            }
-          ]
-        },
-        {
-          "line": 6,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-          "refs": [],
-          "tags": [],
-          "urls": [
-            {
-              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "line": 6
             }
           ]
         }
@@ -2192,29 +2233,24 @@
           "line": 1
         },
         {
-          "raw": "https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html",
-          "target": "https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html",
+          "raw": "https://openlogicproject.org/",
+          "target": "https://openlogicproject.org/",
           "line": 2
         },
         {
-          "raw": "https://tudelft-citg.github.io/learn-probability/intro_in_toc.html",
-          "target": "https://tudelft-citg.github.io/learn-probability/intro_in_toc.html",
+          "raw": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
+          "target": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
           "line": 3
         },
         {
-          "raw": "https://betanalpha.github.io/assets/case_studies/probability_theory.html",
-          "target": "https://betanalpha.github.io/assets/case_studies/probability_theory.html",
+          "raw": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
+          "target": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/watch?v=8DrbcYOcts0",
-          "target": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+          "raw": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+          "target": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
           "line": 5
-        },
-        {
-          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-          "line": 6
         }
       ],
       "nonBulletLines": []
@@ -2292,7 +2328,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "una matriz ordena datos en filas y columnas para operaciones algebraicas; referencia https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas)",
+          "text": "Una matriz ordena datos en filas y columnas para operar sobre ellos; la Wikipedia en español presenta suma, producto y aplicaciones básicas https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas)",
           "refs": [],
           "tags": [],
           "urls": [
@@ -2305,52 +2341,52 @@
         },
         {
           "line": 2,
-          "text": "repaso breve según https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix",
+          "text": "Interactive Linear Algebra de Georgia Tech introduce matrices como transformaciones lineales con ejemplos y ejercicios https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix",
-              "target": "https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix",
+              "raw": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
+              "target": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+          "text": "El libro Linear Algebra Done Right (4.ª ed., 2024) de Axler está disponible en PDF abierto y desarrolla matrices, operadores lineales y diagonalización https://linear.axler.net/LADR4e.pdf",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-              "target": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "raw": "https://linear.axler.net/LADR4e.pdf",
+              "target": "https://linear.axler.net/LADR4e.pdf",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=fNk_zzaMoSs",
+          "text": "Interactive Linear Algebra de Georgia Tech conecta ecuaciones matriciales con combinaciones lineales de columnas https://textbooks.math.gatech.edu/ila/matrix-equations.html",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
-              "target": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "raw": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
+              "target": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+          "text": "Esta playlist Essence of linear algebra de 3Blue1Brown muestra matrices como transformaciones del plano y composición de operaciones lineales https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
-              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
               "line": 5
             }
           ]
@@ -2365,23 +2401,23 @@
           "line": 1
         },
         {
-          "raw": "https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix",
-          "target": "https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix",
+          "raw": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
+          "target": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
           "line": 2
         },
         {
-          "raw": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-          "target": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+          "raw": "https://linear.axler.net/LADR4e.pdf",
+          "target": "https://linear.axler.net/LADR4e.pdf",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
-          "target": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+          "raw": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
+          "target": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
-          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
           "line": 5
         }
       ],
@@ -2397,65 +2433,65 @@
       "blocks": [
         {
           "line": 1,
-          "text": "el modelado de dominio representa entidades, reglas y relaciones del problema a resolver; referencia https://es.wikipedia.org/wiki/Modelado_de_dominio",
+          "text": "El modelado de dominio captura conceptos, reglas y relaciones del negocio en un lenguaje compartido; la Wikipedia en inglés resume entidades, agregados y servicios de dominio https://en.wikipedia.org/wiki/Domain-driven_design",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://es.wikipedia.org/wiki/Modelado_de_dominio",
-              "target": "https://es.wikipedia.org/wiki/Modelado_de_dominio",
+              "raw": "https://en.wikipedia.org/wiki/Domain-driven_design",
+              "target": "https://en.wikipedia.org/wiki/Domain-driven_design",
               "line": 1
             }
           ]
         },
         {
           "line": 2,
-          "text": "artículo breve según https://martinfowler.com/bliki/DomainDrivenDesign.html",
+          "text": "DDD Quickly de InfoQ es un libro breve de acceso libre que resume entidades, value objects, agregados y bounded contexts https://www.infoq.com/minibooks/domain-driven-design-quickly/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
-              "target": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+              "raw": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
+              "target": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "guía extensa según https://www.domainlanguage.com/ddd/reference/",
+          "text": "El artículo de Martin Fowler sobre el lenguaje ubicuo explica cómo alinear términos del negocio con el diseño del software https://martinfowler.com/bliki/UbiquitousLanguage.html",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.domainlanguage.com/ddd/reference/",
-              "target": "https://www.domainlanguage.com/ddd/reference/",
+              "raw": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
+              "target": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=pMuiVWNimyY",
+          "text": "Este video de DDD Europe 2019 con Eric Evans recorre bounded contexts, lenguaje ubicuo y colaboración entre equipos https://www.youtube.com/watch?v=pMuiVlnGqjk",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=pMuiVWNimyY",
-              "target": "https://www.youtube.com/watch?v=pMuiVWNimyY",
+              "raw": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
+              "target": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "El artículo de Martin Fowler sobre domain-driven design resume el enfoque, el lenguaje ubicuo y la colaboración con expertos del dominio https://martinfowler.com/bliki/DomainDrivenDesign.html",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+              "target": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
               "line": 5
             }
           ]
@@ -2465,28 +2501,28 @@
       "tags": [],
       "urls": [
         {
-          "raw": "https://es.wikipedia.org/wiki/Modelado_de_dominio",
-          "target": "https://es.wikipedia.org/wiki/Modelado_de_dominio",
+          "raw": "https://en.wikipedia.org/wiki/Domain-driven_design",
+          "target": "https://en.wikipedia.org/wiki/Domain-driven_design",
           "line": 1
+        },
+        {
+          "raw": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
+          "target": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
+          "line": 2
+        },
+        {
+          "raw": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
+          "target": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
+          "line": 3
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
+          "target": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
+          "line": 4
         },
         {
           "raw": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
           "target": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
-          "line": 2
-        },
-        {
-          "raw": "https://www.domainlanguage.com/ddd/reference/",
-          "target": "https://www.domainlanguage.com/ddd/reference/",
-          "line": 3
-        },
-        {
-          "raw": "https://www.youtube.com/watch?v=pMuiVWNimyY",
-          "target": "https://www.youtube.com/watch?v=pMuiVWNimyY",
-          "line": 4
-        },
-        {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
           "line": 5
         }
       ],
@@ -2502,7 +2538,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "un modelo entidad-relación representa entidades, atributos y relaciones de un dominio; referencia https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
+          "text": "Un modelo entidad-relación representa entidades, atributos y relaciones de un dominio; la Wikipedia en español explica cardinalidad y claves https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
           "refs": [],
           "tags": [],
           "urls": [
@@ -2515,52 +2551,52 @@
         },
         {
           "line": 2,
-          "text": "tutorial breve según https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion",
+          "text": "Draw.io documenta diagramas entidad-relación con notación crow's foot, claves primarias y foráneas en una herramienta gratuita https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion",
-              "target": "https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion",
+              "raw": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
+              "target": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://db-book.com/",
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre modelado de datos y diseño relacional en acceso libre http://www.redbook.io/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://db-book.com/",
-              "target": "https://db-book.com/",
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=QpdhBUYk7Kk",
+          "text": "La documentación de Mermaid muestra cómo escribir diagramas ER como texto con entidades, relaciones y cardinalidad https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=QpdhBUYk7Kk",
-              "target": "https://www.youtube.com/watch?v=QpdhBUYk7Kk",
+              "raw": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
+              "target": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Este tutorial de Lucidchart construye un diagrama ER con entidades, atributos, relaciones y cardinalidad paso a paso https://www.youtube.com/watch?v=zid-MVo7M-E",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+              "target": "https://www.youtube.com/watch?v=zid-MVo7M-E",
               "line": 5
             }
           ]
@@ -2575,23 +2611,23 @@
           "line": 1
         },
         {
-          "raw": "https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion",
-          "target": "https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion",
+          "raw": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
+          "target": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
           "line": 2
         },
         {
-          "raw": "https://db-book.com/",
-          "target": "https://db-book.com/",
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=QpdhBUYk7Kk",
-          "target": "https://www.youtube.com/watch?v=QpdhBUYk7Kk",
+          "raw": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
+          "target": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+          "target": "https://www.youtube.com/watch?v=zid-MVo7M-E",
           "line": 5
         }
       ],
@@ -2607,7 +2643,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "un diagrama de Nassi-Shneiderman representa algoritmos con cajas estructuradas sin flechas de flujo; referencia https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
+          "text": "Un diagrama de Nassi-Shneiderman representa algoritmos con cajas estructuradas sin flechas de flujo; la Wikipedia en español muestra secuencia, selección e iteración anidadas https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
           "refs": [],
           "tags": [],
           "urls": [
@@ -2620,52 +2656,52 @@
         },
         {
           "line": 2,
-          "text": "tutorial breve según https://www.programiz.com/dsa/nassi-shneiderman-diagram",
+          "text": "Ben Shneiderman recorre la historia de los diagramas NS, sus símbolos y su relación con la programación estructurada https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.programiz.com/dsa/nassi-shneiderman-diagram",
-              "target": "https://www.programiz.com/dsa/nassi-shneiderman-diagram",
+              "raw": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
+              "target": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "guía extensa según https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html",
+          "text": "El libro Open Data Structures (edición en línea, 2020) de Morin presenta pseudocódigo estructurado con secuencia, selección e iteración antes de implementar estructuras https://opendatastructures.org/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html",
-              "target": "https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html",
+              "raw": "https://opendatastructures.org/",
+              "target": "https://opendatastructures.org/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=3T3j3Yv3k5A",
+          "text": "Este video recorre cómo crear diagramas Nassi-Shneiderman con Structorizer, incluyendo secuencia, decisión e iteración https://www.youtube.com/watch?v=_GSFmwaErFc",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=3T3j3Yv3k5A",
-              "target": "https://www.youtube.com/watch?v=3T3j3Yv3k5A",
+              "raw": "https://www.youtube.com/watch?v=_GSFmwaErFc",
+              "target": "https://www.youtube.com/watch?v=_GSFmwaErFc",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+          "text": "La guía de Structorizer documenta bloques de proceso, decisión, repetición y casos en diagramas NS https://help.structorizer.fisch.lu/index.php?menu=49",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-              "target": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "raw": "https://help.structorizer.fisch.lu/index.php?menu=49",
+              "target": "https://help.structorizer.fisch.lu/index.php?menu=49",
               "line": 5
             }
           ]
@@ -2680,23 +2716,23 @@
           "line": 1
         },
         {
-          "raw": "https://www.programiz.com/dsa/nassi-shneiderman-diagram",
-          "target": "https://www.programiz.com/dsa/nassi-shneiderman-diagram",
+          "raw": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
+          "target": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
           "line": 2
         },
         {
-          "raw": "https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html",
-          "target": "https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html",
+          "raw": "https://opendatastructures.org/",
+          "target": "https://opendatastructures.org/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=3T3j3Yv3k5A",
-          "target": "https://www.youtube.com/watch?v=3T3j3Yv3k5A",
+          "raw": "https://www.youtube.com/watch?v=_GSFmwaErFc",
+          "target": "https://www.youtube.com/watch?v=_GSFmwaErFc",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-          "target": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+          "raw": "https://help.structorizer.fisch.lu/index.php?menu=49",
+          "target": "https://help.structorizer.fisch.lu/index.php?menu=49",
           "line": 5
         }
       ],
@@ -2712,7 +2748,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "la normalización reorganiza un esquema relacional para reducir redundancia y anomalías; referencia https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
+          "text": "La normalización reorganiza un esquema relacional para reducir redundancia y anomalías; la Wikipedia en español recorre formas normales 1NF a BCNF https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
           "refs": [],
           "tags": [],
           "urls": [
@@ -2725,33 +2761,33 @@
         },
         {
           "line": 2,
-          "text": "guía breve según https://www.guru99.com/database-normalization.html",
+          "text": "DB Fiddle permite crear esquemas en el navegador y comparar tablas desnormalizadas con descomposiciones en formas normales https://www.db-fiddle.com/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.guru99.com/database-normalization.html",
-              "target": "https://www.guru99.com/database-normalization.html",
+              "raw": "https://www.db-fiddle.com/",
+              "target": "https://www.db-fiddle.com/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://db-book.com/",
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre diseño relacional y descomposición de esquemas en acceso libre http://www.redbook.io/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://db-book.com/",
-              "target": "https://db-book.com/",
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=GFQaEYEc8_8",
+          "text": "Este video normaliza una tabla de pedidos mostrando inserción, actualización y borrado anómalos https://www.youtube.com/watch?v=GFQaEYEc8_8",
           "refs": [],
           "tags": [],
           "urls": [
@@ -2764,13 +2800,13 @@
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Esta playlist de Neso Academy conecta diseño relacional, SQL y consultas con lecciones publicadas desde 2021 https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": 5
             }
           ]
@@ -2785,13 +2821,13 @@
           "line": 1
         },
         {
-          "raw": "https://www.guru99.com/database-normalization.html",
-          "target": "https://www.guru99.com/database-normalization.html",
+          "raw": "https://www.db-fiddle.com/",
+          "target": "https://www.db-fiddle.com/",
           "line": 2
         },
         {
-          "raw": "https://db-book.com/",
-          "target": "https://db-book.com/",
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
           "line": 3
         },
         {
@@ -2800,8 +2836,8 @@
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "line": 5
         }
       ],
@@ -2817,59 +2853,59 @@
       "blocks": [
         {
           "line": 1,
-          "text": "la optimización busca el mejor valor de una función objetivo sujeta a restricciones; referencia https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica)",
+          "text": "La optimización busca máximos, mínimos o mejores soluciones bajo restricciones; la Wikipedia en español conecta cálculo, programación lineal y condiciones de optimalidad https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica",
-              "target": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica",
+              "raw": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
+              "target": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
               "line": 1
             }
           ]
         },
         {
           "line": 2,
-          "text": "repaso breve según https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx",
+          "text": "Este video muestra cómo usar Desmos para graficar funciones, derivadas y puntos críticos al resolver problemas de optimización https://www.youtube.com/watch?v=trdab2TO820",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx",
-              "target": "https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx",
+              "raw": "https://www.youtube.com/watch?v=trdab2TO820",
+              "target": "https://www.youtube.com/watch?v=trdab2TO820",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",
+          "text": "Active Calculus (edición 2024) de Matt Boelkins es un libro abierto que trata derivadas, criterios de extremos y modelado con ejercicios https://activecalculus.org/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",
-              "target": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",
+              "raw": "https://activecalculus.org/",
+              "target": "https://activecalculus.org/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM",
+          "text": "Este video recorre tres problemas de optimización con criterios de la derivada y el teorema del valor extremo https://www.youtube.com/watch?v=0vIZdyjoubE",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
-              "target": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "raw": "https://www.youtube.com/watch?v=0vIZdyjoubE",
+              "target": "https://www.youtube.com/watch?v=0vIZdyjoubE",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+          "text": "Esta playlist Essence of calculus de 3Blue1Brown construye intuición sobre límites, derivadas e interpretación geométrica de la optimización https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
           "refs": [],
           "tags": [],
           "urls": [
@@ -2879,35 +2915,53 @@
               "line": 5
             }
           ]
+        },
+        {
+          "line": 6,
+          "text": "Este video de Khan Academy maximiza la ganancia de una fábrica modelando ingresos y costos con derivadas https://www.youtube.com/watch?v=dam16G6cZ8k",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+              "target": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+              "line": 6
+            }
+          ]
         }
       ],
       "refs": [],
       "tags": [],
       "urls": [
         {
-          "raw": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica",
-          "target": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica",
+          "raw": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
+          "target": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
           "line": 1
         },
         {
-          "raw": "https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx",
-          "target": "https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx",
+          "raw": "https://www.youtube.com/watch?v=trdab2TO820",
+          "target": "https://www.youtube.com/watch?v=trdab2TO820",
           "line": 2
         },
         {
-          "raw": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",
-          "target": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",
+          "raw": "https://activecalculus.org/",
+          "target": "https://activecalculus.org/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
-          "target": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+          "raw": "https://www.youtube.com/watch?v=0vIZdyjoubE",
+          "target": "https://www.youtube.com/watch?v=0vIZdyjoubE",
           "line": 4
         },
         {
           "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
           "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
           "line": 5
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+          "target": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+          "line": 6
         }
       ],
       "nonBulletLines": []
@@ -2922,65 +2976,65 @@
       "blocks": [
         {
           "line": 1,
-          "text": "el pensamiento matemático articula abstracción, razonamiento y modelado formal; referencia https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
+          "text": "El pensamiento matemático combina abstracción, razonamiento lógico y argumentación rigurosa; la Wikipedia en inglés distingue demostración, modelado y resolución de problemas https://en.wikipedia.org/wiki/Mathematical_reasoning",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
-              "target": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
+              "raw": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+              "target": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
               "line": 1
             }
           ]
         },
         {
           "line": 2,
-          "text": "repaso breve según https://brilliant.org/wiki/mathematical-reasoning/",
+          "text": "El Open Logic Project es un libro abierto que recorre lógica proposicional, cuantificadores y métodos de prueba con ejercicios https://openlogicproject.org/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://brilliant.org/wiki/mathematical-reasoning/",
-              "target": "https://brilliant.org/wiki/mathematical-reasoning/",
+              "raw": "https://openlogicproject.org/",
+              "target": "https://openlogicproject.org/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://bookofproof.org/",
+          "text": "El curso Introduction to Mathematical Thinking de Keith Devlin en Coursera contrasta matemática escolar con razonamiento formal y resolución de problemas abiertos https://www.coursera.org/learn/mathematical-thinking",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://bookofproof.org/",
-              "target": "https://bookofproof.org/",
+              "raw": "https://www.coursera.org/learn/mathematical-thinking",
+              "target": "https://www.coursera.org/learn/mathematical-thinking",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM",
+          "text": "Esta clase de MIT introduce qué es una demostración, proposiciones y deducciones lógicas como base del razonamiento matemático https://www.youtube.com/watch?v=sbpCTjmw85g",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
-              "target": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "raw": "https://www.youtube.com/watch?v=sbpCTjmw85g",
+              "target": "https://www.youtube.com/watch?v=sbpCTjmw85g",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+          "text": "Esta playlist de MIT recorre razonamiento matemático, conjuntos, funciones y escritura de demostraciones formales https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "raw": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+              "target": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
               "line": 5
             }
           ]
@@ -2990,28 +3044,28 @@
       "tags": [],
       "urls": [
         {
-          "raw": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
-          "target": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
+          "raw": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+          "target": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
           "line": 1
         },
         {
-          "raw": "https://brilliant.org/wiki/mathematical-reasoning/",
-          "target": "https://brilliant.org/wiki/mathematical-reasoning/",
+          "raw": "https://openlogicproject.org/",
+          "target": "https://openlogicproject.org/",
           "line": 2
         },
         {
-          "raw": "https://bookofproof.org/",
-          "target": "https://bookofproof.org/",
+          "raw": "https://www.coursera.org/learn/mathematical-thinking",
+          "target": "https://www.coursera.org/learn/mathematical-thinking",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
-          "target": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+          "raw": "https://www.youtube.com/watch?v=sbpCTjmw85g",
+          "target": "https://www.youtube.com/watch?v=sbpCTjmw85g",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+          "raw": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+          "target": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
           "line": 5
         }
       ],
@@ -3027,7 +3081,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "la persistencia conserva datos más allá de la ejecución de un programa; referencia https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica)",
+          "text": "La persistencia guarda el estado de una aplicación más allá de la ejecución del programa; la Wikipedia en español distingue archivos, bases de datos y serialización https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica)",
           "refs": [],
           "tags": [],
           "urls": [
@@ -3040,53 +3094,66 @@
         },
         {
           "line": 2,
-          "text": "guía breve según https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB",
+          "text": "La documentación de Python explica persistencia con archivos de texto, JSON y el módulo sqlite3 para almacenamiento local https://docs.python.org/es/3/tutorial/inputoutput.html",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB",
-              "target": "https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB",
+              "raw": "https://docs.python.org/es/3/tutorial/inputoutput.html",
+              "target": "https://docs.python.org/es/3/tutorial/inputoutput.html",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://db-book.com/",
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre almacenamiento, transacciones y sistemas de datos en acceso libre http://www.redbook.io/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://db-book.com/",
-              "target": "https://db-book.com/",
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=7S_tz1z_5bA",
+          "text": "Este video compara persistencia en archivos de texto, JSON y pickle con guardado y carga entre ejecuciones https://www.youtube.com/watch?v=GN23Baj63sk",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
-              "target": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+              "raw": "https://www.youtube.com/watch?v=GN23Baj63sk",
+              "target": "https://www.youtube.com/watch?v=GN23Baj63sk",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Este curso en video de freeCodeCamp enseña PostgreSQL con tablas, consultas SQL y transacciones para almacenamiento persistente https://www.youtube.com/watch?v=SpfIwlAYaKk",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+              "target": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
               "line": 5
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "text": "Este video recorre SQLite con Python: crear tablas, insertar datos y consultar un archivo de base de datos local https://www.youtube.com/watch?v=byHcYRpMgI4",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+              "target": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+              "line": 6
             }
           ]
         }
@@ -3100,24 +3167,29 @@
           "line": 1
         },
         {
-          "raw": "https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB",
-          "target": "https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB",
+          "raw": "https://docs.python.org/es/3/tutorial/inputoutput.html",
+          "target": "https://docs.python.org/es/3/tutorial/inputoutput.html",
           "line": 2
         },
         {
-          "raw": "https://db-book.com/",
-          "target": "https://db-book.com/",
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
-          "target": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+          "raw": "https://www.youtube.com/watch?v=GN23Baj63sk",
+          "target": "https://www.youtube.com/watch?v=GN23Baj63sk",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+          "target": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
           "line": 5
+        },
+        {
+          "raw": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+          "target": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+          "line": 6
         }
       ],
       "nonBulletLines": []
@@ -3311,7 +3383,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "la programación orientada a objetos organiza programas en objetos con estado y comportamiento; referencia https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
+          "text": "La programación orientada a objetos organiza software en objetos que combinan estado y comportamiento; la Wikipedia en español resume encapsulación, herencia, polimorfismo y abstracción https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
           "refs": [],
           "tags": [],
           "urls": [
@@ -3324,52 +3396,52 @@
         },
         {
           "line": 2,
-          "text": "guía breve según https://realpython.com/python3-object-oriented-programming/",
+          "text": "Este video de EuroPython contrasta programación estructurada y orientada a objetos sin atarse a un lenguaje concreto https://www.youtube.com/watch?v=M1XL65qj2dU",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://realpython.com/python3-object-oriented-programming/",
-              "target": "https://realpython.com/python3-object-oriented-programming/",
+              "raw": "https://www.youtube.com/watch?v=M1XL65qj2dU",
+              "target": "https://www.youtube.com/watch?v=M1XL65qj2dU",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://docs.python.org/3/tutorial/classes.html",
+          "text": "El libro Principles of Object-Oriented Programming de Baloian es de acceso libre y recorre clases, herencia, polimorfismo y diseño con UML https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://docs.python.org/3/tutorial/classes.html",
-              "target": "https://docs.python.org/3/tutorial/classes.html",
+              "raw": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
+              "target": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=Ej_02ICOIgs",
+          "text": "Este curso en video de freeCodeCamp recorre encapsulación, abstracción, herencia y polimorfismo sin depender de un lenguaje concreto https://www.youtube.com/watch?v=SiBw7os-_zI",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=Ej_02ICOIgs",
-              "target": "https://www.youtube.com/watch?v=Ej_02ICOIgs",
+              "raw": "https://www.youtube.com/watch?v=SiBw7os-_zI",
+              "target": "https://www.youtube.com/watch?v=SiBw7os-_zI",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+          "text": "Este artículo de freeCodeCamp resume los cuatro pilares de la POO con ejemplos conceptuales y buenas prácticas de diseño https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
-              "target": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+              "raw": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
+              "target": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
               "line": 5
             }
           ]
@@ -3384,23 +3456,23 @@
           "line": 1
         },
         {
-          "raw": "https://realpython.com/python3-object-oriented-programming/",
-          "target": "https://realpython.com/python3-object-oriented-programming/",
+          "raw": "https://www.youtube.com/watch?v=M1XL65qj2dU",
+          "target": "https://www.youtube.com/watch?v=M1XL65qj2dU",
           "line": 2
         },
         {
-          "raw": "https://docs.python.org/3/tutorial/classes.html",
-          "target": "https://docs.python.org/3/tutorial/classes.html",
+          "raw": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
+          "target": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=Ej_02ICOIgs",
-          "target": "https://www.youtube.com/watch?v=Ej_02ICOIgs",
+          "raw": "https://www.youtube.com/watch?v=SiBw7os-_zI",
+          "target": "https://www.youtube.com/watch?v=SiBw7os-_zI",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
-          "target": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+          "raw": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
+          "target": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
           "line": 5
         }
       ],
@@ -3416,7 +3488,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "Python es un lenguaje de programación de alto nivel usado para implementar algoritmos y productos de software; referencia https://es.wikipedia.org/wiki/Python",
+          "text": "Python es un lenguaje de propósito general con sintaxis legible y tipado dinámico; la Wikipedia en español resume historia, paradigmas y ecosistema https://es.wikipedia.org/wiki/Python",
           "refs": [],
           "tags": [],
           "urls": [
@@ -3429,52 +3501,52 @@
         },
         {
           "line": 2,
-          "text": "tutorial breve según https://docs.python.org/3/tutorial/",
+          "text": "La documentación oficial en español enseña tipos básicos, control de flujo, funciones y módulos con ejemplos ejecutables https://docs.python.org/es/3/tutorial/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://docs.python.org/3/tutorial/",
-              "target": "https://docs.python.org/3/tutorial/",
+              "raw": "https://docs.python.org/es/3/tutorial/",
+              "target": "https://docs.python.org/es/3/tutorial/",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://www.w3schools.com/python/",
+          "text": "El libro Python Crash Course (3.ª ed., 2023) de Matthes es de acceso libre en su sitio y guía desde variables hasta proyectos con archivos, APIs y visualización https://ehmatthes.github.io/pcc/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.w3schools.com/python/",
-              "target": "https://www.w3schools.com/python/",
+              "raw": "https://ehmatthes.github.io/pcc/",
+              "target": "https://ehmatthes.github.io/pcc/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=rfscVS0vtbw",
+          "text": "Este curso en video de freeCodeCamp introduce Python desde cero con funciones, estructuras de datos y mini-proyectos https://www.youtube.com/watch?v=H2EJuAcrZYU",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=rfscVS0vtbw",
-              "target": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+              "raw": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
+              "target": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+          "text": "Esta playlist de CS Dojo recorre fundamentos de Python con variables, funciones, listas y diccionarios en videos cortos https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
-              "target": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+              "raw": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
+              "target": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
               "line": 5
             }
           ]
@@ -3489,23 +3561,23 @@
           "line": 1
         },
         {
-          "raw": "https://docs.python.org/3/tutorial/",
-          "target": "https://docs.python.org/3/tutorial/",
+          "raw": "https://docs.python.org/es/3/tutorial/",
+          "target": "https://docs.python.org/es/3/tutorial/",
           "line": 2
         },
         {
-          "raw": "https://www.w3schools.com/python/",
-          "target": "https://www.w3schools.com/python/",
+          "raw": "https://ehmatthes.github.io/pcc/",
+          "target": "https://ehmatthes.github.io/pcc/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=rfscVS0vtbw",
-          "target": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+          "raw": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
+          "target": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
-          "target": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+          "raw": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
+          "target": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
           "line": 5
         }
       ],
@@ -3521,65 +3593,65 @@
       "blocks": [
         {
           "line": 1,
-          "text": "un requerimiento describe qué debe hacer el sistema para satisfacer una necesidad; referencia https://es.wikipedia.org/wiki/Requisito_de_software",
+          "text": "Un requerimiento describe una necesidad o restricción que el sistema debe cumplir; la Wikipedia en español distingue funcionales, no funcionales y casos de uso https://es.wikipedia.org/wiki/Requisito",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://es.wikipedia.org/wiki/Requisito_de_software",
-              "target": "https://es.wikipedia.org/wiki/Requisito_de_software",
+              "raw": "https://es.wikipedia.org/wiki/Requisito",
+              "target": "https://es.wikipedia.org/wiki/Requisito",
               "line": 1
             }
           ]
         },
         {
           "line": 2,
-          "text": "guía breve según https://www.atlassian.com/agile/requirements",
+          "text": "El libro abierto Software Engineering en Wikibooks dedica capítulos a requerimientos funcionales, no funcionales y trazabilidad https://en.wikibooks.org/wiki/Software_Engineering",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.atlassian.com/agile/requirements",
-              "target": "https://www.atlassian.com/agile/requirements",
+              "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "target": "https://en.wikibooks.org/wiki/Software_Engineering",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://www.coursera.org/learn/requirements-writing",
+          "text": "El artículo de Martin Fowler sobre user stories resume el formato como cliente, necesidad y beneficio https://martinfowler.com/bliki/UserStory.html",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.coursera.org/learn/requirements-writing",
-              "target": "https://www.coursera.org/learn/requirements-writing",
+              "raw": "https://martinfowler.com/bliki/UserStory.html",
+              "target": "https://martinfowler.com/bliki/UserStory.html",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=FFrNP5q9SxY",
+          "text": "Este video de Mike Cohn contrasta user stories, criterios de aceptación y definition of done con ejemplos ágiles https://www.youtube.com/watch?v=Hq9O7mnUNM4",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=FFrNP5q9SxY",
-              "target": "https://www.youtube.com/watch?v=FFrNP5q9SxY",
+              "raw": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
+              "target": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Este video de Passionate BA modela actores, casos de uso y relaciones include/extend con ejemplos de un sistema real https://www.youtube.com/watch?v=qFaSEMbiWaI",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+              "target": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
               "line": 5
             }
           ]
@@ -3589,28 +3661,28 @@
       "tags": [],
       "urls": [
         {
-          "raw": "https://es.wikipedia.org/wiki/Requisito_de_software",
-          "target": "https://es.wikipedia.org/wiki/Requisito_de_software",
+          "raw": "https://es.wikipedia.org/wiki/Requisito",
+          "target": "https://es.wikipedia.org/wiki/Requisito",
           "line": 1
         },
         {
-          "raw": "https://www.atlassian.com/agile/requirements",
-          "target": "https://www.atlassian.com/agile/requirements",
+          "raw": "https://en.wikibooks.org/wiki/Software_Engineering",
+          "target": "https://en.wikibooks.org/wiki/Software_Engineering",
           "line": 2
         },
         {
-          "raw": "https://www.coursera.org/learn/requirements-writing",
-          "target": "https://www.coursera.org/learn/requirements-writing",
+          "raw": "https://martinfowler.com/bliki/UserStory.html",
+          "target": "https://martinfowler.com/bliki/UserStory.html",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=FFrNP5q9SxY",
-          "target": "https://www.youtube.com/watch?v=FFrNP5q9SxY",
+          "raw": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
+          "target": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+          "target": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
           "line": 5
         }
       ],
@@ -3626,7 +3698,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "un sistema lineal combina ecuaciones lineales con incógnitas compartidas; referencia https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
+          "text": "Un sistema lineal combina ecuaciones lineales con incógnitas compartidas; la Wikipedia en español describe métodos de solución y tipos de compatibilidad https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
           "refs": [],
           "tags": [],
           "urls": [
@@ -3639,52 +3711,52 @@
         },
         {
           "line": 2,
-          "text": "repaso breve según https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations",
+          "text": "Interactive Linear Algebra de Georgia Tech presenta eliminación gaussiana, matrices aumentadas y formas escalonadas con el algoritmo de reducción https://textbooks.math.gatech.edu/ila/row-reduction.html",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations",
-              "target": "https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations",
+              "raw": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
+              "target": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+          "text": "El libro College Algebra (2.ª ed.) de OpenStax es de acceso libre y repasa ecuaciones lineales, sistemas y métodos de solución algebraica https://openstax.org/details/books/college-algebra-2e",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-              "target": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "raw": "https://openstax.org/details/books/college-algebra-2e",
+              "target": "https://openstax.org/details/books/college-algebra-2e",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=Jsiy4TxjXh0",
+          "text": "El libro Linear Algebra Done Right (4.ª ed., 2024) de Axler está disponible en PDF abierto y conecta sistemas lineales con espacio columna, nulo y rango https://linear.axler.net/LADR4e.pdf",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=Jsiy4TxjXh0",
-              "target": "https://www.youtube.com/watch?v=Jsiy4TxjXh0",
+              "raw": "https://linear.axler.net/LADR4e.pdf",
+              "target": "https://linear.axler.net/LADR4e.pdf",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+          "text": "Esta playlist Essence of linear algebra de 3Blue1Brown muestra cómo interpretar sistemas como intersecciones de transformaciones lineales https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
-              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
               "line": 5
             }
           ]
@@ -3699,23 +3771,23 @@
           "line": 1
         },
         {
-          "raw": "https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations",
-          "target": "https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations",
+          "raw": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
+          "target": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
           "line": 2
         },
         {
-          "raw": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-          "target": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+          "raw": "https://openstax.org/details/books/college-algebra-2e",
+          "target": "https://openstax.org/details/books/college-algebra-2e",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=Jsiy4TxjXh0",
-          "target": "https://www.youtube.com/watch?v=Jsiy4TxjXh0",
+          "raw": "https://linear.axler.net/LADR4e.pdf",
+          "target": "https://linear.axler.net/LADR4e.pdf",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
-          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
           "line": 5
         }
       ],
@@ -3731,7 +3803,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "SQL es el lenguaje declarativo para definir, consultar y modificar datos relacionales; referencia https://es.wikipedia.org/wiki/SQL",
+          "text": "SQL es el lenguaje declarativo para definir, consultar y modificar datos relacionales; la Wikipedia en español resume DDL, DML y consultas https://es.wikipedia.org/wiki/SQL",
           "refs": [],
           "tags": [],
           "urls": [
@@ -3744,7 +3816,7 @@
         },
         {
           "line": 2,
-          "text": "tutorial breve según https://sqlbolt.com/",
+          "text": "SQLBolt enseña SELECT, JOIN, agregación e inserción con ejercicios interactivos en el navegador https://sqlbolt.com/",
           "refs": [],
           "tags": [],
           "urls": [
@@ -3757,39 +3829,39 @@
         },
         {
           "line": 3,
-          "text": "curso extenso según https://www.w3schools.com/sql/",
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre lenguajes de consulta y sistemas relacionales en acceso libre http://www.redbook.io/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.w3schools.com/sql/",
-              "target": "https://www.w3schools.com/sql/",
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=7S_tz1z_5bA",
+          "text": "Este curso en video de freeCodeCamp introduce SQL con PostgreSQL, CRUD, joins, subconsultas y agregación https://www.youtube.com/watch?v=SpfIwlAYaKk",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
-              "target": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+              "raw": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+              "target": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Esta playlist de Neso Academy recorre modelo relacional, álgebra, SQL y diseño con lecciones publicadas desde 2021 https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": 5
             }
           ]
@@ -3809,18 +3881,18 @@
           "line": 2
         },
         {
-          "raw": "https://www.w3schools.com/sql/",
-          "target": "https://www.w3schools.com/sql/",
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
-          "target": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+          "raw": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+          "target": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "line": 5
         }
       ],
@@ -3857,20 +3929,20 @@
       "blocks": [
         {
           "line": 1,
-          "text": "una transacción agrupa operaciones de base de datos que deben completarse como una unidad; referencia https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos)",
+          "text": "Una transacción agrupa operaciones de base de datos que deben completarse como una unidad; la Wikipedia en español describe commit, rollback y estados https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos",
-              "target": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos",
+              "raw": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
+              "target": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
               "line": 1
             }
           ]
         },
         {
           "line": 2,
-          "text": "guía breve según https://www.postgresql.org/docs/current/tutorial-transactions.html",
+          "text": "La documentación de PostgreSQL muestra BEGIN, COMMIT y ROLLBACK con ejemplos de transferencias entre cuentas https://www.postgresql.org/docs/current/tutorial-transactions.html",
           "refs": [],
           "tags": [],
           "urls": [
@@ -3883,39 +3955,39 @@
         },
         {
           "line": 3,
-          "text": "curso extenso según https://db-book.com/",
+          "text": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre transacciones, bloqueos y recuperación en acceso libre http://www.redbook.io/",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://db-book.com/",
-              "target": "https://db-book.com/",
+              "raw": "http://www.redbook.io/",
+              "target": "http://www.redbook.io/",
               "line": 3
             }
           ]
         },
         {
           "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=wHUOeX2xs08",
+          "text": "Este video explica atomicidad, consistencia, aislamiento y durabilidad con transferencias bancarias https://www.youtube.com/watch?v=DtlV5JTnlh4",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/watch?v=wHUOeX2xs08",
-              "target": "https://www.youtube.com/watch?v=wHUOeX2xs08",
+              "raw": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
+              "target": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "text": "Esta playlist de Neso Academy sitúa transacciones, SQL y diseño relacional dentro de un curso de bases de datos actualizado https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": 5
             }
           ]
@@ -3925,8 +3997,8 @@
       "tags": [],
       "urls": [
         {
-          "raw": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos",
-          "target": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos",
+          "raw": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
+          "target": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
           "line": 1
         },
         {
@@ -3935,18 +4007,18 @@
           "line": 2
         },
         {
-          "raw": "https://db-book.com/",
-          "target": "https://db-book.com/",
+          "raw": "http://www.redbook.io/",
+          "target": "http://www.redbook.io/",
           "line": 3
         },
         {
-          "raw": "https://www.youtube.com/watch?v=wHUOeX2xs08",
-          "target": "https://www.youtube.com/watch?v=wHUOeX2xs08",
+          "raw": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
+          "target": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-          "target": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+          "raw": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+          "target": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
           "line": 5
         }
       ],
@@ -3962,7 +4034,7 @@
       "blocks": [
         {
           "line": 1,
-          "text": "un vector representa magnitud y dirección en el plano y el espacio; referencia https://es.wikipedia.org/wiki/Vector",
+          "text": "Un vector representa magnitud y dirección en el plano y el espacio; la Wikipedia en español conecta la noción geométrica con suma, escalar y base https://es.wikipedia.org/wiki/Vector",
           "refs": [],
           "tags": [],
           "urls": [
@@ -3975,52 +4047,52 @@
         },
         {
           "line": 2,
-          "text": "repaso breve según https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors",
+          "text": "El libro College Algebra (2.ª ed.) de OpenStax es de acceso libre y repasa magnitudes, direcciones y operaciones con vectores en el plano https://openstax.org/details/books/college-algebra-2e",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors",
-              "target": "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors",
+              "raw": "https://openstax.org/details/books/college-algebra-2e",
+              "target": "https://openstax.org/details/books/college-algebra-2e",
               "line": 2
             }
           ]
         },
         {
           "line": 3,
-          "text": "curso extenso según https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-          "refs": [],
-          "tags": [],
-          "urls": [
-            {
-              "raw": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-              "target": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-              "line": 3
-            }
-          ]
-        },
-        {
-          "line": 4,
-          "text": "video corto según https://www.youtube.com/watch?v=fNk_zzaMoSs",
+          "text": "Este video de 3Blue1Brown introduce vectores como flechas en el plano y el espacio con suma y producto escalar https://www.youtube.com/watch?v=fNk_zzaMoSs",
           "refs": [],
           "tags": [],
           "urls": [
             {
               "raw": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
               "target": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "line": 3
+            }
+          ]
+        },
+        {
+          "line": 4,
+          "text": "Interactive Linear Algebra de Georgia Tech introduce vectores, suma, combinaciones lineales y cambios de base con visualizaciones https://textbooks.math.gatech.edu/ila/vectors.html",
+          "refs": [],
+          "tags": [],
+          "urls": [
+            {
+              "raw": "https://textbooks.math.gatech.edu/ila/vectors.html",
+              "target": "https://textbooks.math.gatech.edu/ila/vectors.html",
               "line": 4
             }
           ]
         },
         {
           "line": 5,
-          "text": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+          "text": "Este video de Khan Academy descompone vectores en componentes horizontal y vertical a partir de magnitud y dirección https://www.youtube.com/watch?v=6Kw2nIwWYL0",
           "refs": [],
           "tags": [],
           "urls": [
             {
-              "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
-              "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "raw": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
+              "target": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
               "line": 5
             }
           ]
@@ -4035,23 +4107,23 @@
           "line": 1
         },
         {
-          "raw": "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors",
-          "target": "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors",
+          "raw": "https://openstax.org/details/books/college-algebra-2e",
+          "target": "https://openstax.org/details/books/college-algebra-2e",
           "line": 2
-        },
-        {
-          "raw": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-          "target": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-          "line": 3
         },
         {
           "raw": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
           "target": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+          "line": 3
+        },
+        {
+          "raw": "https://textbooks.math.gatech.edu/ila/vectors.html",
+          "target": "https://textbooks.math.gatech.edu/ila/vectors.html",
           "line": 4
         },
         {
-          "raw": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
-          "target": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+          "raw": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
+          "target": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
           "line": 5
         }
       ],

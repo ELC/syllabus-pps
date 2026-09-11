@@ -1,6 +1,6 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"dashboards","generatedAt":"2026-09-10T20:40:18.430Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"dashboards","generatedAt":"2026-09-11T00:33:55.447Z","docs":"../../README.md"}
 {
-  "generatedAt": "2026-09-10T20:40:18.430Z",
+  "generatedAt": "2026-09-11T00:33:55.447Z",
   "dashboards": [
     {
       "id": "quality",
@@ -970,13 +970,13 @@
         {
           "name": "Linked Concept Notes",
           "description": "Distinct concept note blocks reachable from all course-linked concepts.",
-          "value": 121,
+          "value": 125,
           "format": ",.0f"
         },
         {
           "name": "Notes With Sources",
           "description": "Reachable concept notes that include at least one detected source link.",
-          "value": 121,
+          "value": 125,
           "format": ",.0f"
         },
         {
@@ -1022,8 +1022,8 @@
           "rows": [
             {
               "year": "año 1",
-              "concept_notes": "121",
-              "sourced": "121",
+              "concept_notes": "125",
+              "sourced": "125",
               "missing": "0",
               "coverage_percent": "100.0"
             }
@@ -1070,8 +1070,8 @@
             {
               "year": "año 1",
               "course": "algoritmos y estructuras de datos",
-              "concept_notes": "25",
-              "sourced": "25",
+              "concept_notes": "26",
+              "sourced": "26",
               "missing": "0",
               "coverage_percent": "100.0"
             },
@@ -1086,8 +1086,8 @@
             {
               "year": "año 1",
               "course": "análisis matemático i",
-              "concept_notes": "21",
-              "sourced": "21",
+              "concept_notes": "23",
+              "sourced": "23",
               "missing": "0",
               "coverage_percent": "100.0"
             },
@@ -1118,8 +1118,8 @@
             {
               "year": "año 1",
               "course": "programación i",
-              "concept_notes": "20",
-              "sourced": "20",
+              "concept_notes": "22",
+              "sourced": "22",
               "missing": "0",
               "coverage_percent": "100.0"
             },
@@ -1174,7 +1174,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas",
-              "note": "una matriz ordena datos en filas y columnas para operaciones algebraicas; referencia https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas)"
+              "note": "Una matriz ordena datos en filas y columnas para operar sobre ellos; la Wikipedia en español presenta suma, producto y aplicaciones básicas https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas)"
             },
             {
               "year": "año 1",
@@ -1182,8 +1182,8 @@
               "concept": "matrices",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix",
-              "note": "repaso breve según https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix"
+              "source_links": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
+              "note": "Interactive Linear Algebra de Georgia Tech introduce matrices como transformaciones lineales con ejemplos y ejercicios https://textbooks.math.gatech.edu/ila/matrix-transformations.html"
             },
             {
               "year": "año 1",
@@ -1191,8 +1191,8 @@
               "concept": "matrices",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-              "note": "curso extenso según https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+              "source_links": "https://linear.axler.net/LADR4e.pdf",
+              "note": "El libro Linear Algebra Done Right (4.ª ed., 2024) de Axler está disponible en PDF abierto y desarrolla matrices, operadores lineales y diagonalización https://linear.axler.net/LADR4e.pdf"
             },
             {
               "year": "año 1",
@@ -1200,8 +1200,8 @@
               "concept": "matrices",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
-              "note": "video corto según https://www.youtube.com/watch?v=fNk_zzaMoSs"
+              "source_links": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
+              "note": "Interactive Linear Algebra de Georgia Tech conecta ecuaciones matriciales con combinaciones lineales de columnas https://textbooks.math.gatech.edu/ila/matrix-equations.html"
             },
             {
               "year": "año 1",
@@ -1209,8 +1209,8 @@
               "concept": "matrices",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y"
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+              "note": "Esta playlist Essence of linear algebra de 3Blue1Brown muestra matrices como transformaciones del plano y composición de operaciones lineales https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab"
             },
             {
               "year": "año 1",
@@ -1218,8 +1218,8 @@
               "concept": "pensamiento matemático",
               "line": "1",
               "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
-              "note": "el pensamiento matemático articula abstracción, razonamiento y modelado formal; referencia https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico"
+              "source_links": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+              "note": "El pensamiento matemático combina abstracción, razonamiento lógico y argumentación rigurosa; la Wikipedia en inglés distingue demostración, modelado y resolución de problemas https://en.wikipedia.org/wiki/Mathematical_reasoning"
             },
             {
               "year": "año 1",
@@ -1227,8 +1227,8 @@
               "concept": "pensamiento matemático",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://brilliant.org/wiki/mathematical-reasoning/",
-              "note": "repaso breve según https://brilliant.org/wiki/mathematical-reasoning/"
+              "source_links": "https://openlogicproject.org/",
+              "note": "El Open Logic Project es un libro abierto que recorre lógica proposicional, cuantificadores y métodos de prueba con ejercicios https://openlogicproject.org/"
             },
             {
               "year": "año 1",
@@ -1236,8 +1236,8 @@
               "concept": "pensamiento matemático",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://bookofproof.org/",
-              "note": "curso extenso según https://bookofproof.org/"
+              "source_links": "https://www.coursera.org/learn/mathematical-thinking",
+              "note": "El curso Introduction to Mathematical Thinking de Keith Devlin en Coursera contrasta matemática escolar con razonamiento formal y resolución de problemas abiertos https://www.coursera.org/learn/mathematical-thinking"
             },
             {
               "year": "año 1",
@@ -1245,8 +1245,8 @@
               "concept": "pensamiento matemático",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
-              "note": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM"
+              "source_links": "https://www.youtube.com/watch?v=sbpCTjmw85g",
+              "note": "Esta clase de MIT introduce qué es una demostración, proposiciones y deducciones lógicas como base del razonamiento matemático https://www.youtube.com/watch?v=sbpCTjmw85g"
             },
             {
               "year": "año 1",
@@ -1254,8 +1254,8 @@
               "concept": "pensamiento matemático",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+              "source_links": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+              "note": "Esta playlist de MIT recorre razonamiento matemático, conjuntos, funciones y escritura de demostraciones formales https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu"
             },
             {
               "year": "año 1",
@@ -1264,7 +1264,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales",
-              "note": "un sistema lineal combina ecuaciones lineales con incógnitas compartidas; referencia https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales"
+              "note": "Un sistema lineal combina ecuaciones lineales con incógnitas compartidas; la Wikipedia en español describe métodos de solución y tipos de compatibilidad https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales"
             },
             {
               "year": "año 1",
@@ -1272,8 +1272,8 @@
               "concept": "sistemas lineales",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations",
-              "note": "repaso breve según https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations"
+              "source_links": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
+              "note": "Interactive Linear Algebra de Georgia Tech presenta eliminación gaussiana, matrices aumentadas y formas escalonadas con el algoritmo de reducción https://textbooks.math.gatech.edu/ila/row-reduction.html"
             },
             {
               "year": "año 1",
@@ -1281,8 +1281,8 @@
               "concept": "sistemas lineales",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-              "note": "curso extenso según https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+              "source_links": "https://openstax.org/details/books/college-algebra-2e",
+              "note": "El libro College Algebra (2.ª ed.) de OpenStax es de acceso libre y repasa ecuaciones lineales, sistemas y métodos de solución algebraica https://openstax.org/details/books/college-algebra-2e"
             },
             {
               "year": "año 1",
@@ -1290,8 +1290,8 @@
               "concept": "sistemas lineales",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=Jsiy4TxjXh0",
-              "note": "video corto según https://www.youtube.com/watch?v=Jsiy4TxjXh0"
+              "source_links": "https://linear.axler.net/LADR4e.pdf",
+              "note": "El libro Linear Algebra Done Right (4.ª ed., 2024) de Axler está disponible en PDF abierto y conecta sistemas lineales con espacio columna, nulo y rango https://linear.axler.net/LADR4e.pdf"
             },
             {
               "year": "año 1",
@@ -1299,8 +1299,8 @@
               "concept": "sistemas lineales",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y"
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+              "note": "Esta playlist Essence of linear algebra de 3Blue1Brown muestra cómo interpretar sistemas como intersecciones de transformaciones lineales https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab"
             },
             {
               "year": "año 1",
@@ -1309,7 +1309,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Vector",
-              "note": "un vector representa magnitud y dirección en el plano y el espacio; referencia https://es.wikipedia.org/wiki/Vector"
+              "note": "Un vector representa magnitud y dirección en el plano y el espacio; la Wikipedia en español conecta la noción geométrica con suma, escalar y base https://es.wikipedia.org/wiki/Vector"
             },
             {
               "year": "año 1",
@@ -1317,8 +1317,8 @@
               "concept": "vectores",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors",
-              "note": "repaso breve según https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors"
+              "source_links": "https://openstax.org/details/books/college-algebra-2e",
+              "note": "El libro College Algebra (2.ª ed.) de OpenStax es de acceso libre y repasa magnitudes, direcciones y operaciones con vectores en el plano https://openstax.org/details/books/college-algebra-2e"
             },
             {
               "year": "año 1",
@@ -1326,8 +1326,8 @@
               "concept": "vectores",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
-              "note": "curso extenso según https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+              "source_links": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "note": "Este video de 3Blue1Brown introduce vectores como flechas en el plano y el espacio con suma y producto escalar https://www.youtube.com/watch?v=fNk_zzaMoSs"
             },
             {
               "year": "año 1",
@@ -1335,8 +1335,8 @@
               "concept": "vectores",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
-              "note": "video corto según https://www.youtube.com/watch?v=fNk_zzaMoSs"
+              "source_links": "https://textbooks.math.gatech.edu/ila/vectors.html",
+              "note": "Interactive Linear Algebra de Georgia Tech introduce vectores, suma, combinaciones lineales y cambios de base con visualizaciones https://textbooks.math.gatech.edu/ila/vectors.html"
             },
             {
               "year": "año 1",
@@ -1344,8 +1344,8 @@
               "concept": "vectores",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y"
+              "source_links": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
+              "note": "Este video de Khan Academy descompone vectores en componentes horizontal y vertical a partir de magnitud y dirección https://www.youtube.com/watch?v=6Kw2nIwWYL0"
             },
             {
               "year": "año 1",
@@ -1354,7 +1354,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Algoritmo",
-              "note": "un algoritmo es un procedimiento finito y bien definido para resolver un problema; referencia https://es.wikipedia.org/wiki/Algoritmo"
+              "note": "Un algoritmo es un procedimiento finito y bien definido para resolver un problema; la Wikipedia en español distingue algoritmo, programa e implementación https://es.wikipedia.org/wiki/Algoritmo"
             },
             {
               "year": "año 1",
@@ -1362,8 +1362,8 @@
               "concept": "algoritmos",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
-              "note": "introducción breve según https://developer.mozilla.org/es/docs/Glossary/Algorithm"
+              "source_links": "https://cs50.harvard.edu/x/notes/3/",
+              "note": "CS50x recorre búsqueda lineal y binaria, ordenamiento, recursión y notación O con pseudocódigo y código en C https://cs50.harvard.edu/x/notes/3/"
             },
             {
               "year": "año 1",
@@ -1371,8 +1371,8 @@
               "concept": "algoritmos",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://opendatastructures.org/ods-es/",
-              "note": "libro introductorio según https://opendatastructures.org/ods-es/"
+              "source_links": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+              "note": "El libro Algorithms (1.ª ed., 2019) de Erickson es de acceso libre bajo licencia Creative Commons y cubre diseño, correctitud y análisis con ejercicios https://jeffe.cs.illinois.edu/teaching/algorithms/"
             },
             {
               "year": "año 1",
@@ -1380,8 +1380,8 @@
               "concept": "algoritmos",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=8hly31xKLi0",
-              "note": "video corto según https://www.youtube.com/watch?v=8hly31xKLi0"
+              "source_links": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+              "note": "Este video de CS50 introduce algoritmos con búsqueda, ordenamiento y análisis de eficiencia en ejemplos concretos https://www.youtube.com/watch?v=jZzyERW7h1A"
             },
             {
               "year": "año 1",
@@ -1389,8 +1389,17 @@
               "concept": "algoritmos",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+              "source_links": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "note": "Esta playlist de CS50x recorre fundamentos de computación, estructuras y algoritmos en clases completas https://www.youtube.com/playlist?list=PLXOJEg4xbr50"
+            },
+            {
+              "year": "año 1",
+              "course": "algoritmos y estructuras de datos",
+              "concept": "algoritmos",
+              "line": "6",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+              "note": "Esta clase de MIT 6.006 introduce algoritmos y computación con análisis de eficiencia y estructuras de datos https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY"
             },
             {
               "year": "año 1",
@@ -1398,8 +1407,8 @@
               "concept": "complejidad algorítmica",
               "line": "1",
               "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/ComplejidadComputacional",
-              "note": "la complejidad algorítmica describe cómo crece el costo de un algoritmo con el tamaño de la entrada; referencia https://es.wikipedia.org/wiki/ComplejidadComputacional"
+              "source_links": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
+              "note": "La complejidad algorítmica describe cómo crece el costo de un algoritmo con el tamaño de la entrada; la Wikipedia en español introduce notación O y análisis de eficiencia https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos"
             },
             {
               "year": "año 1",
@@ -1407,8 +1416,8 @@
               "concept": "complejidad algorítmica",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.bigocheatsheet.com/",
-              "note": "guía breve según https://www.bigocheatsheet.com/"
+              "source_links": "https://cs50.harvard.edu/x/notes/3/",
+              "note": "CS50x dedica una sección a tiempo de ejecución, notación O, Ω y Θ con búsqueda y ordenamiento https://cs50.harvard.edu/x/notes/3/"
             },
             {
               "year": "año 1",
@@ -1416,8 +1425,8 @@
               "concept": "complejidad algorítmica",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html",
-              "note": "curso extenso según https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html"
+              "source_links": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+              "note": "El libro Algorithms (1.ª ed., 2019) de Erickson es de acceso libre y dedica capítulos a notación asintótica, recurrencias y límites inferiores https://jeffe.cs.illinois.edu/teaching/algorithms/"
             },
             {
               "year": "año 1",
@@ -1425,8 +1434,8 @@
               "concept": "complejidad algorítmica",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=Mo4vesaut8g",
-              "note": "video corto según https://www.youtube.com/watch?v=Mo4vesaut8g"
+              "source_links": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+              "note": "Este video de CS50 introduce notación O comparando búsqueda lineal, binaria y distintos métodos de ordenamiento https://www.youtube.com/watch?v=jZzyERW7h1A"
             },
             {
               "year": "año 1",
@@ -1434,8 +1443,8 @@
               "concept": "complejidad algorítmica",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+              "source_links": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "note": "Esta playlist de CS50x incluye clases sobre algoritmos, estructuras y análisis de eficiencia https://www.youtube.com/playlist?list=PLXOJEg4xbr50"
             },
             {
               "year": "año 1",
@@ -1444,7 +1453,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Estructura_de_datos",
-              "note": "una estructura de datos organiza información para acceder y modificarla con eficiencia; referencia https://es.wikipedia.org/wiki/Estructura_de_datos"
+              "note": "Una estructura de datos organiza información para acceder y modificarla con eficiencia; la Wikipedia en español compara arrays, listas, pilas, colas, árboles y grafos https://es.wikipedia.org/wiki/Estructura_de_datos"
             },
             {
               "year": "año 1",
@@ -1453,7 +1462,7 @@
               "line": "2",
               "has_source": "yes",
               "source_links": "https://visualgo.net/en",
-              "note": "visualización interactiva breve según https://visualgo.net/en"
+              "note": "VisuAlgo anima inserciones, búsquedas y recorridos en estructuras clásicas y muestra pseudocódigo junto a la animación https://visualgo.net/en"
             },
             {
               "year": "año 1",
@@ -1461,8 +1470,8 @@
               "concept": "estructuras de datos",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://opendatastructures.org/ods-es/",
-              "note": "libro introductorio según https://opendatastructures.org/ods-es/"
+              "source_links": "https://opendatastructures.org/",
+              "note": "El libro Open Data Structures (edición en línea, 2020) de Morin implementa listas, tablas hash, árboles y grafos con análisis de costo por operación https://opendatastructures.org/"
             },
             {
               "year": "año 1",
@@ -1470,8 +1479,8 @@
               "concept": "estructuras de datos",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=9RHfkFEZLPQ",
-              "note": "video corto según https://www.youtube.com/watch?v=9RHfkFEZLPQ"
+              "source_links": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
+              "note": "Este curso en video de freeCodeCamp recorre arrays, listas, pilas, colas, árboles, grafos y tablas hash con implementaciones https://www.youtube.com/watch?v=CBYHwZcbD-s"
             },
             {
               "year": "año 1",
@@ -1479,8 +1488,8 @@
               "concept": "estructuras de datos",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+              "source_links": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "note": "Esta playlist de CS50x recorre arrays, listas enlazadas, pilas, colas, árboles, tablas hash y tries https://www.youtube.com/playlist?list=PLXOJEg4xbr50"
             },
             {
               "year": "año 1",
@@ -1489,7 +1498,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman",
-              "note": "un diagrama de Nassi-Shneiderman representa algoritmos con cajas estructuradas sin flechas de flujo; referencia https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman"
+              "note": "Un diagrama de Nassi-Shneiderman representa algoritmos con cajas estructuradas sin flechas de flujo; la Wikipedia en español muestra secuencia, selección e iteración anidadas https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman"
             },
             {
               "year": "año 1",
@@ -1497,8 +1506,8 @@
               "concept": "nassi-shneiderman",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.programiz.com/dsa/nassi-shneiderman-diagram",
-              "note": "tutorial breve según https://www.programiz.com/dsa/nassi-shneiderman-diagram"
+              "source_links": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
+              "note": "Ben Shneiderman recorre la historia de los diagramas NS, sus símbolos y su relación con la programación estructurada https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/"
             },
             {
               "year": "año 1",
@@ -1506,8 +1515,8 @@
               "concept": "nassi-shneiderman",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html",
-              "note": "guía extensa según https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html"
+              "source_links": "https://opendatastructures.org/",
+              "note": "El libro Open Data Structures (edición en línea, 2020) de Morin presenta pseudocódigo estructurado con secuencia, selección e iteración antes de implementar estructuras https://opendatastructures.org/"
             },
             {
               "year": "año 1",
@@ -1515,8 +1524,8 @@
               "concept": "nassi-shneiderman",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=3T3j3Yv3k5A",
-              "note": "video corto según https://www.youtube.com/watch?v=3T3j3Yv3k5A"
+              "source_links": "https://www.youtube.com/watch?v=_GSFmwaErFc",
+              "note": "Este video recorre cómo crear diagramas Nassi-Shneiderman con Structorizer, incluyendo secuencia, decisión e iteración https://www.youtube.com/watch?v=_GSFmwaErFc"
             },
             {
               "year": "año 1",
@@ -1524,8 +1533,8 @@
               "concept": "nassi-shneiderman",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+              "source_links": "https://help.structorizer.fisch.lu/index.php?menu=49",
+              "note": "La guía de Structorizer documenta bloques de proceso, decisión, repetición y casos en diagramas NS https://help.structorizer.fisch.lu/index.php?menu=49"
             },
             {
               "year": "año 1",
@@ -1533,8 +1542,8 @@
               "concept": "pensamiento matemático",
               "line": "1",
               "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
-              "note": "el pensamiento matemático articula abstracción, razonamiento y modelado formal; referencia https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico"
+              "source_links": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+              "note": "El pensamiento matemático combina abstracción, razonamiento lógico y argumentación rigurosa; la Wikipedia en inglés distingue demostración, modelado y resolución de problemas https://en.wikipedia.org/wiki/Mathematical_reasoning"
             },
             {
               "year": "año 1",
@@ -1542,8 +1551,8 @@
               "concept": "pensamiento matemático",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://brilliant.org/wiki/mathematical-reasoning/",
-              "note": "repaso breve según https://brilliant.org/wiki/mathematical-reasoning/"
+              "source_links": "https://openlogicproject.org/",
+              "note": "El Open Logic Project es un libro abierto que recorre lógica proposicional, cuantificadores y métodos de prueba con ejercicios https://openlogicproject.org/"
             },
             {
               "year": "año 1",
@@ -1551,8 +1560,8 @@
               "concept": "pensamiento matemático",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://bookofproof.org/",
-              "note": "curso extenso según https://bookofproof.org/"
+              "source_links": "https://www.coursera.org/learn/mathematical-thinking",
+              "note": "El curso Introduction to Mathematical Thinking de Keith Devlin en Coursera contrasta matemática escolar con razonamiento formal y resolución de problemas abiertos https://www.coursera.org/learn/mathematical-thinking"
             },
             {
               "year": "año 1",
@@ -1560,8 +1569,8 @@
               "concept": "pensamiento matemático",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
-              "note": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM"
+              "source_links": "https://www.youtube.com/watch?v=sbpCTjmw85g",
+              "note": "Esta clase de MIT introduce qué es una demostración, proposiciones y deducciones lógicas como base del razonamiento matemático https://www.youtube.com/watch?v=sbpCTjmw85g"
             },
             {
               "year": "año 1",
@@ -1569,8 +1578,8 @@
               "concept": "pensamiento matemático",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+              "source_links": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+              "note": "Esta playlist de MIT recorre razonamiento matemático, conjuntos, funciones y escritura de demostraciones formales https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu"
             },
             {
               "year": "año 1",
@@ -1579,7 +1588,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Caso_de_uso",
-              "note": "un caso de uso describe una interacción entre un actor y el sistema para lograr un objetivo; referencia https://es.wikipedia.org/wiki/Caso_de_uso"
+              "note": "Un caso de uso describe una interacción entre un actor y el sistema para lograr un objetivo; la Wikipedia en español relaciona actores, escenarios y extensiones https://es.wikipedia.org/wiki/Caso_de_uso"
             },
             {
               "year": "año 1",
@@ -1587,8 +1596,8 @@
               "concept": "casos de uso",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.atlassian.com/agile/use-cases",
-              "note": "guía breve según https://www.atlassian.com/agile/use-cases"
+              "source_links": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
+              "note": "Visual Paradigm explica actores, casos de uso, límites del sistema y relaciones include, extend y generalización con ejemplos UML https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/"
             },
             {
               "year": "año 1",
@@ -1596,8 +1605,8 @@
               "concept": "casos de uso",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://www.coursera.org/learn/uml",
-              "note": "curso extenso según https://www.coursera.org/learn/uml"
+              "source_links": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "note": "El libro abierto Software Engineering en Wikibooks dedica una sección a casos de uso, escenarios y su vínculo con requerimientos funcionales https://en.wikibooks.org/wiki/Software_Engineering"
             },
             {
               "year": "año 1",
@@ -1605,8 +1614,8 @@
               "concept": "casos de uso",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=OZ4XmlNIHT4",
-              "note": "video corto según https://www.youtube.com/watch?v=OZ4XmlNIHT4"
+              "source_links": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+              "note": "Este video de Passionate Business Analyst construye un diagrama de casos de uso paso a paso con actores, sistema y relaciones https://www.youtube.com/watch?v=qFaSEMbiWaI"
             },
             {
               "year": "año 1",
@@ -1614,8 +1623,8 @@
               "concept": "casos de uso",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+              "note": "Este video de Lucidchart modela actores, casos de uso y relaciones include/extend con un ejemplo de sistema bancario https://www.youtube.com/watch?v=zid-MVo7M-E"
             },
             {
               "year": "año 1",
@@ -1623,8 +1632,8 @@
               "concept": "criterios de aceptación",
               "line": "1",
               "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n",
-              "note": "un criterio de aceptación define condiciones observables para considerar satisfecho un requerimiento; referencia https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n"
+              "source_links": "https://en.wikipedia.org/wiki/Acceptance_criteria",
+              "note": "Un criterio de aceptación define condiciones observables para considerar satisfecho un requerimiento; la Wikipedia en inglés lo distingue de especificación técnica y pruebas de aceptación https://en.wikipedia.org/wiki/Acceptance_criteria"
             },
             {
               "year": "año 1",
@@ -1633,7 +1642,7 @@
               "line": "2",
               "has_source": "yes",
               "source_links": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
-              "note": "guía breve según https://www.atlassian.com/work-management/project-management/acceptance-criteria"
+              "note": "Atlassian muestra cómo escribir criterios en formato dado-cuando-entonces, vincularlos a historias de usuario y evitar ambigüedad https://www.atlassian.com/work-management/project-management/acceptance-criteria"
             },
             {
               "year": "año 1",
@@ -1641,8 +1650,8 @@
               "concept": "criterios de aceptación",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://www.coursera.org/learn/requirements-writing",
-              "note": "curso extenso según https://www.coursera.org/learn/requirements-writing"
+              "source_links": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "note": "El libro abierto Software Engineering en Wikibooks conecta requerimientos, casos de uso y pruebas de aceptación en el ciclo de desarrollo https://en.wikibooks.org/wiki/Software_Engineering"
             },
             {
               "year": "año 1",
@@ -1650,8 +1659,8 @@
               "concept": "criterios de aceptación",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=Ez9sHj0X_HU",
-              "note": "video corto según https://www.youtube.com/watch?v=Ez9sHj0X_HU"
+              "source_links": "https://www.agilealliance.org/glossary/acceptance-test/",
+              "note": "Agile Alliance explica qué es una prueba de aceptación y por qué los criterios deben ser verificables y automatizables https://www.agilealliance.org/glossary/acceptance-test/"
             },
             {
               "year": "año 1",
@@ -1659,8 +1668,8 @@
               "concept": "criterios de aceptación",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/watch?v=q26147zlcMU",
+              "note": "Este video recorre user stories y criterios de aceptación en formato reglas y escenarios dado-cuando-entonces https://www.youtube.com/watch?v=q26147zlcMU"
             },
             {
               "year": "año 1",
@@ -1668,44 +1677,44 @@
               "concept": "modelado de dominio",
               "line": "1",
               "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/Modelado_de_dominio",
-              "note": "el modelado de dominio representa entidades, reglas y relaciones del problema a resolver; referencia https://es.wikipedia.org/wiki/Modelado_de_dominio"
+              "source_links": "https://en.wikipedia.org/wiki/Domain-driven_design",
+              "note": "El modelado de dominio captura conceptos, reglas y relaciones del negocio en un lenguaje compartido; la Wikipedia en inglés resume entidades, agregados y servicios de dominio https://en.wikipedia.org/wiki/Domain-driven_design"
             },
             {
               "year": "año 1",
               "course": "análisis de sistemas",
               "concept": "modelado de dominio",
               "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
+              "note": "DDD Quickly de InfoQ es un libro breve de acceso libre que resume entidades, value objects, agregados y bounded contexts https://www.infoq.com/minibooks/domain-driven-design-quickly/"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "modelado de dominio",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
+              "note": "El artículo de Martin Fowler sobre el lenguaje ubicuo explica cómo alinear términos del negocio con el diseño del software https://martinfowler.com/bliki/UbiquitousLanguage.html"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "modelado de dominio",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
+              "note": "Este video de DDD Europe 2019 con Eric Evans recorre bounded contexts, lenguaje ubicuo y colaboración entre equipos https://www.youtube.com/watch?v=pMuiVlnGqjk"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis de sistemas",
+              "concept": "modelado de dominio",
+              "line": "5",
               "has_source": "yes",
               "source_links": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
-              "note": "artículo breve según https://martinfowler.com/bliki/DomainDrivenDesign.html"
-            },
-            {
-              "year": "año 1",
-              "course": "análisis de sistemas",
-              "concept": "modelado de dominio",
-              "line": "3",
-              "has_source": "yes",
-              "source_links": "https://www.domainlanguage.com/ddd/reference/",
-              "note": "guía extensa según https://www.domainlanguage.com/ddd/reference/"
-            },
-            {
-              "year": "año 1",
-              "course": "análisis de sistemas",
-              "concept": "modelado de dominio",
-              "line": "4",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=pMuiVWNimyY",
-              "note": "video corto según https://www.youtube.com/watch?v=pMuiVWNimyY"
-            },
-            {
-              "year": "año 1",
-              "course": "análisis de sistemas",
-              "concept": "modelado de dominio",
-              "line": "5",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "note": "El artículo de Martin Fowler sobre domain-driven design resume el enfoque, el lenguaje ubicuo y la colaboración con expertos del dominio https://martinfowler.com/bliki/DomainDrivenDesign.html"
             },
             {
               "year": "año 1",
@@ -1713,8 +1722,8 @@
               "concept": "requerimientos",
               "line": "1",
               "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/Requisito_de_software",
-              "note": "un requerimiento describe qué debe hacer el sistema para satisfacer una necesidad; referencia https://es.wikipedia.org/wiki/Requisito_de_software"
+              "source_links": "https://es.wikipedia.org/wiki/Requisito",
+              "note": "Un requerimiento describe una necesidad o restricción que el sistema debe cumplir; la Wikipedia en español distingue funcionales, no funcionales y casos de uso https://es.wikipedia.org/wiki/Requisito"
             },
             {
               "year": "año 1",
@@ -1722,8 +1731,8 @@
               "concept": "requerimientos",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.atlassian.com/agile/requirements",
-              "note": "guía breve según https://www.atlassian.com/agile/requirements"
+              "source_links": "https://en.wikibooks.org/wiki/Software_Engineering",
+              "note": "El libro abierto Software Engineering en Wikibooks dedica capítulos a requerimientos funcionales, no funcionales y trazabilidad https://en.wikibooks.org/wiki/Software_Engineering"
             },
             {
               "year": "año 1",
@@ -1731,8 +1740,8 @@
               "concept": "requerimientos",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://www.coursera.org/learn/requirements-writing",
-              "note": "curso extenso según https://www.coursera.org/learn/requirements-writing"
+              "source_links": "https://martinfowler.com/bliki/UserStory.html",
+              "note": "El artículo de Martin Fowler sobre user stories resume el formato como cliente, necesidad y beneficio https://martinfowler.com/bliki/UserStory.html"
             },
             {
               "year": "año 1",
@@ -1740,8 +1749,8 @@
               "concept": "requerimientos",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=FFrNP5q9SxY",
-              "note": "video corto según https://www.youtube.com/watch?v=FFrNP5q9SxY"
+              "source_links": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
+              "note": "Este video de Mike Cohn contrasta user stories, criterios de aceptación y definition of done con ejemplos ágiles https://www.youtube.com/watch?v=Hq9O7mnUNM4"
             },
             {
               "year": "año 1",
@@ -1749,8 +1758,8 @@
               "concept": "requerimientos",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
+              "note": "Este video de Passionate BA modela actores, casos de uso y relaciones include/extend con ejemplos de un sistema real https://www.youtube.com/watch?v=qFaSEMbiWaI"
             },
             {
               "year": "año 1",
@@ -1759,7 +1768,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica",
-              "note": "una demostración establece la verdad de un enunciado mediante una cadena lógica de pasos; referencia https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica"
+              "note": "Una demostración establece la verdad de un enunciado mediante una cadena lógica de pasos; la Wikipedia en español distingue directa, contradicción, contrapositiva e inducción https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica"
             },
             {
               "year": "año 1",
@@ -1767,8 +1776,8 @@
               "concept": "demostraciones",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://bookofproof.org/Chapter1/ch_sec_proofs.html",
-              "note": "repaso breve según https://bookofproof.org/Chapter1/ch_sec_proofs.html"
+              "source_links": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
+              "note": "Esta clase de MIT OpenCourseWare introduce inducción matemática y métodos de prueba con ejemplos guiados https://www.youtube.com/watch?v=LY7YmuDbuW0"
             },
             {
               "year": "año 1",
@@ -1776,8 +1785,8 @@
               "concept": "demostraciones",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://bookofproof.org/",
-              "note": "curso extenso según https://bookofproof.org/"
+              "source_links": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+              "note": "El libro Book of Proof (3.ª ed., 2024) de Hammack es de acceso libre y enseña a redactar demostraciones con ejemplos de conjuntos, funciones y combinatoria https://richardhammack.github.io/BookOfProof/Main.pdf"
             },
             {
               "year": "año 1",
@@ -1785,8 +1794,8 @@
               "concept": "demostraciones",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=8DrbcYOcts0",
-              "note": "video corto según https://www.youtube.com/watch?v=8DrbcYOcts0"
+              "source_links": "https://www.youtube.com/watch?v=01b3KjgPhfI",
+              "note": "Este video recorre demostración directa asumiendo la hipótesis y deduciendo la conclusión paso a paso https://www.youtube.com/watch?v=01b3KjgPhfI"
             },
             {
               "year": "año 1",
@@ -1794,8 +1803,26 @@
               "concept": "demostraciones",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+              "source_links": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
+              "note": "Esta playlist de MIT OpenCourseWare recorre sucesiones, continuidad e integración con énfasis en construir demostraciones formales https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "demostraciones",
+              "line": "6",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+              "note": "Este video recorre demostración por contradicción asumiendo lo contrario del enunciado y llegando a una inconsistencia https://www.youtube.com/watch?v=YYgepDY3rHw"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "demostraciones",
+              "line": "7",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
+              "note": "Este video muestra demostración por contrapositiva reformulando la implicación y probando su negación https://www.youtube.com/watch?v=ce4Jc0QmjOI"
             },
             {
               "year": "año 1",
@@ -1804,7 +1831,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica",
-              "note": "la inducción y la lógica formalizan razonamiento deductivo sobre proposiciones y estructuras matemáticas; referencia https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica"
+              "note": "La inducción matemática prueba propiedades para todo n natural a partir de un caso base y un paso inductivo; la Wikipedia en español muestra el esquema y ejemplos clásicos https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica"
             },
             {
               "year": "año 1",
@@ -1812,8 +1839,8 @@
               "concept": "inducción y lógica",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html",
-              "note": "repaso breve según https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html"
+              "source_links": "https://openlogicproject.org/",
+              "note": "El Open Logic Project es un libro abierto de lógica formal con capítulos sobre deducción natural, cuantificadores y métodos de prueba https://openlogicproject.org/"
             },
             {
               "year": "año 1",
@@ -1821,8 +1848,8 @@
               "concept": "inducción y lógica",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://tudelft-citg.github.io/learn-probability/intro_in_toc.html",
-              "note": "curso extenso según https://tudelft-citg.github.io/learn-probability/intro_in_toc.html"
+              "source_links": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
+              "note": "Este video de MIT recorre el esquema de inducción con caso base, hipótesis inductiva y paso inductivo en ejemplos numéricos https://www.youtube.com/watch?v=wblW_M_HVQ8"
             },
             {
               "year": "año 1",
@@ -1830,8 +1857,8 @@
               "concept": "inducción y lógica",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://betanalpha.github.io/assets/case_studies/probability_theory.html",
-              "note": "estudio de caso según https://betanalpha.github.io/assets/case_studies/probability_theory.html"
+              "source_links": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
+              "note": "Este video de la Universidad de Edimburgo demuestra inducción sobre números naturales y listas con demostraciones formales https://www.youtube.com/watch?v=_Vg10FD5ULk"
             },
             {
               "year": "año 1",
@@ -1839,62 +1866,62 @@
               "concept": "inducción y lógica",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=8DrbcYOcts0",
-              "note": "video corto según https://www.youtube.com/watch?v=8DrbcYOcts0"
+              "source_links": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
+              "note": "Esta playlist de MIT 6.042 recorre lógica proposicional, conectivos, cuantificadores y métodos de prueba https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ"
             },
             {
               "year": "año 1",
               "course": "análisis matemático i",
-              "concept": "inducción y lógica",
+              "concept": "optimización",
+              "line": "1",
+              "has_source": "yes",
+              "source_links": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
+              "note": "La optimización busca máximos, mínimos o mejores soluciones bajo restricciones; la Wikipedia en español conecta cálculo, programación lineal y condiciones de optimalidad https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
+              "line": "2",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=trdab2TO820",
+              "note": "Este video muestra cómo usar Desmos para graficar funciones, derivadas y puntos críticos al resolver problemas de optimización https://www.youtube.com/watch?v=trdab2TO820"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
+              "line": "3",
+              "has_source": "yes",
+              "source_links": "https://activecalculus.org/",
+              "note": "Active Calculus (edición 2024) de Matt Boelkins es un libro abierto que trata derivadas, criterios de extremos y modelado con ejercicios https://activecalculus.org/"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
+              "line": "4",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=0vIZdyjoubE",
+              "note": "Este video recorre tres problemas de optimización con criterios de la derivada y el teorema del valor extremo https://www.youtube.com/watch?v=0vIZdyjoubE"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
+              "line": "5",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "note": "Esta playlist Essence of calculus de 3Blue1Brown construye intuición sobre límites, derivadas e interpretación geométrica de la optimización https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+            },
+            {
+              "year": "año 1",
+              "course": "análisis matemático i",
+              "concept": "optimización",
               "line": "6",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
-            },
-            {
-              "year": "año 1",
-              "course": "análisis matemático i",
-              "concept": "optimización",
-              "line": "1",
-              "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica",
-              "note": "la optimización busca el mejor valor de una función objetivo sujeta a restricciones; referencia https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica)"
-            },
-            {
-              "year": "año 1",
-              "course": "análisis matemático i",
-              "concept": "optimización",
-              "line": "2",
-              "has_source": "yes",
-              "source_links": "https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx",
-              "note": "repaso breve según https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx"
-            },
-            {
-              "year": "año 1",
-              "course": "análisis matemático i",
-              "concept": "optimización",
-              "line": "3",
-              "has_source": "yes",
-              "source_links": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",
-              "note": "curso extenso según https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx"
-            },
-            {
-              "year": "año 1",
-              "course": "análisis matemático i",
-              "concept": "optimización",
-              "line": "4",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
-              "note": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM"
-            },
-            {
-              "year": "año 1",
-              "course": "análisis matemático i",
-              "concept": "optimización",
-              "line": "5",
-              "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+              "source_links": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+              "note": "Este video de Khan Academy maximiza la ganancia de una fábrica modelando ingresos y costos con derivadas https://www.youtube.com/watch?v=dam16G6cZ8k"
             },
             {
               "year": "año 1",
@@ -1902,8 +1929,8 @@
               "concept": "pensamiento matemático",
               "line": "1",
               "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
-              "note": "el pensamiento matemático articula abstracción, razonamiento y modelado formal; referencia https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico"
+              "source_links": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+              "note": "El pensamiento matemático combina abstracción, razonamiento lógico y argumentación rigurosa; la Wikipedia en inglés distingue demostración, modelado y resolución de problemas https://en.wikipedia.org/wiki/Mathematical_reasoning"
             },
             {
               "year": "año 1",
@@ -1911,8 +1938,8 @@
               "concept": "pensamiento matemático",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://brilliant.org/wiki/mathematical-reasoning/",
-              "note": "repaso breve según https://brilliant.org/wiki/mathematical-reasoning/"
+              "source_links": "https://openlogicproject.org/",
+              "note": "El Open Logic Project es un libro abierto que recorre lógica proposicional, cuantificadores y métodos de prueba con ejercicios https://openlogicproject.org/"
             },
             {
               "year": "año 1",
@@ -1920,8 +1947,8 @@
               "concept": "pensamiento matemático",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://bookofproof.org/",
-              "note": "curso extenso según https://bookofproof.org/"
+              "source_links": "https://www.coursera.org/learn/mathematical-thinking",
+              "note": "El curso Introduction to Mathematical Thinking de Keith Devlin en Coursera contrasta matemática escolar con razonamiento formal y resolución de problemas abiertos https://www.coursera.org/learn/mathematical-thinking"
             },
             {
               "year": "año 1",
@@ -1929,8 +1956,8 @@
               "concept": "pensamiento matemático",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
-              "note": "video corto según https://www.youtube.com/watch?v=WUvTyaaNkzM"
+              "source_links": "https://www.youtube.com/watch?v=sbpCTjmw85g",
+              "note": "Esta clase de MIT introduce qué es una demostración, proposiciones y deducciones lógicas como base del razonamiento matemático https://www.youtube.com/watch?v=sbpCTjmw85g"
             },
             {
               "year": "año 1",
@@ -1938,8 +1965,8 @@
               "concept": "pensamiento matemático",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+              "source_links": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
+              "note": "Esta playlist de MIT recorre razonamiento matemático, conjuntos, funciones y escritura de demostraciones formales https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu"
             },
             {
               "year": "año 1",
@@ -1948,7 +1975,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/ACID",
-              "note": "ACID resume atomicidad, consistencia, aislamiento y durabilidad en transacciones de base de datos; referencia https://es.wikipedia.org/wiki/ACID"
+              "note": "ACID resume atomicidad, consistencia, aislamiento y durabilidad; la Wikipedia en español define cada propiedad y por qué importan cuando varias operaciones comparten una base de datos https://es.wikipedia.org/wiki/ACID"
             },
             {
               "year": "año 1",
@@ -1956,8 +1983,8 @@
               "concept": "ACID",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.mongodb.com/resources/basics/databases/acid-transactions",
-              "note": "guía breve según https://www.mongodb.com/resources/basics/databases/acid-transactions"
+              "source_links": "https://www.db-fiddle.com/",
+              "note": "DB Fiddle permite ejecutar SQL en el navegador y experimentar con transacciones, constraints e integridad en esquemas de ejemplo https://www.db-fiddle.com/"
             },
             {
               "year": "año 1",
@@ -1965,8 +1992,8 @@
               "concept": "ACID",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://db-book.com/",
-              "note": "curso extenso según https://db-book.com/"
+              "source_links": "http://www.redbook.io/",
+              "note": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre transacciones, concurrencia y recuperación en acceso libre http://www.redbook.io/"
             },
             {
               "year": "año 1",
@@ -1974,8 +2001,8 @@
               "concept": "ACID",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=yaQ5YMWORd4",
-              "note": "video corto según https://www.youtube.com/watch?v=yaQ5YMWORd4"
+              "source_links": "https://www.youtube.com/watch?v=GAe5oB742dw",
+              "note": "Este video recorre las cuatro propiedades con ejemplos de transferencias y niveles de aislamiento https://www.youtube.com/watch?v=GAe5oB742dw"
             },
             {
               "year": "año 1",
@@ -1983,8 +2010,8 @@
               "concept": "ACID",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "note": "Esta playlist de Neso Academy sitúa transacciones, SQL y diseño relacional dentro de un curso de bases de datos actualizado https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ"
             },
             {
               "year": "año 1",
@@ -1993,7 +2020,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/%C3%81lgebra_relacional",
-              "note": "el álgebra relacional define operaciones sobre relaciones como selección, proyección y unión; referencia https://es.wikipedia.org/wiki/%C3%81lgebra_relacional"
+              "note": "El álgebra relacional define operaciones sobre relaciones como selección, proyección y unión; la Wikipedia en español presenta operadores primitivos y equivalencias https://es.wikipedia.org/wiki/%C3%81lgebra_relacional"
             },
             {
               "year": "año 1",
@@ -2001,8 +2028,8 @@
               "concept": "álgebra relacional",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql",
-              "note": "repaso breve según https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql"
+              "source_links": "https://relax.mad.uom.gr/",
+              "note": "RelaX es una calculadora interactiva que ejecuta selección, proyección, join, unión y diferencia sobre relaciones de ejemplo y muestra el árbol de operadores https://relax.mad.uom.gr/"
             },
             {
               "year": "año 1",
@@ -2010,8 +2037,8 @@
               "concept": "álgebra relacional",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://db-book.com/",
-              "note": "curso extenso según https://db-book.com/"
+              "source_links": "http://www.redbook.io/",
+              "note": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre modelos relacionales, consultas y sistemas en acceso libre http://www.redbook.io/"
             },
             {
               "year": "año 1",
@@ -2019,8 +2046,8 @@
               "concept": "álgebra relacional",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=OqjJjpjDRLc",
-              "note": "video corto según https://www.youtube.com/watch?v=OqjJjpjDRLc"
+              "source_links": "https://www.youtube.com/watch?v=8PJGw123zeE",
+              "note": "Este video de Neso Academy recorre operaciones unarias de álgebra relacional —selección, proyección y renombre— con ejemplos resueltos https://www.youtube.com/watch?v=8PJGw123zeE"
             },
             {
               "year": "año 1",
@@ -2028,8 +2055,8 @@
               "concept": "álgebra relacional",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "note": "Esta playlist de Neso Academy recorre modelo relacional, álgebra, SQL y diseño con lecciones publicadas desde 2021 https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ"
             },
             {
               "year": "año 1",
@@ -2038,7 +2065,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n",
-              "note": "un modelo entidad-relación representa entidades, atributos y relaciones de un dominio; referencia https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n"
+              "note": "Un modelo entidad-relación representa entidades, atributos y relaciones de un dominio; la Wikipedia en español explica cardinalidad y claves https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n"
             },
             {
               "year": "año 1",
@@ -2046,8 +2073,8 @@
               "concept": "modelo entidad-relación",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion",
-              "note": "tutorial breve según https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion"
+              "source_links": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
+              "note": "Draw.io documenta diagramas entidad-relación con notación crow's foot, claves primarias y foráneas en una herramienta gratuita https://www.drawio.com/docs/diagram-types/entity-relationship-tables/"
             },
             {
               "year": "año 1",
@@ -2055,8 +2082,8 @@
               "concept": "modelo entidad-relación",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://db-book.com/",
-              "note": "curso extenso según https://db-book.com/"
+              "source_links": "http://www.redbook.io/",
+              "note": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre modelado de datos y diseño relacional en acceso libre http://www.redbook.io/"
             },
             {
               "year": "año 1",
@@ -2064,8 +2091,8 @@
               "concept": "modelo entidad-relación",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=QpdhBUYk7Kk",
-              "note": "video corto según https://www.youtube.com/watch?v=QpdhBUYk7Kk"
+              "source_links": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
+              "note": "La documentación de Mermaid muestra cómo escribir diagramas ER como texto con entidades, relaciones y cardinalidad https://mermaid.js.org/syntax/entityRelationshipDiagram.html"
             },
             {
               "year": "año 1",
@@ -2073,8 +2100,8 @@
               "concept": "modelo entidad-relación",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/watch?v=zid-MVo7M-E",
+              "note": "Este tutorial de Lucidchart construye un diagrama ER con entidades, atributos, relaciones y cardinalidad paso a paso https://www.youtube.com/watch?v=zid-MVo7M-E"
             },
             {
               "year": "año 1",
@@ -2083,7 +2110,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos",
-              "note": "la normalización reorganiza un esquema relacional para reducir redundancia y anomalías; referencia https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos"
+              "note": "La normalización reorganiza un esquema relacional para reducir redundancia y anomalías; la Wikipedia en español recorre formas normales 1NF a BCNF https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos"
             },
             {
               "year": "año 1",
@@ -2091,8 +2118,8 @@
               "concept": "normalización",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://www.guru99.com/database-normalization.html",
-              "note": "guía breve según https://www.guru99.com/database-normalization.html"
+              "source_links": "https://www.db-fiddle.com/",
+              "note": "DB Fiddle permite crear esquemas en el navegador y comparar tablas desnormalizadas con descomposiciones en formas normales https://www.db-fiddle.com/"
             },
             {
               "year": "año 1",
@@ -2100,8 +2127,8 @@
               "concept": "normalización",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://db-book.com/",
-              "note": "curso extenso según https://db-book.com/"
+              "source_links": "http://www.redbook.io/",
+              "note": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre diseño relacional y descomposición de esquemas en acceso libre http://www.redbook.io/"
             },
             {
               "year": "año 1",
@@ -2110,7 +2137,7 @@
               "line": "4",
               "has_source": "yes",
               "source_links": "https://www.youtube.com/watch?v=GFQaEYEc8_8",
-              "note": "video corto según https://www.youtube.com/watch?v=GFQaEYEc8_8"
+              "note": "Este video normaliza una tabla de pedidos mostrando inserción, actualización y borrado anómalos https://www.youtube.com/watch?v=GFQaEYEc8_8"
             },
             {
               "year": "año 1",
@@ -2118,8 +2145,8 @@
               "concept": "normalización",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "note": "Esta playlist de Neso Academy conecta diseño relacional, SQL y consultas con lecciones publicadas desde 2021 https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ"
             },
             {
               "year": "año 1",
@@ -2128,7 +2155,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/SQL",
-              "note": "SQL es el lenguaje declarativo para definir, consultar y modificar datos relacionales; referencia https://es.wikipedia.org/wiki/SQL"
+              "note": "SQL es el lenguaje declarativo para definir, consultar y modificar datos relacionales; la Wikipedia en español resume DDL, DML y consultas https://es.wikipedia.org/wiki/SQL"
             },
             {
               "year": "año 1",
@@ -2137,7 +2164,7 @@
               "line": "2",
               "has_source": "yes",
               "source_links": "https://sqlbolt.com/",
-              "note": "tutorial breve según https://sqlbolt.com/"
+              "note": "SQLBolt enseña SELECT, JOIN, agregación e inserción con ejercicios interactivos en el navegador https://sqlbolt.com/"
             },
             {
               "year": "año 1",
@@ -2145,8 +2172,8 @@
               "concept": "sql",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://www.w3schools.com/sql/",
-              "note": "curso extenso según https://www.w3schools.com/sql/"
+              "source_links": "http://www.redbook.io/",
+              "note": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre lenguajes de consulta y sistemas relacionales en acceso libre http://www.redbook.io/"
             },
             {
               "year": "año 1",
@@ -2154,8 +2181,8 @@
               "concept": "sql",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
-              "note": "video corto según https://www.youtube.com/watch?v=7S_tz1z_5bA"
+              "source_links": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+              "note": "Este curso en video de freeCodeCamp introduce SQL con PostgreSQL, CRUD, joins, subconsultas y agregación https://www.youtube.com/watch?v=SpfIwlAYaKk"
             },
             {
               "year": "año 1",
@@ -2163,8 +2190,8 @@
               "concept": "sql",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "note": "Esta playlist de Neso Academy recorre modelo relacional, álgebra, SQL y diseño con lecciones publicadas desde 2021 https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ"
             },
             {
               "year": "año 1",
@@ -2172,8 +2199,8 @@
               "concept": "transacciones",
               "line": "1",
               "has_source": "yes",
-              "source_links": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos",
-              "note": "una transacción agrupa operaciones de base de datos que deben completarse como una unidad; referencia https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos)"
+              "source_links": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
+              "note": "Una transacción agrupa operaciones de base de datos que deben completarse como una unidad; la Wikipedia en español describe commit, rollback y estados https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos"
             },
             {
               "year": "año 1",
@@ -2182,7 +2209,7 @@
               "line": "2",
               "has_source": "yes",
               "source_links": "https://www.postgresql.org/docs/current/tutorial-transactions.html",
-              "note": "guía breve según https://www.postgresql.org/docs/current/tutorial-transactions.html"
+              "note": "La documentación de PostgreSQL muestra BEGIN, COMMIT y ROLLBACK con ejemplos de transferencias entre cuentas https://www.postgresql.org/docs/current/tutorial-transactions.html"
             },
             {
               "year": "año 1",
@@ -2190,8 +2217,8 @@
               "concept": "transacciones",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://db-book.com/",
-              "note": "curso extenso según https://db-book.com/"
+              "source_links": "http://www.redbook.io/",
+              "note": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre transacciones, bloqueos y recuperación en acceso libre http://www.redbook.io/"
             },
             {
               "year": "año 1",
@@ -2199,8 +2226,8 @@
               "concept": "transacciones",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=wHUOeX2xs08",
-              "note": "video corto según https://www.youtube.com/watch?v=wHUOeX2xs08"
+              "source_links": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
+              "note": "Este video explica atomicidad, consistencia, aislamiento y durabilidad con transferencias bancarias https://www.youtube.com/watch?v=DtlV5JTnlh4"
             },
             {
               "year": "año 1",
@@ -2208,8 +2235,8 @@
               "concept": "transacciones",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
+              "note": "Esta playlist de Neso Academy sitúa transacciones, SQL y diseño relacional dentro de un curso de bases de datos actualizado https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ"
             },
             {
               "year": "año 1",
@@ -2218,7 +2245,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Algoritmo",
-              "note": "un algoritmo es un procedimiento finito y bien definido para resolver un problema; referencia https://es.wikipedia.org/wiki/Algoritmo"
+              "note": "Un algoritmo es un procedimiento finito y bien definido para resolver un problema; la Wikipedia en español distingue algoritmo, programa e implementación https://es.wikipedia.org/wiki/Algoritmo"
             },
             {
               "year": "año 1",
@@ -2226,8 +2253,8 @@
               "concept": "algoritmos",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
-              "note": "introducción breve según https://developer.mozilla.org/es/docs/Glossary/Algorithm"
+              "source_links": "https://cs50.harvard.edu/x/notes/3/",
+              "note": "CS50x recorre búsqueda lineal y binaria, ordenamiento, recursión y notación O con pseudocódigo y código en C https://cs50.harvard.edu/x/notes/3/"
             },
             {
               "year": "año 1",
@@ -2235,8 +2262,8 @@
               "concept": "algoritmos",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://opendatastructures.org/ods-es/",
-              "note": "libro introductorio según https://opendatastructures.org/ods-es/"
+              "source_links": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+              "note": "El libro Algorithms (1.ª ed., 2019) de Erickson es de acceso libre bajo licencia Creative Commons y cubre diseño, correctitud y análisis con ejercicios https://jeffe.cs.illinois.edu/teaching/algorithms/"
             },
             {
               "year": "año 1",
@@ -2244,8 +2271,8 @@
               "concept": "algoritmos",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=8hly31xKLi0",
-              "note": "video corto según https://www.youtube.com/watch?v=8hly31xKLi0"
+              "source_links": "https://www.youtube.com/watch?v=jZzyERW7h1A",
+              "note": "Este video de CS50 introduce algoritmos con búsqueda, ordenamiento y análisis de eficiencia en ejemplos concretos https://www.youtube.com/watch?v=jZzyERW7h1A"
             },
             {
               "year": "año 1",
@@ -2253,8 +2280,17 @@
               "concept": "algoritmos",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7"
+              "source_links": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
+              "note": "Esta playlist de CS50x recorre fundamentos de computación, estructuras y algoritmos en clases completas https://www.youtube.com/playlist?list=PLXOJEg4xbr50"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "algoritmos",
+              "line": "6",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+              "note": "Esta clase de MIT 6.006 introduce algoritmos y computación con análisis de eficiencia y estructuras de datos https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY"
             },
             {
               "year": "año 1",
@@ -2263,7 +2299,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica",
-              "note": "la persistencia conserva datos más allá de la ejecución de un programa; referencia https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica)"
+              "note": "La persistencia guarda el estado de una aplicación más allá de la ejecución del programa; la Wikipedia en español distingue archivos, bases de datos y serialización https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica)"
             },
             {
               "year": "año 1",
@@ -2271,8 +2307,8 @@
               "concept": "persistencia",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB",
-              "note": "guía breve según https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB"
+              "source_links": "https://docs.python.org/es/3/tutorial/inputoutput.html",
+              "note": "La documentación de Python explica persistencia con archivos de texto, JSON y el módulo sqlite3 para almacenamiento local https://docs.python.org/es/3/tutorial/inputoutput.html"
             },
             {
               "year": "año 1",
@@ -2280,8 +2316,8 @@
               "concept": "persistencia",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://db-book.com/",
-              "note": "curso extenso según https://db-book.com/"
+              "source_links": "http://www.redbook.io/",
+              "note": "El libro Readings in Database Systems (5.ª ed., 2020) reúne artículos clásicos sobre almacenamiento, transacciones y sistemas de datos en acceso libre http://www.redbook.io/"
             },
             {
               "year": "año 1",
@@ -2289,8 +2325,8 @@
               "concept": "persistencia",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
-              "note": "video corto según https://www.youtube.com/watch?v=7S_tz1z_5bA"
+              "source_links": "https://www.youtube.com/watch?v=GN23Baj63sk",
+              "note": "Este video compara persistencia en archivos de texto, JSON y pickle con guardado y carga entre ejecuciones https://www.youtube.com/watch?v=GN23Baj63sk"
             },
             {
               "year": "año 1",
@@ -2298,8 +2334,17 @@
               "concept": "persistencia",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe"
+              "source_links": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
+              "note": "Este curso en video de freeCodeCamp enseña PostgreSQL con tablas, consultas SQL y transacciones para almacenamiento persistente https://www.youtube.com/watch?v=SpfIwlAYaKk"
+            },
+            {
+              "year": "año 1",
+              "course": "programación i",
+              "concept": "persistencia",
+              "line": "6",
+              "has_source": "yes",
+              "source_links": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+              "note": "Este video recorre SQLite con Python: crear tablas, insertar datos y consultar un archivo de base de datos local https://www.youtube.com/watch?v=byHcYRpMgI4"
             },
             {
               "year": "año 1",
@@ -2308,7 +2353,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos",
-              "note": "la programación orientada a objetos organiza programas en objetos con estado y comportamiento; referencia https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos"
+              "note": "La programación orientada a objetos organiza software en objetos que combinan estado y comportamiento; la Wikipedia en español resume encapsulación, herencia, polimorfismo y abstracción https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos"
             },
             {
               "year": "año 1",
@@ -2316,8 +2361,8 @@
               "concept": "programación orientada a objetos",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://realpython.com/python3-object-oriented-programming/",
-              "note": "guía breve según https://realpython.com/python3-object-oriented-programming/"
+              "source_links": "https://www.youtube.com/watch?v=M1XL65qj2dU",
+              "note": "Este video de EuroPython contrasta programación estructurada y orientada a objetos sin atarse a un lenguaje concreto https://www.youtube.com/watch?v=M1XL65qj2dU"
             },
             {
               "year": "año 1",
@@ -2325,8 +2370,8 @@
               "concept": "programación orientada a objetos",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://docs.python.org/3/tutorial/classes.html",
-              "note": "curso extenso según https://docs.python.org/3/tutorial/classes.html"
+              "source_links": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
+              "note": "El libro Principles of Object-Oriented Programming de Baloian es de acceso libre y recorre clases, herencia, polimorfismo y diseño con UML https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf"
             },
             {
               "year": "año 1",
@@ -2334,8 +2379,8 @@
               "concept": "programación orientada a objetos",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=Ej_02ICOIgs",
-              "note": "video corto según https://www.youtube.com/watch?v=Ej_02ICOIgs"
+              "source_links": "https://www.youtube.com/watch?v=SiBw7os-_zI",
+              "note": "Este curso en video de freeCodeCamp recorre encapsulación, abstracción, herencia y polimorfismo sin depender de un lenguaje concreto https://www.youtube.com/watch?v=SiBw7os-_zI"
             },
             {
               "year": "año 1",
@@ -2343,8 +2388,8 @@
               "concept": "programación orientada a objetos",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi"
+              "source_links": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
+              "note": "Este artículo de freeCodeCamp resume los cuatro pilares de la POO con ejemplos conceptuales y buenas prácticas de diseño https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/"
             },
             {
               "year": "año 1",
@@ -2353,7 +2398,7 @@
               "line": "1",
               "has_source": "yes",
               "source_links": "https://es.wikipedia.org/wiki/Python",
-              "note": "Python es un lenguaje de programación de alto nivel usado para implementar algoritmos y productos de software; referencia https://es.wikipedia.org/wiki/Python"
+              "note": "Python es un lenguaje de propósito general con sintaxis legible y tipado dinámico; la Wikipedia en español resume historia, paradigmas y ecosistema https://es.wikipedia.org/wiki/Python"
             },
             {
               "year": "año 1",
@@ -2361,8 +2406,8 @@
               "concept": "python",
               "line": "2",
               "has_source": "yes",
-              "source_links": "https://docs.python.org/3/tutorial/",
-              "note": "tutorial breve según https://docs.python.org/3/tutorial/"
+              "source_links": "https://docs.python.org/es/3/tutorial/",
+              "note": "La documentación oficial en español enseña tipos básicos, control de flujo, funciones y módulos con ejemplos ejecutables https://docs.python.org/es/3/tutorial/"
             },
             {
               "year": "año 1",
@@ -2370,8 +2415,8 @@
               "concept": "python",
               "line": "3",
               "has_source": "yes",
-              "source_links": "https://www.w3schools.com/python/",
-              "note": "curso extenso según https://www.w3schools.com/python/"
+              "source_links": "https://ehmatthes.github.io/pcc/",
+              "note": "El libro Python Crash Course (3.ª ed., 2023) de Matthes es de acceso libre en su sitio y guía desde variables hasta proyectos con archivos, APIs y visualización https://ehmatthes.github.io/pcc/"
             },
             {
               "year": "año 1",
@@ -2379,8 +2424,8 @@
               "concept": "python",
               "line": "4",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/watch?v=rfscVS0vtbw",
-              "note": "video corto según https://www.youtube.com/watch?v=rfscVS0vtbw"
+              "source_links": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
+              "note": "Este curso en video de freeCodeCamp introduce Python desde cero con funciones, estructuras de datos y mini-proyectos https://www.youtube.com/watch?v=H2EJuAcrZYU"
             },
             {
               "year": "año 1",
@@ -2388,8 +2433,8 @@
               "concept": "python",
               "line": "5",
               "has_source": "yes",
-              "source_links": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
-              "note": "playlist extensa según https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi"
+              "source_links": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
+              "note": "Esta playlist de CS Dojo recorre fundamentos de Python con variables, funciones, listas y diccionarios en videos cortos https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE"
             }
           ]
         }
@@ -2421,7 +2466,7 @@
         {
           "name": "Source Links",
           "description": "Total source rows found across concept pages.",
-          "value": 121,
+          "value": 125,
           "format": ",.0f"
         }
       ],
@@ -2471,25 +2516,25 @@
             {
               "concept": "ACID",
               "source_type": "url",
-              "source": "https://www.mongodb.com/resources/basics/databases/acid-transactions",
+              "source": "https://www.db-fiddle.com/",
               "line": "2"
             },
             {
               "concept": "ACID",
               "source_type": "bibliography",
-              "source": "https://db-book.com/",
+              "source": "http://www.redbook.io/",
               "line": "3"
             },
             {
               "concept": "ACID",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=yaQ5YMWORd4",
+              "source": "https://www.youtube.com/watch?v=GAe5oB742dw",
               "line": "4"
             },
             {
               "concept": "ACID",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": "5"
             },
             {
@@ -2501,25 +2546,25 @@
             {
               "concept": "álgebra relacional",
               "source_type": "url",
-              "source": "https://www.khanacademy.org/computing/computer-science/sql/sql-basics/a/what-is-sql",
+              "source": "https://relax.mad.uom.gr/",
               "line": "2"
             },
             {
               "concept": "álgebra relacional",
               "source_type": "bibliography",
-              "source": "https://db-book.com/",
+              "source": "http://www.redbook.io/",
               "line": "3"
             },
             {
               "concept": "álgebra relacional",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=OqjJjpjDRLc",
+              "source": "https://www.youtube.com/watch?v=8PJGw123zeE",
               "line": "4"
             },
             {
               "concept": "álgebra relacional",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": "5"
             },
             {
@@ -2530,27 +2575,33 @@
             },
             {
               "concept": "algoritmos",
-              "source_type": "documentation",
-              "source": "https://developer.mozilla.org/es/docs/Glossary/Algorithm",
+              "source_type": "url",
+              "source": "https://cs50.harvard.edu/x/notes/3/",
               "line": "2"
             },
             {
               "concept": "algoritmos",
               "source_type": "bibliography",
-              "source": "https://opendatastructures.org/ods-es/",
+              "source": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
               "line": "3"
             },
             {
               "concept": "algoritmos",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=8hly31xKLi0",
+              "source": "https://www.youtube.com/watch?v=jZzyERW7h1A",
               "line": "4"
             },
             {
               "concept": "algoritmos",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "source": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
               "line": "5"
+            },
+            {
+              "concept": "algoritmos",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=ZA-tUyM_y7s&list=PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+              "line": "6"
             },
             {
               "concept": "casos de uso",
@@ -2561,61 +2612,61 @@
             {
               "concept": "casos de uso",
               "source_type": "url",
-              "source": "https://www.atlassian.com/agile/use-cases",
+              "source": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram/",
               "line": "2"
             },
             {
               "concept": "casos de uso",
-              "source_type": "url",
-              "source": "https://www.coursera.org/learn/uml",
+              "source_type": "bibliography",
+              "source": "https://en.wikibooks.org/wiki/Software_Engineering",
               "line": "3"
             },
             {
               "concept": "casos de uso",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=OZ4XmlNIHT4",
+              "source": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
               "line": "4"
             },
             {
               "concept": "casos de uso",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/watch?v=zid-MVo7M-E",
               "line": "5"
             },
             {
               "concept": "complejidad algorítmica",
               "source_type": "url",
-              "source": "https://es.wikipedia.org/wiki/ComplejidadComputacional",
+              "source": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos",
               "line": "1"
             },
             {
               "concept": "complejidad algorítmica",
               "source_type": "url",
-              "source": "https://www.bigocheatsheet.com/",
+              "source": "https://cs50.harvard.edu/x/notes/3/",
               "line": "2"
             },
             {
               "concept": "complejidad algorítmica",
-              "source_type": "url",
-              "source": "https://opendatastructures.org/ods-es/2.3_2D3_Notacion_.html",
+              "source_type": "bibliography",
+              "source": "https://jeffe.cs.illinois.edu/teaching/algorithms/",
               "line": "3"
             },
             {
               "concept": "complejidad algorítmica",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=Mo4vesaut8g",
+              "source": "https://www.youtube.com/watch?v=jZzyERW7h1A",
               "line": "4"
             },
             {
               "concept": "complejidad algorítmica",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "source": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
               "line": "5"
             },
             {
               "concept": "criterios de aceptación",
               "source_type": "url",
-              "source": "https://es.wikipedia.org/wiki/Criterios_de_aceptaci%C3%B3n",
+              "source": "https://en.wikipedia.org/wiki/Acceptance_criteria",
               "line": "1"
             },
             {
@@ -2626,20 +2677,20 @@
             },
             {
               "concept": "criterios de aceptación",
-              "source_type": "url",
-              "source": "https://www.coursera.org/learn/requirements-writing",
+              "source_type": "bibliography",
+              "source": "https://en.wikibooks.org/wiki/Software_Engineering",
               "line": "3"
             },
             {
               "concept": "criterios de aceptación",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=Ez9sHj0X_HU",
+              "source": "https://www.agilealliance.org/glossary/acceptance-test/",
               "line": "4"
             },
             {
               "concept": "criterios de aceptación",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/watch?v=q26147zlcMU",
               "line": "5"
             },
             {
@@ -2651,26 +2702,38 @@
             {
               "concept": "demostraciones",
               "source_type": "url",
-              "source": "https://bookofproof.org/Chapter1/ch_sec_proofs.html",
+              "source": "https://www.youtube.com/watch?v=LY7YmuDbuW0",
               "line": "2"
             },
             {
               "concept": "demostraciones",
-              "source_type": "url",
-              "source": "https://bookofproof.org/",
+              "source_type": "bibliography",
+              "source": "https://richardhammack.github.io/BookOfProof/Main.pdf",
               "line": "3"
             },
             {
               "concept": "demostraciones",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+              "source": "https://www.youtube.com/watch?v=01b3KjgPhfI",
               "line": "4"
             },
             {
               "concept": "demostraciones",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "source": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61O7HkcF7UImpM0cR_L2gSw",
               "line": "5"
+            },
+            {
+              "concept": "demostraciones",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=YYgepDY3rHw",
+              "line": "6"
+            },
+            {
+              "concept": "demostraciones",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=ce4Jc0QmjOI",
+              "line": "7"
             },
             {
               "concept": "estructuras de datos",
@@ -2687,19 +2750,19 @@
             {
               "concept": "estructuras de datos",
               "source_type": "bibliography",
-              "source": "https://opendatastructures.org/ods-es/",
+              "source": "https://opendatastructures.org/",
               "line": "3"
             },
             {
               "concept": "estructuras de datos",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=9RHfkFEZLPQ",
+              "source": "https://www.youtube.com/watch?v=CBYHwZcbD-s",
               "line": "4"
             },
             {
               "concept": "estructuras de datos",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "source": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50",
               "line": "5"
             },
             {
@@ -2710,33 +2773,27 @@
             },
             {
               "concept": "inducción y lógica",
-              "source_type": "url",
-              "source": "https://bookofproof.org/Chapter2/ch_sec_mathematicalinduction.html",
+              "source_type": "bibliography",
+              "source": "https://openlogicproject.org/",
               "line": "2"
             },
             {
               "concept": "inducción y lógica",
               "source_type": "url",
-              "source": "https://tudelft-citg.github.io/learn-probability/intro_in_toc.html",
+              "source": "https://www.youtube.com/watch?v=wblW_M_HVQ8",
               "line": "3"
             },
             {
               "concept": "inducción y lógica",
               "source_type": "url",
-              "source": "https://betanalpha.github.io/assets/case_studies/probability_theory.html",
+              "source": "https://www.youtube.com/watch?v=_Vg10FD5ULk",
               "line": "4"
             },
             {
               "concept": "inducción y lógica",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=8DrbcYOcts0",
+              "source": "https://www.youtube.com/playlist?list=PLUl4u3cNGP60UlabZBeeqOuoLuj_KNphQ",
               "line": "5"
-            },
-            {
-              "concept": "inducción y lógica",
-              "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
-              "line": "6"
             },
             {
               "concept": "matrices",
@@ -2747,55 +2804,55 @@
             {
               "concept": "matrices",
               "source_type": "url",
-              "source": "https://www.khanacademy.org/math/linear-algebra/matrix-transformations/matrices-introduction/v/introduction-to-the-matrix",
+              "source": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html",
               "line": "2"
             },
             {
               "concept": "matrices",
-              "source_type": "url",
-              "source": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "source_type": "bibliography",
+              "source": "https://linear.axler.net/LADR4e.pdf",
               "line": "3"
             },
             {
               "concept": "matrices",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "source": "https://textbooks.math.gatech.edu/ila/matrix-equations.html",
               "line": "4"
             },
             {
               "concept": "matrices",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
               "line": "5"
             },
             {
               "concept": "modelado de dominio",
               "source_type": "url",
-              "source": "https://es.wikipedia.org/wiki/Modelado_de_dominio",
+              "source": "https://en.wikipedia.org/wiki/Domain-driven_design",
               "line": "1"
             },
             {
               "concept": "modelado de dominio",
-              "source_type": "article",
-              "source": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+              "source_type": "bibliography",
+              "source": "https://www.infoq.com/minibooks/domain-driven-design-quickly/",
               "line": "2"
             },
             {
               "concept": "modelado de dominio",
-              "source_type": "url",
-              "source": "https://www.domainlanguage.com/ddd/reference/",
+              "source_type": "article",
+              "source": "https://martinfowler.com/bliki/UbiquitousLanguage.html",
               "line": "3"
             },
             {
               "concept": "modelado de dominio",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=pMuiVWNimyY",
+              "source": "https://www.youtube.com/watch?v=pMuiVlnGqjk",
               "line": "4"
             },
             {
               "concept": "modelado de dominio",
-              "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source_type": "article",
+              "source": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
               "line": "5"
             },
             {
@@ -2806,26 +2863,26 @@
             },
             {
               "concept": "modelo entidad-relación",
-              "source_type": "url",
-              "source": "https://www.lucidchart.com/pages/es/que-es-un-diagrama-entidad-relacion",
+              "source_type": "documentation",
+              "source": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables/",
               "line": "2"
             },
             {
               "concept": "modelo entidad-relación",
               "source_type": "bibliography",
-              "source": "https://db-book.com/",
+              "source": "http://www.redbook.io/",
               "line": "3"
             },
             {
               "concept": "modelo entidad-relación",
-              "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=QpdhBUYk7Kk",
+              "source_type": "documentation",
+              "source": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html",
               "line": "4"
             },
             {
               "concept": "modelo entidad-relación",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/watch?v=zid-MVo7M-E",
               "line": "5"
             },
             {
@@ -2837,25 +2894,25 @@
             {
               "concept": "nassi-shneiderman",
               "source_type": "url",
-              "source": "https://www.programiz.com/dsa/nassi-shneiderman-diagram",
+              "source": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd/",
               "line": "2"
             },
             {
               "concept": "nassi-shneiderman",
-              "source_type": "url",
-              "source": "https://www.cs.uni.edu/~wallingf/instruction/misc/nassi-shneiderman/index.html",
+              "source_type": "bibliography",
+              "source": "https://opendatastructures.org/",
               "line": "3"
             },
             {
               "concept": "nassi-shneiderman",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=3T3j3Yv3k5A",
+              "source": "https://www.youtube.com/watch?v=_GSFmwaErFc",
               "line": "4"
             },
             {
               "concept": "nassi-shneiderman",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PL8CFV5BB735367BA7",
+              "source": "https://help.structorizer.fisch.lu/index.php?menu=49",
               "line": "5"
             },
             {
@@ -2867,13 +2924,13 @@
             {
               "concept": "normalización",
               "source_type": "url",
-              "source": "https://www.guru99.com/database-normalization.html",
+              "source": "https://www.db-fiddle.com/",
               "line": "2"
             },
             {
               "concept": "normalización",
               "source_type": "bibliography",
-              "source": "https://db-book.com/",
+              "source": "http://www.redbook.io/",
               "line": "3"
             },
             {
@@ -2885,31 +2942,31 @@
             {
               "concept": "normalización",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": "5"
             },
             {
               "concept": "optimización",
               "source_type": "url",
-              "source": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_(matem%C3%A1tica",
+              "source": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica",
               "line": "1"
             },
             {
               "concept": "optimización",
               "source_type": "url",
-              "source": "https://tutorial.math.lamar.edu/Classes/CalcI/MinMaxValues.aspx",
+              "source": "https://www.youtube.com/watch?v=trdab2TO820",
               "line": "2"
             },
             {
               "concept": "optimización",
-              "source_type": "url",
-              "source": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",
+              "source_type": "bibliography",
+              "source": "https://activecalculus.org/",
               "line": "3"
             },
             {
               "concept": "optimización",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "source": "https://www.youtube.com/watch?v=0vIZdyjoubE",
               "line": "4"
             },
             {
@@ -2919,33 +2976,39 @@
               "line": "5"
             },
             {
-              "concept": "pensamiento matemático",
+              "concept": "optimización",
               "source_type": "url",
-              "source": "https://es.wikipedia.org/wiki/Pensamiento_matem%C3%A1tico",
-              "line": "1"
+              "source": "https://www.youtube.com/watch?v=dam16G6cZ8k",
+              "line": "6"
             },
             {
               "concept": "pensamiento matemático",
               "source_type": "url",
-              "source": "https://brilliant.org/wiki/mathematical-reasoning/",
+              "source": "https://en.wikipedia.org/wiki/Mathematical_reasoning",
+              "line": "1"
+            },
+            {
+              "concept": "pensamiento matemático",
+              "source_type": "bibliography",
+              "source": "https://openlogicproject.org/",
               "line": "2"
             },
             {
               "concept": "pensamiento matemático",
               "source_type": "url",
-              "source": "https://bookofproof.org/",
+              "source": "https://www.coursera.org/learn/mathematical-thinking",
               "line": "3"
             },
             {
               "concept": "pensamiento matemático",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+              "source": "https://www.youtube.com/watch?v=sbpCTjmw85g",
               "line": "4"
             },
             {
               "concept": "pensamiento matemático",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",
+              "source": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu",
               "line": "5"
             },
             {
@@ -2957,26 +3020,32 @@
             {
               "concept": "persistencia",
               "source_type": "documentation",
-              "source": "https://developer.mozilla.org/es/docs/Web/API/IndexedDB_API/Using_IndexedDB",
+              "source": "https://docs.python.org/es/3/tutorial/inputoutput.html",
               "line": "2"
             },
             {
               "concept": "persistencia",
               "source_type": "bibliography",
-              "source": "https://db-book.com/",
+              "source": "http://www.redbook.io/",
               "line": "3"
             },
             {
               "concept": "persistencia",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+              "source": "https://www.youtube.com/watch?v=GN23Baj63sk",
               "line": "4"
             },
             {
               "concept": "persistencia",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
               "line": "5"
+            },
+            {
+              "concept": "persistencia",
+              "source_type": "url",
+              "source": "https://www.youtube.com/watch?v=byHcYRpMgI4",
+              "line": "6"
             },
             {
               "concept": "programación orientada a objetos",
@@ -2987,25 +3056,25 @@
             {
               "concept": "programación orientada a objetos",
               "source_type": "url",
-              "source": "https://realpython.com/python3-object-oriented-programming/",
+              "source": "https://www.youtube.com/watch?v=M1XL65qj2dU",
               "line": "2"
             },
             {
               "concept": "programación orientada a objetos",
-              "source_type": "documentation",
-              "source": "https://docs.python.org/3/tutorial/classes.html",
+              "source_type": "bibliography",
+              "source": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf",
               "line": "3"
             },
             {
               "concept": "programación orientada a objetos",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=Ej_02ICOIgs",
+              "source": "https://www.youtube.com/watch?v=SiBw7os-_zI",
               "line": "4"
             },
             {
               "concept": "programación orientada a objetos",
-              "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+              "source_type": "article",
+              "source": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming/",
               "line": "5"
             },
             {
@@ -3017,55 +3086,55 @@
             {
               "concept": "python",
               "source_type": "documentation",
-              "source": "https://docs.python.org/3/tutorial/",
+              "source": "https://docs.python.org/es/3/tutorial/",
               "line": "2"
             },
             {
               "concept": "python",
-              "source_type": "url",
-              "source": "https://www.w3schools.com/python/",
+              "source_type": "bibliography",
+              "source": "https://ehmatthes.github.io/pcc/",
               "line": "3"
             },
             {
               "concept": "python",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+              "source": "https://www.youtube.com/watch?v=H2EJuAcrZYU",
               "line": "4"
             },
             {
               "concept": "python",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PL6gx4Cwl9DGAJLjAd6aiHouR9ItGQeJWi",
+              "source": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE",
               "line": "5"
             },
             {
               "concept": "requerimientos",
               "source_type": "url",
-              "source": "https://es.wikipedia.org/wiki/Requisito_de_software",
+              "source": "https://es.wikipedia.org/wiki/Requisito",
               "line": "1"
             },
             {
               "concept": "requerimientos",
-              "source_type": "url",
-              "source": "https://www.atlassian.com/agile/requirements",
+              "source_type": "bibliography",
+              "source": "https://en.wikibooks.org/wiki/Software_Engineering",
               "line": "2"
             },
             {
               "concept": "requerimientos",
-              "source_type": "url",
-              "source": "https://www.coursera.org/learn/requirements-writing",
+              "source_type": "article",
+              "source": "https://martinfowler.com/bliki/UserStory.html",
               "line": "3"
             },
             {
               "concept": "requerimientos",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=FFrNP5q9SxY",
+              "source": "https://www.youtube.com/watch?v=Hq9O7mnUNM4",
               "line": "4"
             },
             {
               "concept": "requerimientos",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/watch?v=qFaSEMbiWaI",
               "line": "5"
             },
             {
@@ -3077,25 +3146,25 @@
             {
               "concept": "sistemas lineales",
               "source_type": "url",
-              "source": "https://www.khanacademy.org/math/linear-algebra/linear-systems-of-equations",
+              "source": "https://textbooks.math.gatech.edu/ila/row-reduction.html",
               "line": "2"
             },
             {
               "concept": "sistemas lineales",
-              "source_type": "url",
-              "source": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "source_type": "bibliography",
+              "source": "https://openstax.org/details/books/college-algebra-2e",
               "line": "3"
             },
             {
               "concept": "sistemas lineales",
-              "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=Jsiy4TxjXh0",
+              "source_type": "bibliography",
+              "source": "https://linear.axler.net/LADR4e.pdf",
               "line": "4"
             },
             {
               "concept": "sistemas lineales",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
               "line": "5"
             },
             {
@@ -3112,26 +3181,26 @@
             },
             {
               "concept": "sql",
-              "source_type": "url",
-              "source": "https://www.w3schools.com/sql/",
+              "source_type": "bibliography",
+              "source": "http://www.redbook.io/",
               "line": "3"
             },
             {
               "concept": "sql",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+              "source": "https://www.youtube.com/watch?v=SpfIwlAYaKk",
               "line": "4"
             },
             {
               "concept": "sql",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": "5"
             },
             {
               "concept": "transacciones",
               "source_type": "url",
-              "source": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_(bases_de_datos",
+              "source": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos",
               "line": "1"
             },
             {
@@ -3143,19 +3212,19 @@
             {
               "concept": "transacciones",
               "source_type": "bibliography",
-              "source": "https://db-book.com/",
+              "source": "http://www.redbook.io/",
               "line": "3"
             },
             {
               "concept": "transacciones",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=wHUOeX2xs08",
+              "source": "https://www.youtube.com/watch?v=DtlV5JTnlh4",
               "line": "4"
             },
             {
               "concept": "transacciones",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLW3w0F1qMentzYachDam_WceA4QP-TqDe",
+              "source": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ",
               "line": "5"
             },
             {
@@ -3166,26 +3235,26 @@
             },
             {
               "concept": "vectores",
-              "source_type": "url",
-              "source": "https://www.khanacademy.org/math/linear-algebra/vectors-and-spaces/vectors/v/linear-algebra-introduction-to-vectors",
+              "source_type": "bibliography",
+              "source": "https://openstax.org/details/books/college-algebra-2e",
               "line": "2"
             },
             {
               "concept": "vectores",
               "source_type": "url",
-              "source": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+              "source": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
               "line": "3"
             },
             {
               "concept": "vectores",
               "source_type": "url",
-              "source": "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+              "source": "https://textbooks.math.gatech.edu/ila/vectors.html",
               "line": "4"
             },
             {
               "concept": "vectores",
               "source_type": "url",
-              "source": "https://www.youtube.com/playlist?list=PLZHQObOWTQDCKAPyFA38qTsUIiXK9Kj6Y",
+              "source": "https://www.youtube.com/watch?v=6Kw2nIwWYL0",
               "line": "5"
             }
           ]
