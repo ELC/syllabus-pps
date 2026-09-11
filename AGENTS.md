@@ -48,10 +48,10 @@ kind: concept
 
 ## PPS Analytics And DAC
 
-Shared business logic lives in `workspaces/pps-core` (parser, graph, diagnostics, projections). The CLI in `workspaces/pps-analytics` (`@pps/analytics-cli`) reads `content/pages/`, writes `_generated/`, and assembles Bruin DAC locally.
+Shared business logic lives in `workspaces/core` (parser, graph, diagnostics, projections). The CLI in `workspaces/analytics-cli` (`@pps/analytics-cli`) reads `content/pages/`, writes `_generated/`, and assembles Bruin DAC locally.
 
-- Do not edit generated files under `workspaces/pps-analytics/_generated/` by hand.
-- Expected years/courses stay in `workspaces/pps-analytics/pps.config.ts` via `contentDir`.
+- Do not edit generated files under `workspaces/analytics-cli/_generated/` by hand.
+- Expected years/courses stay in `workspaces/analytics-cli/pps.config.ts` via `contentDir`.
 - CMS blocks saves on diagnostics with severity `error` or `warning`. CI fails on `error` only.
 
 Useful commands from the repository root:
@@ -71,8 +71,8 @@ After changing TypeScript analytics code, run typecheck, tests, and rebuild:
 pnpm typecheck
 pnpm test
 pnpm build:content
-dac validate --dir workspaces/pps-analytics/_generated/dac
-dac check --dir workspaces/pps-analytics/_generated/dac
+dac validate --dir workspaces/analytics-cli/_generated/dac
+dac check --dir workspaces/analytics-cli/_generated/dac
 ```
 
 ## Logseq Migration

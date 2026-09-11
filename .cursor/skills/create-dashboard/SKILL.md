@@ -3,8 +3,8 @@ name: create-dashboard
 description: >-
   Create and modify Bruin DAC dashboards (TSX), widgets, filters, SQL,
   semantic models, and CLI validate/check/serve workflows. In this repo, edit
-  generated dashboards only through workspaces/pps-analytics/src/dashboards/ and workspaces/pps-analytics/src/dac/. Use when
-  the user mentions DAC, workspaces/pps-analytics/_generated/dac, dashboard widgets, or dac dashboards.
+  generated dashboards only through workspaces/analytics-cli/src/dashboards/ and workspaces/analytics-cli/src/dac/. Use when
+  the user mentions DAC, workspaces/analytics-cli/_generated/dac, dashboard widgets, or dac dashboards.
 ---
 
 # Create Dashboard
@@ -15,20 +15,20 @@ DAC schema, widgets, filters, and semantic examples live in [reference.md](refer
 
 ## This repository
 
-PPS dashboards are generated. Do not hand-edit `workspaces/pps-analytics/_generated/dac/dashboards/*.dashboard.tsx` or other generated files under `workspaces/pps-analytics/_generated/`.
+PPS dashboards are generated. Do not hand-edit `workspaces/analytics-cli/_generated/dac/dashboards/*.dashboard.tsx` or other generated files under `workspaces/analytics-cli/_generated/`.
 
-1. Change dashboard TSX in `workspaces/pps-analytics/src/dashboards/` and query generators in `workspaces/pps-analytics/src/dac/generate-queries/`.
+1. Change dashboard TSX in `workspaces/analytics-cli/src/dashboards/` and query generators in `workspaces/analytics-cli/src/dac/generate-queries/`.
 2. Rebuild, then validate:
 
 ```shell
 pnpm typecheck
 pnpm test
 pnpm build:analytics
-dac validate --dir workspaces/pps-analytics/_generated/dac
-dac check --dir workspaces/pps-analytics/_generated/dac
+dac validate --dir workspaces/analytics-cli/_generated/dac
+dac check --dir workspaces/analytics-cli/_generated/dac
 ```
 
-Serve with `dac serve --dir workspaces/pps-analytics/_generated/dac --open` or `pnpm serve:dac`.
+Serve with `dac serve --dir workspaces/analytics-cli/_generated/dac --open` or `pnpm serve:dac`.
 
 Bruin DAC is not the npm package named `dac`. Install with:
 
@@ -68,7 +68,7 @@ my-dac-project/
 - Other TSX files can be helpers; they are not auto-discovered as dashboards.
 - Regular SQL dashboards do not need semantic models.
 
-This repo's generated project is `workspaces/pps-analytics/_generated/dac`.
+This repo's generated project is `workspaces/analytics-cli/_generated/dac`.
 
 ## Commands
 

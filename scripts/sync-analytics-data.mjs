@@ -2,7 +2,7 @@ import { cpSync, existsSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const generatedDir = join(root, "workspaces/pps-analytics/_generated");
+const generatedDir = join(root, "workspaces/analytics-cli/_generated");
 const analyticsDataDir = join(root, "workspaces/analytics/public/data");
 const networkDataDir = join(root, "workspaces/network/public/data");
 const roadmapDataDir = join(root, "workspaces/roadmap/public/data");

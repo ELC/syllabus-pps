@@ -17,7 +17,7 @@ const networkDist = join(root, "workspaces/network/dist");
 const cmsDist = join(root, "workspaces/cms/dist");
 const roadmapDist = join(root, "workspaces/roadmap/dist");
 const combinedDist = join(root, "dist");
-const generatedDir = join(root, "workspaces/pps-analytics/_generated");
+const generatedDir = join(root, "workspaces/analytics-cli/_generated");
 
 rmSync(combinedDist, { recursive: true, force: true });
 mkdirSync(combinedDist, { recursive: true });

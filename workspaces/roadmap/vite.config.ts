@@ -13,7 +13,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@pps/core": resolve(__dirname, "../pps-core/src/index.ts"),
+      "@pps/core": resolve(__dirname, "../core/src/index.ts"),
       "@pps/shell": resolve(__dirname, "../shell/src"),
     },
   },

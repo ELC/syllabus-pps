@@ -1,7 +1,7 @@
 logs/queries
 node_modules
 dist
-workspaces/pps-analytics/_generated
+workspaces/analytics-cli/_generated
 **/LCD/*
 !**/LCD/.gitkeep
 **/LDS/*

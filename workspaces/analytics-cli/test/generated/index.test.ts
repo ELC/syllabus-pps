@@ -16,7 +16,7 @@ import {
 describe("generated directories", () => {
   it("resolves analytics outputs under _generated", () => {
     // Arrange
-    const outDir = "/repo/pps-analytics";
+    const outDir = "/repo/analytics-cli";
 
     // Act
     const generatedDir = resolveGeneratedDir(outDir);

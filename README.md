@@ -2,7 +2,7 @@
 
 Curriculum notes and analytics for the PPS zettelkasten, stored as repo-native Markdown.
 
-Source pages live in [`content/pages/`](content/pages/). Shared parsing, diagnostics, and projections live in [`workspaces/pps-core/`](workspaces/pps-core/). The CLI in [`workspaces/pps-analytics/`](workspaces/pps-analytics/) builds `_generated/` artifacts and Bruin DAC locally. Public sites live under [`workspaces/`](workspaces/):
+Source pages live in [`content/pages/`](content/pages/). Shared parsing, diagnostics, and projections live in [`workspaces/core/`](workspaces/core/). The CLI in [`workspaces/analytics-cli/`](workspaces/analytics-cli/) builds `_generated/` artifacts and Bruin DAC locally. Public sites live under [`workspaces/`](workspaces/):
 
 | Workspace | URL (local) |
 |-----------|-------------|
@@ -46,11 +46,11 @@ pnpm build:pages      # combined GitHub Pages dist/
 pnpm inspect
 ```
 
-Content directory defaults to `content/pages/` via `workspaces/pps-analytics/pps.config.ts`. Override with `--content` or `PPS_CONTENT_DIR`.
+Content directory defaults to `content/pages/` via `workspaces/analytics-cli/pps.config.ts`. Override with `--content` or `PPS_CONTENT_DIR`.
 
 ## Outputs
 
-`pnpm build:content` writes under `workspaces/pps-analytics/_generated/`:
+`pnpm build:content` writes under `workspaces/analytics-cli/_generated/`:
 
 - `curriculum-graph.json` — full domain graph
 - `graph.cy.json` — Cytoscape.js elements for visualization

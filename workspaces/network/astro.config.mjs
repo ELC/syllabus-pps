@@ -16,7 +16,7 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        "@pps/core": resolve(rootDir, "../pps-core/src/index.ts"),
+        "@pps/core": resolve(rootDir, "../core/src/index.ts"),
         "@pps/shell": resolve(rootDir, "../shell/src"),
       },
     },
