@@ -1,6 +1,6 @@
-{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"dashboards","generatedAt":"2026-09-11T17:01:10.838Z","docs":"../../README.md"}
+{"generatedBy":"pps-analytics","generator":"artifacts/write.ts:writeOutputs","kind":"dashboards","generatedAt":"2026-09-11T19:36:58.553Z","docs":"../../README.md"}
 {
-  "generatedAt": "2026-09-11T17:01:10.838Z",
+  "generatedAt": "2026-09-11T19:36:58.553Z",
   "dashboards": [
     {
       "id": "quality",

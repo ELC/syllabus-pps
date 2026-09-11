@@ -17,6 +17,10 @@ const config = {
         "filosofía",
       ],
     },
+    {
+      title: "año 2",
+      courses: ["estadística i", "matemática discreta"],
+    },
   ],
 } satisfies ExpectedCurriculum;
 
