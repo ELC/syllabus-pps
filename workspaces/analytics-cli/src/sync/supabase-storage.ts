@@ -1,4 +1,5 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import WebSocket from "ws";
 
 export interface RemotePageObject {
   path: string;
@@ -18,7 +19,16 @@ export function createSupabaseClientFromEnv(): SupabaseClient {
     );
   }
 
-  return createClient(url, key);
+  return createClient(url, key, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+    global: {
+      // Supabase realtime expects WebSocket; Node 20 needs the ws polyfill (Node 22+ has native WebSocket).
+      WebSocket: WebSocket as unknown as typeof globalThis.WebSocket,
+    },
+  } as NonNullable<Parameters<typeof createClient>[2]>);
 }
 
 export function remoteObjectPath(slug: string): string {
