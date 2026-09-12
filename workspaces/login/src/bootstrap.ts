@@ -11,6 +11,7 @@ import { readBrowserSession } from "./authSession";
 import { createBrowserClient } from "./client";
 import { isMissingConfig, readSupabaseConfig } from "./config";
 import { LoginForm } from "./LoginForm";
+import { LoginScreen } from "./LoginScreen";
 import {
   activateSidebarFooter,
   clearLoginMount,
@@ -132,8 +133,8 @@ function mountLogin(host: HTMLElement, configMessage?: string): Root {
 
 function ConfigErrorPanel({ message }: { message: string }) {
   return createElement(
-    "div",
-    { className: "login-panel" },
+    LoginScreen,
+    null,
     createElement("h1", { className: "login-title" }, "Configuration required"),
     createElement("p", { className: "login-error", role: "alert" }, message),
   );

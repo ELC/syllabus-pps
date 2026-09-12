@@ -43,30 +43,16 @@ export function ShellAuthGate({ children, logoUrl, siteRoot, renderShell }: Shel
 
   if (status === "loading") {
     return (
-      <div className="dashboard-app auth-shell-loading">
-        <aside className="dashboard-sidebar">
-          <a className="dashboard-brand" href={siteRoot} aria-label="Universidad Austral — PPS Curriculum">
-            <img src={logoUrl} alt="Universidad Austral" />
-          </a>
-        </aside>
-        <main className="dashboard-main">
-          <p className="login-lead">Checking login…</p>
-        </main>
+      <div className="login-main-only">
+        <p className="login-auth-loading login-lead">Checking login…</p>
       </div>
     );
   }
 
   if (status === "misconfigured" || status === "unauthenticated") {
     return (
-      <div className="dashboard-app auth-shell-guest">
-        <aside className="dashboard-sidebar">
-          <a className="dashboard-brand" href={siteRoot} aria-label="Universidad Austral — PPS Curriculum">
-            <img src={logoUrl} alt="Universidad Austral" />
-          </a>
-        </aside>
-        <main className="dashboard-main">
-          <LoginForm />
-        </main>
+      <div className="login-main-only">
+        <LoginForm />
       </div>
     );
   }

@@ -1,6 +1,10 @@
-body.auth-guest .dashboard-nav,
-body.auth-guest .dashboard-sidebar-extra,
-body.auth-guest .dashboard-sidebar [slot="sidebar"] {
+body.auth-guest .dashboard-app,
+html:not(.auth-session-cached) body.auth-pending .dashboard-app {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body.auth-guest .dashboard-sidebar,
+html:not(.auth-session-cached) body.auth-pending .dashboard-sidebar {
   display: none;
 }
 

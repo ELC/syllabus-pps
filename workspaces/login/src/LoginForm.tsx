@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 
 import { createBrowserClient } from "./client";
 import { isMissingConfig, readSupabaseConfig } from "./config";
+import { LoginScreen } from "./LoginScreen";
 import { readBrowserSiteRoot } from "./siteRoot";
 
 function signInRedirectTo(): string {
@@ -39,12 +40,12 @@ export function LoginForm() {
 
   if (isMissingConfig(configResult)) {
     return (
-      <div className="login-panel">
+      <LoginScreen>
         <h1 className="login-title">Configuration required</h1>
         <p className="login-error" role="alert">
           {configResult.message}
         </p>
-      </div>
+      </LoginScreen>
     );
   }
 
@@ -82,7 +83,7 @@ export function LoginForm() {
   }
 
   return (
-    <div className="login-panel">
+    <LoginScreen>
       <h1 className="login-title">Log in</h1>
       <p className="login-lead">
         Only pre-approved users can log in. Enter your email and we will send you a one-time link.
@@ -147,6 +148,6 @@ export function LoginForm() {
       <p className="login-disclaimer">
         This system does not store passwords or other personal information beyond your email address and name.
       </p>
-    </div>
+    </LoginScreen>
   );
 }

@@ -1,7 +1,3 @@
-body.auth-guest .dashboard-sidebar-footer {
-  visibility: hidden;
-}
-
 .dashboard-sidebar-signout-slot {
   min-height: 2.1875rem;
 }
@@ -47,9 +43,13 @@ body.auth-guest .dashboard-sidebar-footer {
   text-align: center;
 }
 
-body.auth-guest .dashboard-nav,
-body.auth-guest .dashboard-sidebar-extra,
-body.auth-guest .dashboard-sidebar [slot="sidebar"] {
+body.auth-guest .dashboard-app,
+html:not(.auth-session-cached) body.auth-pending .dashboard-app {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body.auth-guest .dashboard-sidebar,
+html:not(.auth-session-cached) body.auth-pending .dashboard-sidebar {
   display: none;
 }
 
@@ -62,22 +62,57 @@ html.auth-session-cached body.auth-pending .dashboard-main > :not(.login-mount):
   display: revert;
 }
 
-body.auth-guest .dashboard-main:has(.login-mount),
+body.auth-guest .dashboard-main,
 html:not(.auth-session-cached) body.auth-pending .dashboard-main:has(.login-mount),
-body.auth-guest .dashboard-main:has(.login-auth-loading),
-html:not(.auth-session-cached) body.auth-pending .dashboard-main:has(.login-auth-loading) {
+body.auth-guest .dashboard-main:has(.login-mount),
+html:not(.auth-session-cached) body.auth-pending .dashboard-main:has(.login-auth-loading),
+body.auth-guest .dashboard-main:has(.login-auth-loading) {
   justify-content: center;
   align-items: center;
+  padding: 1.25rem;
+}
+
+.login-main-only {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1.25rem;
+  background: var(--dash-bg, #0b1220);
+}
+
+.login-screen {
+  width: 100%;
+  max-width: 32rem;
+  border: 1px solid var(--dash-border, #2a3344);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--dash-surface, #111827);
+}
+
+.login-logo-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.25rem 1.5rem 1.75rem;
+  background: var(--dash-sidebar, #2e3092);
+}
+
+.login-logo {
+  display: block;
+  width: min(20rem, 100%);
+  height: auto;
+  aspect-ratio: 5000 / 1837;
+  object-fit: contain;
 }
 
 .login-panel {
-  max-width: 28rem;
   width: 100%;
   margin: 0;
   padding: 1.5rem;
-  border: 1px solid var(--dash-border, #2a3344);
-  border-radius: 0.5rem;
-  background: var(--dash-surface, #111827);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .login-title {
