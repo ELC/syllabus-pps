@@ -6,11 +6,7 @@ function normalizeBase(base: string): string {
   return base.endsWith("/") ? base : `${base}/`;
 }
 
-export function resolveSiteRoot(appBaseUrl: string, publicSiteRoot?: string): string {
-  if (publicSiteRoot) {
-    return normalizeBase(publicSiteRoot);
-  }
-
+export function resolveSiteRoot(appBaseUrl: string): string {
   const base = normalizeBase(appBaseUrl);
   for (const suffix of APP_SUFFIXES) {
     if (base.endsWith(suffix)) {
@@ -23,17 +19,6 @@ export function resolveSiteRoot(appBaseUrl: string, publicSiteRoot?: string): st
 }
 
 export function siteRootFromEnv(appBaseUrl: string): string {
-  const publicSiteRoot =
-    typeof import.meta !== "undefined" && import.meta.env?.PUBLIC_SITE_ROOT
-      ? String(import.meta.env.PUBLIC_SITE_ROOT)
-      : undefined;
-  return resolveSiteRoot(appBaseUrl, publicSiteRoot);
+  return resolveSiteRoot(appBaseUrl);
 }
 
-export function shellStylesHref(appBaseUrl: string): string {
-  return `${siteRootFromEnv(appBaseUrl)}assets/shell/pps-shell.css`;
-}
-
-export function shellLogoHref(appBaseUrl: string): string {
-  return `${siteRootFromEnv(appBaseUrl)}assets/shell/logo-horizontal-blanco.png`;
-}

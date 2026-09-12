@@ -25,6 +25,8 @@ jobs:
       NETWORK_BASE: /syllabus-pps/network/
       ROADMAP_BASE: /syllabus-pps/roadmap/
       CMS_BASE: /syllabus-pps/cms/
+      PUBLIC_SUPABASE_PROJECT_URL: ${{ secrets.PUBLIC_SUPABASE_PROJECT_URL }}
+      PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -41,11 +43,10 @@ jobs:
 
       - name: Sync from Supabase (optional)
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SUPABASE_STORAGE_BUCKET: ${{ vars.SUPABASE_STORAGE_BUCKET }}
         run: |
-          if [ -n "$SUPABASE_URL" ]; then
+          if [ -n "$PUBLIC_SUPABASE_PROJECT_URL" ]; then
             pnpm build:core
             pnpm --filter @pps/analytics-cli build
             pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-pull

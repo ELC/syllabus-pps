@@ -5,11 +5,17 @@ export interface RemotePageObject {
   content: string;
 }
 
+function readSupabaseUrlFromEnv(): string | undefined {
+  return process.env.PUBLIC_SUPABASE_PROJECT_URL?.trim() || process.env.SUPABASE_URL?.trim();
+}
+
 export function createSupabaseClientFromEnv(): SupabaseClient {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_ANON_KEY;
+  const url = readSupabaseUrlFromEnv();
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) {
-    throw new Error("Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (or SUPABASE_ANON_KEY).");
+    throw new Error(
+      "Set PUBLIC_SUPABASE_PROJECT_URL and SUPABASE_SERVICE_ROLE_KEY (or PUBLIC_SUPABASE_PUBLISHABLE_KEY).",
+    );
   }
 
   return createClient(url, key);

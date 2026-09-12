@@ -1,0 +1,14 @@
+body.auth-guest .dashboard-nav,
+body.auth-guest .dashboard-sidebar-extra,
+body.auth-guest .dashboard-sidebar [slot="sidebar"] {
+  display: none;
+}
+
+body.auth-pending .dashboard-main > :not(.login-mount):not(.login-auth-loading),
+body.auth-guest .dashboard-main > :not(.login-mount):not(.login-auth-loading) {
+  display: none;
+}
+
+html.auth-session-cached body.auth-pending .dashboard-main > :not(.login-mount):not(.login-auth-loading) {
+  display: revert;
+}

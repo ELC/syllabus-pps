@@ -8,23 +8,24 @@
     "./styles/roadmap.css": "./src/styles/roadmap.css"
   },
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@pps/core": "workspace:*",
+    "@pps/login": "workspace:*",
     "@pps/shell": "workspace:*",
     "@xyflow/react": "^12.11.6",
     "elkjs": "^0.12.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
-    "@vitejs/plugin-react": "^4.3.4",
-    "typescript": "^5.9.3",
-    "vite": "^6.2.0"
+    "@pps/config": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }

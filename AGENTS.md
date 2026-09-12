@@ -2,6 +2,34 @@
 
 Curriculum content lives in `content/pages/` as repo-native Markdown with YAML frontmatter. Supabase Storage is canonical for the hosted CMS; a daily cron syncs remote content into the repo for builds.
 
+## Documentation
+
+Keep human-facing setup and operations docs in the root [README.md](README.md). Workspace-local README files should only cover workspace-specific details and link back to the root README instead of duplicating setup guides.
+
+## Shell assets
+
+Shared chrome styles live in `@pps/shell` (`styles/shell.css` and partials) and auth UI styles in `@pps/login/styles/login.css`. Import them through the bundler (`import shellCss from "@pps/shell/styles/shell.css?url"` in Astro, or `import "@pps/shell/shell-chrome"` in Vite SPAs). Do not copy CSS into app `public/` folders.
+
+Astro apps register `import ppsShell from "@pps/shell/astro"` in `integrations`. Vite SPAs (CMS, roadmap) import `shellHeadPlugin` from `@pps/shell/vite`. Integration sources live in `workspaces/shell/integration/`.
+
+## Dependency versions
+
+Shared tool versions (`astro`, `react`, `vite`, `typescript`, and related types) are defined once in the root `pnpm-workspace.yaml` `catalog` and referenced as `"catalog:"` in workspace `package.json` files.
+
+## Analytics artifacts
+
+The CLI writes JSON to `workspaces/analytics-cli/_generated/`. Apps load them at runtime from `/data/*.json` via `analyticsDataPlugin` from `@pps/config` (dev middleware + build emit). Run `pnpm build:content` before `pnpm dev` or app builds when content changes. Do not copy artifacts into app `public/data/` folders.
+
+## Workspace packages
+
+Prefer `workspace:*` dependencies and package `exports` over Vite aliases. `@pps/core` exposes `./src/index.ts` under the `development` export condition for Vite dev; production builds use `dist/`. Shared Vite env helpers and plugins live in `@pps/config` (built to `dist/` before app builds). `@pps/shell` Astro/Vite integration sources live in `workspaces/shell/integration/` and compile to `integration/dist/` for nested Vite config loading.
+
+Local dev runs only `@pps/site` on port 4321; CMS, roadmap, analytics, and network mount into that server via `subsitesDevPlugins()` from `@pps/config`.
+
+## Workspace packages
+
+Prefer `workspace:*` dependencies and package `exports` over Vite aliases. `@pps/core` exposes `./src/index.ts` under the `development` export condition for Vite dev; production builds use `dist/`.
+
 ## Working With Content
 
 - Edit local files in `content/pages/` for agent workflows, or use the CMS (`workspaces/cms`) for authors.

@@ -1,8 +1,7 @@
-import { useEffect, useRef } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import { useCallback, useEffect, useRef } from "react";
 
 import { RoadmapApp } from "./components/roadmap/RoadmapApp";
-import { mountConceptPanel } from "./scripts/concept-panel";
+import { mountConceptPanel, type ConceptPage } from "./scripts/concept-panel";
 import { defaultCurriculumUrl } from "./site-base";
 
 interface AppProps {
@@ -11,32 +10,26 @@ interface AppProps {
 
 export function App({ dataUrl }: AppProps) {
   const resolvedUrl = dataUrl ?? defaultCurriculumUrl();
-  const roadmapHostRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLElement>(null);
-  const reactRootRef = useRef<Root | null>(null);
+  const conceptPanelRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
 
   useEffect(() => {
-    const host = roadmapHostRef.current;
     const panelRoot = panelRef.current;
-    if (!host || !panelRoot) {
+    if (!panelRoot) {
       return;
     }
 
     const conceptPanel = mountConceptPanel(panelRoot);
-    const root = createRoot(host);
-    reactRootRef.current = root;
-    root.render(
-      <RoadmapApp
-        dataUrl={resolvedUrl}
-        onConceptOpen={(page) => conceptPanel.open(page)}
-      />,
-    );
+    conceptPanelRef.current = conceptPanel;
 
     return () => {
-      root.unmount();
-      reactRootRef.current = null;
+      conceptPanelRef.current = null;
     };
-  }, [resolvedUrl]);
+  }, []);
+
+  const handleConceptOpen = useCallback((page: ConceptPage) => {
+    conceptPanelRef.current?.open(page);
+  }, []);
 
   return (
     <>
@@ -49,7 +42,7 @@ export function App({ dataUrl }: AppProps) {
       </header>
 
       <section className="roadmap-shell">
-        <div ref={roadmapHostRef} id="roadmap-root" />
+        <RoadmapApp dataUrl={resolvedUrl} onConceptOpen={handleConceptOpen} />
       </section>
 
       <aside

@@ -1186,13 +1186,6 @@ export async function mountGraph(
           "border-width": 3,
           "border-color": defaultNodeStyle.border,
           color: AUSTRAL.text,
-          cursor: "grab",
-        },
-      },
-      {
-        selector: "node:active",
-        style: {
-          cursor: "grabbing",
         },
       },
       {
@@ -1260,6 +1253,14 @@ export async function mountGraph(
         },
       },
     ],
+  });
+
+  container.style.cursor = "grab";
+  cy.on("mousedown", () => {
+    container.style.cursor = "grabbing";
+  });
+  cy.on("mouseup mouseleave", () => {
+    container.style.cursor = "grab";
   });
 
   const cmsBase = options.cmsBase ?? defaultCmsBase();

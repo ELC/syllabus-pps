@@ -10,13 +10,15 @@
   },
   "dependencies": {
     "@pps/shell": "workspace:*",
-    "astro": "^5.5.2"
+    "astro": "catalog:"
   },
   "devDependencies": {
+    "@astrojs/check": "catalog:",
     "@pps/cms": "workspace:*",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "typescript": "^5.9.3",
-    "vite": "^6.2.0"
+    "@pps/config": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }

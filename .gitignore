@@ -15,3 +15,8 @@ workspaces/analytics-cli/_generated
 *.pdf
 
 .astro
+**/public/data/
+.env
+.env.local
+.env.*.local
+token

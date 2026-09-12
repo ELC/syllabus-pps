@@ -72,6 +72,7 @@
 
   --dash-bg: var(--austral-bg);
   --dash-sidebar: var(--austral-azul-primario);
+  --dash-sidebar-width: 15rem;
   --dash-sidebar-text: var(--austral-blanco);
   --dash-sidebar-muted: var(--austral-azul-muted);
   --dash-sidebar-active: var(--austral-azul-soft);

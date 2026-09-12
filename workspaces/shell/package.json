@@ -7,6 +7,7 @@
     "./SiteShell": "./src/SiteShell.tsx",
     "./ShellLayout.astro": "./src/ShellLayout.astro",
     "./site-root": "./src/site-root.ts",
+    "./logo-meta": "./src/logo-meta.ts",
     "./nav": "./src/nav.ts",
     "./austral-tokens": "./src/austral-tokens.ts",
     "./styles/tokens.css": "./src/styles/tokens.css",
@@ -15,19 +16,30 @@
     "./styles/spa.css": "./src/styles/spa.css",
     "./styles/concept-panel.css": "./src/styles/concept-panel.css",
     "./styles/scrollbars.css": "./src/styles/scrollbars.css",
-    "./vite/shell-font-links": "./vite/shell-font-links.mjs",
-    "./vite/shell-head": "./vite/shell-head.mjs",
+    "./styles/shell.css": "./src/styles/shell.css",
+    "./shell-chrome": "./src/shell-chrome.ts",
+    "./astro": {
+      "types": "./integration/dist/index.d.ts",
+      "default": "./integration/dist/index.js"
+    },
+    "./vite": {
+      "types": "./integration/dist/vite.d.ts",
+      "default": "./integration/dist/vite.js"
+    },
     "./assets/logo-horizontal-blanco.png": "./assets/logo-horizontal-blanco.png"
   },
   "scripts": {
-    "build:css": "node scripts/build-css.mjs",
+    "build": "tsc -p integration/tsconfig.build.json",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^19.0.0"
+    "@pps/login": "workspace:*",
+    "react": "catalog:"
   },
   "devDependencies": {
-    "@types/react": "^19.0.10",
-    "typescript": "^5.9.3"
+    "@types/react": "catalog:",
+    "astro": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }

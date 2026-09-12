@@ -1,12 +1,20 @@
-import { resolve } from "node:path";
+import ppsShell from "@pps/shell/astro";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
-import { cmsDevPlugin } from "./vite-cms-dev.mjs";
+import {
+  quietEmbeddedDevPlugin,
+  repoRootFromWorkspace,
+  sharedViteEnv,
+  subsitesDevPlugins,
+  withSharedVitePlugins,
+} from "@pps/config";
 
 const rootDir = fileURLToPath(new URL(".", import.meta.url));
+const repoRoot = repoRootFromWorkspace(rootDir);
 const base = process.env.SITE_BASE ?? "/";
 
 export default defineConfig({
+  integrations: [ppsShell()],
   base,
   outDir: "dist",
   publicDir: "public",
@@ -15,12 +23,12 @@ export default defineConfig({
     strictPort: true,
   },
   vite: {
-    plugins: [cmsDevPlugin()],
-    resolve: {
-      alias: {
-        "@pps/shell": resolve(rootDir, "../shell/src"),
-      },
-    },
+    ...sharedViteEnv(repoRoot),
+    plugins: [
+      ...withSharedVitePlugins(repoRoot),
+      quietEmbeddedDevPlugin({ scope: "site", disableHmr: false }),
+      ...subsitesDevPlugins(repoRoot),
+    ],
     server: {
       fs: {
         allow: ["../.."],

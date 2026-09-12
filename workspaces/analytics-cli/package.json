@@ -20,7 +20,7 @@
     "@pps/core": "workspace:*",
     "@stricli/core": "^1.3.0",
     "@supabase/supabase-js": "^2.49.1",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

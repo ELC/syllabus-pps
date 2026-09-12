@@ -4,15 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --port 4323 --host 127.0.0.1",
     "build": "astro build",
     "typecheck": "astro check"
   },
   "dependencies": {
     "@pps/shell": "workspace:*",
-    "astro": "^5.5.2"
+    "astro": "catalog:"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "@astrojs/check": "catalog:",
+    "@pps/config": "workspace:*",
+    "typescript": "catalog:"
   }
 }
