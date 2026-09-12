@@ -18,10 +18,6 @@ export default defineConfig({
   base,
   outDir: "dist",
   publicDir: "public",
-  server: {
-    port: 4323,
-    strictPort: true,
-  },
   vite: {
     ...sharedViteEnv(repoRoot),
     plugins: [

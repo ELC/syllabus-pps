@@ -1,10 +1,10 @@
 import { buildCommand } from "@stricli/core";
 import type { CliContext } from "../../context";
-import type { AnalyticsFlags } from "../../parameters/analytics";
-import { analyticsParameters } from "../../parameters/analytics";
+import type { SyncPullFlags } from "../../parameters/sync-pull";
+import { syncPullParameters } from "../../parameters/sync-pull";
 
-export const command = buildCommand<AnalyticsFlags, [], CliContext>({
+export const command = buildCommand<SyncPullFlags, [], CliContext>({
   loader: () => import("./impl"),
-  parameters: analyticsParameters,
+  parameters: syncPullParameters,
   docs: { brief: "Pull markdown pages from Supabase into content/pages." },
 });

@@ -49,9 +49,8 @@ jobs:
           if [ -n "$PUBLIC_SUPABASE_PROJECT_URL" ]; then
             pnpm build:core
             pnpm --filter @pps/analytics-cli build
-            pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-pull
+            pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-pull --allow-conflicts
           fi
-        continue-on-error: true
 
       - run: pnpm build:pages
 
