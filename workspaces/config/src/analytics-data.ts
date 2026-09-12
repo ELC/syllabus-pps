@@ -12,14 +12,12 @@ export function analyticsDataPlugin(
   options: { generatedDir?: string } = {},
 ): Plugin {
   const generatedDir = options.generatedDir ?? defaultGeneratedDir;
-  let projectRoot = process.cwd();
-  let outDir = "dist";
+  let resolvedOutDir = join(process.cwd(), "dist");
 
   return {
     name: "pps-analytics-data",
     configResolved(config) {
-      projectRoot = config.root;
-      outDir = config.build.outDir;
+      resolvedOutDir = resolve(config.root, config.build.outDir);
     },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
@@ -47,7 +45,7 @@ export function analyticsDataPlugin(
         return;
       }
 
-      const outDataDir = join(projectRoot, outDir, "data");
+      const outDataDir = join(resolvedOutDir, "data");
       mkdirSync(outDataDir, { recursive: true });
 
       for (const file of files) {

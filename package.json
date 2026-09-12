@@ -16,7 +16,7 @@
     "build:network": "pnpm --filter @pps/network build",
     "build:roadmap": "pnpm --filter @pps/roadmap build",
     "build:tooling": "pnpm --filter @pps/config --filter @pps/shell run build",
-    "build:apps": "pnpm -r --filter '@pps/{cms,site,analytics,network,roadmap}' run build",
+    "build:apps": "pnpm -r --filter @pps/site --filter @pps/cms --filter @pps/analytics --filter @pps/network --filter @pps/roadmap run build",
     "build:pages": "pnpm build:tooling && pnpm build:content && pnpm build:apps && pnpm --filter @pps/config merge-pages",
     "dev": "pnpm build:tooling && pnpm --filter @pps/site dev",
     "watch:analytics": "pnpm --filter @pps/analytics-cli watch:analytics",

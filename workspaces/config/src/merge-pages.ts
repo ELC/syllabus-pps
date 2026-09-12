@@ -22,5 +22,12 @@ export function mergePagesDist(repoRoot: string): string {
     cpSync(appDist, target, { recursive: true });
   }
 
+  const indexHtml = join(combinedDist, "index.html");
+  if (!existsSync(indexHtml)) {
+    throw new Error(
+      "GitHub Pages artifact is missing index.html. Build workspace apps before merge-pages.",
+    );
+  }
+
   return combinedDist;
 }
