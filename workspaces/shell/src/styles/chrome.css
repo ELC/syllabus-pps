@@ -25,6 +25,9 @@ body.dashboard-body {
 }
 
 .dashboard-sidebar {
+  /* Sidebar-relative queries let nested chrome (e.g. the sign-out control in
+     @pps/login) adapt to the top-bar layout without another viewport breakpoint. */
+  container: shell-sidebar / inline-size;
   height: 100%;
   min-height: 0;
   background: var(--dash-sidebar);
@@ -332,11 +335,42 @@ body.dashboard-body {
     height: 100%;
   }
 
+  /* Top bar: logo in the leading corner, nav centered, session actions trailing,
+     with sidebar extras (dashboard tabs, graph filters) on a second row. */
   .dashboard-sidebar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand nav session"
+      "extra extra extra";
+    align-items: center;
+    column-gap: 0.75rem;
+    row-gap: 0;
     height: auto;
     max-height: 40vh;
-    padding-bottom: 0.5rem;
+    padding: 0.4rem 0.75rem 0.5rem;
     overflow: hidden;
+  }
+
+  .dashboard-brand {
+    grid-area: brand;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .dashboard-brand img {
+    max-width: 5.5rem;
+  }
+
+  .dashboard-sidebar-footer {
+    grid-area: session;
+    margin-top: 0;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .dashboard-sidebar-user {
+    display: none;
   }
 
   .dashboard-main {
@@ -346,10 +380,22 @@ body.dashboard-body {
   }
 
   .dashboard-nav {
-    flex-direction: row;
+    grid-area: nav;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    justify-content: center;
+    /* Keep the first item reachable once the tabs overflow the scroller. */
+    justify-content: safe center;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 0 0.75rem;
+    padding: 0;
+  }
+
+  .dashboard-sidebar > .dashboard-nav-sub,
+  .dashboard-sidebar-extra {
+    grid-area: extra;
+    align-self: stretch;
   }
 
   .dashboard-nav button,
@@ -357,12 +403,15 @@ body.dashboard-body {
     min-height: 0;
     white-space: nowrap;
     border-left-width: 0;
-    border-radius: 999px;
-    padding: 0.5rem 1.25rem;
+    border-bottom: 2px solid transparent;
+    padding: 0.45rem 0.9rem;
   }
 
+  /* The underline takes over from the desktop left border; --dash-accent would
+     match the sidebar background. */
   .dashboard-nav button.active,
   .dashboard-nav .nav-link.active {
-    background: var(--dash-accent);
+    background: transparent;
+    border-bottom-color: var(--austral-blanco);
   }
 }
