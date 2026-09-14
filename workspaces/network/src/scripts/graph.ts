@@ -37,6 +37,7 @@ export interface MountGraphOptions {
   expansionListId?: string;
   refreshButtonId?: string;
   resetFiltersButtonId?: string;
+  toggleConceptsButtonId?: string;
   conceptPanelId?: string;
   conceptNotesUrl?: string;
 }
@@ -74,6 +75,7 @@ interface GraphViewState {
   focusLayoutCache: Map<string, Map<string, cytoscape.Position>>;
   kindFilters: KindFilters;
   searchQuery: string;
+  conceptsHidden: boolean;
 }
 
 function createKindFilters(): KindFilters {
@@ -232,7 +234,15 @@ function nodeMatchesSearch(node: cytoscape.NodeSingular, query: string): boolean
 
 const SEARCH_RESULTS_LIMIT = 50;
 
-function matchingNodes(cy: cytoscape.Core, query: string): cytoscape.NodeSingular[] {
+function isConceptNode(node: cytoscape.NodeSingular): boolean {
+  return String(node.data("kind")) === "concept";
+}
+
+function matchingNodes(
+  cy: cytoscape.Core,
+  query: string,
+  options: { excludeConcepts?: boolean } = {},
+): cytoscape.NodeSingular[] {
   const normalizedQuery = normalizeSearchText(query.trim());
   if (!normalizedQuery) {
     return [];
@@ -240,6 +250,10 @@ function matchingNodes(cy: cytoscape.Core, query: string): cytoscape.NodeSingula
 
   const matches: cytoscape.NodeSingular[] = [];
   cy.nodes().forEach((node) => {
+    if (options.excludeConcepts && isConceptNode(node)) {
+      return;
+    }
+
     if (nodeMatchesSearch(node, query)) {
       matches.push(node);
     }
@@ -326,6 +340,14 @@ function applyElementVisibility(cy: cytoscape.Core, viewState: GraphViewState): 
   cy.nodes().forEach((node) => {
     const nodeId = node.id();
     let visible = true;
+
+    if (
+      viewState.conceptsHidden &&
+      !focusVisibleNodeIds &&
+      isConceptNode(node)
+    ) {
+      visible = false;
+    }
 
     if (globalVisibleNodeIds && !globalVisibleNodeIds.has(nodeId)) {
       visible = false;
@@ -597,6 +619,46 @@ function mountResetFiltersButton(
   });
 }
 
+function isExpansionActive(viewState: GraphViewState): boolean {
+  return Boolean(viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0);
+}
+
+function setConceptsHidden(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  hidden: boolean,
+): void {
+  viewState.conceptsHidden = hidden;
+  ui.syncView();
+
+  if (!isExpansionActive(viewState)) {
+    refreshGraphLayout(cy, viewState);
+  }
+}
+
+function syncToggleConceptsButton(button: HTMLButtonElement, hidden: boolean): void {
+  button.setAttribute("aria-pressed", hidden ? "true" : "false");
+  button.textContent = hidden ? "Mostrar conceptos" : "Ocultar conceptos";
+  button.title = hidden
+    ? "Volver a mostrar los nodos de concepto"
+    : "Ocultar conceptos en la vista general; al hacer clic en un nodo siguen visibles";
+}
+
+function mountToggleConceptsButton(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  button: HTMLButtonElement,
+): void {
+  syncToggleConceptsButton(button, viewState.conceptsHidden);
+
+  button.addEventListener("click", () => {
+    setConceptsHidden(cy, viewState, ui, !viewState.conceptsHidden);
+    syncToggleConceptsButton(button, viewState.conceptsHidden);
+  });
+}
+
 function positionSearchDropdown(
   searchInput: HTMLInputElement,
   resultsRoot: HTMLElement,
@@ -628,7 +690,9 @@ function updateSearchResultsUI(
   onNodeActivate: (node: cytoscape.NodeSingular) => void,
 ): void {
   const query = searchInput.value;
-  const matches = matchingNodes(cy, query);
+  const matches = matchingNodes(cy, query, {
+    excludeConcepts: viewState.conceptsHidden && !isExpansionActive(viewState),
+  });
   resultsRoot.replaceChildren();
 
   if (!query.trim()) {
@@ -1293,6 +1357,7 @@ export async function mountGraph(
     focusLayoutCache: new Map(),
     kindFilters: createKindFilters(),
     searchQuery: "",
+    conceptsHidden: false,
   };
 
   const ui: GraphUi = {
@@ -1318,6 +1383,14 @@ export async function mountGraph(
 
   if (filtersRoot && resetFiltersButton instanceof HTMLButtonElement) {
     mountResetFiltersButton(cy, viewState, ui, filtersRoot, resetFiltersButton);
+  }
+
+  const toggleConceptsButton = options.toggleConceptsButtonId
+    ? document.getElementById(options.toggleConceptsButtonId)
+    : null;
+
+  if (toggleConceptsButton instanceof HTMLButtonElement) {
+    mountToggleConceptsButton(cy, viewState, ui, toggleConceptsButton);
   }
 
   const activateNode = (node: cytoscape.NodeSingular) => {

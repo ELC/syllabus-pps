@@ -230,6 +230,42 @@
   outline-offset: 2px;
 }
 
+.graph-sidebar-toggle-concepts-button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0 0 0.75rem;
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 0.5rem;
+  background: transparent;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--dash-sidebar-text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.graph-sidebar-toggle-concepts-button:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: var(--dash-sidebar-active);
+}
+
+.graph-sidebar-toggle-concepts-button[aria-pressed="true"] {
+  border-color: var(--austral-celeste-suave);
+  background: var(--dash-sidebar-active);
+  color: var(--austral-celeste-suave);
+}
+
+.graph-sidebar-toggle-concepts-button:focus-visible {
+  outline: 2px solid var(--austral-blanco);
+  outline-offset: 2px;
+}
+
 .graph-sidebar-reset-filters-button {
   appearance: none;
   display: inline-flex;

@@ -15,6 +15,15 @@ import networkCss from "../styles/network.css?url";
     >
       ↻ Reordenar
     </button>
+    <button
+      id="graph-toggle-concepts"
+      type="button"
+      class="graph-sidebar-toggle-concepts-button"
+      aria-pressed="false"
+      title="Ocultar conceptos en la vista general; al hacer clic en un nodo siguen visibles"
+    >
+      Ocultar conceptos
+    </button>
     <p class="dashboard-nav-label">Filtros</p>
     <p class="graph-filters-help">
       Cada filtro muestra el nodo elegido y todos los que tienen un camino dirigido hacia él. No
@@ -100,6 +109,7 @@ import networkCss from "../styles/network.css?url";
       expansionListId: "graph-expansion-list",
       refreshButtonId: "graph-refresh-layout",
       resetFiltersButtonId: "graph-reset-filters",
+      toggleConceptsButtonId: "graph-toggle-concepts",
       conceptPanelId: "graph-concept-panel",
       conceptNotesUrl: "./data/curriculum-graph.json",
     }).catch((error) => {
