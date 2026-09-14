@@ -43,15 +43,15 @@ export function ShellAuthGate({ children, logoUrl, siteRoot, renderShell }: Shel
 
   if (status === "loading") {
     return (
-      <div className="login-main-only">
-        <p className="login-auth-loading login-lead">Checking login…</p>
+      <div className="login__main-only">
+        <p className="login__auth-loading login__lead">Checking login…</p>
       </div>
     );
   }
 
   if (status === "misconfigured" || status === "unauthenticated") {
     return (
-      <div className="login-main-only">
+      <div className="login__main-only">
         <LoginForm />
       </div>
     );

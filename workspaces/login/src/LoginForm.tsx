@@ -41,8 +41,8 @@ export function LoginForm() {
   if (isMissingConfig(configResult)) {
     return (
       <LoginScreen>
-        <h1 className="login-title">Configuration required</h1>
-        <p className="login-error" role="alert">
+        <h1 className="login__title">Configuration required</h1>
+        <p className="login__error" role="alert">
           {configResult.message}
         </p>
       </LoginScreen>
@@ -84,19 +84,19 @@ export function LoginForm() {
 
   return (
     <LoginScreen>
-      <h1 className="login-title">Log in</h1>
-      <p className="login-lead">
+      <h1 className="login__title">Log in</h1>
+      <p className="login__lead">
         Only pre-approved users can log in. Enter your email and we will send you a one-time link.
       </p>
 
       {!linkSent ? (
-        <form className="login-form" onSubmit={(event) => void sendLink(event)}>
-          <label className="login-label" htmlFor="login-email">
+        <form className="login__form" onSubmit={(event) => void sendLink(event)}>
+          <label className="login__label" htmlFor="login-email">
             Email
           </label>
           <input
             id="login-email"
-            className="login-input"
+            className="login__input"
             type="email"
             autoComplete="email"
             required
@@ -104,17 +104,17 @@ export function LoginForm() {
             onChange={(event) => setEmail(event.target.value)}
             disabled={busy}
           />
-          <button className="login-button" type="submit" disabled={busy}>
+          <button className="login__button" type="submit" disabled={busy}>
             {busy ? "Sending…" : "Send link"}
           </button>
         </form>
       ) : (
-        <div className="login-form">
-          <p className="login-notice login-notice-success" role="status">
+        <div className="login__form">
+          <p className="login__notice login__notice--success" role="status">
             {message}
           </p>
           <button
-            className="login-link-button"
+            className="login__link-button"
             type="button"
             disabled={busy}
             onClick={() => {
@@ -130,22 +130,22 @@ export function LoginForm() {
       )}
 
       {!linkSent && notice ? (
-        <p className="login-notice" role="status">
+        <p className="login__notice" role="status">
           {notice}
         </p>
       ) : null}
       {error ? (
-        <p className="login-error" role="alert">
+        <p className="login__error" role="alert">
           {error}
         </p>
       ) : null}
 
-      <p className="login-help">
-        <span className="login-help-label">Didn&apos;t receive an email?</span> Contact the administrator if
+      <p className="login__help">
+        <span className="login__help-label">Didn&apos;t receive an email?</span> Contact the administrator if
         no link arrives within a few minutes.
       </p>
 
-      <p className="login-disclaimer">
+      <p className="login__disclaimer">
         This system does not store passwords or other personal information beyond your email address and name.
       </p>
     </LoginScreen>

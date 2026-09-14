@@ -5,7 +5,7 @@ import { createRoot } from "react-dom/client";
 
 import { bootstrapAuthenticatedApp } from "@pps/login/bootstrap";
 import { App } from "./App";
-import "./styles/cms.css";
+import "./styles/cms.scss";
 
 const host = document.getElementById("root");
 if (!host) {

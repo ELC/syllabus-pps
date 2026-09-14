@@ -239,7 +239,7 @@ export function subsitesDevPlugins(repoRoot: string): Plugin[] {
       base: "/analytics/",
       ownedPathPrefixes: [
         "/src/scripts/analytics-dashboard",
-        "/src/styles/analytics.css",
+        "/src/styles/analytics.scss",
         "/src/pages/graph",
       ],
     }),
@@ -247,7 +247,7 @@ export function subsitesDevPlugins(repoRoot: string): Plugin[] {
       name: "network",
       workspace: "network",
       base: "/network/",
-      ownedPathPrefixes: ["/src/scripts/graph", "/src/styles/network.css"],
+      ownedPathPrefixes: ["/src/scripts/graph", "/src/styles/network.scss"],
     }),
   ];
 }

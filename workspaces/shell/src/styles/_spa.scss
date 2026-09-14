@@ -1,0 +1,9 @@
+html,
+body {
+  height: 100%;
+}
+
+/* CMS mounts SiteShell inside a bare app root; Roadmap uses app root as dashboard__main. */
+.app-root:not(.dashboard__main) {
+  display: contents;
+}

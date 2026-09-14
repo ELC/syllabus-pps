@@ -14,8 +14,8 @@ import { NAV_ITEMS, navHref } from "./nav";
 import type { NavId } from "./site-root";
 import { siteRootFromEnv } from "./site-root";
 
-import "./styles/shell.css";
-import "@pps/login/styles/login.css";
+import "./styles/shell.scss";
+import "@pps/login/styles/login.scss";
 
 interface SiteShellProps {
   children: ReactNode;
@@ -40,10 +40,11 @@ function AuthenticatedShell({
   const logoUrl = shellLogoHref(siteRoot);
 
   return (
-    <div className="dashboard-app">
-      <aside className="dashboard-sidebar">
-        <a className="dashboard-brand" href={siteRoot} aria-label="Universidad Austral — PPS Curriculum">
+    <div className="dashboard">
+      <aside className="dashboard__sidebar">
+        <a className="dashboard__brand" href={siteRoot} aria-label="Universidad Austral — PPS Curriculum">
           <img
+            className="dashboard__brand-logo"
             src={logoUrl}
             fetchPriority="high"
             alt={SHELL_LOGO_ALT}
@@ -52,11 +53,11 @@ function AuthenticatedShell({
             decoding="async"
           />
         </a>
-        <nav className="dashboard-nav" aria-label="Site">
+        <nav className="dashboard__nav" aria-label="Site">
           {NAV_ITEMS.map((item) => (
             <a
               key={item.id}
-              className={item.id === activeNav ? "nav-link active" : "nav-link"}
+              className={item.id === activeNav ? "dashboard__link dashboard__link--active" : "dashboard__link"}
               href={navHref(siteRoot, item.segment)}
               aria-current={item.id === activeNav ? "page" : undefined}
             >
@@ -67,7 +68,9 @@ function AuthenticatedShell({
         {sidebarExtra}
         <ShellSidebarFooter email={userEmail} userName={userName} onSignOut={onSignOut} />
       </aside>
-      <main className="dashboard-main">{children}</main>
+      <main className="dashboard__main">
+        <div className="dashboard__content">{children}</div>
+      </main>
     </div>
   );
 }

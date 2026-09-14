@@ -60,11 +60,11 @@ function edgeStyleSuffix(
   let suffix = "";
 
   if (topics.some(isTopicDone)) {
-    suffix += " roadmap-edge--done";
+    suffix += " roadmap__edge--done";
   }
 
   if (focusNeighborhood.has(source) && focusNeighborhood.has(target)) {
-    suffix += " roadmap-edge--active";
+    suffix += " roadmap__edge--active";
   }
 
   return suffix;
@@ -82,14 +82,14 @@ function branchEdgeStyleSuffix(
 
   if (branchKind === "trunk") {
     if (groupTargets.length > 0 && groupTargets.every(isTopicDone)) {
-      suffix += " roadmap-edge--done";
+      suffix += " roadmap__edge--done";
     }
   } else if (isRoadmapTopicId(target) && isTopicDone(target)) {
-    suffix += " roadmap-edge--done";
+    suffix += " roadmap__edge--done";
   }
 
   if (focusNeighborhood.has(source) && focusNeighborhood.has(target)) {
-    suffix += " roadmap-edge--active";
+    suffix += " roadmap__edge--active";
   }
 
   return suffix;
@@ -111,7 +111,7 @@ const ROADMAP_EDGE_PROPS = {
   focusable: false,
   interactionWidth: 0,
   selectable: false,
-  type: "step",
+  type: "roadmapSpine",
   pathOptions: { borderRadius: 0, offset: STEP_EDGE_OFFSET },
 } as const;
 
@@ -354,7 +354,7 @@ function emitBranchEdges(
       target,
       sourceHandle,
       targetHandle,
-      className: `roadmap-edge roadmap-edge--branch${styleSuffix(source, target, data.branchKind, data.groupTargets ?? [])}`,
+      className: `roadmap__edge roadmap__edge--branch${styleSuffix(source, target, data.branchKind, data.groupTargets ?? [])}`,
       data,
       ...ROADMAP_BRANCH_EDGE_PROPS,
     });
@@ -501,7 +501,7 @@ function emitSpineLinks(
       target,
       sourceHandle,
       targetHandle,
-      className: `roadmap-edge roadmap-edge--spine${activeSuffix(source, target)}`,
+      className: `roadmap__edge roadmap__edge--spine${activeSuffix(source, target)}`,
       ...spineEdgeProps(center, straight),
     });
   };

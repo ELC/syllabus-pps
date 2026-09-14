@@ -1,16 +1,16 @@
 ---
 import ShellLayout from "@pps/shell/ShellLayout.astro";
 import { GRAPH_NODE_KINDS } from "../scripts/graph-styles";
-import networkCss from "../styles/network.css?url";
+import networkCss from "../styles/network.scss?url";
 ---
 
 <ShellLayout title="PPS Network" activeNav="network">
   <link slot="head" rel="stylesheet" href={networkCss} />
-  <div slot="sidebar" class="graph-sidebar-filters dashboard-nav-sub">
+  <div slot="sidebar" class="graph__sidebar-filters dashboard__nav--sub">
     <button
       id="graph-refresh-layout"
       type="button"
-      class="graph-sidebar-refresh-button"
+      class="graph__sidebar-refresh"
       title="Recomputar el layout del grafo visible"
     >
       ↻ Reordenar
@@ -18,42 +18,42 @@ import networkCss from "../styles/network.css?url";
     <button
       id="graph-toggle-concepts"
       type="button"
-      class="graph-sidebar-toggle-concepts-button"
+      class="graph__sidebar-toggle-concepts"
       aria-pressed="false"
       title="Ocultar conceptos en la vista general; al hacer clic en un nodo siguen visibles"
     >
       Ocultar conceptos
     </button>
-    <p class="dashboard-nav-label">Filtros</p>
-    <p class="graph-filters-help">
+    <p class="graph__sidebar-label">Filtros</p>
+    <p class="graph__filters-help">
       Cada filtro muestra el nodo elegido y todos los que tienen un camino dirigido hacia él. No
       es lo mismo que hacer clic en el grafo, que expande el vecindario de un nodo.
     </p>
-    <div id="graph-filters" class="graph-sidebar-filters-list"></div>
+    <div id="graph-filters" class="graph__filters-list"></div>
     <button
       id="graph-reset-filters"
       type="button"
-      class="graph-sidebar-reset-filters-button"
+      class="graph__sidebar-reset-filters"
       title="Quitar todos los filtros del sidebar"
     >
       Limpiar filtros
     </button>
   </div>
 
-  <header class="dashboard-header">
-    <h1>Curriculum network</h1>
-    <p>
+  <header class="dashboard__header">
+    <h1 class="dashboard__header-title">Curriculum network</h1>
+    <p class="dashboard__header-lead dashboard__header-lead--wide">
       Use the sidebar filters or search bar to narrow the graph. Click a node to focus its
       neighborhood; clicking a concept also opens its notes. Remove an expansion with the × on its
       chip. Double-click to open in the CMS. Click the background to show all nodes again.
     </p>
-    <div class="graph-header-meta">
-      <ul class="graph-legend" aria-label="Tipos de nodo">
+    <div class="graph__header-meta graph__header-meta--compact">
+      <ul class="graph__legend" aria-label="Tipos de nodo">
         {
           GRAPH_NODE_KINDS.map((item) => (
-            <li class="graph-legend-item">
+            <li class="graph__legend-item">
               <span
-                class="graph-legend-swatch"
+                class="graph__legend-swatch"
                 style={`background:${item.swatchFill};border-color:${item.border}`}
               />
               {item.label}
@@ -61,10 +61,11 @@ import networkCss from "../styles/network.css?url";
           ))
         }
       </ul>
-      <div class="graph-search-combobox">
-        <label class="visually-hidden" for="graph-search">Buscar</label>
+      <div class="graph__search">
+        <label class="u-visually-hidden" for="graph-search">Buscar</label>
         <input
           id="graph-search"
+          class="graph__search-input"
           type="search"
           placeholder="Filtrar nodos por nombre..."
           autocomplete="off"
@@ -73,36 +74,36 @@ import networkCss from "../styles/network.css?url";
           aria-controls="graph-search-results"
           aria-autocomplete="list"
         />
-        <div id="graph-search-results" class="graph-search-dropdown" role="listbox"></div>
+        <div id="graph-search-results" class="graph__search-dropdown" role="listbox"></div>
       </div>
     </div>
   </header>
 
-  <section class="graph-panel">
-    <div id="graph-expansion-list" class="graph-expansion-list" hidden></div>
-    <div id="cy"></div>
+  <section class="graph__panel">
+    <div id="graph-expansion-list" class="graph__expansion-list" hidden></div>
+    <div class="graph__canvas"></div>
   </section>
 
-  <aside id="graph-concept-panel" class="graph-concept-panel" aria-hidden="true">
-    <div class="graph-concept-panel-backdrop"></div>
+  <aside id="graph-concept-panel" class="graph__concept-panel" aria-hidden="true">
+    <div class="graph__concept-backdrop"></div>
     <div
-      class="graph-concept-panel-sheet"
+      class="graph__concept-sheet"
       role="dialog"
       aria-modal="true"
       aria-labelledby="graph-concept-panel-title"
     >
-      <header class="graph-concept-panel-header">
-        <h2 id="graph-concept-panel-title"></h2>
-        <button type="button" class="graph-concept-panel-close" aria-label="Cerrar">×</button>
+      <header class="graph__concept-header">
+        <h2 id="graph-concept-panel-title" class="graph__concept-title"></h2>
+        <button type="button" class="graph__concept-close" aria-label="Cerrar">×</button>
       </header>
-      <div id="graph-concept-panel-notes" class="graph-concept-panel-body"></div>
+      <div id="graph-concept-panel-notes" class="graph__concept-body"></div>
     </div>
   </aside>
 
   <script>
     import { mountGraph } from "../scripts/graph";
 
-    mountGraph("cy", "./data/graph.cy.json", {
+    mountGraph("graph__canvas", "./data/graph.cy.json", {
       filtersRootId: "graph-filters",
       searchInputId: "graph-search",
       searchResultsId: "graph-search-results",
@@ -114,7 +115,7 @@ import networkCss from "../styles/network.css?url";
       conceptNotesUrl: "./data/curriculum-graph.json",
     }).catch((error) => {
       console.error(error);
-      const container = document.getElementById("cy");
+      const container = document.querySelector(".graph__canvas");
       if (container) {
         container.textContent =
           "Failed to load graph. Run pnpm build:content first.";

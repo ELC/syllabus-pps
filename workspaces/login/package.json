@@ -12,8 +12,8 @@
     "./bootstrap": "./src/bootstrap.ts",
     "./mountShellAuth": "./src/mountShellAuth.ts",
     "./sessionStorage": "./src/sessionStorage.ts",
-    "./styles/auth-critical.css": "./src/styles/auth-critical.css",
-    "./styles/login.css": "./src/styles/login.css"
+    "./styles/auth-critical.scss": "./src/styles/auth-critical.scss",
+    "./styles/login.scss": "./src/styles/login.scss"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "sass": "catalog:"
   }
 }

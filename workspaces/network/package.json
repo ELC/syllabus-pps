@@ -20,6 +20,7 @@
   "devDependencies": {
     "@astrojs/check": "catalog:",
     "@pps/config": "workspace:*",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "sass": "catalog:"
   }
 }

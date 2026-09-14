@@ -46,39 +46,39 @@ export function renderStaticShell(
 ): string {
   const {
     sidebarExtraId,
-    mainClass = "dashboard-main",
+    mainClass = "dashboard__main",
     logoSrc = "/assets/shell/logo-horizontal-blanco.png",
   } = options;
   const navLinks = NAV_ITEMS.map((item) => {
     const active = item.id === activeNav;
     const aria = active ? ' aria-current="page"' : "";
-    const className = active ? "nav-link active" : "nav-link";
+    const className = active ? "dashboard__link dashboard__link--active" : "dashboard__link";
     return `<a class="${className}" href="${siteRoot}${item.segment}"${aria}>${item.label}</a>`;
   }).join("");
 
   const sidebarExtra = sidebarExtraId
-    ? `\n    <div id="${sidebarExtraId}" class="dashboard-sidebar-extra"></div>`
+    ? `\n    <div id="${sidebarExtraId}" class="dashboard__extra"></div>`
     : "";
 
   return `${renderAuthRedirectScript(siteRoot)}
-<div class="dashboard-app auth-shell-prerender">
-  <aside class="dashboard-sidebar">
-    <a class="dashboard-brand" href="${siteRoot}" aria-label="Universidad Austral — PPS Curriculum">
-      <img data-pps-shell-logo src="${logoSrc}" alt="Universidad Austral" width="${SHELL_LOGO_WIDTH}" height="${SHELL_LOGO_HEIGHT}" decoding="async" fetchpriority="high" />
+<div class="dashboard auth-shell-prerender">
+  <aside class="dashboard__sidebar">
+    <a class="dashboard__brand" href="${siteRoot}" aria-label="Universidad Austral — PPS Curriculum">
+      <img class="dashboard__brand-logo" data-pps-shell-logo src="${logoSrc}" alt="Universidad Austral" width="${SHELL_LOGO_WIDTH}" height="${SHELL_LOGO_HEIGHT}" decoding="async" fetchpriority="high" />
     </a>
-    <nav class="dashboard-nav" aria-label="Site">
+    <nav class="dashboard__nav" aria-label="Site">
       ${navLinks}
     </nav>${sidebarExtra}
-    <div class="dashboard-sidebar-footer">
-      <div class="dashboard-sidebar-user" aria-live="polite">
-        <div class="dashboard-sidebar-user-name" data-pps-user-name hidden>&nbsp;</div>
-        <div class="dashboard-sidebar-user-email" data-pps-user-email>&nbsp;</div>
+    <div class="dashboard__footer">
+      <div class="dashboard__user" aria-live="polite">
+        <div class="dashboard__user-name" data-pps-user-name hidden>&nbsp;</div>
+        <div class="dashboard__user-email" data-pps-user-email>&nbsp;</div>
       </div>
-      <div class="dashboard-sidebar-signout-slot">
-        <button type="button" class="login-sign-out" data-pps-sign-out hidden>Sign out</button>
+      <div class="dashboard__signout-slot">
+        <button type="button" class="login__sign-out" data-pps-sign-out hidden>Sign out</button>
       </div>
     </div>
   </aside>
-  <main class="${mainClass}"><div id="root"></div></main>
+  <main class="${mainClass}"><div id="root" class="app-root"></div></main>
 </div>`;
 }

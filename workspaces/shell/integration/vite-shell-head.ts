@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { OPTIMISTIC_AUTH_BOOTSTRAP_SCRIPT } from "@pps/login/sessionStorage";
+import * as sass from "sass";
 import type { HtmlTagDescriptor, IndexHtmlTransformHook, Plugin } from "vite";
 
 import { SHELL_FONT_MARKUP } from "./vite-font-links.js";
@@ -12,10 +12,9 @@ const integrationDir = dirname(fileURLToPath(import.meta.url));
 const shellRoot = join(integrationDir, "..", "..");
 const workspacesRoot = join(shellRoot, "..");
 
-const AUTH_CRITICAL_CSS = readFileSync(
-  join(workspacesRoot, "login/src/styles/auth-critical.css"),
-  "utf8",
-);
+const AUTH_CRITICAL_CSS = sass.compile(
+  join(workspacesRoot, "login/src/styles/auth-critical.scss"),
+).css;
 
 const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/"];
 const SHELL_LOGO_PATH = "assets/shell/logo-horizontal-blanco.png";
@@ -53,8 +52,8 @@ export function siteRootFromBase(appBaseUrl: string): string {
 }
 
 function shellHeadTags(): HtmlTagDescriptor[] {
-  const shellCss = join(shellRoot, "src/styles/shell.css");
-  const loginCss = join(workspacesRoot, "login/src/styles/login.css");
+  const shellCss = join(shellRoot, "src/styles/shell.scss");
+  const loginCss = join(workspacesRoot, "login/src/styles/login.scss");
 
   return [
     {
@@ -100,7 +99,7 @@ export function shellHeadPlugin(
       out = out.replace("<head>", `<head>\n${SHELL_FONT_MARKUP}`);
     }
 
-    if (prerenderShell && activeNav && !out.includes("dashboard-app")) {
+    if (prerenderShell && activeNav && !out.includes("dashboard__sidebar")) {
       const siteRoot = siteRootFromBase(appBase);
       const shell = renderStaticShell(activeNav, siteRoot, {
         sidebarExtraId,
@@ -113,7 +112,7 @@ export function shellHeadPlugin(
         }
         return `<body${attrs} class="auth-pending">`;
       });
-      out = out.replace(/<div id="root"><\/div>/, shell);
+      out = out.replace(/<div id="root"[^>]*><\/div>/, shell);
     }
 
     return {

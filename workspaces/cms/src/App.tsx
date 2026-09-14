@@ -15,10 +15,10 @@ import { hasBlockingDiagnostics, runDiagnosticsForEditor } from "./validation/ru
 
 function severityClass(severity: string): string {
   if (severity === "error") {
-    return "severity-error";
+    return "cms__diagnostics-severity--error";
   }
   if (severity === "warning") {
-    return "severity-warning";
+    return "cms__diagnostics-severity--warning";
   }
   return "";
 }
@@ -87,13 +87,15 @@ export function App() {
   const canSave = !readOnly && !hasBlockingDiagnostics(diagnostics);
 
   const pageNav = (
-    <nav className="dashboard-nav dashboard-nav-sub dashboard-nav-sub--scroll" aria-label="Pages">
-      <div className="dashboard-nav-label">Pages</div>
+    <nav className="dashboard__nav dashboard__nav--sub dashboard__nav--scroll" aria-label="Pages">
+      <div className="dashboard__nav-label">Pages</div>
       {pages.map((page) => (
         <button
           key={page.slug}
           type="button"
-          className={page.slug === selectedSlug ? "active" : undefined}
+          className={
+            page.slug === selectedSlug ? "dashboard__link dashboard__link--active" : "dashboard__link"
+          }
           onClick={() => setSelectedSlug(page.slug)}
         >
           {page.slug}
@@ -108,41 +110,45 @@ export function App() {
     <>
       {sidebarExtra ? createPortal(pageNav, sidebarExtra) : pageNav}
 
-      <div className="cms-workspace">
-      <header className="dashboard-header">
-        <h1>{selectedSlug || "CMS"}</h1>
-        <p>
+      <div className="dashboard__content">
+      <div className="cms__workspace">
+      <header className="cms__header">
+        <h1 className="cms__header-title">{selectedSlug || "CMS"}</h1>
+        <p className="cms__header-lead">
           {readOnly ? (
             <>
-              Read-only snapshot from the last <code>pnpm build:pages</code>. Run{" "}
-              <code>pnpm dev</code> to edit <code>content/pages</code> locally.
+              Read-only snapshot from the last <code className="cms__code">pnpm build:pages</code>.
+              Run <code className="cms__code">pnpm dev</code> to edit{" "}
+              <code className="cms__code">content/pages</code> locally.
             </>
           ) : (
             <>
-              Edits write to <code>content/pages</code> through the local dev API. Run{" "}
-              <code>pnpm dev</code> and open <code>/cms/</code> on the host port, or{" "}
-              <code>pnpm dev:cms</code> for CMS-only on port 5173.
+              Edits write to <code className="cms__code">content/pages</code> through the local dev
+              API. Run <code className="cms__code">pnpm dev</code> and open{" "}
+              <code className="cms__code">/cms/</code> on the host port, or{" "}
+              <code className="cms__code">pnpm dev:cms</code> for CMS-only on port 5173.
             </>
           )}
         </p>
       </header>
 
-      {loadingPages ? <p className="cms-loading">Loading pages…</p> : null}
+      {loadingPages ? <p className="cms__loading">Loading pages…</p> : null}
       {loadError ? (
-        <p className="cms-error" role="alert">
+        <p className="cms__error" role="alert">
           {loadError}
           {loadError.includes("404") && !readOnly ? (
             <>
               {" "}
-              Start the CMS dev server with <code>pnpm dev</code> or <code>pnpm dev:cms</code>.
+              Start the CMS dev server with <code className="cms__code">pnpm dev</code> or{" "}
+              <code className="cms__code">pnpm dev:cms</code>.
             </>
           ) : null}
         </p>
       ) : null}
 
-      <section className="cms-editor-panel">
+      <section className="cms__editor-panel">
         <textarea
-          className="cms-editor"
+          className="cms__editor"
           value={content}
           onChange={(event) => setContent(event.target.value)}
           readOnly={readOnly}
@@ -151,33 +157,38 @@ export function App() {
         />
       </section>
 
-      <section className="dashboard-table-section">
-        <header>
-          <h2>Diagnostics</h2>
-          <p>Errors and warnings block save until resolved.</p>
+      <section className="cms__diagnostics">
+        <header className="cms__diagnostics-head">
+          <h2 className="cms__diagnostics-title">Diagnostics</h2>
+          <p className="cms__diagnostics-lead">Errors and warnings block save until resolved.</p>
         </header>
-        <div className="table-wrap">
+        <div className="cms__diagnostics-wrap">
           {diagnostics.length === 0 ? (
-            <p className="dashboard-empty">No diagnostics.</p>
+            <p className="cms__diagnostics-empty">No diagnostics.</p>
           ) : (
-            <table className="dashboard-table">
+            <table className="cms__diagnostics-table">
               <thead>
                 <tr>
-                  <th>Severity</th>
-                  <th>Code</th>
-                  <th>Page</th>
-                  <th>Line</th>
-                  <th>Message</th>
+                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Severity</th>
+                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Code</th>
+                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Page</th>
+                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Line</th>
+                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Message</th>
                 </tr>
               </thead>
               <tbody>
                 {diagnostics.map((diagnostic, index) => (
-                  <tr key={`${diagnostic.code}-${diagnostic.page}-${diagnostic.line}-${index}`}>
-                    <td className={severityClass(diagnostic.severity)}>{diagnostic.severity}</td>
-                    <td>{diagnostic.code}</td>
-                    <td>{diagnostic.page ?? ""}</td>
-                    <td>{diagnostic.line ?? ""}</td>
-                    <td>{diagnostic.message}</td>
+                  <tr
+                    key={`${diagnostic.code}-${diagnostic.page}-${diagnostic.line}-${index}`}
+                    className="cms__diagnostics-row"
+                  >
+                    <td className={`cms__diagnostics-cell ${severityClass(diagnostic.severity)}`}>
+                      {diagnostic.severity}
+                    </td>
+                    <td className="cms__diagnostics-cell">{diagnostic.code}</td>
+                    <td className="cms__diagnostics-cell">{diagnostic.page ?? ""}</td>
+                    <td className="cms__diagnostics-cell">{diagnostic.line ?? ""}</td>
+                    <td className="cms__diagnostics-cell">{diagnostic.message}</td>
                   </tr>
                 ))}
               </tbody>
@@ -187,12 +198,12 @@ export function App() {
       </section>
 
       {readOnly ? (
-        <p className="cms-hint">Saving is disabled on the hosted site.</p>
+        <p className="cms__hint">Saving is disabled on the hosted site.</p>
       ) : (
-        <div className="cms-actions">
+        <div className="cms__actions">
           <button
             type="button"
-            className="cms-button"
+            className="cms__button"
             disabled={!canSave}
             onClick={() => {
               void writePage(selectedSlug, content).then(() => {
@@ -203,10 +214,11 @@ export function App() {
           >
             Save
           </button>
-          {status ? <span className="cms-status">{status}</span> : null}
-          {!canSave ? <p className="cms-hint">Fix errors and warnings before saving.</p> : null}
+          {status ? <span className="cms__status">{status}</span> : null}
+          {!canSave ? <p className="cms__hint">Fix errors and warnings before saving.</p> : null}
         </div>
       )}
+      </div>
       </div>
     </>
   );

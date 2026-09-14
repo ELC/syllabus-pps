@@ -1,9 +1,9 @@
-import "@pps/login/styles/login.css";
+import "@pps/login/styles/login.scss";
 
 import { shellLogoHref } from "./logo-meta";
 import { siteRootFromEnv } from "./site-root";
 
-import "./styles/shell.css";
+import "./styles/shell.scss";
 
 const brandImg = document.querySelector<HTMLImageElement>("[data-pps-shell-logo]");
 if (brandImg && !brandImg.getAttribute("src")) {

@@ -8,7 +8,7 @@ Keep human-facing setup and operations docs in the root [README.md](README.md). 
 
 ## Shell assets
 
-Shared chrome styles live in `@pps/shell` (`styles/shell.css` and partials) and auth UI styles in `@pps/login/styles/login.css`. Import them through the bundler (`import shellCss from "@pps/shell/styles/shell.css?url"` in Astro, or `import "@pps/shell/shell-chrome"` in Vite SPAs). Do not copy CSS into app `public/` folders.
+Shared chrome styles live in `@pps/shell` (`styles/shell.scss` and partials) and auth UI styles in `@pps/login/styles/login.scss`. Import them through the bundler (`import shellCss from "@pps/shell/styles/shell.scss?url"` in Astro, or `import "@pps/shell/shell-chrome"` in Vite SPAs). Do not copy CSS into app `public/` folders.
 
 Astro apps register `import ppsShell from "@pps/shell/astro"` in `integrations`. Vite SPAs (CMS, roadmap) import `shellHeadPlugin` from `@pps/shell/vite`. Integration sources live in `workspaces/shell/integration/`.
 

@@ -79,26 +79,35 @@ function rowMatchesFilters(
 
 function severityClass(value: string): string {
   if (value === "error") {
-    return "severity-error";
+    return "analytics__table-severity--error";
   }
   if (value === "warning") {
-    return "severity-warning";
+    return "analytics__table-severity--warning";
   }
   return "";
 }
 
 function renderMetrics(metrics: StaticMetric[]): HTMLElement {
   const grid = document.createElement("section");
-  grid.className = "metrics-grid";
+  grid.className = "analytics__metrics";
 
   for (const metric of metrics) {
     const card = document.createElement("article");
-    card.className = "metric-card";
-    card.innerHTML = `
-      <h3>${metric.name}</h3>
-      <div class="metric-value">${formatMetricValue(metric)}</div>
-      <p>${metric.description}</p>
-    `;
+    card.className = "analytics__metric";
+
+    const name = document.createElement("h3");
+    name.className = "analytics__metric-name";
+    name.textContent = metric.name;
+
+    const value = document.createElement("div");
+    value.className = "analytics__metric-value";
+    value.textContent = formatMetricValue(metric);
+
+    const description = document.createElement("p");
+    description.className = "analytics__metric-desc";
+    description.textContent = metric.description;
+
+    card.append(name, value, description);
     grid.appendChild(card);
   }
 
@@ -115,20 +124,23 @@ function renderFilters(
   }
 
   const bar = document.createElement("section");
-  bar.className = "filters-bar";
+  bar.className = "analytics__filters";
 
   for (const filter of filters) {
     const field = document.createElement("div");
-    field.className = "filter-field";
+    field.className = "analytics__filter";
 
     const label = document.createElement("label");
+    label.className = "analytics__filter-label";
     label.textContent = filter.name;
     label.title = filter.description;
 
     const select = document.createElement("select");
+    select.className = "analytics__filter-select";
     select.value = activeFilters[filter.name] ?? filter.defaultValue;
     for (const optionValue of filter.options) {
       const option = document.createElement("option");
+      option.className = "analytics__filter-option";
       option.value = optionValue;
       option.textContent = optionValue;
       select.appendChild(option);
@@ -147,21 +159,32 @@ function renderFilters(
 
 function renderTable(table: StaticTable, filters: Record<string, string>): HTMLElement {
   const section = document.createElement("section");
-  section.className = "dashboard-table-section";
+  section.className = "analytics__table";
 
   const header = document.createElement("header");
-  header.innerHTML = `<h2>${table.name}</h2><p>${table.description}</p>`;
+  header.className = "analytics__table-head";
+
+  const title = document.createElement("h2");
+  title.className = "analytics__table-title";
+  title.textContent = table.name;
+
+  const lead = document.createElement("p");
+  lead.className = "analytics__table-lead";
+  lead.textContent = table.description;
+
+  header.append(title, lead);
 
   const wrap = document.createElement("div");
-  wrap.className = "table-wrap";
+  wrap.className = "analytics__table-wrap";
 
   const tableEl = document.createElement("table");
-  tableEl.className = "dashboard-table";
+  tableEl.className = "analytics__table-grid";
 
   const thead = document.createElement("thead");
   const headRow = document.createElement("tr");
   for (const column of table.columns) {
     const th = document.createElement("th");
+    th.className = "analytics__table-cell analytics__table-cell--head";
     th.textContent = column.label;
     headRow.appendChild(th);
   }
@@ -171,13 +194,11 @@ function renderTable(table: StaticTable, filters: Record<string, string>): HTMLE
   const rows = table.rows.filter((row) => rowMatchesFilters(row, filters));
   for (const row of rows) {
     const tr = document.createElement("tr");
+    tr.className = "analytics__table-row";
     for (const column of table.columns) {
       const td = document.createElement("td");
-      const value = String(row[column.name] ?? "");
-      td.textContent = value;
-      if (column.name === "severity") {
-        td.className = severityClass(value);
-      }
+      td.className = `analytics__table-cell ${column.name === "severity" ? severityClass(String(row[column.name] ?? "")) : ""}`.trim();
+      td.textContent = String(row[column.name] ?? "");
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
@@ -203,13 +224,22 @@ function renderDashboardContent(
   root.replaceChildren();
 
   const header = document.createElement("header");
-  header.className = "dashboard-header";
-  header.innerHTML = `<h1>${dashboard.name}</h1><p>${dashboard.description}</p>`;
+  header.className = "dashboard__header";
+
+  const title = document.createElement("h1");
+  title.className = "dashboard__header-title";
+  title.textContent = dashboard.name;
+
+  const lead = document.createElement("p");
+  lead.className = "dashboard__header-lead";
+  lead.textContent = dashboard.description;
+
+  header.append(title, lead);
   root.appendChild(header);
   root.appendChild(renderMetrics(dashboard.metrics));
 
   const rerenderTables = () => {
-    root.querySelectorAll(".dashboard-table-section").forEach((node) => node.remove());
+    root.querySelectorAll(".analytics__table").forEach((node) => node.remove());
     for (const table of dashboard.tables) {
       root.appendChild(renderTable(table, activeFilters));
     }
@@ -228,11 +258,12 @@ export async function mountAnalyticsDashboard(
   tabsId: string,
   dataUrl: string,
 ): Promise<void> {
-  const container = document.getElementById(contentId);
+  const container = document.querySelector<HTMLElement>(`.${contentId}`);
   const tabs = document.getElementById(tabsId);
   if (!container || !tabs) {
-    throw new Error(`Missing dashboard containers #${contentId} or #${tabsId}`);
+    throw new Error(`Missing dashboard containers .${contentId} or #${tabsId}`);
   }
+  container.classList.add("analytics");
 
   const response = await fetch(dataUrl);
   if (!response.ok) {
@@ -256,7 +287,7 @@ export async function mountAnalyticsDashboard(
   };
 
   const label = document.createElement("div");
-  label.className = "dashboard-nav-label";
+  label.className = "dashboard__nav-label";
   label.textContent = "Dashboards";
   tabs.appendChild(label);
 
@@ -264,11 +295,14 @@ export async function mountAnalyticsDashboard(
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = dashboard.name;
-    button.classList.toggle("active", dashboard.id === activeDashboard.id);
+    button.className = "dashboard__link";
+    button.classList.toggle("dashboard__link--active", dashboard.id === activeDashboard.id);
     button.addEventListener("click", () => {
       activeDashboard = dashboard;
-      tabs.querySelectorAll("button").forEach((node) => node.classList.remove("active"));
-      button.classList.add("active");
+      tabs.querySelectorAll("button").forEach((node) => {
+        node.className = "dashboard__link";
+      });
+      button.className = "dashboard__link dashboard__link--active";
       renderActiveDashboard();
     });
     tabs.appendChild(button);

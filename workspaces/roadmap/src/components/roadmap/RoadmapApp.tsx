@@ -3,7 +3,6 @@ import {
   Controls,
   MiniMap,
   ReactFlow,
-  StepEdge,
   useReactFlow,
   useStore,
   type EdgeTypes,
@@ -23,6 +22,7 @@ import {
 import { buildRoadmapLayout, type RoadmapBounds } from "./layout";
 import { RoadmapAnchorNode } from "./RoadmapAnchorNode";
 import { RoadmapBranchEdge } from "./RoadmapBranchEdge";
+import { RoadmapSpineEdge } from "./RoadmapSpineEdge";
 import { RoadmapJunctionNode } from "./RoadmapJunctionNode";
 import { RoadmapLegend } from "./RoadmapLegend";
 import {
@@ -41,7 +41,7 @@ const nodeTypes: NodeTypes = {
 };
 
 const edgeTypes: EdgeTypes = {
-  step: StepEdge,
+  roadmapSpine: RoadmapSpineEdge,
   roadmapBranch: RoadmapBranchEdge,
 };
 
@@ -244,19 +244,19 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
   }, [confirmingReset, progress]);
 
   if (loadError) {
-    return <p className="roadmap-error">{loadError}</p>;
+    return <p className="roadmap__error">{loadError}</p>;
   }
 
   if (curationError) {
-    return <p className="roadmap-error">{curationError}</p>;
+    return <p className="roadmap__error">{curationError}</p>;
   }
 
   if (!graph) {
-    return <p className="roadmap-loading">Cargando roadmap…</p>;
+    return <p className="roadmap__loading">Cargando roadmap…</p>;
   }
 
   if (!activeRoadmap || !layout) {
-    return <p className="roadmap-empty">No hay carreras con conceptos para mostrar.</p>;
+    return <p className="roadmap__empty">No hay carreras con conceptos para mostrar.</p>;
   }
 
   const { counts } = progress;
@@ -264,12 +264,12 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
   const percent = remainingProgressPercent(counts.done, counts.total, counts.skipped);
 
   return (
-    <div className="roadmap-app">
-      <div className="roadmap-toolbar">
-        <label className="roadmap-degree-field">
-          <span className="roadmap-degree-label">Carrera</span>
+    <div className="roadmap">
+      <div className="roadmap__toolbar">
+        <label className="roadmap__degree-field">
+          <span className="roadmap__degree-label">Carrera</span>
           <select
-            className="roadmap-degree-select"
+            className="roadmap__degree-select"
             value={activeRoadmap.career}
             onChange={(event) => {
               setSelectedCareer(event.target.value);
@@ -284,30 +284,30 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
           </select>
         </label>
 
-        <div className="roadmap-progress">
-          <div className="roadmap-progress-head">
-            <span className="roadmap-degree-label">Progreso</span>
-            <span className="roadmap-progress-value">
+        <div className="roadmap__progress">
+          <div className="roadmap__progress-head">
+            <span className="roadmap__degree-label">Progreso</span>
+            <span className="roadmap__progress-value">
               {counts.done} de {remaining} temas · {percent}%
             </span>
           </div>
 
           <div
-            className="roadmap-progress-track"
+            className="roadmap__progress-track"
             role="progressbar"
             aria-valuemin={0}
             aria-valuemax={remaining}
             aria-valuenow={counts.done}
             aria-label={`Temas completados en ${activeRoadmap.career}`}
           >
-            <span className="roadmap-progress-fill" style={{ width: `${percent}%` }} />
+            <span className="roadmap__progress-fill" style={{ width: `${percent}%` }} />
           </div>
 
-          <div className="roadmap-progress-foot">
-            <span className="roadmap-progress-meta">{counts.skipped} omitidos</span>
+          <div className="roadmap__progress-foot">
+            <span className="roadmap__progress-meta">{counts.skipped} omitidos</span>
             <button
               type="button"
-              className={`roadmap-progress-reset${confirmingReset ? " is-confirming" : ""}`}
+              className={`roadmap__progress-reset${confirmingReset ? " roadmap__progress-reset--confirming" : ""}`}
               onClick={handleReset}
             >
               {confirmingReset ? "Confirmar reinicio" : "Reiniciar progreso"}
@@ -316,7 +316,7 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
         </div>
       </div>
 
-      <p className="roadmap-toolbar-help">
+      <p className="roadmap__toolbar-help">
         Tres caminos arrancan en paralelo desde el inicio, se unen en un solo eje y bajan hasta el
         objetivo; los temas laterales cuelgan una sola vez de un nodo del eje. Elegí una
         tarjeta para ver sus notas y resaltar sus prerequisitos.
@@ -324,7 +324,7 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
 
       <RoadmapLegend />
 
-      <section className="roadmap-canvas-panel" aria-label="Mapa de conceptos">
+      <section className="roadmap__canvas-panel" aria-label="Mapa de conceptos">
         <RoadmapProgressContext.Provider value={progress}>
           <ReactFlow
             nodes={flow.nodes}
@@ -344,9 +344,9 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
             proOptions={{ hideAttribution: true }}
           >
             <CanvasViewport bounds={layout.bounds} />
-            <MiniMap pannable zoomable className="roadmap-minimap" nodeStrokeWidth={0} />
-            <Controls className="roadmap-controls" showInteractive={false} />
-            <Background gap={20} size={1} className="roadmap-background" />
+            <MiniMap pannable zoomable className="roadmap__minimap" nodeStrokeWidth={0} />
+            <Controls className="roadmap__controls" showInteractive={false} />
+            <Background gap={20} size={1} className="roadmap__background" />
           </ReactFlow>
         </RoadmapProgressContext.Provider>
       </section>

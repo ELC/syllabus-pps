@@ -28,13 +28,15 @@ const LEGEND_SECTIONS: LegendEntry[][] = [
 function LegendMarkerIcon({ marker }: { marker: LegendMarker }) {
   switch (marker.kind) {
     case "swatch":
-      return <span className={`roadmap-legend-swatch roadmap-legend-swatch--${marker.key}`} />;
+      return <span className={`roadmap__legend-swatch roadmap__legend-swatch--${marker.key}`} />;
     case "line":
-      return <span className={`roadmap-legend-line roadmap-legend-line--${marker.key}`} />;
+      return <span className={`roadmap__legend-line roadmap__legend-line--${marker.key}`} />;
     case "status":
       return (
-        <span className={`roadmap-legend-check roadmap-legend-check--${marker.key}`}>
-          <span className="roadmap-legend-check-glyph" aria-hidden="true" />
+        <span className={`roadmap__legend-check roadmap__legend-check--${marker.key}`}>
+          <span className="roadmap__legend-check-glyph" aria-hidden="true">
+            {marker.key === "done" ? "✓" : marker.key === "skipped" ? "✕" : ""}
+          </span>
         </span>
       );
   }
@@ -42,14 +44,14 @@ function LegendMarkerIcon({ marker }: { marker: LegendMarker }) {
 
 export function RoadmapLegend() {
   return (
-    <details className="roadmap-legend">
-      <summary className="roadmap-legend-summary">Referencias</summary>
+    <details className="roadmap__legend">
+      <summary className="roadmap__legend-summary">Referencias</summary>
 
-      <div className="roadmap-legend-body">
+      <div className="roadmap__legend-body">
         {LEGEND_SECTIONS.map((section, index) => (
-          <ul key={index} className="roadmap-legend-group">
+          <ul key={index} className="roadmap__legend-group">
             {section.map((entry) => (
-              <li key={`${entry.marker.kind}-${entry.marker.key}`} className="roadmap-legend-item">
+              <li key={`${entry.marker.kind}-${entry.marker.key}`} className="roadmap__legend-item">
                 <LegendMarkerIcon marker={entry.marker} />
                 {entry.label}
               </li>

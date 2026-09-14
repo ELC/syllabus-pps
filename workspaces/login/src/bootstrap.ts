@@ -116,9 +116,9 @@ export async function bootstrapAuthenticatedApp(
 }
 
 function mountLogin(host: HTMLElement, configMessage?: string): Root {
-  host.querySelector(".login-auth-loading")?.remove();
+  host.querySelector(".login__auth-loading")?.remove();
   const mount = document.createElement("div");
-  mount.className = "login-mount";
+  mount.className = "login__mount";
   host.appendChild(mount);
   const root = createRoot(mount);
   root.render(
@@ -135,7 +135,7 @@ function ConfigErrorPanel({ message }: { message: string }) {
   return createElement(
     LoginScreen,
     null,
-    createElement("h1", { className: "login-title" }, "Configuration required"),
-    createElement("p", { className: "login-error", role: "alert" }, message),
+    createElement("h1", { className: "login__title" }, "Configuration required"),
+    createElement("p", { className: "login__error", role: "alert" }, message),
   );
 }

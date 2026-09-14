@@ -1,7 +1,7 @@
 ---
 import ShellLayout from "@pps/shell/ShellLayout.astro";
 import { siteRootFromEnv } from "@pps/shell/site-root";
-import siteCss from "../styles/site.css?url";
+import siteCss from "../styles/site.scss?url";
 
 const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
 
@@ -31,19 +31,19 @@ const links = [
 
 <ShellLayout title="PPS Curriculum" activeNav="home">
   <link slot="head" rel="stylesheet" href={siteCss} />
-  <header class="dashboard-header">
-    <h1>PPS Curriculum</h1>
-    <p>
+  <header class="dashboard__header">
+    <h1 class="dashboard__header-title">PPS Curriculum</h1>
+    <p class="dashboard__header-lead">
       Repo-native curriculum notes, analytics, and authoring tools for the PPS zettelkasten.
     </p>
   </header>
 
-  <section class="site-card-grid">
+  <section class="site__cards">
     {
       links.map((link) => (
-        <a class="site-card" href={link.href}>
-          <h2>{link.title}</h2>
-          <p>{link.description}</p>
+        <a class="site__card" href={link.href}>
+          <h2 class="site__card-title">{link.title}</h2>
+          <p class="site__card-desc">{link.description}</p>
         </a>
       ))
     }

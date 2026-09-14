@@ -27,14 +27,14 @@ const JUNCTION_HANDLES = [
 
 export function RoadmapJunctionNode(_props: NodeProps) {
   return (
-    <div className="roadmap-junction-node" aria-hidden="true">
+    <div className="roadmap__junction" aria-hidden="true">
       {JUNCTION_HANDLES.map((handle) => (
         <Handle
           key={handle.id}
           id={handle.id}
           type={handle.type}
           position={handle.position}
-          className="roadmap-junction-handle"
+          className="roadmap__junction-handle"
           style={CENTER_HANDLE_STYLE}
           isConnectable={false}
         />

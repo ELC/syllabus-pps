@@ -1,6 +1,6 @@
 ---
-import authCriticalCss from "@pps/login/styles/auth-critical.css?raw";
-import authCss from "@pps/login/styles/login.css?url";
+import authCriticalCss from "@pps/login/styles/auth-critical.scss?inline";
+import authCss from "@pps/login/styles/login.scss?url";
 import { OPTIMISTIC_AUTH_BOOTSTRAP_SCRIPT } from "@pps/login/sessionStorage";
 import {
   SHELL_LOGO_ALT,
@@ -8,7 +8,7 @@ import {
   SHELL_LOGO_WIDTH,
   shellLogoHref,
 } from "./logo-meta";
-import shellCss from "@pps/shell/styles/shell.css?url";
+import shellCss from "@pps/shell/styles/shell.scss?url";
 import { NAV_ITEMS, navHref } from "./nav";
 import type { NavId } from "./site-root";
 import { siteRootFromEnv } from "./site-root";
@@ -40,11 +40,12 @@ const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
     <script is:inline set:html={OPTIMISTIC_AUTH_BOOTSTRAP_SCRIPT} />
     <slot name="head" />
   </head>
-  <body class="dashboard-body auth-pending">
-    <div class="dashboard-app">
-      <aside class="dashboard-sidebar">
-        <a class="dashboard-brand" href={siteRoot} aria-label="Universidad Austral — PPS Curriculum">
+  <body class="dashboard--body auth-pending">
+    <div class="dashboard">
+      <aside class="dashboard__sidebar">
+        <a class="dashboard__brand" href={siteRoot} aria-label="Universidad Austral — PPS Curriculum">
           <img
+            class="dashboard__brand-logo"
             src={shellLogoHref(siteRoot)}
             alt={SHELL_LOGO_ALT}
             width={SHELL_LOGO_WIDTH}
@@ -52,11 +53,11 @@ const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
             decoding="async"
           />
         </a>
-        <nav class="dashboard-nav" aria-label="Site">
+        <nav class="dashboard__nav" aria-label="Site">
           {
             NAV_ITEMS.map((item) => (
               <a
-                class:list={["nav-link", { active: item.id === activeNav }]}
+                class:list={["dashboard__link", { "dashboard__link--active": item.id === activeNav }]}
                 href={navHref(siteRoot, item.segment)}
                 aria-current={item.id === activeNav ? "page" : undefined}
               >
@@ -66,18 +67,20 @@ const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
           }
         </nav>
         <slot name="sidebar" />
-        <div class="dashboard-sidebar-footer">
-          <div class="dashboard-sidebar-user" aria-live="polite">
-            <div class="dashboard-sidebar-user-name" data-pps-user-name hidden>&nbsp;</div>
-            <div class="dashboard-sidebar-user-email" data-pps-user-email>&nbsp;</div>
+        <div class="dashboard__footer">
+          <div class="dashboard__user" aria-live="polite">
+            <div class="dashboard__user-name" data-pps-user-name hidden>&nbsp;</div>
+            <div class="dashboard__user-email" data-pps-user-email>&nbsp;</div>
           </div>
-          <div class="dashboard-sidebar-signout-slot">
-            <button type="button" class="login-sign-out" data-pps-sign-out hidden>Sign out</button>
+          <div class="dashboard__signout-slot">
+            <button type="button" class="login__sign-out" data-pps-sign-out hidden>Sign out</button>
           </div>
         </div>
       </aside>
-      <main class="dashboard-main">
-        <slot />
+      <main class="dashboard__main">
+        <div class="dashboard__content">
+          <slot />
+        </div>
       </main>
     </div>
     <script>

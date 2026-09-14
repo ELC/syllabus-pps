@@ -1,0 +1,23 @@
+body.auth-guest,
+html:not(.auth-session-cached) body.auth-pending {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard__sidebar {
+    display: none;
+  }
+}
+
+body.auth-pending,
+body.auth-guest {
+  .dashboard__content {
+    display: none;
+  }
+}
+
+html.auth-session-cached body.auth-pending {
+  .dashboard__content {
+    display: revert;
+  }
+}

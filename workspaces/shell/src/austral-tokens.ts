@@ -1,4 +1,4 @@
-/** Mirror of @pps/shell/styles/tokens.css for Cytoscape runtime. */
+/** Mirror of @pps/shell/styles/_tokens.scss for Cytoscape runtime. */
 
 export const AUSTRAL = {
   azulPrimario: "#2E3092",

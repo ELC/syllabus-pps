@@ -51,10 +51,10 @@ export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
   return (
     <div
       className={[
-        "roadmap-topic-node",
-        `roadmap-topic-node--${nodeData.role}`,
-        `roadmap-topic-node--${state}`,
-        `is-${status}`,
+        "roadmap__topic",
+        `roadmap__topic--${nodeData.role}`,
+        `roadmap__topic--${state}`,
+        status !== "pending" ? `roadmap__topic--${status}` : "",
       ].join(" ")}
     >
       {HANDLES.map((handle) => (
@@ -63,14 +63,20 @@ export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
           id={handle.id}
           type={handle.type}
           position={handle.position}
-          className="roadmap-topic-handle"
+          className="roadmap__topic-handle"
           isConnectable={false}
         />
       ))}
 
       <button
         type="button"
-        className={`roadmap-topic-check roadmap-topic-check--${status} nodrag nopan`}
+        className={[
+          "roadmap__topic-check",
+          `roadmap__topic-check--${status}`,
+          status === "done" ? "roadmap__topic-check--on-topic" : "",
+          "nodrag",
+          "nopan",
+        ].join(" ")}
         aria-label={`${nodeData.label}: ${ROADMAP_STATUS_LABELS[status]}. Cambiar estado`}
         title={`${ROADMAP_STATUS_LABELS[status]} — tocá para cambiar`}
         onClick={(event) => {
@@ -78,15 +84,24 @@ export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
           progress?.cycle(id);
         }}
       >
-        <span className="roadmap-topic-check-glyph" aria-hidden="true" />
+        <span className="roadmap__topic-check-glyph" aria-hidden="true">
+          {status === "done" ? "✓" : status === "skipped" ? "✕" : ""}
+        </span>
       </button>
 
-      <span ref={labelRef} className="roadmap-topic-label">
+      <span
+        ref={labelRef}
+        className={[
+          "roadmap__topic-label",
+          isSpine ? "roadmap__topic-label--spine" : "",
+          status === "done" ? "roadmap__topic-label--done" : "",
+        ].join(" ")}
+      >
         {nodeData.label}
       </span>
 
       {isSpine ? (
-        <span className="roadmap-topic-stage" aria-label={`Etapa ${nodeData.stage}`}>
+        <span className="roadmap__topic-stage" aria-label={`Etapa ${nodeData.stage}`}>
           {nodeData.stage}
         </span>
       ) : null}

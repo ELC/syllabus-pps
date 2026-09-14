@@ -29,7 +29,7 @@ export function hideShellForGuest(): void {
 }
 
 export function activateSidebarFooter(profile: SidebarUserProfile, onSignOut: () => void | Promise<void>): () => void {
-  const userBlock = document.querySelector<HTMLElement>(".dashboard-sidebar-user");
+  const userBlock = document.querySelector<HTMLElement>(".dashboard__user");
   const nameEl = document.querySelector<HTMLElement>(USER_NAME_SELECTOR);
   const emailEl = document.querySelector<HTMLElement>(USER_EMAIL_SELECTOR);
   const button = document.querySelector<HTMLButtonElement>(SIGN_OUT_SELECTOR);
@@ -49,14 +49,14 @@ export function activateSidebarFooter(profile: SidebarUserProfile, onSignOut: ()
     emailEl.textContent = profile.email;
   }
 
-  userBlock?.classList.add("dashboard-sidebar-user-active");
+  userBlock?.classList.add("dashboard__user--active");
 
   if (!button) {
     return () => clearSidebarFooter();
   }
 
   button.hidden = false;
-  button.classList.add("login-sign-out-active");
+  button.classList.add("login__sign-out--active");
 
   const handler = () => {
     void onSignOut();
@@ -70,7 +70,7 @@ export function activateSidebarFooter(profile: SidebarUserProfile, onSignOut: ()
 }
 
 export function clearSidebarFooter(): void {
-  const userBlock = document.querySelector<HTMLElement>(".dashboard-sidebar-user");
+  const userBlock = document.querySelector<HTMLElement>(".dashboard__user");
   const nameEl = document.querySelector<HTMLElement>(USER_NAME_SELECTOR);
   const emailEl = document.querySelector<HTMLElement>(USER_EMAIL_SELECTOR);
   const button = document.querySelector<HTMLButtonElement>(SIGN_OUT_SELECTOR);
@@ -84,24 +84,24 @@ export function clearSidebarFooter(): void {
     emailEl.textContent = "\u00a0";
   }
 
-  userBlock?.classList.remove("dashboard-sidebar-user-active");
+  userBlock?.classList.remove("dashboard__user--active");
 
   if (button) {
     button.hidden = true;
-    button.classList.remove("login-sign-out-active");
+    button.classList.remove("login__sign-out--active");
   }
 }
 
 export function clearLoginMount(host: HTMLElement): void {
-  host.querySelector(".login-panel")?.remove();
-  host.querySelector(".login-mount")?.remove();
-  host.querySelector(".login-auth-loading")?.remove();
+  host.querySelector(".login__panel")?.remove();
+  host.querySelector(".login__mount")?.remove();
+  host.querySelector(".login__auth-loading")?.remove();
 }
 
 export function mountAuthLoading(host: HTMLElement, message = "Checking login…"): void {
-  host.querySelector(".login-auth-loading")?.remove();
+  host.querySelector(".login__auth-loading")?.remove();
   const loading = document.createElement("p");
-  loading.className = "login-auth-loading login-lead";
+  loading.className = "login__auth-loading login__lead";
   loading.setAttribute("role", "status");
   loading.textContent = message;
   host.prepend(loading);

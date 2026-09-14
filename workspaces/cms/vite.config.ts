@@ -26,7 +26,7 @@ export default defineConfig({
       activeNav: "cms",
       prerenderShell: true,
       sidebarExtraId: "cms-sidebar-extra",
-      mainClass: "dashboard-main",
+      mainClass: "dashboard__main",
     }),
     shellLogoPostPlugin(),
     localContentPlugin(),

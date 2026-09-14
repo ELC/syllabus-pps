@@ -10,13 +10,7 @@
     "./logo-meta": "./src/logo-meta.ts",
     "./nav": "./src/nav.ts",
     "./austral-tokens": "./src/austral-tokens.ts",
-    "./styles/tokens.css": "./src/styles/tokens.css",
-    "./styles/chrome.css": "./src/styles/chrome.css",
-    "./styles/dashboard.css": "./src/styles/dashboard.css",
-    "./styles/spa.css": "./src/styles/spa.css",
-    "./styles/concept-panel.css": "./src/styles/concept-panel.css",
-    "./styles/scrollbars.css": "./src/styles/scrollbars.css",
-    "./styles/shell.css": "./src/styles/shell.css",
+    "./styles/shell.scss": "./src/styles/shell.scss",
     "./shell-chrome": "./src/shell-chrome.ts",
     "./astro": {
       "types": "./integration/dist/index.d.ts",
@@ -39,6 +33,7 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "astro": "catalog:",
+    "sass": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   }

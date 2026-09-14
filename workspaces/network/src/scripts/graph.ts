@@ -568,31 +568,31 @@ function updateExpansionListUI(
   listRoot.hidden = false;
 
   const label = document.createElement("span");
-  label.className = "graph-expansion-label";
+  label.className = "graph__expansion-label";
   label.textContent = "Expansiones";
 
   const list = document.createElement("ul");
-  list.className = "graph-expansion-items";
+  list.className = "graph__expansion-items";
 
   for (const nodeId of expansionNodeIds) {
     const node = cy.getElementById(nodeId);
     const item = document.createElement("li");
     const chip = document.createElement("div");
-    chip.className = "graph-expansion-chip";
+    chip.className = "graph__expansion-chip";
     chip.style.borderColor =
       viewState.expansionAnchorColors.get(nodeId) ??
       kindStyle(String(node.data("kind"))).border;
     if (nodeId === viewState.focusedNodeId) {
-      chip.classList.add("active");
+      chip.classList.add("graph__expansion-chip--active");
     }
 
     const selectButton = document.createElement("button");
     selectButton.type = "button";
-    selectButton.className = "graph-expansion-chip-main";
+    selectButton.className = "graph__expansion-chip-main";
 
     const swatch = document.createElement("span");
     const style = kindStyle(String(node.data("kind")));
-    swatch.className = "graph-expansion-swatch";
+    swatch.className = "graph__expansion-swatch";
     swatch.style.background = style.swatchFill;
     swatch.style.borderColor = style.border;
 
@@ -601,7 +601,7 @@ function updateExpansionListUI(
 
     const removeButton = document.createElement("button");
     removeButton.type = "button";
-    removeButton.className = "graph-expansion-remove";
+    removeButton.className = "graph__expansion-remove";
     removeButton.setAttribute("aria-label", `Quitar ${nodeTitle(node, nodeId)}`);
     removeButton.textContent = "×";
 
@@ -664,21 +664,25 @@ function mountKindFilters(
 
   for (const { kind, label } of GRAPH_FILTER_KINDS) {
     const field = document.createElement("div");
-    field.className = "filter-field";
+    field.className = "graph__filter";
 
     const fieldLabel = document.createElement("label");
+    fieldLabel.className = "graph__filter-label";
     fieldLabel.textContent = label;
     fieldLabel.setAttribute("for", `graph-filter-${kind}`);
 
     const select = document.createElement("select");
+    select.className = "graph__filter-select";
     select.id = `graph-filter-${kind}`;
     const defaultOption = document.createElement("option");
+    defaultOption.className = "graph__filter-option";
     defaultOption.value = "";
     defaultOption.textContent = "Todos";
     select.appendChild(defaultOption);
 
     for (const node of optionsByKind[kind]) {
       const option = document.createElement("option");
+      option.className = "graph__filter-option";
       option.value = node.id();
       option.textContent = nodeTitle(node, node.id());
       select.appendChild(option);
@@ -835,7 +839,7 @@ function setSearchDropdownOpen(
   resultsRoot: HTMLElement,
   open: boolean,
 ): void {
-  resultsRoot.classList.toggle("is-open", open);
+  resultsRoot.classList.toggle("graph__search-dropdown--open", open);
   searchInput.setAttribute("aria-expanded", open ? "true" : "false");
   if (open) {
     positionSearchDropdown(searchInput, resultsRoot);
@@ -863,7 +867,7 @@ function updateSearchResultsUI(
 
   if (matches.length === 0) {
     const emptyItem = document.createElement("div");
-    emptyItem.className = "graph-search-empty";
+    emptyItem.className = "graph__search-empty";
     emptyItem.textContent = "Sin coincidencias";
     resultsRoot.appendChild(emptyItem);
     setSearchDropdownOpen(searchInput, resultsRoot, true);
@@ -873,21 +877,21 @@ function updateSearchResultsUI(
   const visibleMatches = matches.slice(0, SEARCH_RESULTS_LIMIT);
   for (const node of visibleMatches) {
     const item = document.createElement("div");
-    item.className = "graph-search-result";
+    item.className = "graph__search-result";
     item.setAttribute("role", "option");
 
     const swatch = document.createElement("span");
     const style = kindStyle(String(node.data("kind")));
-    swatch.className = "graph-search-result-swatch";
+    swatch.className = "graph__search-result-swatch";
     swatch.style.background = style.swatchFill;
     swatch.style.borderColor = style.border;
 
     const label = document.createElement("span");
-    label.className = "graph-search-result-label";
+    label.className = "graph__search-result-label";
     label.textContent = nodeTitle(node, node.id());
 
     const meta = document.createElement("span");
-    meta.className = "graph-search-result-kind";
+    meta.className = "graph__search-result-kind";
     meta.textContent = kindLabel(String(node.data("kind")));
 
     item.append(swatch, label, meta);
@@ -907,7 +911,7 @@ function updateSearchResultsUI(
 
   if (matches.length > SEARCH_RESULTS_LIMIT) {
     const moreItem = document.createElement("div");
-    moreItem.className = "graph-search-more";
+    moreItem.className = "graph__search-more";
     moreItem.textContent = `Mostrando ${SEARCH_RESULTS_LIMIT} de ${matches.length} nodos`;
     resultsRoot.appendChild(moreItem);
   }
@@ -961,7 +965,7 @@ function mountSearchInput(
   });
 
   const repositionDropdown = () => {
-    if (resultsRoot?.classList.contains("is-open")) {
+    if (resultsRoot?.classList.contains("graph__search-dropdown--open")) {
       positionSearchDropdown(searchInput, resultsRoot);
     }
   };
@@ -1360,13 +1364,13 @@ function openConceptPanelForNode(
 }
 
 export async function mountGraph(
-  containerId: string,
+  containerClass: string,
   dataUrl: string,
   options: MountGraphOptions = {},
 ): Promise<void> {
-  const container = document.getElementById(containerId);
+  const container = document.querySelector<HTMLElement>(`.${containerClass}`);
   if (!container) {
-    throw new Error(`Missing graph container #${containerId}`);
+    throw new Error(`Missing graph container .${containerClass}`);
   }
 
   const response = await fetch(dataUrl);

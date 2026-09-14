@@ -73,7 +73,7 @@ function createSvgRoot(): SVGSVGElement {
   svg.setAttribute("width", "20");
   svg.setAttribute("height", "20");
   svg.setAttribute("focusable", "false");
-  svg.classList.add("graph-concept-note-icon");
+  svg.classList.add("graph__concept-note-icon");
   return svg;
 }
 
@@ -86,7 +86,7 @@ function appendFilledPath(svg: SVGSVGElement, pathData: string): void {
 
 function createResourceIcon(kind: ResourceKind): HTMLElement {
   const badge = document.createElement("span");
-  badge.className = `graph-concept-note-icon-badge graph-concept-note-icon-badge--${kind}`;
+  badge.className = `graph__concept-note-badge graph__concept-note-badge--${kind}`;
   badge.setAttribute("aria-hidden", "true");
 
   const svg = createSvgRoot();
@@ -152,25 +152,25 @@ function createResourceIcon(kind: ResourceKind): HTMLElement {
 
 function renderConceptNote(block: ConceptBlock): HTMLElement {
   const item = document.createElement("li");
-  item.className = "graph-concept-note";
+  item.className = "graph__concept-note";
 
   const primaryUrl = primaryBlockUrl(block);
   const resourceKind = classifyResourceKind(block);
   const resolvedTitle = block.citations?.[0]?.resolved?.title;
   const body = document.createElement("div");
-  body.className = "graph-concept-note-body";
+  body.className = "graph__concept-note-body";
   body.textContent = blockDisplayText(block);
 
   if (!primaryUrl) {
     const content = document.createElement("div");
-    content.className = "graph-concept-note-static";
+    content.className = "graph__concept-note-static";
     content.append(createResourceIcon(resourceKind), body);
     item.appendChild(content);
     return item;
   }
 
   const link = document.createElement("a");
-  link.className = "graph-concept-note-link";
+  link.className = "graph__concept-note-link";
   link.href = primaryUrl;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
@@ -187,14 +187,14 @@ function renderConceptNotes(notesRoot: HTMLElement, blocks: ConceptBlock[]): voi
 
   if (blocks.length === 0) {
     const empty = document.createElement("p");
-    empty.className = "graph-concept-panel-empty";
+    empty.className = "graph__concept-empty";
     empty.textContent = "Esta concept page no tiene notas todavía.";
     notesRoot.appendChild(empty);
     return;
   }
 
   const list = document.createElement("ul");
-  list.className = "graph-concept-notes";
+  list.className = "graph__concept-note-list";
 
   for (const block of blocks) {
     list.appendChild(renderConceptNote(block));
@@ -229,32 +229,38 @@ export interface ConceptPanel {
 }
 
 export function mountConceptPanel(root: HTMLElement): ConceptPanel {
-  const title = root.querySelector<HTMLElement>("#graph-concept-panel-title");
-  const notesRoot = root.querySelector<HTMLElement>("#graph-concept-panel-notes");
-  const closeButton = root.querySelector<HTMLButtonElement>(".graph-concept-panel-close");
-  const backdrop = root.querySelector<HTMLElement>(".graph-concept-panel-backdrop");
+  const title = root.querySelector<HTMLElement>(".graph__concept-title");
+  const notesRoot = root.querySelector<HTMLElement>(".graph__concept-body");
+  const closeButton = root.querySelector<HTMLButtonElement>(".graph__concept-close");
+  const backdrop = root.querySelector<HTMLElement>(".graph__concept-backdrop");
+  const sheet = root.querySelector<HTMLElement>(".graph__concept-sheet");
 
-  if (!title || !notesRoot || !closeButton || !backdrop) {
+  if (!title || !notesRoot || !closeButton || !backdrop || !sheet) {
     throw new Error("Concept panel markup is incomplete");
   }
 
+  const setPanelOpen = (open: boolean) => {
+    root.classList.toggle("graph__concept-panel--open", open);
+    backdrop.classList.toggle("graph__concept-backdrop--open", open);
+    sheet.classList.toggle("graph__concept-sheet--open", open);
+    root.setAttribute("aria-hidden", open ? "false" : "true");
+  };
+
   const close = () => {
-    root.classList.remove("is-open");
-    root.setAttribute("aria-hidden", "true");
+    setPanelOpen(false);
   };
 
   const open = (page: ConceptPage) => {
     title.textContent = capitalizeWords(page.title);
     renderConceptNotes(notesRoot, page.blocks);
-    root.classList.add("is-open");
-    root.setAttribute("aria-hidden", "false");
+    setPanelOpen(true);
   };
 
   closeButton.addEventListener("click", close);
   backdrop.addEventListener("click", close);
 
   window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && root.classList.contains("is-open")) {
+    if (event.key === "Escape" && root.classList.contains("graph__concept-panel--open")) {
       close();
     }
   });

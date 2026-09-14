@@ -5,7 +5,7 @@
   "type": "module",
   "exports": {
     "./App": "./src/App.tsx",
-    "./styles/cms.css": "./src/styles/cms.css"
+    "./styles/cms.scss": "./src/styles/cms.scss"
   },
   "scripts": {
     "preview": "vite preview",
@@ -26,6 +26,7 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "sass": "catalog:"
   }
 }

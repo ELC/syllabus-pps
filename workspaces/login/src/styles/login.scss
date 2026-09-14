@@ -1,0 +1,269 @@
+.dashboard {
+  &__signout-slot {
+    min-height: 2.1875rem;
+  }
+}
+
+.login {
+  &__sign-out {
+    appearance: none;
+    display: block;
+    width: 100%;
+    min-height: 2.1875rem;
+    margin-top: 0;
+    padding: 0.5rem 1.25rem 0.5rem calc(1.25rem - 3px);
+    border: 0;
+    border-left: 3px solid transparent;
+    background: transparent;
+    color: inherit;
+    font-family: var(--font-heading, Montserrat, sans-serif);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+
+    &[hidden] {
+      display: none;
+    }
+
+    &--active:hover {
+      background: var(--dash-sidebar-active, rgba(255, 255, 255, 0.06));
+    }
+  }
+
+  &__lead {
+    margin: 0 0 1.25rem;
+    color: var(--dash-muted, #9ca3af);
+    line-height: 1.5;
+  }
+
+  &__auth-loading {
+    margin: 0;
+    max-width: 28rem;
+    width: 100%;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+
+  &__main-only {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1.25rem;
+    background: var(--dash-bg, #0b1220);
+  }
+
+  &__screen {
+    width: 100%;
+    max-width: 32rem;
+    border: 1px solid var(--dash-border, #2a3344);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: var(--dash-surface, #111827);
+  }
+
+  &__logo-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2.25rem 1.5rem 1.75rem;
+    background: var(--dash-sidebar, #2e3092);
+  }
+
+  &__logo {
+    display: block;
+    width: min(20rem, 100%);
+    height: auto;
+    aspect-ratio: 5000 / 1837;
+    object-fit: contain;
+  }
+
+  &__panel {
+    width: 100%;
+    margin: 0;
+    padding: 1.5rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  &__title {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-heading, Montserrat, sans-serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__label {
+    font-family: var(--font-heading, Montserrat, sans-serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--dash-border, #2a3344);
+    border-radius: 0.35rem;
+    background: var(--dash-bg, #0b1220);
+    color: var(--dash-text, #f3f4f6);
+    font: inherit;
+
+    &--code {
+      letter-spacing: 0.25em;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  &__button {
+    appearance: none;
+    border: 0;
+    border-radius: 0.35rem;
+    padding: 0.7rem 1rem;
+    background: var(--dash-accent, #2563eb);
+    color: #fff;
+    font-family: var(--font-heading, Montserrat, sans-serif);
+    font-weight: 600;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+
+  &__link-button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--dash-accent, #2563eb);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  &__notice,
+  &__error {
+    margin: 1rem 0 0;
+    padding: 0.85rem 1rem;
+    border-radius: 0.75rem;
+    font-family: var(--font-body, "Open Sans", sans-serif);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--dash-text);
+  }
+
+  &__notice {
+    border: 1px solid var(--austral-badge-interactive-fg);
+    background: var(--austral-badge-interactive-bg);
+
+    &--success {
+      border-color: var(--austral-ing-primary);
+      background: var(--austral-celeste-suave);
+    }
+  }
+
+  &__error {
+    border: 1px solid var(--dash-severity-error);
+    background: color-mix(in srgb, var(--dash-severity-error) 8%, var(--dash-surface));
+  }
+
+  &__help {
+    margin: 1.25rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--dash-border, #2a3344);
+    color: var(--dash-muted, #9ca3af);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  &__help-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-family: var(--font-heading, Montserrat, sans-serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dash-text, #f3f4f6);
+  }
+
+  &__disclaimer {
+    margin: 0.85rem 0 0;
+    color: var(--dash-muted, #9ca3af);
+    font-family: var(--font-body, "Open Sans", sans-serif);
+    font-size: 0.7rem;
+    font-weight: 400;
+    line-height: 1.4;
+    opacity: 0.72;
+  }
+
+  &__mount {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* A sidebar this wide is the small-screen top bar (the docked sidebar is
+   --dash-sidebar-width, 15rem), so sign out becomes a slim pill beside the nav. */
+@container shell-sidebar (min-width: 20rem) {
+  .dashboard__signout-slot {
+    min-height: 0;
+    /* Reserve the pill's footprint so the centered nav does not shift once auth resolves. */
+    min-inline-size: 5.5rem;
+  }
+
+  .login__sign-out {
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    min-height: 0;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    border-radius: 0.35rem;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+}
+
+body.auth-guest,
+html:not(.auth-session-cached) body.auth-pending {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard__sidebar {
+    display: none;
+  }
+}
+
+body.auth-pending,
+body.auth-guest {
+  .dashboard__content {
+    display: none;
+  }
+}
+
+html.auth-session-cached body.auth-pending {
+  .dashboard__content {
+    display: revert;
+  }
+}
+
+body.auth-guest .dashboard__main,
+html:not(.auth-session-cached) body.auth-pending .dashboard__main:has(.login__mount),
+body.auth-guest .dashboard__main:has(.login__mount),
+html:not(.auth-session-cached) body.auth-pending .dashboard__main:has(.login__auth-loading),
+body.auth-guest .dashboard__main:has(.login__auth-loading) {
+  justify-content: center;
+  align-items: center;
+  padding: 1.25rem;
+}

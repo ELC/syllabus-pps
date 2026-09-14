@@ -27,7 +27,7 @@ export async function mountShellAuth(): Promise<void> {
     return;
   }
 
-  const mainElement = document.querySelector(".dashboard-main");
+  const mainElement = document.querySelector(".dashboard__main");
   if (!(mainElement instanceof HTMLElement)) {
     return;
   }
@@ -62,8 +62,8 @@ async function runShellAuthGate(dashboardMain: HTMLElement): Promise<void> {
   function clearLogin(): void {
     loginRoot?.unmount();
     loginRoot = null;
-    dashboardMain.querySelector(".login-mount")?.remove();
-    dashboardMain.querySelector(".login-auth-loading")?.remove();
+    dashboardMain.querySelector(".login__mount")?.remove();
+    dashboardMain.querySelector(".login__auth-loading")?.remove();
   }
 
   async function showGuest(): Promise<void> {
@@ -111,10 +111,10 @@ async function runShellAuthGate(dashboardMain: HTMLElement): Promise<void> {
 
 function mountLoginPanel(main: HTMLElement, existingRoot: Root | null, configMessage?: string): Root {
   existingRoot?.unmount();
-  main.querySelector(".login-auth-loading")?.remove();
+  main.querySelector(".login__auth-loading")?.remove();
 
   const mount = document.createElement("div");
-  mount.className = "login-mount";
+  mount.className = "login__mount";
   main.prepend(mount);
   const root = createRoot(mount);
   root.render(
@@ -125,8 +125,8 @@ function mountLoginPanel(main: HTMLElement, existingRoot: Root | null, configMes
         ? createElement(
             LoginScreen,
             null,
-            createElement("h1", { className: "login-title" }, "Configuration required"),
-            createElement("p", { className: "login-error", role: "alert" }, configMessage),
+            createElement("h1", { className: "login__title" }, "Configuration required"),
+            createElement("p", { className: "login__error", role: "alert" }, configMessage),
           )
         : createElement(LoginForm),
     ),

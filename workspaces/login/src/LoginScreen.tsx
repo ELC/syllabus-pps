@@ -14,10 +14,10 @@ function loginLogoHref(): string {
 
 export function LoginScreen({ children }: { children: ReactNode }) {
   return (
-    <div className="login-screen">
-      <div className="login-logo-wrap">
+    <div className="login__screen">
+      <div className="login__logo-wrap">
         <img
-          className="login-logo"
+          className="login__logo"
           src={loginLogoHref()}
           alt="Universidad Austral"
           width={LOGO_WIDTH}
@@ -25,7 +25,7 @@ export function LoginScreen({ children }: { children: ReactNode }) {
           decoding="async"
         />
       </div>
-      <div className="login-panel">{children}</div>
+      <div className="login__panel">{children}</div>
     </div>
   );
 }
