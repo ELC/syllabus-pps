@@ -133,6 +133,8 @@ pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-push
 pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-status
 ```
 
+Pull and push sync `content/pages/` and the shared source catalog at `content/resources.json` (remote path `resources/resources.json` in the storage bucket).
+
 Optional CI sync reuses `PUBLIC_SUPABASE_PROJECT_URL` from the build job. Also set `SUPABASE_SERVICE_ROLE_KEY` and optionally `SUPABASE_STORAGE_BUCKET`.
 
 ## Logseq migration

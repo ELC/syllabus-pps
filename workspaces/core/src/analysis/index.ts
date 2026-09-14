@@ -1,14 +1,14 @@
 export { buildCurriculumIndexes, type CurriculumIndexes } from "./indexes";
 export {
   blockHasSourceLink,
-  classifySourceType,
   collectConceptSources,
   collectPageBookSources,
   collectPageSources,
   collectSourcesForBlock,
+  collectUsedCitationIds,
   MINIMUM_CONCEPT_SOURCES,
   type ConceptSourceRow,
   hasSourceCue,
-  isBookSource,
+  isBookCitation,
   isSourceReference,
 } from "./sources";

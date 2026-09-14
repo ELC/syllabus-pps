@@ -1,0 +1,2889 @@
+[
+  {
+    "id": "open-logic-project",
+    "type": "book",
+    "title": "abierto",
+    "author": [
+      {
+        "literal": "lógica formal con capítulos sobre deducción natural"
+      }
+    ],
+    "publisher": "lógica formal con capítulos sobre deducción natural",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://openlogicproject.org/"
+  },
+  {
+    "id": "software-engineering-uml",
+    "type": "book",
+    "title": "abierto Introduction to Software Engineering en Wikibooks explica diagramas",
+    "author": [
+      {
+        "literal": "casos de uso con actores"
+      }
+    ],
+    "publisher": "Wikibooks",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://en.wikibooks.org/wiki/Introduction_to_Software_Engineering/UML/Introduction"
+  },
+  {
+    "id": "active-calculus",
+    "type": "book",
+    "title": "Active Calculus",
+    "author": [
+      {
+        "given": "David",
+        "family": "Austin",
+        "literal": "David Austin (austind@gvsu.edu)"
+      },
+      {
+        "given": "Matt",
+        "family": "Boelkins",
+        "literal": "Matt Boelkins (boelkinm@gvsu.edu)"
+      },
+      {
+        "given": "Mitchel",
+        "family": "Keller",
+        "literal": "Mitchel Keller (mitch.keller@wisc.edu)"
+      },
+      {
+        "given": "Nick",
+        "family": "Long",
+        "literal": "Nick Long (longne@sfasu.edu)"
+      },
+      {
+        "given": "Chrissy",
+        "family": "Safranski",
+        "literal": "Chrissy Safranski (csafranski@franciscan.edu)"
+      },
+      {
+        "given": "Steven",
+        "family": "Schlicker",
+        "literal": "Steven Schlicker (schlicks@gvsu.edu)"
+      }
+    ],
+    "publisher": "Active Calculus",
+    "edition": "2024",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://activecalculus.org/"
+  },
+  {
+    "id": "real-startup-book",
+    "type": "book",
+    "title": "abierto The Real Startup Book (2.ª ed.), editado por Tristan Kromer, reúne más",
+    "author": [
+      {
+        "literal": "sesenta métodos de validación —entrevistas"
+      }
+    ],
+    "publisher": "sesenta métodos de validación —entrevistas",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://kromatic.com/real-startup-book"
+  },
+  {
+    "id": "algorithms",
+    "type": "book",
+    "title": "Algorithms",
+    "author": [
+      {
+        "literal": "Erickson es de acceso libre bajo licencia Creative Commons y cubre diseño"
+      }
+    ],
+    "publisher": "Erickson es de acceso libre bajo licencia Creative Commons y cubre diseño",
+    "issued": {
+      "raw": "2019"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://jeffe.cs.illinois.edu/teaching/algorithms",
+    "edition": "1.ª ed., 2019"
+  },
+  {
+    "id": "automate-the-boring-stuff-with-python",
+    "type": "book",
+    "title": "Automate the Boring Stuff with Python",
+    "author": [
+      {
+        "literal": "Sweigart es de acceso libre y dedica capítulos a leer y escribir archivos"
+      }
+    ],
+    "publisher": "Sweigart es de acceso libre y dedica capítulos a leer y escribir archivos",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://automatetheboringstuff.com/",
+    "edition": "3.ª ed."
+  },
+  {
+    "id": "book-of-proof",
+    "type": "book",
+    "title": "Book of Proof",
+    "author": [
+      {
+        "literal": "Hammack es de acceso libre y enseña a redactar demostraciones con ejemplos de conjuntos"
+      }
+    ],
+    "publisher": "Hammack es de acceso libre y enseña a redactar demostraciones con ejemplos de conjuntos",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://richardhammack.github.io/BookOfProof/Main.pdf",
+    "edition": "3.ª ed., 2024"
+  },
+  {
+    "id": "ddd-quickly",
+    "type": "book",
+    "title": "breve",
+    "author": [
+      {
+        "literal": "acceso libre que resume entidades"
+      }
+    ],
+    "publisher": "acceso libre que resume entidades",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.infoq.com/minibooks/domain-driven-design-quickly"
+  },
+  {
+    "id": "authentication-cheat-sheet",
+    "type": "webpage",
+    "title": "Authentication Cheat Sheet",
+    "author": [
+      {
+        "literal": "OWASP Foundation"
+      }
+    ],
+    "publisher": "OWASP Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html"
+  },
+  {
+    "id": "college-algebra",
+    "type": "book",
+    "title": "College Algebra",
+    "author": [
+      {
+        "literal": "OpenStax es de acceso libre y repasa ecuaciones lineales"
+      }
+    ],
+    "publisher": "OpenStax es de acceso libre y repasa ecuaciones lineales",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://openstax.org/details/books/college-algebra-2e",
+    "edition": "2.ª ed."
+  },
+  {
+    "id": "asymptotic-notation",
+    "type": "webpage",
+    "title": "3",
+    "author": [
+      {
+        "literal": "cs50.harvard.edu"
+      }
+    ],
+    "publisher": "cs50.harvard.edu",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://cs50.harvard.edu/x/notes/3"
+  },
+  {
+    "id": "database-system-concepts",
+    "type": "book",
+    "title": "Database System Concepts",
+    "author": [
+      {
+        "literal": "Silberschatz"
+      }
+    ],
+    "publisher": "Silberschatz",
+    "issued": {
+      "raw": "2019"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.db-book.com/",
+    "edition": "7.ª ed., 2019"
+  },
+  {
+    "id": "docker-handbook",
+    "type": "book",
+    "title": "de código abierto The Docker Handbook",
+    "author": [
+      {
+        "literal": "Farhan Hasin Chowdhury recorre imágenes"
+      }
+    ],
+    "publisher": "Farhan Hasin Chowdhury recorre imágenes",
+    "issued": {
+      "raw": "2021"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docker-handbook.farhan.dev/",
+    "edition": "2021"
+  },
+  {
+    "id": "http-authentication",
+    "type": "software",
+    "title": "Authentication",
+    "author": [
+      {
+        "literal": "Mozilla Developer Network"
+      }
+    ],
+    "publisher": "Mozilla",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://developer.mozilla.org/es/docs/Web/HTTP/Guides/Authentication"
+  },
+  {
+    "id": "learn-web-development",
+    "type": "software",
+    "title": "Learn Web Development",
+    "author": [
+      {
+        "literal": "Mozilla Developer Network"
+      }
+    ],
+    "publisher": "Mozilla",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://developer.mozilla.org/es/docs/Learn_web_development"
+  },
+  {
+    "id": "your-first-website",
+    "type": "software",
+    "title": "Your First Website",
+    "author": [
+      {
+        "literal": "Mozilla Developer Network"
+      }
+    ],
+    "publisher": "Mozilla",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://developer.mozilla.org/es/docs/Learn_web_development/Getting_started/Your_first_website"
+  },
+  {
+    "id": "get-started",
+    "type": "software",
+    "title": "Get Started",
+    "author": [
+      {
+        "literal": "Docker Inc."
+      }
+    ],
+    "publisher": "Docker Inc.",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.docker.com/get-started"
+  },
+  {
+    "id": "python-inputoutput",
+    "type": "software",
+    "title": "Inputoutput",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "publisher": "Python Software Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.python.org/es/3/tutorial/inputoutput.html"
+  },
+  {
+    "id": "python-tutorial",
+    "type": "software",
+    "title": "Tutorial",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "publisher": "Python Software Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.python.org/es/3/tutorial"
+  },
+  {
+    "id": "uml-use-case-diagrams",
+    "type": "webpage",
+    "title": "Uml Use Case Diagrams With Draw Io",
+    "author": [
+      {
+        "literal": "drawio-app.com"
+      }
+    ],
+    "publisher": "drawio-app.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://drawio-app.com/blog/uml-use-case-diagrams-with-draw-io",
+    "genre": "interactive"
+  },
+  {
+    "id": "eloquent-javascript",
+    "type": "book",
+    "title": "Eloquent JavaScript",
+    "author": [
+      {
+        "literal": "Haverbeke es de acceso libre y recorre el lenguaje"
+      }
+    ],
+    "publisher": "Haverbeke es de acceso libre y recorre el lenguaje",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://eloquentjavascript.net/",
+    "edition": "4.ª ed., 2024"
+  },
+  {
+    "id": "software-engineering",
+    "type": "webpage",
+    "title": "Software Engineering",
+    "author": [
+      {
+        "literal": "en.wikibooks.org"
+      }
+    ],
+    "publisher": "en.wikibooks.org",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://en.wikibooks.org/wiki/Software_Engineering"
+  },
+  {
+    "id": "acceptance-criteria",
+    "type": "webpage",
+    "title": "Acceptance Criteria",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://en.wikipedia.org/wiki/Acceptance_criteria"
+  },
+  {
+    "id": "mathematical-reasoning",
+    "type": "webpage",
+    "title": "Mathematical Reasoning",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://en.wikipedia.org/wiki/Mathematical_reasoning"
+  },
+  {
+    "id": "richardson-maturity-model",
+    "type": "webpage",
+    "title": "Richardson Maturity Model",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://en.wikipedia.org/wiki/Richardson_Maturity_Model"
+  },
+  {
+    "id": "engineering-software-products",
+    "type": "book",
+    "title": "Engineering Software Products",
+    "author": [
+      {
+        "literal": "Sommerville conecta requerimientos"
+      }
+    ],
+    "publisher": "Sommerville conecta requerimientos",
+    "issued": {
+      "raw": "2019"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://iansommerville.com/engineering-software-products",
+    "edition": "2019"
+  },
+  {
+    "id": "acid",
+    "type": "webpage",
+    "title": "ACID",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/ACID"
+  },
+  {
+    "id": "algebra-relacional",
+    "type": "webpage",
+    "title": "ÁLgebra Relacional",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/%C3%81lgebra_relacional"
+  },
+  {
+    "id": "algoritmo",
+    "type": "webpage",
+    "title": "Algoritmo",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Algoritmo"
+  },
+  {
+    "id": "analisis-de-algoritmos",
+    "type": "webpage",
+    "title": "AnáLisis De Algoritmos",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_algoritmos"
+  },
+  {
+    "id": "api",
+    "type": "webpage",
+    "title": "API",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/API"
+  },
+  {
+    "id": "autenticacion",
+    "type": "webpage",
+    "title": "AutenticacióN",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Autenticaci%C3%B3n"
+  },
+  {
+    "id": "caso-de-uso",
+    "type": "webpage",
+    "title": "Caso De Uso",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Caso_de_uso"
+  },
+  {
+    "id": "demostracion-matematica",
+    "type": "webpage",
+    "title": "DemostracióN MatemáTica",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Demostraci%C3%B3n_matem%C3%A1tica"
+  },
+  {
+    "id": "desarrollo-agil-de-software",
+    "type": "webpage",
+    "title": "Desarrollo áGil De Software",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Desarrollo_%C3%A1gil_de_software"
+  },
+  {
+    "id": "desarrollo-web",
+    "type": "webpage",
+    "title": "Desarrollo Web",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Desarrollo_web"
+  },
+  {
+    "id": "diagrama-de-nassi-shneiderman",
+    "type": "webpage",
+    "title": "Diagrama De Nassi Shneiderman",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Diagrama_de_Nassi-Shneiderman"
+  },
+  {
+    "id": "diseno-guiado-por-el-dominio",
+    "type": "webpage",
+    "title": "DiseñO Guiado Por El Dominio",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Dise%C3%B1o_guiado_por_el_dominio"
+  },
+  {
+    "id": "docker",
+    "type": "webpage",
+    "title": "Docker (Software",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Docker_(software"
+  },
+  {
+    "id": "estructura-de-datos",
+    "type": "webpage",
+    "title": "Estructura De Datos",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Estructura_de_datos"
+  },
+  {
+    "id": "induccion-matematica",
+    "type": "webpage",
+    "title": "InduccióN MatemáTica",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Inducci%C3%B3n_matem%C3%A1tica"
+  },
+  {
+    "id": "inferencia-estadistica",
+    "type": "webpage",
+    "title": "Inferencia EstadíStica",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Inferencia_estad%C3%ADstica"
+  },
+  {
+    "id": "integracion-continua",
+    "type": "webpage",
+    "title": "IntegracióN Continua",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Integraci%C3%B3n_continua"
+  },
+  {
+    "id": "logica-proposicional",
+    "type": "webpage",
+    "title": "LóGica Proposicional",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/L%C3%B3gica_proposicional"
+  },
+  {
+    "id": "matriz-matematicas",
+    "type": "webpage",
+    "title": "Matriz (MatemáTicas",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Matriz_(matem%C3%A1ticas"
+  },
+  {
+    "id": "modelo-entidad-relacion",
+    "type": "webpage",
+    "title": "Modelo Entidad RelacióN",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Modelo_entidad-relaci%C3%B3n"
+  },
+  {
+    "id": "normalizacion-de-bases-de-datos",
+    "type": "webpage",
+    "title": "NormalizacióN De Bases De Datos",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Normalizaci%C3%B3n_de_bases_de_datos"
+  },
+  {
+    "id": "optimizacion-matematica",
+    "type": "webpage",
+    "title": "OptimizacióN MatemáTica",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Optimizaci%C3%B3n_matem%C3%A1tica"
+  },
+  {
+    "id": "persistencia-informatica",
+    "type": "webpage",
+    "title": "Persistencia (InformáTica",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Persistencia_(inform%C3%A1tica"
+  },
+  {
+    "id": "producto-viable-minimo",
+    "type": "webpage",
+    "title": "Producto Viable MíNimo",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Producto_viable_m%C3%ADnimo"
+  },
+  {
+    "id": "programacion-orientada-a-objetos",
+    "type": "webpage",
+    "title": "ProgramacióN Orientada A Objetos",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos"
+  },
+  {
+    "id": "python",
+    "type": "webpage",
+    "title": "Python",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Python"
+  },
+  {
+    "id": "requisito",
+    "type": "webpage",
+    "title": "Requisito",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Requisito"
+  },
+  {
+    "id": "sistema-de-ecuaciones-lineales",
+    "type": "webpage",
+    "title": "Sistema De Ecuaciones Lineales",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales"
+  },
+  {
+    "id": "sql",
+    "type": "webpage",
+    "title": "SQL",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/SQL"
+  },
+  {
+    "id": "transaccion-de-base-de-datos",
+    "type": "webpage",
+    "title": "TransaccióN De Base De Datos",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Transacci%C3%B3n_de_base_de_datos"
+  },
+  {
+    "id": "usabilidad",
+    "type": "webpage",
+    "title": "Usabilidad",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Usabilidad"
+  },
+  {
+    "id": "vector",
+    "type": "webpage",
+    "title": "Vector",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Vector"
+  },
+  {
+    "id": "frameworkless-js",
+    "type": "webpage",
+    "title": "Frameworkless.Js.Org",
+    "author": [
+      {
+        "literal": "frameworkless.js.org"
+      }
+    ],
+    "publisher": "frameworkless.js.org",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://frameworkless.js.org/"
+  },
+  {
+    "id": "web-api-design-the-missing-link",
+    "type": "book",
+    "title": "gratuito Web API Design: The Missing Link (Apigee, 2016) discute diseño",
+    "author": [
+      {
+        "literal": "URLs"
+      }
+    ],
+    "publisher": "URLs",
+    "issued": {
+      "raw": "2016"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.apigee.com/files/Web-design-the-missing-link-ebook-2016-11.pdf"
+  },
+  {
+    "id": "structorizer",
+    "type": "webpage",
+    "title": "Index.Php",
+    "author": [
+      {
+        "literal": "help.structorizer.fisch.lu"
+      }
+    ],
+    "publisher": "help.structorizer.fisch.lu",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://help.structorizer.fisch.lu/index.php?menu=49",
+    "genre": "interactive"
+  },
+  {
+    "id": "laws-of-ux",
+    "type": "book",
+    "title": "Laws of UX",
+    "author": [
+      {
+        "literal": "Yablonski aplica principios de psicología a interfaces"
+      }
+    ],
+    "publisher": "Yablonski aplica principios de psicología a interfaces",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://lawsofux.com/",
+    "edition": "2.ª ed., 2024"
+  },
+  {
+    "id": "linear-algebra-done-right",
+    "type": "book",
+    "title": "Linear Algebra Done Right",
+    "author": [
+      {
+        "literal": "Axler está disponible en PDF abierto y desarrolla matrices"
+      }
+    ],
+    "publisher": "Axler está disponible en PDF abierto y desarrolla matrices",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://linear.axler.net/LADR4e.pdf",
+    "edition": "4.ª ed., 2024"
+  },
+  {
+    "id": "domain-driven-design",
+    "type": "webpage",
+    "title": "DomainDrivenDesign",
+    "author": [
+      {
+        "literal": "Martin Fowler"
+      }
+    ],
+    "publisher": "Martin Fowler",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://martinfowler.com/bliki/DomainDrivenDesign.html"
+  },
+  {
+    "id": "given-when-then",
+    "type": "webpage",
+    "title": "GivenWhenThen",
+    "author": [
+      {
+        "literal": "Martin Fowler"
+      }
+    ],
+    "publisher": "Martin Fowler",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://martinfowler.com/bliki/GivenWhenThen.html"
+  },
+  {
+    "id": "richardson-maturity-model-fowler",
+    "type": "webpage",
+    "title": "RichardsonMaturityModel",
+    "author": [
+      {
+        "literal": "Martin Fowler"
+      }
+    ],
+    "publisher": "Martin Fowler",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://martinfowler.com/articles/richardsonMaturityModel.html"
+  },
+  {
+    "id": "ubiquitous-language",
+    "type": "webpage",
+    "title": "UbiquitousLanguage",
+    "author": [
+      {
+        "literal": "Martin Fowler"
+      }
+    ],
+    "publisher": "Martin Fowler",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://martinfowler.com/bliki/UbiquitousLanguage.html"
+  },
+  {
+    "id": "user-story",
+    "type": "webpage",
+    "title": "UserStory",
+    "author": [
+      {
+        "literal": "Martin Fowler"
+      }
+    ],
+    "publisher": "Martin Fowler",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://martinfowler.com/bliki/UserStory.html"
+  },
+  {
+    "id": "mermaid-entityrelationshipdiagram",
+    "type": "webpage",
+    "title": "EntityRelationshipDiagram",
+    "author": [
+      {
+        "literal": "mermaid.js.org"
+      }
+    ],
+    "publisher": "mermaid.js.org",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://mermaid.js.org/syntax/entityRelationshipDiagram.html"
+  },
+  {
+    "id": "oauth-2-0-simplified",
+    "type": "book",
+    "title": "OAuth 2.0 Simplified",
+    "author": [
+      {
+        "literal": "Aaron Parecki se lee completo y gratis en la web y explica cómo se construye un servidor OAuth 2"
+      }
+    ],
+    "publisher": "Aaron Parecki se lee completo y gratis en la web y explica cómo se construye un servidor OAuth 2",
+    "issued": {
+      "raw": "2018"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.oauth.com/",
+    "edition": "2018"
+  },
+  {
+    "id": "mathematics-for-computer-science-lectures",
+    "type": "webpage",
+    "title": "Lecture Videos",
+    "author": [
+      {
+        "literal": "ocw.mit.edu"
+      }
+    ],
+    "publisher": "ocw.mit.edu",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://ocw.mit.edu/courses/6-1200j-mathematics-for-computer-science-spring-2024/resources/lecture-videos"
+  },
+  {
+    "id": "open-data-structures",
+    "type": "book",
+    "title": "Open Data Structures",
+    "author": [
+      {
+        "literal": "Morin implementa listas"
+      }
+    ],
+    "publisher": "Morin implementa listas",
+    "issued": {
+      "raw": "2020"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://opendatastructures.org/",
+    "edition": "edición en línea, 2020"
+  },
+  {
+    "id": "openintro-statistics",
+    "type": "book",
+    "title": "OpenIntro Statistics (4.ª ed., 2019) es",
+    "author": [
+      {
+        "literal": "acceso libre y enseña inferencia para medias"
+      }
+    ],
+    "publisher": "acceso libre y enseña inferencia para medias",
+    "issued": {
+      "raw": "2019"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.openintro.org/book/os"
+  },
+  {
+    "id": "users-dcc-uchile-cl-oop-ooprogramming-pdf",
+    "type": "book",
+    "title": "Principles of Object-Oriented Programming",
+    "author": [
+      {
+        "literal": "Baloian es de acceso libre y recorre clases"
+      }
+    ],
+    "publisher": "Baloian es de acceso libre y recorre clases",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://users.dcc.uchile.cl/~nbaloian/OOP/ooprogramming.pdf"
+  },
+  {
+    "id": "pcep",
+    "type": "webpage",
+    "title": "Pcep",
+    "author": [
+      {
+        "literal": "Python Institute"
+      }
+    ],
+    "publisher": "Python Institute",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://pythoninstitute.org/pcep"
+  },
+  {
+    "id": "relax",
+    "type": "webpage",
+    "title": "Relax.Mad.Uom.Gr",
+    "author": [
+      {
+        "literal": "relax.mad.uom.gr"
+      }
+    ],
+    "publisher": "relax.mad.uom.gr",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://relax.mad.uom.gr/",
+    "genre": "interactive"
+  },
+  {
+    "id": "scrum-guide",
+    "type": "webpage",
+    "title": "Scrum Guide",
+    "author": [
+      {
+        "literal": "Scrum.org"
+      }
+    ],
+    "publisher": "Scrum.org",
+    "issued": {
+      "raw": "2020"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://scrumguides.org/scrum-guide.html"
+  },
+  {
+    "id": "seeing-theory-frequentist",
+    "type": "webpage",
+    "title": "Frequentist Inference",
+    "author": [
+      {
+        "literal": "seeing-theory.brown.edu"
+      }
+    ],
+    "publisher": "seeing-theory.brown.edu",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://seeing-theory.brown.edu/frequentist-inference",
+    "genre": "interactive"
+  },
+  {
+    "id": "shape-up",
+    "type": "book",
+    "title": "Shape Up",
+    "author": [
+      {
+        "literal": "Ryan Singer es de acceso libre y muestra ciclos acotados"
+      }
+    ],
+    "publisher": "Ryan Singer es de acceso libre y muestra ciclos acotados",
+    "issued": {
+      "raw": "2019"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://basecamp.com/shapeup",
+    "edition": "2019"
+  },
+  {
+    "id": "software-engineering-at-google",
+    "type": "book",
+    "title": "Software Engineering at Google",
+    "author": [
+      {
+        "literal": "Winters"
+      }
+    ],
+    "publisher": "Winters",
+    "issued": {
+      "raw": "2020"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://abseil.io/resources/swe-book/html/ch23.html",
+    "edition": "2020"
+  },
+  {
+    "id": "sqlbolt",
+    "type": "webpage",
+    "title": "Sqlbolt.Com",
+    "author": [
+      {
+        "literal": "sqlbolt.com"
+      }
+    ],
+    "publisher": "sqlbolt.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://sqlbolt.com/",
+    "genre": "interactive"
+  },
+  {
+    "id": "matrix-equations",
+    "type": "webpage",
+    "title": "Matrix Equations",
+    "author": [
+      {
+        "literal": "textbooks.math.gatech.edu"
+      }
+    ],
+    "publisher": "textbooks.math.gatech.edu",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://textbooks.math.gatech.edu/ila/matrix-equations.html"
+  },
+  {
+    "id": "matrix-transformations",
+    "type": "webpage",
+    "title": "Matrix Transformations",
+    "author": [
+      {
+        "literal": "textbooks.math.gatech.edu"
+      }
+    ],
+    "publisher": "textbooks.math.gatech.edu",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://textbooks.math.gatech.edu/ila/matrix-transformations.html"
+  },
+  {
+    "id": "row-reduction",
+    "type": "webpage",
+    "title": "Row Reduction",
+    "author": [
+      {
+        "literal": "textbooks.math.gatech.edu"
+      }
+    ],
+    "publisher": "textbooks.math.gatech.edu",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://textbooks.math.gatech.edu/ila/row-reduction.html"
+  },
+  {
+    "id": "vectors-interactive-linear-algebra",
+    "type": "webpage",
+    "title": "Vectors",
+    "author": [
+      {
+        "literal": "textbooks.math.gatech.edu"
+      }
+    ],
+    "publisher": "textbooks.math.gatech.edu",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://textbooks.math.gatech.edu/ila/vectors.html"
+  },
+  {
+    "id": "visualgo",
+    "type": "webpage",
+    "title": "En",
+    "author": [
+      {
+        "literal": "visualgo.net"
+      }
+    ],
+    "publisher": "visualgo.net",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://visualgo.net/en",
+    "genre": "interactive"
+  },
+  {
+    "id": "visualgo-sorting",
+    "type": "webpage",
+    "title": "Sorting",
+    "author": [
+      {
+        "literal": "visualgo.net"
+      }
+    ],
+    "publisher": "visualgo.net",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://visualgo.net/en/sorting",
+    "genre": "interactive"
+  },
+  {
+    "id": "acceptance-testing",
+    "type": "webpage",
+    "title": "Acceptance Test",
+    "author": [
+      {
+        "literal": "agilealliance.org"
+      }
+    ],
+    "publisher": "agilealliance.org",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.agilealliance.org/glossary/acceptance-test"
+  },
+  {
+    "id": "writing-acceptance-criteria",
+    "type": "webpage",
+    "title": "Acceptance Criteria",
+    "author": [
+      {
+        "literal": "atlassian.com"
+      }
+    ],
+    "publisher": "atlassian.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.atlassian.com/work-management/project-management/acceptance-criteria"
+  },
+  {
+    "id": "continuous-integration-delivery-deployment",
+    "type": "webpage",
+    "title": "Continuous Integration Vs Delivery Vs Deployment",
+    "author": [
+      {
+        "literal": "atlassian.com"
+      }
+    ],
+    "publisher": "atlassian.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment"
+  },
+  {
+    "id": "agile-development-and-scrum",
+    "type": "webpage",
+    "title": "Agile Development And Scrum",
+    "author": [
+      {
+        "literal": "Coursera"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/learn/agile-development-and-scrum",
+    "genre": "course"
+  },
+  {
+    "id": "agile-essentials",
+    "type": "webpage",
+    "title": "Agile Essentials",
+    "author": [
+      {
+        "literal": "Coursera"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/learn/agile-essentials",
+    "genre": "course"
+  },
+  {
+    "id": "algorithms-specialization",
+    "type": "webpage",
+    "title": "Algorithms",
+    "author": [
+      {
+        "literal": "Coursera"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/specializations/algorithms",
+    "genre": "course"
+  },
+  {
+    "id": "critical-thinking-logical-reasoning",
+    "type": "webpage",
+    "title": "Critical Thinking Logical Reasoning",
+    "author": [
+      {
+        "literal": "Coursera"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/specializations/critical-thinking-logical-reasoning",
+    "genre": "course"
+  },
+  {
+    "id": "data-structures-specialization",
+    "type": "webpage",
+    "title": "Data Structures Algorithms",
+    "author": [
+      {
+        "literal": "Coursera"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/specializations/data-structures-algorithms",
+    "genre": "course"
+  },
+  {
+    "id": "linear-algebra-elementary-to-advanced",
+    "type": "webpage",
+    "title": "Linear Algebra Elementary To Advanced",
+    "author": [
+      {
+        "literal": "Coursera"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced",
+    "genre": "course"
+  },
+  {
+    "id": "logic-critical-thinking-duke",
+    "type": "webpage",
+    "title": "Logic Critical Thinking Duke",
+    "author": [
+      {
+        "literal": "Coursera"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+    "genre": "course"
+  },
+  {
+    "id": "mathematical-proofs",
+    "type": "webpage",
+    "title": "Mathematical Proofs",
+    "author": [
+      {
+        "literal": "Coursera"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/learn/mathematical-proofs",
+    "genre": "course"
+  },
+  {
+    "id": "mathematical-thinking",
+    "type": "webpage",
+    "title": "Mathematical Thinking",
+    "author": [
+      {
+        "literal": "Coursera"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/learn/mathematical-thinking",
+    "genre": "course"
+  },
+  {
+    "id": "namespaces-in-databases",
+    "type": "webpage",
+    "title": "Nsd",
+    "author": [
+      {
+        "literal": "cs.umd.edu"
+      }
+    ],
+    "publisher": "cs.umd.edu",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.cs.umd.edu/hcil/members/bshneiderman/nsd"
+  },
+  {
+    "id": "db-fiddle",
+    "type": "webpage",
+    "title": "Db Fiddle.Com",
+    "author": [
+      {
+        "literal": "db-fiddle.com"
+      }
+    ],
+    "publisher": "db-fiddle.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.db-fiddle.com/",
+    "genre": "interactive"
+  },
+  {
+    "id": "entity-relationship-diagrams",
+    "type": "webpage",
+    "title": "Entity Relationship Tables",
+    "author": [
+      {
+        "literal": "drawio.com"
+      }
+    ],
+    "publisher": "drawio.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.drawio.com/docs/diagram-types/entity-relationship-tables",
+    "genre": "interactive"
+  },
+  {
+    "id": "frameworkless-movement",
+    "type": "webpage",
+    "title": "Frameworklessmovement.Org",
+    "author": [
+      {
+        "literal": "frameworklessmovement.org"
+      }
+    ],
+    "publisher": "frameworklessmovement.org",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.frameworklessmovement.org/"
+  },
+  {
+    "id": "introduction-to-docker-and-containers",
+    "type": "webpage",
+    "title": "An Introduction To Docker And Containers For Beginners",
+    "author": [
+      {
+        "literal": "freeCodeCamp"
+      }
+    ],
+    "publisher": "freeCodeCamp",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.freecodecamp.org/news/an-introduction-to-docker-and-containers-for-beginners"
+  },
+  {
+    "id": "four-pillars-of-object-oriented-programming",
+    "type": "webpage",
+    "title": "Four Pillars Of Object Oriented Programming",
+    "author": [
+      {
+        "literal": "freeCodeCamp"
+      }
+    ],
+    "publisher": "freeCodeCamp",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.freecodecamp.org/news/four-pillars-of-object-oriented-programming"
+  },
+  {
+    "id": "learn-continuous-integration-delivery-deployment",
+    "type": "webpage",
+    "title": "Learn Continuous Integration Delivery And Deployment",
+    "author": [
+      {
+        "literal": "freeCodeCamp"
+      }
+    ],
+    "publisher": "freeCodeCamp",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.freecodecamp.org/news/learn-continuous-integration-delivery-and-deployment"
+  },
+  {
+    "id": "continuous-integration",
+    "type": "webpage",
+    "title": "ContinuousIntegration",
+    "author": [
+      {
+        "literal": "Martin Fowler"
+      }
+    ],
+    "publisher": "Martin Fowler",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.martinfowler.com/articles/continuousIntegration.html"
+  },
+  {
+    "id": "ten-usability-heuristics",
+    "type": "webpage",
+    "title": "Ten Usability Heuristics",
+    "author": [
+      {
+        "literal": "nngroup.com"
+      }
+    ],
+    "publisher": "nngroup.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.nngroup.com/articles/ten-usability-heuristics"
+  },
+  {
+    "id": "usability-testing-101",
+    "type": "webpage",
+    "title": "Usability Testing 101",
+    "author": [
+      {
+        "literal": "nngroup.com"
+      }
+    ],
+    "publisher": "nngroup.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.nngroup.com/articles/usability-testing-101"
+  },
+  {
+    "id": "transactions-tutorial",
+    "type": "webpage",
+    "title": "Tutorial Transactions",
+    "author": [
+      {
+        "literal": "postgresql.org"
+      }
+    ],
+    "publisher": "postgresql.org",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.postgresql.org/docs/current/tutorial-transactions.html"
+  },
+  {
+    "id": "redbook",
+    "type": "webpage",
+    "title": "Redbook.Io",
+    "author": [
+      {
+        "literal": "redbook.io"
+      }
+    ],
+    "publisher": "redbook.io",
+    "issued": {
+      "raw": "2015"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "http://www.redbook.io/"
+  },
+  {
+    "id": "oauth2-explained",
+    "type": "webpage",
+    "title": "Whats Aouth2",
+    "author": [
+      {
+        "literal": "romaglushko.com"
+      }
+    ],
+    "publisher": "romaglushko.com",
+    "issued": {
+      "raw": "2025"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.romaglushko.com/blog/whats-aouth2"
+  },
+  {
+    "id": "what-is-use-case-diagram",
+    "type": "webpage",
+    "title": "What Is Use Case Diagram",
+    "author": [
+      {
+        "literal": "visual-paradigm.com"
+      }
+    ],
+    "publisher": "visual-paradigm.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-use-case-diagram"
+  },
+  {
+    "id": "cs50x-en-espanol",
+    "type": "motion_picture",
+    "title": "CS50x en Español",
+    "author": [
+      {
+        "literal": "CS50"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50"
+  },
+  {
+    "id": "prerequisite-for-abstract-algebra",
+    "type": "motion_picture",
+    "title": "Prerequisite for Abstract Algebra",
+    "author": [
+      {
+        "literal": "SawFin Mathematics"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PLl-gb0E4MII3VYU3WDNEkHiHN8LipBpLR"
+  },
+  {
+    "id": "introduction-to-mathematical-proofs",
+    "type": "motion_picture",
+    "title": "Introduction to Mathematical Proofs",
+    "author": [
+      {
+        "literal": "Ellie Sleightholm"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PL1G5DlZL8LNUgp1SaLclrASiGY8_ZS6JF"
+  },
+  {
+    "id": "essence-of-linear-algebra",
+    "type": "motion_picture",
+    "title": "Essence of linear algebra",
+    "author": [
+      {
+        "literal": "3Blue1Brown"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab"
+  },
+  {
+    "id": "database-management-systems",
+    "type": "motion_picture",
+    "title": "Database Management Systems",
+    "author": [
+      {
+        "literal": "Neso Academy"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2021"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRi_CUQ-FXxgzKQ1dwr_ZJWZ"
+  },
+  {
+    "id": "essence-of-calculus",
+    "type": "motion_picture",
+    "title": "Essence of calculus",
+    "author": [
+      {
+        "literal": "3Blue1Brown"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr"
+  },
+  {
+    "id": "mathematics-for-computer-science-spring-2024",
+    "type": "motion_picture",
+    "title": "MIT 6.1200J Mathematics for Computer Science,  Spring 2024",
+    "author": [
+      {
+        "literal": "MIT OpenCourseWare"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PLUl4u3cNGP61VNvICqk2HXJTonnKgAc9d"
+  },
+  {
+    "id": "intro-to-mathematical-reasoning-spring-2024",
+    "type": "motion_picture",
+    "title": "MIT 18.090 Intro to Mathematical Reasoning Spring 2024",
+    "author": [
+      {
+        "literal": "Michael King"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PL-nrTJmvEtZbaV15NZcfE8dvIIceV3tqu"
+  },
+  {
+    "id": "python-para-programadores",
+    "type": "motion_picture",
+    "title": "Python Para Programadores",
+    "author": [
+      {
+        "literal": "Ezequiel L. Castaño - Español (ELC)"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PL6L8P83xTjQ43lioPhb7liCeg5fe6ucaE"
+  },
+  {
+    "id": "acid-properties-in-databases-with-examples",
+    "type": "motion_picture",
+    "title": "ACID Properties in Databases With Examples",
+    "author": [
+      {
+        "literal": "ByteByteGo"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=GAe5oB742dw"
+  },
+  {
+    "id": "an-introduction-to-mathematical-proofs",
+    "type": "motion_picture",
+    "title": "An Introduction to Mathematical Proofs",
+    "author": [
+      {
+        "literal": "zeropercent"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=YYgepDY3rHw"
+  },
+  {
+    "id": "data-structures-and-algorithms-full-course",
+    "type": "motion_picture",
+    "title": "Data Structures and Algorithms Full Course 📈",
+    "author": [
+      {
+        "literal": "Bro Code"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=CBYHwZcbD-s"
+  },
+  {
+    "id": "full-stack-web-development-for-beginners-full-co",
+    "type": "motion_picture",
+    "title": "Full Stack Web Development for Beginners (Full Course on HTML, CSS, JavaScript, Node.js, MongoDB)",
+    "author": [
+      {
+        "literal": "freeCodeCamp.org"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=nu_pCVPKzTk"
+  },
+  {
+    "id": "hypothesis-testing-and-the-null-hypothesis-clear",
+    "type": "motion_picture",
+    "title": "Hypothesis Testing and The Null Hypothesis, Clearly Explained!!!",
+    "author": [
+      {
+        "literal": "StatQuest with Josh Starmer"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=0oc49DyA3hU"
+  },
+  {
+    "id": "p-values-what-they-are-and-how-to-interpret-them",
+    "type": "motion_picture",
+    "title": "p-values: What they are and how to interpret them",
+    "author": [
+      {
+        "literal": "StatQuest with Josh Starmer"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=vemZtEM63GY"
+  },
+  {
+    "id": "github-actions-tutorial-basic-concepts-and-ci-cd",
+    "type": "motion_picture",
+    "title": "GitHub Actions Tutorial - Basic Concepts and CI/CD Pipeline with Docker",
+    "author": [
+      {
+        "literal": "TechWorld with Nana"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=R8_veQiYBjI"
+  },
+  {
+    "id": "project-management-waterfall-agile-hybrid-approa",
+    "type": "motion_picture",
+    "title": "Project Management: Waterfall, Agile, & Hybrid Approaches",
+    "author": [
+      {
+        "literal": "Kandis Porter"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=bLZ9MNwV2vE"
+  },
+  {
+    "id": "what-is-ddd-eric-evans-ddd-europe-2019",
+    "type": "motion_picture",
+    "title": "What is DDD - Eric Evans - DDD Europe 2019",
+    "author": [
+      {
+        "literal": "Domain-Driven Design Europe"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2019"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=pMuiVlnGqjk"
+  },
+  {
+    "id": "entity-relationship-diagram-erd-tutorial-part-1",
+    "type": "motion_picture",
+    "title": "Entity Relationship Diagram (ERD) Tutorial - Part 1",
+    "author": [
+      {
+        "literal": "Lucid Software"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2023"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=xsg9BDiwiJE"
+  },
+  {
+    "id": "how-to-create-an-mvp-minimum-viable-product-step",
+    "type": "motion_picture",
+    "title": "How To Create An MVP (Minimum Viable Product) - STEP BY STEP",
+    "author": [
+      {
+        "literal": "Rob Walling"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=YwEEV0wHnaA"
+  },
+  {
+    "id": "relational-algebra-operations-unary",
+    "type": "motion_picture",
+    "title": "Relational Algebra Operations - Unary",
+    "author": [
+      {
+        "literal": "Neso Academy"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=8PJGw123zeE"
+  },
+  {
+    "id": "tutorial-structorizer",
+    "type": "motion_picture",
+    "title": "Tutorial structorizer",
+    "author": [
+      {
+        "literal": "Informatica Wereld"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=_GSFmwaErFc",
+    "genre": "interactive"
+  },
+  {
+    "id": "learn-database-normalization-1nf-2nf-3nf-4nf-5nf",
+    "type": "motion_picture",
+    "title": "Learn Database Normalization - 1NF, 2NF, 3NF, 4NF, 5NF",
+    "author": [
+      {
+        "literal": "Decomplexify"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=GFQaEYEc8_8"
+  },
+  {
+    "id": "ace-derivatives-with-desmos-in-ap-calculus",
+    "type": "motion_picture",
+    "title": "Ace Derivatives with Desmos in AP Calculus!",
+    "author": [
+      {
+        "literal": "Angie Teaches Math"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=trdab2TO820"
+  },
+  {
+    "id": "how-to-solve-any-optimization-problem-calculus-1",
+    "type": "motion_picture",
+    "title": "How to Solve ANY Optimization Problem | Calculus 1",
+    "author": [
+      {
+        "literal": "Wrath of Math"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=0vIZdyjoubE"
+  },
+  {
+    "id": "optimization-profit-applications-of-derivatives",
+    "type": "motion_picture",
+    "title": "Optimization: profit | Applications of derivatives | AP Calculus AB | Khan Academy",
+    "author": [
+      {
+        "literal": "Khan Academy"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=dam16G6cZ8k"
+  },
+  {
+    "id": "saving-files-in-python-with-text-json-and-pickle",
+    "type": "motion_picture",
+    "title": "Saving files in Python with text, json and pickle - improving the Simple Todo App made with GooeyPie",
+    "author": [
+      {
+        "literal": "Coding Mechanism"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=GN23Baj63sk"
+  },
+  {
+    "id": "postgresql-tutorial",
+    "type": "motion_picture",
+    "title": "PostgreSQL Tutorial for Beginners",
+    "author": [
+      {
+        "literal": "freeCodeCamp.org"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=SpfIwlAYaKk"
+  },
+  {
+    "id": "sqlite-databases-with-python-full-course",
+    "type": "motion_picture",
+    "title": "SQLite Databases With Python - Full Course",
+    "author": [
+      {
+        "literal": "freeCodeCamp.org"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=byHcYRpMgI4"
+  },
+  {
+    "id": "what-s-the-point-of-object-orientation",
+    "type": "motion_picture",
+    "title": "What's the point of Object Orientation?",
+    "author": [
+      {
+        "literal": "Next Day Video"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=M1XL65qj2dU"
+  },
+  {
+    "id": "intro-to-object-oriented-programming-crash-cours",
+    "type": "motion_picture",
+    "title": "Intro to Object Oriented Programming - Crash Course",
+    "author": [
+      {
+        "literal": "freeCodeCamp.org"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=SiBw7os-_zI"
+  },
+  {
+    "id": "cs50x-2024-lecture-3-algorithms",
+    "type": "motion_picture",
+    "title": "CS50x 2024 - Lecture 3 - Algorithms",
+    "author": [
+      {
+        "literal": "CS50"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=jZzyERW7h1A"
+  },
+  {
+    "id": "python-full-course-for-beginners-complete-all-in",
+    "type": "motion_picture",
+    "title": "Python Full Course for Beginners | Complete All-in-One Tutorial | 9 Hours",
+    "author": [
+      {
+        "literal": "Dave Gray"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=H2EJuAcrZYU"
+  },
+  {
+    "id": "definition-of-done-vs-acceptance-criteria-what-s",
+    "type": "motion_picture",
+    "title": "Definition of Done vs Acceptance Criteria: What's the Difference?",
+    "author": [
+      {
+        "literal": "Mountain Goat Software: Agile & Scrum Mastery"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=Hq9O7mnUNM4"
+  },
+  {
+    "id": "the-acid-properties-of-databases-key-concepts-in",
+    "type": "motion_picture",
+    "title": "The ACID Properties of Databases ~ Key Concepts in System Design",
+    "author": [
+      {
+        "literal": "Hello Byte"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=DtlV5JTnlh4"
+  },
+  {
+    "id": "laws-of-ux-using-psychology-to-design-better-pro",
+    "type": "motion_picture",
+    "title": "Laws of UX: Using Psychology to Design Better Products & Services",
+    "author": [
+      {
+        "literal": "Proximity Lab"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2023"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=Qc5F07l1Fjs"
+  },
+  {
+    "id": "vectors-chapter-1-essence-of-linear-algebra",
+    "type": "motion_picture",
+    "title": "Vectors | Chapter 1, Essence of linear algebra",
+    "author": [
+      {
+        "literal": "3Blue1Brown"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=fNk_zzaMoSs"
+  },
+  {
+    "id": "breaking-down-vectors-into-components-vectors-pr",
+    "type": "motion_picture",
+    "title": "Breaking down vectors into components | Vectors | Precalculus | Khan Academy",
+    "author": [
+      {
+        "literal": "Khan Academy"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=6Kw2nIwWYL0"
+  },
+  {
+    "id": "what-is-rest-api-examples-and-how-to-use-it-cras",
+    "type": "motion_picture",
+    "title": "What Is REST API? Examples And How To Use It: Crash Course System Design #3",
+    "author": [
+      {
+        "literal": "ByteByteGo"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=-mN3VyJuCjM"
+  },
+  {
+    "id": "api-authentication-explained-finally-basic-auth",
+    "type": "motion_picture",
+    "title": "API Authentication Explained (Finally) — Basic Auth, Bearer & JWT",
+    "author": [
+      {
+        "literal": "LearnThatStack"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2025"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=I747kI_y9eQ"
+  },
+  {
+    "id": "uml-use-case-diagram-tutorial-business-analyst-t",
+    "type": "motion_picture",
+    "title": "UML Use Case Diagram [Tutorial] Business Analyst Techniques",
+    "author": [
+      {
+        "literal": "Passionate Business Analyst"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=qFaSEMbiWaI"
+  },
+  {
+    "id": "uml-use-case-diagram-tutorial",
+    "type": "motion_picture",
+    "title": "UML Use Case Diagram Tutorial",
+    "author": [
+      {
+        "literal": "Lucid Software"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=zid-MVo7M-E"
+  },
+  {
+    "id": "docker-containers-and-kubernetes-fundamentals-fu",
+    "type": "motion_picture",
+    "title": "Docker Containers and Kubernetes Fundamentals – Full Hands-On Course",
+    "author": [
+      {
+        "literal": "freeCodeCamp.org"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=kTp5xUtcalw"
+  },
+  {
+    "id": "user-stories-and-acceptance-criteria-example-agi",
+    "type": "motion_picture",
+    "title": "User Stories and Acceptance Criteria EXAMPLE (Agile Story Tutorial)",
+    "author": [
+      {
+        "literal": "The Business Analysis Doctor - IIBA Certification"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=q26147zlcMU"
+  }
+]

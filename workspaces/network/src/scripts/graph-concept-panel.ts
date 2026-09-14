@@ -1,4 +1,4 @@
-import { isBookSource } from "@pps/core";
+import { panelResourceKind, stripCitationRefs, type ResourceCatalogEntry } from "@pps/core";
 
 import { capitalizeWords } from "./graph-styles";
 
@@ -7,10 +7,17 @@ interface ConceptUrlLink {
   target: string;
 }
 
+interface ConceptCitation {
+  raw: string;
+  id: string;
+  resolved?: ResourceCatalogEntry;
+}
+
 interface ConceptBlock {
   line: number;
   text: string;
   urls: ConceptUrlLink[];
+  citations?: ConceptCitation[];
 }
 
 export interface ConceptPage {
@@ -36,50 +43,25 @@ function parseGeneratedPayload<T>(content: string): T {
   return JSON.parse(json) as T;
 }
 
-function primaryBlockUrl(urls: ConceptUrlLink[]): string | undefined {
-  return urls[0]?.target;
+function primaryBlockUrl(block: ConceptBlock): string | undefined {
+  return block.citations?.[0]?.resolved?.URL ?? block.urls[0]?.target;
 }
 
-function classifyResourceKind(text: string, url?: string): ResourceKind {
-  const normalizedUrl = url?.toLowerCase() ?? "";
-
-  if (normalizedUrl.includes("wikipedia.org") || /\bwikipedia\b/i.test(text)) {
-    return "wikipedia";
-  }
-
-  if (
-    /youtube\.com|youtu\.be|vimeo\.com/.test(normalizedUrl) ||
-    /\b(video|playlist)\b/i.test(text)
-  ) {
-    return "video";
-  }
-
-  if (isBookSource(text, url)) {
-    return "book";
-  }
-
-  if (
-    /db-fiddle|replit\.com|repl\.it|codecademy|exercism|observablehq|sqlfiddle|jsfiddle|codesandbox|scratch\.mit\.edu/.test(
-      normalizedUrl,
-    ) ||
-    /\b(interactivo|interactive|simulador|sandbox|playground|fiddle|experiment)\b/i.test(text)
-  ) {
-    return "interactive";
+function classifyResourceKind(block: ConceptBlock): ResourceKind {
+  const resolved = block.citations?.[0]?.resolved;
+  if (resolved) {
+    return panelResourceKind(resolved);
   }
 
   return "text";
 }
 
-function blockDisplayText(text: string, primaryUrl?: string): string {
-  if (!primaryUrl) {
-    return text;
-  }
+function blockDisplayText(block: ConceptBlock): string {
+  const primaryUrl = primaryBlockUrl(block);
+  let display = stripCitationRefs(block.text).trim();
 
-  let display = text.trim();
-  if (display.endsWith(primaryUrl)) {
+  if (primaryUrl && display.endsWith(primaryUrl)) {
     display = display.slice(0, -primaryUrl.length).trim();
-  } else {
-    display = display.replace(primaryUrl, "").trim();
   }
 
   return display;
@@ -172,11 +154,12 @@ function renderConceptNote(block: ConceptBlock): HTMLElement {
   const item = document.createElement("li");
   item.className = "graph-concept-note";
 
-  const primaryUrl = primaryBlockUrl(block.urls);
-  const resourceKind = classifyResourceKind(block.text, primaryUrl);
+  const primaryUrl = primaryBlockUrl(block);
+  const resourceKind = classifyResourceKind(block);
+  const resolvedTitle = block.citations?.[0]?.resolved?.title;
   const body = document.createElement("div");
   body.className = "graph-concept-note-body";
-  body.textContent = blockDisplayText(block.text, primaryUrl);
+  body.textContent = blockDisplayText(block);
 
   if (!primaryUrl) {
     const content = document.createElement("div");
@@ -191,7 +174,9 @@ function renderConceptNote(block: ConceptBlock): HTMLElement {
   link.href = primaryUrl;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
-  link.title = `${RESOURCE_LABELS[resourceKind]}: ${primaryUrl}`;
+  link.title = resolvedTitle
+    ? `${RESOURCE_LABELS[resourceKind]}: ${resolvedTitle}`
+    : `${RESOURCE_LABELS[resourceKind]}: ${primaryUrl}`;
   link.append(createResourceIcon(resourceKind), body);
   item.appendChild(link);
   return item;

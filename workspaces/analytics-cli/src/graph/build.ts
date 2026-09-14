@@ -1,6 +1,7 @@
 import { resolve } from "node:path";
 import { buildGraphFromPages, LoadedConfig } from "@pps/core";
 import { readPageSources } from "../content/read-pages";
+import { readResourceCatalog } from "../content/read-resources";
 import { CurriculumGraph } from "../types";
 
 export { buildEdges } from "@pps/core";
@@ -15,5 +16,6 @@ export function buildGraph(input: {
     sources: readPageSources(contentDir),
     config: input.config,
     generatedAt: input.generatedAt,
+    resources: readResourceCatalog(contentDir),
   });
 }

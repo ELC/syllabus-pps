@@ -52,6 +52,7 @@ describe("collectSourcesForBlock", () => {
       ],
       tags: [],
       urls: [{ raw: "https://example.com", target: "https://example.com", line: 1 }],
+      citations: [],
     };
     const curriculumTitles = new Set(["año 1"]);
 
@@ -65,7 +66,7 @@ describe("collectSourcesForBlock", () => {
 });
 
 describe("collectPageSources", () => {
-  it("deduplicates source links across all blocks on a page", () => {
+  it("deduplicates citation ids across all blocks on a page", () => {
     const page: ZettelPage = {
       slug: "algoritmos",
       title: "algoritmos",
@@ -76,19 +77,21 @@ describe("collectPageSources", () => {
       blocks: [
         {
           line: 1,
-          text: "referencia https://es.wikipedia.org/wiki/Algoritmo",
+          text: "referencia wikipedia",
           refs: [],
           tags: [],
-          urls: [{ raw: "https://es.wikipedia.org/wiki/Algoritmo", target: "https://es.wikipedia.org/wiki/Algoritmo", line: 1 }],
+          urls: [],
+          citations: [{ id: "algoritmo", raw: "[@algoritmo]", line: 1 }],
         },
         {
           line: 2,
-          text: "según https://example.com/intro y https://example.com/intro",
+          text: "según cs50",
           refs: [],
           tags: [],
-          urls: [
-            { raw: "https://example.com/intro", target: "https://example.com/intro", line: 2 },
-            { raw: "https://example.com/intro", target: "https://example.com/intro", line: 2 },
+          urls: [],
+          citations: [
+            { id: "asymptotic-notation", raw: "[@asymptotic-notation]", line: 2 },
+            { id: "asymptotic-notation", raw: "[@asymptotic-notation]", line: 2 },
           ],
         },
       ],
@@ -98,8 +101,8 @@ describe("collectPageSources", () => {
     };
 
     expect(collectPageSources(page, new Set())).toEqual([
-      "https://es.wikipedia.org/wiki/Algoritmo",
-      "https://example.com/intro",
+      "algoritmo",
+      "asymptotic-notation",
     ]);
   });
 });

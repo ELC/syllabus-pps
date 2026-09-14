@@ -22,7 +22,8 @@ export function conceptNotesWithoutLinks(graph: CurriculumGraph): Diagnostic[] {
           (block) =>
             block.refs.length === 0 &&
             block.tags.length === 0 &&
-            block.urls.length === 0,
+            block.urls.length === 0 &&
+            block.citations.length === 0,
         )
         .map((block) => ({
           severity: "warning" as const,

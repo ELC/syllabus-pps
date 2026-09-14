@@ -1,4 +1,5 @@
 import { LoadedConfig } from "../config/loaded-config";
+import { indexResourceCatalog, ResourceCatalogEntry } from "../resources";
 import { parsePages, PageSource } from "../parser";
 import { CurriculumGraph, GraphEdge, PageKind, ZettelPage } from "../types";
 
@@ -32,18 +33,26 @@ export function buildGraphFromPages(input: {
   sources: PageSource[];
   config: LoadedConfig;
   generatedAt?: string;
+  resources?: ResourceCatalogEntry[];
 }): CurriculumGraph {
-  const pages = parsePages(input.sources, {
-    expectedCourseTitles: input.config.expectedCourseTitles,
-    expectedYearTitles: input.config.expectedYearTitles,
-    administrativeTitles: input.config.administrativeTitles,
-  });
+  const resources = input.resources ?? [];
+  const catalog = indexResourceCatalog(resources);
+  const pages = parsePages(
+    input.sources,
+    {
+      expectedCourseTitles: input.config.expectedCourseTitles,
+      expectedYearTitles: input.config.expectedYearTitles,
+      administrativeTitles: input.config.administrativeTitles,
+    },
+    catalog,
+  );
 
   return {
     generatedAt: input.generatedAt ?? new Date().toISOString(),
     pages,
     edges: buildEdges(pages),
     expected: input.config.expected,
+    resources,
   };
 }
 

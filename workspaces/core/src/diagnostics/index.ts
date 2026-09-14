@@ -23,6 +23,10 @@ import {
   selfLinkDiagnostics,
 } from "./pages";
 import {
+  resourceCatalogDiagnostics,
+  unresolvedCitationDiagnostics,
+} from "./resources";
+import {
   conceptInsufficientSources,
   conceptMissingBookSource,
   conceptNotesWithoutSourceLinks,
@@ -52,6 +56,8 @@ export function collectDiagnostics(graph: CurriculumGraph): Diagnostic[] {
   diagnostics.push(...conceptInsufficientSources(graph));
   diagnostics.push(...conceptMissingBookSource(graph));
   diagnostics.push(...conceptNotesWithoutSourceLinks(graph));
+  diagnostics.push(...resourceCatalogDiagnostics(graph));
+  diagnostics.push(...unresolvedCitationDiagnostics(graph));
   diagnostics.push(...conceptLinksToNonConceptPages(graph));
   diagnostics.push(...conceptLowCourseCoverage(graph));
   diagnostics.push(...uuidReferenceDiagnostics(graph));

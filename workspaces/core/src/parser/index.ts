@@ -1,3 +1,4 @@
+import { ResourceCatalogIndex } from "../resources";
 import { ZettelPage } from "../types";
 import { classifyPage } from "./classify";
 import { buildPageIndex } from "./page-index";
@@ -9,16 +10,41 @@ export type { PageSource, ParseOptions, RawPage } from "./types";
 export { parseFrontmatter } from "./frontmatter";
 export { parsePageContent } from "./parse-content";
 export { slugifyTitle } from "../slug";
+export { extractCitationRefs, stripCitationRefs } from "./extractors";
 
-export function parsePages(sources: PageSource[], options: ParseOptions = {}): ZettelPage[] {
+function resolveBlockCitations(
+  block: ZettelPage["blocks"][number],
+  catalog: ResourceCatalogIndex | undefined,
+): ZettelPage["blocks"][number] {
+  if (!catalog || block.citations.length === 0) {
+    return block;
+  }
+
+  return {
+    ...block,
+    citations: block.citations.map((citation) => ({
+      ...citation,
+      resolved: catalog.byId.get(citation.id),
+    })),
+  };
+}
+
+export function parsePages(
+  sources: PageSource[],
+  options: ParseOptions = {},
+  catalog?: ResourceCatalogIndex,
+): ZettelPage[] {
   const rawPages = sources.map((source) => parsePageContent(source));
   const index = buildPageIndex(rawPages);
 
   const resolvedPages = rawPages.map((page) => {
-    const blocks = page.blocks.map((block) => resolveBlock(block, index));
+    const blocks = page.blocks
+      .map((block) => resolveBlock(block, index))
+      .map((block) => resolveBlockCitations(block, catalog));
     const refs = blocks.flatMap((block) => block.refs);
     const tags = blocks.flatMap((block) => block.tags);
     const urls = blocks.flatMap((block) => block.urls);
+    const citations = blocks.flatMap((block) => block.citations);
 
     return {
       ...page,
@@ -57,6 +83,7 @@ export function parsePages(sources: PageSource[], options: ParseOptions = {}): Z
         refs: page.refs,
         tags: page.tags,
         urls: page.urls,
+        citations: page.blocks.flatMap((block) => block.citations),
         nonBulletLines: page.nonBulletLines,
         dependsOn,
         dependsOnInvalid,

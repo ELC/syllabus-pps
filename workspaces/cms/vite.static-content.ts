@@ -5,6 +5,7 @@ import type { Plugin } from "vite";
 
 const cmsDir = fileURLToPath(new URL(".", import.meta.url));
 const contentDir = resolve(cmsDir, "../../content/pages");
+const resourcesPath = resolve(cmsDir, "../../content/resources.json");
 
 export function staticContentPlugin(): Plugin {
   let outDir = "dist";
@@ -27,6 +28,7 @@ export function staticContentPlugin(): Plugin {
       }));
 
       writeFileSync(join(dataDir, "pages.json"), JSON.stringify(pages));
+      writeFileSync(join(dataDir, "resources.json"), readFileSync(resourcesPath, "utf8"), "utf8");
 
       for (const entry of entries) {
         const slug = entry.replace(/\.md$/i, "");

@@ -5,9 +5,9 @@ dependsOn:
   - matrices
   - vectores
 ---
-- Un sistema lineal combina ecuaciones lineales con incógnitas compartidas; la Wikipedia en español describe métodos de solución y tipos de compatibilidad https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales
-- Interactive Linear Algebra de Georgia Tech presenta eliminación gaussiana, matrices aumentadas y formas escalonadas con el algoritmo de reducción https://textbooks.math.gatech.edu/ila/row-reduction.html
-- El libro College Algebra (2.ª ed.) de OpenStax es de acceso libre y repasa ecuaciones lineales, sistemas y métodos de solución algebraica https://openstax.org/details/books/college-algebra-2e
-- El libro Linear Algebra Done Right (4.ª ed., 2024) de Axler está disponible en PDF abierto y conecta sistemas lineales con espacio columna, nulo y rango https://linear.axler.net/LADR4e.pdf
-- Esta playlist Essence of linear algebra de 3Blue1Brown muestra cómo interpretar sistemas como intersecciones de transformaciones lineales https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab
-- La especialización Linear Algebra from Elementary to Advanced de Johns Hopkins en Coursera empieza por ecuaciones lineales y métodos matriciales antes de pasar a autovalores y formas cuadráticas https://www.coursera.org/specializations/linear-algebra-elementary-to-advanced
+- Un sistema lineal combina ecuaciones lineales con incógnitas compartidas; la Wikipedia en español describe métodos de solución y tipos de compatibilidad [@sistema-de-ecuaciones-lineales]
+- Interactive Linear Algebra de Georgia Tech presenta eliminación gaussiana, matrices aumentadas y formas escalonadas con el algoritmo de reducción [@row-reduction]
+- El libro College Algebra (2.ª ed.) de OpenStax es de acceso libre y repasa ecuaciones lineales, sistemas y métodos de solución algebraica [@college-algebra]
+- El libro Linear Algebra Done Right (4.ª ed., 2024) de Axler está disponible en PDF abierto y conecta sistemas lineales con espacio columna, nulo y rango [@linear-algebra-done-right]
+- Esta playlist Essence of linear algebra de 3Blue1Brown muestra cómo interpretar sistemas como intersecciones de transformaciones lineales [@essence-of-linear-algebra]
+- La especialización Linear Algebra from Elementary to Advanced de Johns Hopkins en Coursera empieza por ecuaciones lineales y métodos matriciales antes de pasar a autovalores y formas cuadráticas [@linear-algebra-elementary-to-advanced]

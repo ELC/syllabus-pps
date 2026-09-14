@@ -35,6 +35,8 @@ export function remoteObjectPath(slug: string): string {
   return `pages/${slug}.md`;
 }
 
+export const remoteResourcesPath = "resources/resources.json";
+
 export async function listRemotePages(client: SupabaseClient, bucket: string): Promise<RemotePageObject[]> {
   const { data, error } = await client.storage.from(bucket).list("pages", { limit: 1000 });
   if (error) {
@@ -60,6 +62,35 @@ export async function listRemotePages(client: SupabaseClient, bucket: string): P
   }
 
   return pages;
+}
+
+export async function downloadRemoteResources(
+  client: SupabaseClient,
+  bucket: string,
+): Promise<string | null> {
+  const downloaded = await client.storage.from(bucket).download(remoteResourcesPath);
+  if (downloaded.error) {
+    if (downloaded.error.message.toLowerCase().includes("not found")) {
+      return null;
+    }
+    throw downloaded.error;
+  }
+
+  return downloaded.data.text();
+}
+
+export async function uploadRemoteResources(
+  client: SupabaseClient,
+  bucket: string,
+  content: string,
+): Promise<void> {
+  const { error } = await client.storage.from(bucket).upload(remoteResourcesPath, content, {
+    upsert: true,
+    contentType: "application/json",
+  });
+  if (error) {
+    throw error;
+  }
 }
 
 export async function uploadRemotePage(

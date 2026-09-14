@@ -1,5 +1,7 @@
 import { isUuid, normalizeTitle } from "../normalize";
-import { ConceptTag, PageRef, UrlLink } from "../types";
+import { CitationRef, ConceptTag, PageRef, UrlLink } from "../types";
+
+const CITATION_PATTERN = /\[@([a-z0-9]+(?:-[a-z0-9]+)*)\]/g;
 
 export function extractPageRefs(text: string, line: number): PageRef[] {
   const refs: PageRef[] = [];
@@ -86,4 +88,27 @@ export function extractUrlLinks(text: string, line: number): UrlLink[] {
 
 function trimTrailingUrlPunctuation(value: string): string {
   return value.replace(/[.,;:!?]+$/g, "");
+}
+
+export function extractCitationRefs(text: string, line: number): CitationRef[] {
+  const citations: CitationRef[] = [];
+
+  for (const match of text.matchAll(CITATION_PATTERN)) {
+    const id = (match[1] ?? "").trim();
+    if (!id) {
+      continue;
+    }
+
+    citations.push({
+      raw: match[0],
+      id,
+      line,
+    });
+  }
+
+  return citations;
+}
+
+export function stripCitationRefs(text: string): string {
+  return text.replace(CITATION_PATTERN, "").replace(/\s+/g, " ").trim();
 }

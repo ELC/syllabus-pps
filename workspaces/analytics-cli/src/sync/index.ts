@@ -1,8 +1,18 @@
-import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { slugFromPath } from "@pps/core";
 import { mergeRecords, SyncConflict, toSyncRecord } from "./merge";
-import { createSupabaseClientFromEnv, listRemotePages, uploadRemotePage } from "./supabase-storage";
+import { join } from "node:path";
+import {
+  createSupabaseClientFromEnv,
+  downloadRemoteResources,
+  listRemotePages,
+  uploadRemotePage,
+  uploadRemoteResources,
+} from "./supabase-storage";
+
+function resourcesPath(contentDir: string): string {
+  return join(contentDir, "..", "resources.json");
+}
 
 function readLocalPages(contentDir: string) {
   return readdirSync(contentDir)
@@ -50,6 +60,12 @@ export async function syncPull(contentDir: string): Promise<{ written: number; c
     }
   }
 
+  const remoteResources = await downloadRemoteResources(client, bucket);
+  if (remoteResources !== null) {
+    writeFileSync(resourcesPath(contentDir), remoteResources, "utf8");
+    written += 1;
+  }
+
   return { written, conflicts };
 }
 
@@ -74,6 +90,12 @@ export async function syncPush(contentDir: string): Promise<{ uploaded: number; 
       await uploadRemotePage(client, bucket, local.slug, merged.winner.content);
       uploaded += 1;
     }
+  }
+
+  const catalogPath = resourcesPath(contentDir);
+  if (existsSync(catalogPath)) {
+    await uploadRemoteResources(client, bucket, readFileSync(catalogPath, "utf8"));
+    uploaded += 1;
   }
 
   return { uploaded, conflicts };

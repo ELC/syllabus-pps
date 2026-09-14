@@ -1,3 +1,4 @@
+import { catalogSourceType, isBookResource } from "../resources";
 import { normalizeTitle, uniqueSorted } from "../normalize";
 import { ZettelBlock, ZettelPage } from "../types";
 
@@ -34,13 +35,21 @@ export function isSourceReference(
   );
 }
 
+function citationSourceIds(block: ZettelBlock): string[] {
+  return block.citations.map((citation) => citation.id);
+}
+
 export function collectSourcesForBlock(
   page: ZettelPage,
   block: ZettelBlock,
   curriculumTitles: ReadonlySet<string>,
 ): string[] {
-  const urlSources = block.urls.map((url) => url.target);
+  const citationSources = citationSourceIds(block);
+  if (citationSources.length > 0) {
+    return uniqueSorted(citationSources);
+  }
 
+  const urlSources = block.urls.map((url) => url.target);
   if (!hasSourceCue(block.text)) {
     return uniqueSorted(urlSources);
   }
@@ -64,35 +73,20 @@ export interface ConceptSourceRow {
 
 export const MINIMUM_CONCEPT_SOURCES = 3;
 
-const BOOK_URL_PATTERN =
-  /\b(db-book\.com|bookofproof\.org|opendatastructures\.org|mitpress\.mit\.edu|oreilly\.com\/library\/view|linear\.axler\.net|ehmatthes\.github\.io\/pcc|manning\.com|link\.springer\.com\/book|openstax\.org\/details\/books)\b/i;
-
-export function isBookSource(text: string, url?: string): boolean {
-  const value = `${text} ${url ?? ""}`.toLocaleLowerCase("es-AR");
-
-  if (/\b(bibliograf[ií]a|libro|textbook|texto|isbn|edici[oó]n|\bed\.|\d{4}\))\b/.test(value)) {
-    return true;
-  }
-
-  if (url && BOOK_URL_PATTERN.test(url)) {
-    return true;
-  }
-
-  return classifySourceType(text, url) === "bibliography";
+export function isBookCitation(block: ZettelBlock): boolean {
+  return block.citations.some((citation) => citation.resolved && isBookResource(citation.resolved));
 }
 
 export function collectPageBookSources(
   page: ZettelPage,
-  curriculumTitles: ReadonlySet<string>,
+  _curriculumTitles: ReadonlySet<string>,
 ): string[] {
   return uniqueSorted(
-    page.blocks.flatMap((block) => {
-      const sources = collectSourcesForBlock(page, block, curriculumTitles);
-      return sources.filter((source) => {
-        const url = block.urls.find((entry) => entry.target === source)?.target;
-        return isBookSource(block.text, url ?? (source.startsWith("http") ? source : undefined));
-      });
-    }),
+    page.blocks.flatMap((block) =>
+      block.citations
+        .filter((citation) => citation.resolved && isBookResource(citation.resolved))
+        .map((citation) => citation.id),
+    ),
   );
 }
 
@@ -107,54 +101,28 @@ export function collectPageSources(
 
 export function collectConceptSources(
   page: ZettelPage,
-  curriculumTitles: ReadonlySet<string>,
+  _curriculumTitles: ReadonlySet<string>,
 ): ConceptSourceRow[] {
-  return page.blocks.flatMap((block) => {
-    const urlSources = block.urls.map((url) => ({
-      sourceType: classifySourceType(block.text, url.target),
-      source: url.target,
+  return page.blocks.flatMap((block) =>
+    block.citations.map((citation) => ({
+      sourceType: citation.resolved ? catalogSourceType(citation.resolved) : "reference",
+      source: citation.resolved?.URL ?? citation.id,
       line: block.line.toString(),
       note: block.text,
-    }));
-
-    if (!hasSourceCue(block.text)) {
-      return urlSources;
-    }
-
-    const referenceSources = block.refs
-      .filter((ref) => {
-        const target = normalizeTitle(ref.resolvedTarget ?? ref.target);
-        return target !== page.normalizedTitle && !curriculumTitles.has(target);
-      })
-      .map((ref) => ({
-        sourceType: classifySourceType(block.text),
-        source: ref.resolvedTarget ?? ref.target,
-        line: block.line.toString(),
-        note: block.text,
-      }));
-
-    return [...urlSources, ...referenceSources];
-  });
+    })),
+  );
 }
 
-export function classifySourceType(text: string, url?: string): string {
-  const value = `${text} ${url ?? ""}`.toLocaleLowerCase("es-AR");
+export function collectUsedCitationIds(pages: ZettelPage[]): Set<string> {
+  const used = new Set<string>();
 
-  if (/\b(documentaci[oó]n|docs?|manual)\b/.test(value)) {
-    return "documentation";
+  for (const page of pages) {
+    for (const block of page.blocks) {
+      for (const citation of block.citations) {
+        used.add(citation.id);
+      }
+    }
   }
 
-  if (/\b(bibliograf|libro|book|isbn)\b/.test(value)) {
-    return "bibliography";
-  }
-
-  if (/\b(paper|art[ií]culo|article|doi|arxiv)\b/.test(value)) {
-    return "article";
-  }
-
-  if (url) {
-    return "url";
-  }
-
-  return "reference";
+  return used;
 }

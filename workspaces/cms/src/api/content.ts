@@ -1,4 +1,4 @@
-import { PageSource } from "@pps/core";
+import { PageSource, parseResourceCatalogJson, ResourceCatalogEntry } from "@pps/core";
 
 export interface PageListItem {
   slug: string;
@@ -50,6 +50,18 @@ export async function writePage(slug: string, content: string): Promise<void> {
   if (!response.ok && response.status !== 204) {
     throw new Error(`Failed to write page (${response.status})`);
   }
+}
+
+export async function loadResources(): Promise<ResourceCatalogEntry[]> {
+  const url = readOnlyCms ? assetUrl("data/resources.json") : assetUrl("api/resources");
+  const response = await fetch(url);
+  if (!response.ok) {
+    if (response.status === 404) {
+      return [];
+    }
+    throw new Error(`Failed to load resources (${response.status})`);
+  }
+  return parseResourceCatalogJson(await response.text()).entries;
 }
 
 export async function loadAllPageSources(): Promise<PageSource[]> {

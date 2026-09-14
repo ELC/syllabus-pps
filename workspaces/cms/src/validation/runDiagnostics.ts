@@ -4,6 +4,7 @@ import {
   createLoadedConfig,
   Diagnostic,
   PageSource,
+  ResourceCatalogEntry,
 } from "@pps/core";
 
 const expectedCurriculum = {
@@ -19,6 +20,7 @@ export function runDiagnosticsForEditor(
   currentSlug: string,
   currentContent: string,
   allPages: PageSource[],
+  resources: ResourceCatalogEntry[] = [],
 ): Diagnostic[] {
   const sources = allPages.map((page) =>
     page.path.replace(/\.md$/i, "") === currentSlug ? { ...page, content: currentContent } : page,
@@ -28,6 +30,7 @@ export function runDiagnosticsForEditor(
     sources,
     config,
     generatedAt: new Date().toISOString(),
+    resources,
   });
   return collectDiagnostics(graph);
 }

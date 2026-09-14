@@ -46,6 +46,9 @@ export const diagnosticCodes = [
   "concept-depends-on-non-concept",
   "concept-depends-on-self",
   "concept-depends-on-cycle",
+  "citation-unresolved",
+  "resource-catalog-invalid",
+  "resource-catalog-unused",
 ] as const;
 
 export type DiagnosticCode = (typeof diagnosticCodes)[number];
@@ -74,12 +77,20 @@ export interface UrlLink {
   line: number;
 }
 
+export interface CitationRef {
+  raw: string;
+  id: string;
+  line: number;
+  resolved?: import("./resources/types").ResourceCatalogEntry;
+}
+
 export interface ZettelBlock {
   line: number;
   text: string;
   refs: PageRef[];
   tags: ConceptTag[];
   urls: UrlLink[];
+  citations: CitationRef[];
 }
 
 export interface ConceptDependency {
@@ -112,6 +123,7 @@ export interface ZettelPage {
   refs: PageRef[];
   tags: ConceptTag[];
   urls: UrlLink[];
+  citations: CitationRef[];
   nonBulletLines?: number[];
   /** Parsed from frontmatter; undefined when the field is absent. */
   dependsOn?: ConceptDependency[];
@@ -146,6 +158,7 @@ export interface CurriculumGraph {
   pages: ZettelPage[];
   edges: GraphEdge[];
   expected: ExpectedCurriculum;
+  resources: import("./resources/types").ResourceCatalogEntry[];
 }
 
 export interface Diagnostic {

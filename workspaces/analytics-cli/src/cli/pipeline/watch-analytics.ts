@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { resolve } from "node:path";
+import { join, resolve } from "node:path";
 import type { AnalyticsRunOptions } from "../parameters/analytics";
 import { runBuild } from "./run-build";
 import { snapshotBuildInputs } from "./snapshot";
@@ -7,9 +7,11 @@ import { snapshotBuildInputs } from "./snapshot";
 export function watchAnalytics(options: AnalyticsRunOptions): void {
   const contentDir = resolve(options.contentDir);
   const watchDirs = existsSync(contentDir) ? [contentDir] : [];
-  const watchFiles = options.config && existsSync(resolve(options.config))
-    ? [resolve(options.config)]
-    : [];
+  const resourcesFile = join(contentDir, "..", "resources.json");
+  const watchFiles = [
+    ...(options.config && existsSync(resolve(options.config)) ? [resolve(options.config)] : []),
+    ...(existsSync(resourcesFile) ? [resourcesFile] : []),
+  ];
 
   if (watchDirs.length === 0) {
     throw new Error(`Content pages directory not found at ${contentDir}.`);

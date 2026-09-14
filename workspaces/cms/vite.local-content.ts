@@ -5,6 +5,7 @@ import type { Connect, Plugin } from "vite";
 
 const cmsDir = fileURLToPath(new URL(".", import.meta.url));
 const contentDir = resolve(cmsDir, "../../content/pages");
+const resourcesPath = resolve(cmsDir, "../../content/resources.json");
 
 function normalizeApiPath(url: string, base: string): string | null {
   const path = url.split("?")[0] ?? "";
@@ -30,6 +31,12 @@ function createContentMiddleware(base: string): Connect.NextHandleFunction {
     }
 
     try {
+      if (apiPath === "/api/resources" && req.method === "GET") {
+        res.setHeader("Content-Type", "application/json; charset=utf-8");
+        res.end(readFileSync(resourcesPath, "utf8"));
+        return;
+      }
+
       if (apiPath === "/api/pages" && req.method === "GET") {
         const pages = readdirSync(contentDir)
           .filter((entry) => entry.endsWith(".md"))

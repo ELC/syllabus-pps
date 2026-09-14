@@ -39,9 +39,11 @@ Prefer `workspace:*` dependencies and package `exports` over Vite aliases. `@pps
 - Do not link a page to itself; the title already identifies the page.
 - Use native inline hashtags only when they naturally belong in the sentence.
 - Avoid source-document pages, artifact pages, and administrative index pages unless the user explicitly asks for them.
-- Concept pages need at least three source links per page: mix Wikipedia, beginner-friendly written resources (short and long), and video resources (short and long, e.g. a single video and a playlist).
-- Each concept page also needs at least one book source, preferably published within the last ten years; name the book in prose and link to its official page or open edition.
-- Write concept notes as prose bullets; each bullet should carry at least one source URL and briefly explain what that source covers. Avoid placeholder phrasing such as "curso extenso" or "video corto".
+- External sources live in the shared CSL-JSON catalog at `content/resources.json`; concept bullets cite them with `[@resource-id]` and keep the concept-specific explanation in prose.
+- Concept pages need at least three source citations per page: mix Wikipedia, beginner-friendly written resources (short and long), and video resources (short and long, e.g. a single video and a playlist).
+- Each concept page also needs at least one book source, preferably published within the last ten years; name the book in prose and cite its catalog entry.
+- Write concept notes as prose bullets; each bullet should carry at least one `[@resource-id]` and briefly explain what that source covers. Avoid placeholder phrasing such as "curso extenso" or "video corto".
+- Do not put bare URLs in concept bullets; add or reuse a catalog entry in `content/resources.json` instead.
 - Prefer interactive, video, and rich web formats over plain-text notes when choosing non-book sources; verify that linked titles and content match the bullet, not just HTTP status.
 - Prefer videos published within the last five years; replace stale lecture captures when a recent equivalent exists.
 - When citing MIT courses, name the course code and term/year in prose (e.g. `MIT 6.1200J (primavera 2024)`).
@@ -66,8 +68,8 @@ Concept pages use the same shape with `kind: concept`:
 title: algoritmos
 kind: concept
 ---
-- un algoritmo es un procedimiento finito para resolver un problema; la Wikipedia en español distingue algoritmo, programa e implementación https://es.wikipedia.org/wiki/Algoritmo
-- MDN resume qué es un algoritmo y cómo se relaciona con código ejecutable https://developer.mozilla.org/es/docs/Glossary/Algorithm
+- un algoritmo es un procedimiento finito para resolver un problema; la Wikipedia en español distingue algoritmo, programa e implementación [@algoritmo]
+- CS50x recorre búsqueda, ordenamiento y notación O con pseudocódigo y código en C [@asymptotic-notation]
 ```
 
 - Slug filenames on disk; `title` is the display name and wikilink target.

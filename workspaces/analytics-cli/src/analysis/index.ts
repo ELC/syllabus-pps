@@ -1,12 +1,10 @@
 export {
   blockHasSourceLink,
   buildCurriculumIndexes,
-  classifySourceType,
   collectConceptSources,
   collectPageBookSources,
   collectPageSources,
   collectSourcesForBlock,
-  isBookSource,
   MINIMUM_CONCEPT_SOURCES,
   hasSourceCue,
   isSourceReference,

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "algorithms",
+    "type": "book",
+    "title": "Algorithms",
+    "author": [
+      {
+        "literal": "Erickson es de acceso libre bajo licencia Creative Commons y cubre diseño"
+      }
+    ],
+    "publisher": "Erickson es de acceso libre bajo licencia Creative Commons y cubre diseño",
+    "issued": {
+      "raw": "2019"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://jeffe.cs.illinois.edu/teaching/algorithms",
+    "edition": "1.ª ed., 2019"
+  },
+  {
+    "id": "asymptotic-notation",
+    "type": "webpage",
+    "title": "3",
+    "author": [
+      {
+        "literal": "cs50.harvard.edu"
+      }
+    ],
+    "publisher": "cs50.harvard.edu",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://cs50.harvard.edu/x/notes/3"
+  },
+  {
+    "id": "algoritmo",
+    "type": "webpage",
+    "title": "Algoritmo",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Algoritmo"
+  },
+  {
+    "id": "cs50x-en-espanol",
+    "type": "motion_picture",
+    "title": "CS50x en Español",
+    "author": [
+      {
+        "literal": "CS50"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/playlist?list=PLXOJEg4xbr50"
+  },
+  {
+    "id": "cs50x-2024-lecture-3-algorithms",
+    "type": "motion_picture",
+    "title": "CS50x 2024 - Lecture 3 - Algorithms",
+    "author": [
+      {
+        "literal": "CS50"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=jZzyERW7h1A"
+  }
+]

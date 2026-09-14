@@ -2,7 +2,12 @@ import { normalizeTitle, stripMarkdownExtension } from "../normalize";
 import { parseFrontmatter } from "./frontmatter";
 import { slugFromPath } from "../slug";
 import { PageKind, ZettelBlock } from "../types";
-import { extractConceptTags, extractPageRefs, extractUrlLinks } from "./extractors";
+import {
+  extractCitationRefs,
+  extractConceptTags,
+  extractPageRefs,
+  extractUrlLinks,
+} from "./extractors";
 import { RawPage } from "./types";
 
 const VALID_KINDS = new Set<PageKind>([
@@ -78,6 +83,7 @@ export function parsePageContent(source: { path: string; content: string }): Raw
       refs: extractPageRefs(text, lineNumber),
       tags: extractConceptTags(text, lineNumber),
       urls: extractUrlLinks(text, lineNumber),
+      citations: extractCitationRefs(text, lineNumber),
     });
   });
 

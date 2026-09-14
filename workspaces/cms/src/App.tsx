@@ -1,7 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { isReadOnlyCms, listPages, loadAllPageSources, readPage, writePage } from "./api/content";
+import {
+  isReadOnlyCms,
+  listPages,
+  loadAllPageSources,
+  loadResources,
+  readPage,
+  writePage,
+} from "./api/content";
+import type { ResourceCatalogEntry } from "@pps/core";
 import { readPageParam, writePageParam } from "./page-param";
 import { hasBlockingDiagnostics, runDiagnosticsForEditor } from "./validation/runDiagnostics";
 
@@ -23,6 +31,7 @@ export function App() {
   const [loadError, setLoadError] = useState<string>("");
   const [loadingPages, setLoadingPages] = useState(true);
   const [allSources, setAllSources] = useState<Array<{ path: string; content: string }>>([]);
+  const [resources, setResources] = useState<ResourceCatalogEntry[]>([]);
 
   useEffect(() => {
     setLoadingPages(true);
@@ -64,14 +73,15 @@ export function App() {
 
   useEffect(() => {
     void loadAllPageSources().then(setAllSources);
+    void loadResources().then(setResources);
   }, [pages, content, selectedSlug]);
 
   const diagnostics = useMemo(() => {
     if (!selectedSlug || allSources.length === 0) {
       return [];
     }
-    return runDiagnosticsForEditor(selectedSlug, content, allSources);
-  }, [allSources, content, selectedSlug]);
+    return runDiagnosticsForEditor(selectedSlug, content, allSources, resources);
+  }, [allSources, content, resources, selectedSlug]);
 
   const readOnly = isReadOnlyCms();
   const canSave = !readOnly && !hasBlockingDiagnostics(diagnostics);
