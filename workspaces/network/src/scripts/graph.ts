@@ -711,6 +711,61 @@ function resetKindFilters(
   }
 }
 
+function syncKindFilterControls(
+  filtersRoot: HTMLElement | null,
+  viewState: GraphViewState,
+): void {
+  if (!filtersRoot) {
+    return;
+  }
+
+  for (const { kind } of GRAPH_FILTER_KINDS) {
+    const select = filtersRoot.querySelector<HTMLSelectElement>(`#graph-filter-${kind}`);
+    if (select) {
+      select.value = viewState.kindFilters[kind];
+    }
+  }
+}
+
+function restoreGraphViewFromUrl(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  filtersRoot: HTMLElement | null,
+  toggleConceptsButton: HTMLButtonElement | null,
+): boolean {
+  const hadExpansion = isExpansionActive(viewState);
+  const urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
+
+  syncKindFilterControls(filtersRoot, viewState);
+  if (toggleConceptsButton) {
+    syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
+  }
+
+  if (isExpansionActive(viewState)) {
+    if (viewState.fullGraphPositions) {
+      applyRestoredUrlView(cy, viewState, ui);
+    }
+    return urlRestorePending;
+  }
+
+  if (hadExpansion) {
+    viewState.expansionAnchorColors.clear();
+    viewState.focusedNodeId = null;
+    cy.elements().removeClass("focused");
+    if (viewState.fullGraphPositions) {
+      restorePositions(cy, viewState.fullGraphPositions);
+    }
+  }
+
+  ui.syncView(true);
+  if (viewState.initialLayoutSaved) {
+    refreshGraphLayout(cy, viewState);
+  }
+
+  return urlRestorePending;
+}
+
 function mountResetFiltersButton(
   cy: cytoscape.Core,
   viewState: GraphViewState,
@@ -1335,7 +1390,6 @@ export async function mountGraph(
   const cy = cytoscape({
     container,
     elements: prepareGraphElements(payload.elements),
-    layout: graphLayoutOptions(),
     autoungrabify: false,
     boxSelectionEnabled: false,
     style: [
@@ -1465,7 +1519,7 @@ export async function mountGraph(
     searchQuery: "",
     conceptsHidden: false,
   };
-  const urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
+  let urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
 
   const ui: GraphUi = {
     expansionListRoot,
@@ -1480,6 +1534,28 @@ export async function mountGraph(
       }
     },
   };
+
+  cy.on("layoutstop", () => {
+    if (!viewState.initialLayoutSaved) {
+      viewState.fullGraphPositions = snapshotPositions(cy);
+      viewState.initialLayoutSaved = true;
+      if (urlRestorePending && isExpansionActive(viewState)) {
+        applyRestoredUrlView(cy, viewState, ui);
+      }
+      return;
+    }
+
+    if (viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0) {
+      viewState.focusLayoutCache.set(
+        expansionSessionKey(viewState.expansionNodeIds),
+        snapshotPositions(cy),
+      );
+    } else {
+      viewState.fullGraphPositions = snapshotPositions(cy);
+    }
+
+    ui.syncView();
+  });
 
   const resetFiltersButton = options.resetFiltersButtonId
     ? document.getElementById(options.resetFiltersButtonId)
@@ -1499,6 +1575,11 @@ export async function mountGraph(
 
   if (toggleConceptsButton instanceof HTMLButtonElement) {
     mountToggleConceptsButton(cy, viewState, ui, toggleConceptsButton);
+    syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
+  }
+
+  if (urlRestorePending && !isExpansionActive(viewState)) {
+    ui.syncView();
   }
 
   const activateNode = (node: cytoscape.NodeSingular) => {
@@ -1518,26 +1599,14 @@ export async function mountGraph(
   let nodeDragged = false;
   let elasticDrag: ElasticNeighborDragState | null = null;
 
-  cy.on("layoutstop", () => {
-    if (!viewState.initialLayoutSaved) {
-      viewState.fullGraphPositions = snapshotPositions(cy);
-      viewState.initialLayoutSaved = true;
-      if (urlRestorePending) {
-        applyRestoredUrlView(cy, viewState, ui);
-      }
-      return;
-    }
-
-    if (viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0) {
-      viewState.focusLayoutCache.set(
-        expansionSessionKey(viewState.expansionNodeIds),
-        snapshotPositions(cy),
-      );
-    } else {
-      viewState.fullGraphPositions = snapshotPositions(cy);
-    }
-
-    ui.syncView();
+  window.addEventListener("popstate", () => {
+    urlRestorePending = restoreGraphViewFromUrl(
+      cy,
+      viewState,
+      ui,
+      filtersRoot,
+      toggleConceptsButton instanceof HTMLButtonElement ? toggleConceptsButton : null,
+    );
   });
 
   cy.on("grab", "node", (event) => {
@@ -1592,5 +1661,10 @@ export async function mountGraph(
       return;
     }
     openInCms(cmsBase, slug);
+  });
+
+  runGraphLayout(cy.elements(), {
+    quality: "proof",
+    randomize: true,
   });
 }

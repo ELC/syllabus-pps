@@ -2,13 +2,62 @@
   {
     "id": "open-logic-project",
     "type": "book",
-    "title": "abierto",
+    "title": "Open Logic Text",
     "author": [
       {
-        "literal": "lógica formal con capítulos sobre deducción natural"
+        "given": "Richard",
+        "family": "Zach"
+      },
+      {
+        "given": "Andrew",
+        "family": "Arana"
+      },
+      {
+        "given": "Jeremy",
+        "family": "Avigad"
+      },
+      {
+        "given": "Tim",
+        "family": "Button"
+      },
+      {
+        "given": "Walter",
+        "family": "Dean"
+      },
+      {
+        "given": "Benedict",
+        "family": "Eastaugh"
+      },
+      {
+        "given": "Gillian",
+        "family": "Russell"
+      },
+      {
+        "given": "Nicole",
+        "family": "Wyatt"
+      },
+      {
+        "given": "Audrey",
+        "family": "Yap"
+      },
+      {
+        "given": "Aldo",
+        "family": "Antonelli"
+      },
+      {
+        "given": "Sam",
+        "family": "Burns"
+      },
+      {
+        "given": "Dana",
+        "family": "Hagg"
+      },
+      {
+        "given": "Zesen",
+        "family": "Qian"
       }
     ],
-    "publisher": "lógica formal con capítulos sobre deducción natural",
+    "publisher": "Open Logic Project",
     "issued": {
       "raw": "2026-09-14"
     },
@@ -84,15 +133,40 @@
   {
     "id": "real-startup-book",
     "type": "book",
-    "title": "abierto The Real Startup Book (2.ª ed.), editado por Tristan Kromer, reúne más",
+    "title": "The Real Startup Book",
     "author": [
       {
-        "literal": "sesenta métodos de validación —entrevistas"
+        "given": "Tristan",
+        "family": "Kromer"
+      },
+      {
+        "given": "Chris",
+        "family": "Cannon"
+      },
+      {
+        "given": "Luke",
+        "family": "Szyrmer"
+      },
+      {
+        "given": "Kenny",
+        "family": "Nguyen"
+      },
+      {
+        "given": "Soojung",
+        "family": "Chang"
       }
     ],
-    "publisher": "sesenta métodos de validación —entrevistas",
+    "editor": [
+      {
+        "given": "Tristan",
+        "family": "Kromer"
+      }
+    ],
+    "publisher": "Kromatic",
+    "edition": "2",
+    "ISBN": "979-8-196294-00-6",
     "issued": {
-      "raw": "2026-09-14"
+      "raw": "2026"
     },
     "accessed": {
       "raw": "2026-09-14"
