@@ -35,6 +35,12 @@ export interface RoadmapBounds {
   maxY: number;
 }
 
+export interface RoadmapTrunkForkLayout {
+  after: string;
+  lanes: string[][];
+  mergeInto: string;
+}
+
 export interface RoadmapLayout {
   placements: Map<string, RoadmapPlacement>;
   /** Spine title -> terminal topics hanging off it. */
@@ -45,6 +51,8 @@ export interface RoadmapLayout {
   trunk: string[];
   /** Parallel lane tails that merge into a later trunk node. */
   lateJoins: Array<{ from: string; to: string }>;
+  /** Mid-trunk forks that split and merge back into one spine node. */
+  trunkForks: RoadmapTrunkForkLayout[];
   start: { x: number; y: number };
   end: { x: number; y: number };
   bounds: RoadmapBounds;
@@ -56,6 +64,7 @@ const EMPTY_LAYOUT: RoadmapLayout = {
   parallelLanes: [],
   trunk: [],
   lateJoins: [],
+  trunkForks: [],
   start: { x: -ANCHOR_NODE_WIDTH / 2, y: 0 },
   end: { x: -ANCHOR_NODE_WIDTH / 2, y: ANCHOR_NODE_HEIGHT + ANCHOR_GAP },
   bounds: {
@@ -249,9 +258,7 @@ function laneSpine(
   curation: RoadmapCuration,
 ): string[] {
   const lane = curation.parallelLanes.find((entry) => entry.root === track.lead);
-  const spine = lane
-    ? lane.spine.filter((title) => track.spine.includes(title))
-    : track.spine;
+  const spine = lane?.spine ?? track.spine;
 
   return spine.filter((title) => !deferred.has(title));
 }
@@ -316,11 +323,133 @@ function orderTrunk(
   return trunk;
 }
 
+function composeTrunk(
+  prefix: string[],
+  tail: string[],
+  trunkForks: RoadmapTrunkForkLayout[],
+): string[] {
+  const mergeIntoTitles = new Set(trunkForks.map((fork) => fork.mergeInto));
+  const trunk = [...prefix, ...tail.filter((title) => !mergeIntoTitles.has(title))];
+
+  for (const fork of trunkForks) {
+    const afterIndex = trunk.indexOf(fork.after);
+    if (afterIndex >= 0 && !trunk.includes(fork.mergeInto)) {
+      trunk.splice(afterIndex + 1, 0, fork.mergeInto);
+    }
+  }
+
+  return trunk;
+}
+
 function laneCenters(laneCount: number): number[] {
   const stride = SPINE_NODE_WIDTH + LANE_GAP;
   const first = -((laneCount - 1) * stride) / 2;
 
   return Array.from({ length: laneCount }, (_, index) => first + index * stride);
+}
+
+interface ParallelLaneRowsContext {
+  parallelLanes: string[][];
+  centers: number[];
+  cursorY: number;
+  placements: Map<string, RoadmapPlacement>;
+  attached: Map<string, string[]>;
+  stageOf: Map<string, number>;
+}
+
+function placeParallelLaneRows(context: ParallelLaneRowsContext): number {
+  const { parallelLanes, centers, placements, attached, stageOf } = context;
+  let { cursorY } = context;
+
+  if (parallelLanes.length === 0) {
+    return cursorY;
+  }
+
+  const laneDepth = Math.max(...parallelLanes.map((lane) => lane.length));
+
+  for (let row = 0; row < laneDepth; row += 1) {
+    const rowTitles = parallelLanes
+      .map((lane, laneIndex) => ({ title: lane[row], laneIndex }))
+      .filter((entry): entry is { title: string; laneIndex: number } => entry.title !== undefined);
+
+    const provisionalRowHeight = Math.max(
+      SPINE_NODE_HEIGHT,
+      ...rowTitles.map(({ title }) =>
+        Math.max(SPINE_NODE_HEIGHT, branchTreeHeight(title, attached)),
+      ),
+    );
+
+    const rowSpineY = cursorY + (provisionalRowHeight - SPINE_NODE_HEIGHT) / 2;
+    const rowBlockers = rowTitles.map(({ laneIndex }) =>
+      spineBox(centers[laneIndex] ?? 0, rowSpineY),
+    );
+    const rowBranchLayouts = rowTitles.map(({ title, laneIndex }) => {
+      const terminals = attached.get(title) ?? [];
+      const laneCenter = centers[laneIndex] ?? 0;
+      const owner = spineBox(laneCenter, rowSpineY);
+
+      return {
+        title,
+        laneCenter,
+        owner,
+        terminals,
+        branch:
+          terminals.length === 0
+            ? ({ mode: "side", side: "left" } as BranchPlacement)
+            : pickBranchPlacement(
+                owner,
+                laneCenter,
+                laneIndex,
+                parallelLanes.length,
+                centers,
+                cursorY,
+                provisionalRowHeight,
+                terminals.length,
+                placements,
+                rowBlockers,
+              ),
+      };
+    });
+
+    const rowHeight = Math.max(
+      provisionalRowHeight,
+      ...rowBranchLayouts.map(({ terminals, branch }) =>
+        Math.max(
+          branch.mode === "below" ? SPINE_NODE_HEIGHT + branchBelowHeight(terminals.length) : 0,
+          provisionalRowHeight + nestedBelowOverflow(terminals, attached, provisionalRowHeight),
+        ),
+      ),
+    );
+
+    for (const { title, laneCenter } of rowBranchLayouts) {
+      placeSpineNode(placements, stageOf, {
+        title,
+        laneCenter,
+        cursorY,
+        rowHeight,
+      });
+    }
+
+    for (const { title, laneCenter, owner, terminals, branch } of rowBranchLayouts) {
+      if (terminals.length === 0) {
+        continue;
+      }
+
+      const placedOwner = placements.get(title);
+      placeBranchStack(placements, attached, stageOf, {
+        title,
+        owner: placedOwner ?? owner,
+        laneCenter,
+        branch,
+        cursorY,
+        rowHeight,
+      });
+    }
+
+    cursorY += rowHeight + STAGE_GAP;
+  }
+
+  return cursorY;
 }
 
 interface LayoutBox {
@@ -669,112 +798,46 @@ export function buildRoadmapLayout(
   const lateJoins = Object.entries(curation.spineJoins).flatMap(([from, to]) =>
     to === undefined ? [] : [{ from, to }],
   );
+  const trunkForks: RoadmapTrunkForkLayout[] = (curation.trunkForks ?? []).map((fork) => ({
+    after: fork.after,
+    lanes: fork.lanes.map((lane) => lane.spine),
+    mergeInto: fork.mergeInto,
+  }));
+  const trunkForkLaneTitles = new Set(trunkForks.flatMap((fork) => fork.lanes.flat()));
   const postMerge = curation.postMergeSpine.filter((title) => spineCandidates.includes(title));
+  const trunkTailCandidates = spineCandidates.filter(
+    (title) =>
+      !parallelSpineTitles.has(title) &&
+      !deferredSpine.has(title) &&
+      !trunkForkLaneTitles.has(title),
+  );
   const trunk =
     parallelLanes.length > 0
-      ? [
-          ...postMerge,
-          ...orderTrunk(
-            spineCandidates.filter(
-              (title) => !parallelSpineTitles.has(title) && !deferredSpine.has(title),
-            ),
-            adjacency,
-            stageOf,
-          ),
-        ]
-      : orderTrunk(spineCandidates, adjacency, stageOf);
+      ? composeTrunk(
+          postMerge,
+          orderTrunk(trunkTailCandidates, adjacency, stageOf),
+          trunkForks,
+        )
+      : composeTrunk(
+          [],
+          orderTrunk(trunkTailCandidates, adjacency, stageOf),
+          trunkForks,
+        );
+  const trunkForkByAfter = new Map(trunkForks.map((fork) => [fork.after, fork]));
 
   const placements = new Map<string, RoadmapPlacement>();
   let cursorY = ANCHOR_NODE_HEIGHT + ANCHOR_GAP;
   let sideFlip = 0;
 
   if (parallelLanes.length > 0) {
-    const centers = laneCenters(parallelLanes.length);
-    const laneDepth = Math.max(...parallelLanes.map((lane) => lane.length));
-
-    for (let row = 0; row < laneDepth; row += 1) {
-      const rowTitles = parallelLanes
-        .map((lane, laneIndex) => ({ title: lane[row], laneIndex }))
-        .filter((entry): entry is { title: string; laneIndex: number } => entry.title !== undefined);
-
-      const provisionalRowHeight = Math.max(
-        SPINE_NODE_HEIGHT,
-        ...rowTitles.map(({ title }) =>
-          Math.max(SPINE_NODE_HEIGHT, branchTreeHeight(title, attached)),
-        ),
-      );
-
-      const rowSpineY = cursorY + (provisionalRowHeight - SPINE_NODE_HEIGHT) / 2;
-      const rowBlockers = rowTitles.map(({ laneIndex }) =>
-        spineBox(centers[laneIndex] ?? 0, rowSpineY),
-      );
-      const rowBranchLayouts = rowTitles.map(({ title, laneIndex }) => {
-        const terminals = attached.get(title) ?? [];
-        const laneCenter = centers[laneIndex] ?? 0;
-        const owner = spineBox(laneCenter, rowSpineY);
-
-        return {
-          title,
-          laneIndex,
-          laneCenter,
-          owner,
-          terminals,
-          branch:
-            terminals.length === 0
-              ? ({ mode: "side", side: "left" } as BranchPlacement)
-              : pickBranchPlacement(
-                  owner,
-                  laneCenter,
-                  laneIndex,
-                  parallelLanes.length,
-                  centers,
-                  cursorY,
-                  provisionalRowHeight,
-                  terminals.length,
-                  placements,
-                  rowBlockers,
-                ),
-        };
-      });
-
-      const rowHeight = Math.max(
-        provisionalRowHeight,
-        ...rowBranchLayouts.map(({ terminals, branch }) =>
-          Math.max(
-            branch.mode === "below" ? SPINE_NODE_HEIGHT + branchBelowHeight(terminals.length) : 0,
-            provisionalRowHeight + nestedBelowOverflow(terminals, attached, provisionalRowHeight),
-          ),
-        ),
-      );
-      const spineY = cursorY + (rowHeight - SPINE_NODE_HEIGHT) / 2;
-
-      for (const { title, laneCenter } of rowBranchLayouts) {
-        placeSpineNode(placements, stageOf, {
-          title,
-          laneCenter,
-          cursorY,
-          rowHeight,
-        });
-      }
-
-      for (const { title, laneCenter, owner, terminals, branch } of rowBranchLayouts) {
-        if (terminals.length === 0) {
-          continue;
-        }
-
-        const placedOwner = placements.get(title);
-        placeBranchStack(placements, attached, stageOf, {
-          title,
-          owner: placedOwner ?? owner,
-          laneCenter,
-          branch,
-          cursorY,
-          rowHeight,
-        });
-      }
-
-      cursorY += rowHeight + STAGE_GAP;
-    }
+    cursorY = placeParallelLaneRows({
+      parallelLanes,
+      centers: laneCenters(parallelLanes.length),
+      cursorY,
+      placements,
+      attached,
+      stageOf,
+    });
   }
 
   const spineX = -SPINE_NODE_WIDTH / 2;
@@ -834,6 +897,18 @@ export function buildRoadmapLayout(
     }
 
     cursorY += rowHeight + STAGE_GAP;
+
+    const fork = trunkForkByAfter.get(title);
+    if (fork !== undefined) {
+      cursorY = placeParallelLaneRows({
+        parallelLanes: fork.lanes,
+        centers: laneCenters(fork.lanes.length),
+        cursorY,
+        placements,
+        attached,
+        stageOf,
+      });
+    }
   }
 
   const positioned = [...placements.values()];
@@ -850,6 +925,7 @@ export function buildRoadmapLayout(
     parallelLanes,
     trunk,
     lateJoins,
+    trunkForks,
     start: { x: anchorX, y: 0 },
     end,
     bounds: {

@@ -3,8 +3,10 @@ import {
   Controls,
   MiniMap,
   ReactFlow,
+  StepEdge,
   useReactFlow,
   useStore,
+  type EdgeTypes,
   type NodeTypes,
 } from "@xyflow/react";
 import { projectAllDegreeRoadmaps, type CurriculumGraph } from "@pps/core";
@@ -20,6 +22,8 @@ import {
 } from "./curation";
 import { buildRoadmapLayout, type RoadmapBounds } from "./layout";
 import { RoadmapAnchorNode } from "./RoadmapAnchorNode";
+import { RoadmapBranchEdge } from "./RoadmapBranchEdge";
+import { RoadmapJunctionNode } from "./RoadmapJunctionNode";
 import { RoadmapLegend } from "./RoadmapLegend";
 import {
   remainingProgressPercent,
@@ -33,6 +37,12 @@ import "@xyflow/react/dist/style.css";
 const nodeTypes: NodeTypes = {
   roadmapTopic: RoadmapTopicNode,
   roadmapAnchor: RoadmapAnchorNode,
+  roadmapJunction: RoadmapJunctionNode,
+};
+
+const edgeTypes: EdgeTypes = {
+  step: StepEdge,
+  roadmapBranch: RoadmapBranchEdge,
 };
 
 const VIEWPORT_PADDING = 48;
@@ -133,6 +143,11 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
               line: block.line,
               text: block.text,
               urls: block.urls.map((url) => ({ raw: url.raw, target: url.target })),
+              citations: block.citations.map((citation) => ({
+                raw: citation.raw,
+                id: citation.id,
+                resolved: citation.resolved,
+              })),
             })),
           },
         ]),
@@ -188,9 +203,10 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
             adjacency,
             layout,
             focusTitle: selectedConcept,
+            isTopicDone: (title) => progress.statusFor(title) === "done",
           })
         : { nodes: [], edges: [] },
-    [activeRoadmap, adjacency, layout, selectedConcept],
+    [activeRoadmap, adjacency, layout, progress.counts, progress.statusFor, selectedConcept],
   );
 
   useEffect(() => {
@@ -314,6 +330,7 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
             nodes={flow.nodes}
             edges={flow.edges}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             nodesDraggable={false}
             nodesConnectable={false}
             elementsSelectable

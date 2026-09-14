@@ -168,13 +168,16 @@
   background: transparent;
 }
 
+.roadmap-topic-node {
+  cursor: pointer;
+}
+
 .roadmap-topic-node--spine {
   border-color: var(--austral-azul-primario);
   background: var(--austral-celeste-suave);
 }
 
 .roadmap-topic-node--spine .roadmap-topic-label {
-  font-size: 0.95rem;
   font-weight: 700;
 }
 
@@ -336,14 +339,50 @@ button.roadmap-topic-check:hover {
   pointer-events: none;
 }
 
+.roadmap-junction-node {
+  position: relative;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+}
+
+.roadmap-junction-node::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border: 3px solid var(--austral-azul-primario);
+  border-radius: 999px;
+  background: var(--austral-blanco);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.95);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.roadmap-junction-handle {
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  min-width: 0;
+  min-height: 0;
+}
+
 /* Connectors */
+
+.roadmap-edge {
+  pointer-events: none;
+}
 
 .roadmap-edge .react-flow__edge-path {
   stroke: var(--dash-border);
   stroke-width: 2;
 }
 
-.roadmap-edge--trunk .react-flow__edge-path {
+.roadmap-edge--spine .react-flow__edge-path {
   stroke: var(--austral-azul-primario);
   stroke-width: 3;
 }
@@ -353,12 +392,11 @@ button.roadmap-topic-check:hover {
   stroke-dasharray: 6 5;
 }
 
-.roadmap-edge--sequence .react-flow__edge-path {
-  stroke: var(--austral-ing-tertiary);
-  stroke-width: 3;
+.roadmap-edge--done .react-flow__edge-path {
+  stroke: var(--austral-graph-concept-base);
 }
 
-.roadmap-edge--active .react-flow__edge-path {
+.roadmap-edge--active:not(.roadmap-edge--done) .react-flow__edge-path {
   stroke: var(--austral-azul-primario);
 }
 
@@ -496,10 +534,6 @@ button.roadmap-topic-check:hover {
 
 .roadmap-legend-check--skipped .roadmap-legend-check-glyph::before {
   content: "✕";
-}
-
-.roadmap-legend-line--sequence {
-  border-color: var(--austral-ing-tertiary);
 }
 
 .roadmap-legend-line--branch {

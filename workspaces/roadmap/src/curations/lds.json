@@ -15,19 +15,39 @@
     }
   ],
   "postMergeSpine": [
-    "python",
-    "estructuras de datos"
+    "python"
+  ],
+  "trunkForks": [
+    {
+      "after": "python",
+      "lanes": [
+        {
+          "root": "metodologías ágiles",
+          "spine": ["metodologías ágiles"]
+        },
+        {
+          "root": "integración continua",
+          "spine": ["integración continua"]
+        },
+        {
+          "root": "modelado de dominio",
+          "spine": ["modelado de dominio"]
+        }
+      ],
+      "mergeInto": "apis"
+    }
   ],
   "branches": {
     "modelo entidad-relación": ["normalización"],
     "sql": ["álgebra relacional", "transacciones", "ACID"],
+    "pensamiento matemático": ["matrices"],
     "lógica": ["demostraciones"],
     "estructuras de datos": ["programación orientada a objetos"],
+    "integración continua": ["contenedores"],
     "matrices": ["vectores"],
-    "modelado de dominio": ["requerimientos"]
+    "modelado de dominio": ["requerimientos"],
+    "python": ["estructuras de datos", "persistencia"]
   },
-  "branchOwnerOverrides": {
-    "persistencia": "python"
-  },
+  "branchOwnerOverrides": {},
   "spineJoins": {}
 }

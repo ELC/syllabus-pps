@@ -16,8 +16,7 @@ const LEGEND_SECTIONS: LegendEntry[][] = [
     { marker: { kind: "swatch", key: "done" }, label: "Completado" },
   ],
   [
-    { marker: { kind: "line", key: "trunk" }, label: "Prerequisito" },
-    { marker: { kind: "line", key: "sequence" }, label: "Orden sugerido" },
+    { marker: { kind: "line", key: "spine" }, label: "Secuencia del eje" },
     { marker: { kind: "line", key: "branch" }, label: "Derivado" },
   ],
   ROADMAP_STATUS_CYCLE.map((status) => ({

@@ -1,4 +1,5 @@
 import { Handle, Position, type NodeProps } from "@xyflow/react";
+import { useRef } from "react";
 
 import {
   HANDLE_BOTTOM_OUT,
@@ -10,6 +11,7 @@ import {
 } from "./constants";
 import { ROADMAP_STATUS_LABELS, useRoadmapProgressContext } from "./progress";
 import type { RoadmapRole } from "./layout";
+import { useTwoLineLabelFontSize } from "./useTwoLineLabel";
 
 export interface RoadmapTopicNodeData extends Record<string, unknown> {
   label: string;
@@ -27,12 +29,24 @@ const HANDLES = [
   { id: HANDLE_RIGHT_OUT, type: "source", position: Position.Right },
 ] as const;
 
+const SPINE_LABEL_MAX_REM = 1.05;
+const SPINE_LABEL_MIN_REM = 0.68;
+const BRANCH_LABEL_MAX_REM = 0.92;
+const BRANCH_LABEL_MIN_REM = 0.58;
+
 export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
   const nodeData = data as unknown as RoadmapTopicNodeData;
   const progress = useRoadmapProgressContext();
   const isSpine = nodeData.role === "spine";
   const status = progress?.statusFor(id) ?? "pending";
   const state = selected ? "selected" : nodeData.state;
+  const labelRef = useRef<HTMLSpanElement>(null);
+
+  useTwoLineLabelFontSize(labelRef, {
+    maxRem: isSpine ? SPINE_LABEL_MAX_REM : BRANCH_LABEL_MAX_REM,
+    minRem: isSpine ? SPINE_LABEL_MIN_REM : BRANCH_LABEL_MIN_REM,
+    text: nodeData.label,
+  });
 
   return (
     <div
@@ -67,7 +81,9 @@ export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
         <span className="roadmap-topic-check-glyph" aria-hidden="true" />
       </button>
 
-      <span className="roadmap-topic-label">{nodeData.label}</span>
+      <span ref={labelRef} className="roadmap-topic-label">
+        {nodeData.label}
+      </span>
 
       {isSpine ? (
         <span className="roadmap-topic-stage" aria-label={`Etapa ${nodeData.stage}`}>
