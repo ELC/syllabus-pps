@@ -51,13 +51,19 @@ export function supabasePublicEnvPlugin(repoRoot: string): Plugin {
   };
 }
 
-function reactResolveAliases(workspaceDir: string): Record<string, string> {
+function hasLocalReact(workspaceDir: string): boolean {
   const reactDir = resolve(workspaceDir, "node_modules/react");
   const reactDomDir = resolve(workspaceDir, "node_modules/react-dom");
+  return existsSync(reactDir) && existsSync(reactDomDir);
+}
 
-  if (!existsSync(reactDir) || !existsSync(reactDomDir)) {
+function reactResolveAliases(workspaceDir: string): Record<string, string> {
+  if (!hasLocalReact(workspaceDir)) {
     return {};
   }
+
+  const reactDir = resolve(workspaceDir, "node_modules/react");
+  const reactDomDir = resolve(workspaceDir, "node_modules/react-dom");
 
   return {
     react: reactDir,
@@ -71,18 +77,28 @@ function reactResolveAliases(workspaceDir: string): Record<string, string> {
 /** Shared Vite env for a workspace package directory (the folder with its package.json). */
 export function sharedViteEnv(workspaceDir: string) {
   const repoRoot = repoRootFromWorkspace(workspaceDir);
+  const reactAliases = reactResolveAliases(workspaceDir);
+  const useLocalReact = hasLocalReact(workspaceDir);
 
   return {
     envDir: repoRoot,
     envPrefix: ["PUBLIC_", "VITE_"],
     resolve: {
       conditions: ["development", "import", "module", "browser", "default"],
-      dedupe: ["react", "react-dom"],
-      alias: reactResolveAliases(workspaceDir),
+      ...(useLocalReact
+        ? {
+            dedupe: ["react", "react-dom"],
+            alias: reactAliases,
+          }
+        : {}),
     },
-    optimizeDeps: {
-      include: ["react", "react-dom", "react/jsx-dev-runtime"],
-    },
+    ...(useLocalReact
+      ? {
+          optimizeDeps: {
+            include: ["react", "react-dom", "react/jsx-dev-runtime"],
+          },
+        }
+      : {}),
   };
 }
 
