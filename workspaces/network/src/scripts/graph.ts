@@ -18,6 +18,11 @@ import {
   GRAPH_FILTER_KINDS,
   GRAPH_NODE_KINDS,
 } from "./graph-styles";
+import {
+  parseGraphUrlState,
+  writeGraphUrlState,
+  type GraphUrlState,
+} from "./graph-url";
 
 export { GRAPH_FILTER_KINDS, GRAPH_NODE_KINDS };
 
@@ -85,6 +90,107 @@ function createKindFilters(): KindFilters {
     course: "",
     concept: "",
   };
+}
+
+function nodeSlug(node: cytoscape.NodeSingular): string | undefined {
+  const slug = node.data("slug");
+  return typeof slug === "string" && slug.length > 0 ? slug : undefined;
+}
+
+function findNodeBySlug(cy: cytoscape.Core, slug: string): cytoscape.NodeSingular | undefined {
+  const found = cy.nodes().filter((node) => node.isNode() && nodeSlug(node) === slug);
+  if (found.empty() || !found[0]?.isNode()) {
+    return undefined;
+  }
+
+  return found[0];
+}
+
+function urlStateFromViewState(cy: cytoscape.Core, viewState: GraphViewState): GraphUrlState {
+  const filterSlugs = createKindFilters();
+
+  for (const { kind } of GRAPH_FILTER_KINDS) {
+    const nodeId = viewState.kindFilters[kind];
+    if (!nodeId) {
+      continue;
+    }
+
+    const node = cy.getElementById(nodeId);
+    const slug = node.nonempty() && node.isNode() ? nodeSlug(node) : undefined;
+    if (slug) {
+      filterSlugs[kind] = slug;
+    }
+  }
+
+  const expansionSlugs = (viewState.expansionNodeIds ?? [])
+    .map((nodeId) => {
+      const node = cy.getElementById(nodeId);
+      return node.nonempty() && node.isNode() ? nodeSlug(node) : undefined;
+    })
+    .filter((slug): slug is string => Boolean(slug));
+
+  return {
+    expansionSlugs,
+    filterSlugs,
+    conceptsHidden: viewState.conceptsHidden,
+  };
+}
+
+function applyUrlStateToViewState(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  urlState: GraphUrlState,
+): boolean {
+  const kindFilters = createKindFilters();
+  let restored = urlState.conceptsHidden;
+
+  for (const { kind } of GRAPH_FILTER_KINDS) {
+    const slug = urlState.filterSlugs[kind];
+    if (!slug) {
+      continue;
+    }
+
+    const node = findNodeBySlug(cy, slug);
+    if (!node) {
+      continue;
+    }
+
+    kindFilters[kind] = node.id();
+    restored = true;
+  }
+
+  const expansionNodeIds = urlState.expansionSlugs
+    .map((slug) => findNodeBySlug(cy, slug)?.id())
+    .filter((nodeId): nodeId is string => Boolean(nodeId));
+
+  viewState.kindFilters = kindFilters;
+  viewState.conceptsHidden = urlState.conceptsHidden;
+  viewState.expansionNodeIds = expansionNodeIds.length > 0 ? expansionNodeIds : null;
+  viewState.focusedNodeId =
+    expansionNodeIds.length > 0 ? expansionNodeIds[expansionNodeIds.length - 1]! : null;
+
+  return restored || expansionNodeIds.length > 0;
+}
+
+function applyRestoredUrlView(cy: cytoscape.Core, viewState: GraphViewState, ui: GraphUi): void {
+  if (isExpansionActive(viewState)) {
+    for (const nodeId of viewState.expansionNodeIds ?? []) {
+      assignExpansionAnchorColor(cy, viewState, nodeId);
+    }
+
+    const focusNode = viewState.focusedNodeId
+      ? cy.getElementById(viewState.focusedNodeId)
+      : undefined;
+
+    applyFocusView(cy, viewState, ui, {
+      randomize: true,
+      focusNode: focusNode?.nonempty() && focusNode.isNode() ? focusNode : undefined,
+    });
+    return;
+  }
+
+  ui.syncView();
+  refreshGraphLayout(cy, viewState);
 }
 
 const ELASTIC_NEIGHBOR_DRAG_FACTOR = 0.35;
@@ -566,8 +672,6 @@ function mountKindFilters(
 
     const select = document.createElement("select");
     select.id = `graph-filter-${kind}`;
-    select.value = viewState.kindFilters[kind];
-
     const defaultOption = document.createElement("option");
     defaultOption.value = "";
     defaultOption.textContent = "Todos";
@@ -579,6 +683,8 @@ function mountKindFilters(
       option.textContent = nodeTitle(node, node.id());
       select.appendChild(option);
     }
+
+    select.value = viewState.kindFilters[kind];
 
     select.addEventListener("change", () => {
       viewState.kindFilters[kind] = select.value;
@@ -1359,6 +1465,7 @@ export async function mountGraph(
     searchQuery: "",
     conceptsHidden: false,
   };
+  const urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
 
   const ui: GraphUi = {
     expansionListRoot,
@@ -1366,6 +1473,7 @@ export async function mountGraph(
       applyElementVisibility(cy, viewState);
       applyExpansionEdgeColors(cy, viewState);
       updateExpansionListUI(cy, viewState, expansionListRoot, ui);
+      writeGraphUrlState(urlStateFromViewState(cy, viewState));
       cy.resize();
       if (fit) {
         fitVisibleGraph(cy);
@@ -1414,6 +1522,9 @@ export async function mountGraph(
     if (!viewState.initialLayoutSaved) {
       viewState.fullGraphPositions = snapshotPositions(cy);
       viewState.initialLayoutSaved = true;
+      if (urlRestorePending) {
+        applyRestoredUrlView(cy, viewState, ui);
+      }
       return;
     }
 
