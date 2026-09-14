@@ -5,8 +5,6 @@ import {
   type EdgeProps,
 } from "@xyflow/react";
 
-import { roadmapEdgePathClassName } from "./edge-path-class";
-
 export function RoadmapSpineEdge({
   sourceX,
   sourceY,
@@ -31,13 +29,5 @@ export function RoadmapSpineEdge({
     stepPosition: pathOptions?.stepPosition,
   });
 
-  return (
-    <BaseEdge
-      {...props}
-      path={path}
-      labelX={labelX}
-      labelY={labelY}
-      className={roadmapEdgePathClassName(props)}
-    />
-  );
+  return <BaseEdge {...props} path={path} labelX={labelX} labelY={labelY} />;
 }

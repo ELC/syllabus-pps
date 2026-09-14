@@ -11,7 +11,6 @@ import {
   type LayoutBox,
   type RoadmapBranchEdgeData,
 } from "./branch-path";
-import { roadmapEdgePathClassName } from "./edge-path-class";
 
 export type { RoadmapBranchEdgeData };
 
@@ -88,5 +87,5 @@ export function RoadmapBranchEdge({
     return null;
   }
 
-  return <BaseEdge {...props} path={path} className={roadmapEdgePathClassName(props)} />;
+  return <BaseEdge {...props} path={path} />;
 }

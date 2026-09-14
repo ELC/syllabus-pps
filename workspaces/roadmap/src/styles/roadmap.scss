@@ -539,28 +539,4 @@
       stroke: var(--austral-azul-primario);
     }
   }
-
-  &__edge-path {
-    stroke: var(--dash-border);
-    stroke-width: 2;
-    fill: none;
-
-    &--spine {
-      stroke: var(--austral-azul-primario);
-      stroke-width: 3;
-    }
-
-    &--branch {
-      stroke: var(--austral-ing-secondary);
-      stroke-dasharray: 6 5;
-    }
-
-    &--done {
-      stroke: var(--austral-graph-concept-base);
-    }
-
-    &--active {
-      stroke: var(--austral-azul-primario);
-    }
-  }
 }
