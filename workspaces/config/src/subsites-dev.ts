@@ -114,6 +114,7 @@ function createViteSpaDevMiddleware(repoRoot: string, spec: ViteSpaDevSpec): Plu
             configFile,
             root,
             base: basePath,
+            envDir: repoRoot,
             plugins: [quietEmbeddedDevPlugin()],
             server: {
               middlewareMode: true,

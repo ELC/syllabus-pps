@@ -36,8 +36,9 @@ export function App({ dataUrl }: AppProps) {
       <header className="dashboard-header">
         <h1>Degree roadmaps</h1>
         <p>
-          Self-paced learning paths built from concept prerequisites. Follow the suggested route or
-          explore freely; the outline lists each stage with its direct dependencies.
+          Self-paced learning paths built from concept prerequisites. Follow the main track from top
+          to bottom, branch out into the related topics of each stage, and tick off what you already
+          know.
         </p>
       </header>
 

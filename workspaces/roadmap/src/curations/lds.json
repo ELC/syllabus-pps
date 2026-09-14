@@ -1,0 +1,33 @@
+{
+  "careerSlug": "lds",
+  "parallelLanes": [
+    {
+      "root": "modelo entidad-relación",
+      "spine": ["modelo entidad-relación", "sql"]
+    },
+    {
+      "root": "algoritmos",
+      "spine": ["algoritmos"]
+    },
+    {
+      "root": "pensamiento matemático",
+      "spine": ["pensamiento matemático", "lógica"]
+    }
+  ],
+  "postMergeSpine": [
+    "python",
+    "estructuras de datos"
+  ],
+  "branches": {
+    "modelo entidad-relación": ["normalización"],
+    "sql": ["álgebra relacional", "transacciones", "ACID"],
+    "lógica": ["demostraciones"],
+    "estructuras de datos": ["programación orientada a objetos"],
+    "matrices": ["vectores"],
+    "modelado de dominio": ["requerimientos"]
+  },
+  "branchOwnerOverrides": {
+    "persistencia": "python"
+  },
+  "spineJoins": {}
+}

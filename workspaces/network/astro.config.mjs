@@ -19,7 +19,7 @@ export default defineConfig({
   outDir: "dist",
   publicDir: "public",
   vite: {
-    ...sharedViteEnv(repoRoot),
+    ...sharedViteEnv(rootDir),
     plugins: [
       ...withSharedVitePlugins(repoRoot),
       quietEmbeddedDevPlugin(),

@@ -16,7 +16,7 @@ const base = process.env.ROADMAP_BASE ?? "/roadmap/";
 
 export default defineConfig({
   base,
-  ...sharedViteEnv(repoRoot),
+  ...sharedViteEnv(workspaceDir),
   plugins: [
     ...withSharedVitePlugins(repoRoot),
     quietEmbeddedDevPlugin(),

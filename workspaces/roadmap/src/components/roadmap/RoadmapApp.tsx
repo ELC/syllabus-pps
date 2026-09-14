@@ -3,19 +3,29 @@ import {
   Controls,
   MiniMap,
   ReactFlow,
-  type Edge,
-  type Node,
+  useReactFlow,
+  useStore,
   type NodeTypes,
 } from "@xyflow/react";
-import { projectAllDegreeRoadmaps, type CurriculumGraph, type DegreeRoadmap } from "@pps/core";
+import { projectAllDegreeRoadmaps, type CurriculumGraph } from "@pps/core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { capitalizeWords } from "../../scripts/labels";
 import type { ConceptPage } from "../../scripts/concept-panel";
-import { RoadmapAnchorNode } from "./RoadmapAnchorNode";
+import { buildAdjacency } from "./adjacency";
 import { buildRoadmapFlow } from "./build-flow";
-import { ROADMAP_END_ID, ROADMAP_START_ID } from "./constants";
-import { layoutRoadmapElements } from "./layout-elk";
+import {
+  EMPTY_ROADMAP_CURATION,
+  resolveRoadmapCuration,
+  validateRoadmapCuration,
+} from "./curation";
+import { buildRoadmapLayout, type RoadmapBounds } from "./layout";
+import { RoadmapAnchorNode } from "./RoadmapAnchorNode";
+import { RoadmapLegend } from "./RoadmapLegend";
+import {
+  remainingProgressPercent,
+  RoadmapProgressContext,
+  useRoadmapProgress,
+} from "./progress";
 import { RoadmapTopicNode } from "./RoadmapTopicNode";
 
 import "@xyflow/react/dist/style.css";
@@ -25,48 +35,46 @@ const nodeTypes: NodeTypes = {
   roadmapAnchor: RoadmapAnchorNode,
 };
 
+const VIEWPORT_PADDING = 48;
+/** Below this the labels stop being readable, so wide roadmaps are panned instead of shrunk. */
+const MIN_READABLE_ZOOM = 0.55;
+
 function parseGeneratedPayload<T>(content: string): T {
   const newlineIndex = content.indexOf("\n");
   const json = newlineIndex === -1 ? content : content.slice(newlineIndex + 1);
   return JSON.parse(json) as T;
 }
 
-function topologicalLayers(roadmap: DegreeRoadmap): string[][] {
-  const titles = roadmap.concepts.map((concept) => concept.title);
-  const incoming = new Map(titles.map((title) => [title, 0]));
-  const adjacency = new Map<string, string[]>();
+/**
+ * Frames the spine across the width of the canvas and pins it to the top, so the roadmap is read
+ * by scrolling down instead of zooming out to the whole graph.
+ */
+function CanvasViewport({ bounds }: { bounds: RoadmapBounds }) {
+  const { setViewport } = useReactFlow();
+  const width = useStore((state) => state.width);
+  const height = useStore((state) => state.height);
 
-  for (const concept of roadmap.concepts) {
-    adjacency.set(concept.title, []);
-    for (const prerequisite of concept.dependsOn) {
-      if (!incoming.has(prerequisite)) {
-        continue;
-      }
-      incoming.set(concept.title, (incoming.get(concept.title) ?? 0) + 1);
-      adjacency.set(prerequisite, [...(adjacency.get(prerequisite) ?? []), concept.title]);
-    }
-  }
-
-  const layers: string[][] = [];
-  let frontier = titles.filter((title) => (incoming.get(title) ?? 0) === 0);
-
-  while (frontier.length > 0) {
-    layers.push([...frontier].sort((left, right) => left.localeCompare(right, "es-AR")));
-    const nextFrontier: string[] = [];
-
-    for (const title of frontier) {
-      for (const dependent of adjacency.get(title) ?? []) {
-        incoming.set(dependent, (incoming.get(dependent) ?? 0) - 1);
-        if ((incoming.get(dependent) ?? 0) === 0) {
-          nextFrontier.push(dependent);
-        }
-      }
+  useEffect(() => {
+    if (width === 0 || height === 0) {
+      return;
     }
 
-    frontier = nextFrontier;
-  }
+    const contentWidth = Math.max(bounds.maxX - bounds.minX, 1);
+    const fitted = (width - VIEWPORT_PADDING * 2) / contentWidth;
+    const zoom = Math.min(1, Math.max(MIN_READABLE_ZOOM, fitted));
+    const centerX = (bounds.minX + bounds.maxX) / 2;
 
-  return layers;
+    setViewport({
+      x:
+        fitted >= MIN_READABLE_ZOOM
+          ? width / 2 - centerX * zoom
+          : VIEWPORT_PADDING - bounds.minX * zoom,
+      y: VIEWPORT_PADDING - bounds.minY * zoom,
+      zoom,
+    });
+  }, [bounds, height, setViewport, width]);
+
+  return null;
 }
 
 interface RoadmapAppProps {
@@ -78,8 +86,7 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
   const [graph, setGraph] = useState<CurriculumGraph | null>(null);
   const [selectedCareer, setSelectedCareer] = useState<string>("");
   const [selectedConcept, setSelectedConcept] = useState<string>("");
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
+  const [confirmingReset, setConfirmingReset] = useState(false);
   const [loadError, setLoadError] = useState<string>("");
 
   useEffect(() => {
@@ -132,27 +139,72 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
     );
   }, [graph]);
 
-  const outlineLayers = useMemo(
-    () => (activeRoadmap ? topologicalLayers(activeRoadmap) : []),
+  const adjacency = useMemo(
+    () => (activeRoadmap ? buildAdjacency(activeRoadmap) : null),
     [activeRoadmap],
   );
 
-  const applyLayout = useCallback(async (roadmap: DegreeRoadmap, focusTitle: string) => {
-    const { nodes: flowNodes, edges: flowEdges } = buildRoadmapFlow(roadmap, focusTitle);
-    const layoutedNodes = await layoutRoadmapElements(flowNodes, flowEdges);
-    setNodes(layoutedNodes);
-    setEdges(flowEdges);
-  }, []);
+  const { curation, layout, curationError } = useMemo(() => {
+    if (!activeRoadmap || !adjacency) {
+      return { curation: null, layout: null, curationError: "" };
+    }
+
+    try {
+      const resolved = resolveRoadmapCuration(activeRoadmap.careerSlug);
+      const activeCuration = resolved ?? EMPTY_ROADMAP_CURATION;
+
+      if (resolved) {
+        validateRoadmapCuration(activeRoadmap, resolved);
+      }
+
+      return {
+        curation: activeCuration,
+        layout: buildRoadmapLayout(activeRoadmap, adjacency, activeCuration),
+        curationError: "",
+      };
+    } catch (error: unknown) {
+      return {
+        curation: null,
+        layout: null,
+        curationError:
+          error instanceof Error ? error.message : "Invalid roadmap curation configuration.",
+      };
+    }
+  }, [activeRoadmap, adjacency]);
+
+  const slugByTitle = useMemo(
+    () =>
+      new Map((activeRoadmap?.concepts ?? []).map((concept) => [concept.title, concept.slug])),
+    [activeRoadmap],
+  );
+
+  const progress = useRoadmapProgress(activeRoadmap?.careerSlug ?? "", slugByTitle);
+
+  const flow = useMemo(
+    () =>
+      activeRoadmap && adjacency && layout
+        ? buildRoadmapFlow({
+            roadmap: activeRoadmap,
+            adjacency,
+            layout,
+            focusTitle: selectedConcept,
+          })
+        : { nodes: [], edges: [] },
+    [activeRoadmap, adjacency, layout, selectedConcept],
+  );
 
   useEffect(() => {
-    if (!activeRoadmap) {
-      setNodes([]);
-      setEdges([]);
+    setConfirmingReset(false);
+  }, [activeRoadmap]);
+
+  useEffect(() => {
+    if (!confirmingReset) {
       return;
     }
 
-    void applyLayout(activeRoadmap, selectedConcept);
-  }, [activeRoadmap, applyLayout, selectedConcept]);
+    const timer = window.setTimeout(() => setConfirmingReset(false), 4000);
+    return () => window.clearTimeout(timer);
+  }, [confirmingReset]);
 
   const handleConceptSelect = useCallback(
     (title: string) => {
@@ -165,17 +217,35 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
     [conceptPages, onConceptOpen],
   );
 
+  const handleReset = useCallback(() => {
+    if (!confirmingReset) {
+      setConfirmingReset(true);
+      return;
+    }
+
+    progress.reset();
+    setConfirmingReset(false);
+  }, [confirmingReset, progress]);
+
   if (loadError) {
     return <p className="roadmap-error">{loadError}</p>;
+  }
+
+  if (curationError) {
+    return <p className="roadmap-error">{curationError}</p>;
   }
 
   if (!graph) {
     return <p className="roadmap-loading">Cargando roadmap…</p>;
   }
 
-  if (!activeRoadmap) {
+  if (!activeRoadmap || !layout) {
     return <p className="roadmap-empty">No hay carreras con conceptos para mostrar.</p>;
   }
+
+  const { counts } = progress;
+  const remaining = counts.total - counts.skipped;
+  const percent = remainingProgressPercent(counts.done, counts.total, counts.skipped);
 
   return (
     <div className="roadmap-app">
@@ -197,89 +267,72 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
             ))}
           </select>
         </label>
-        <p className="roadmap-toolbar-help">
-          El mapa fluye de arriba hacia abajo desde un inicio común hasta un objetivo común. Cada
-          tarjeta es un concepto; elegí una para ver sus notas y resaltar prerequisitos y siguientes
-          pasos.
-        </p>
+
+        <div className="roadmap-progress">
+          <div className="roadmap-progress-head">
+            <span className="roadmap-degree-label">Progreso</span>
+            <span className="roadmap-progress-value">
+              {counts.done} de {remaining} temas · {percent}%
+            </span>
+          </div>
+
+          <div
+            className="roadmap-progress-track"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={remaining}
+            aria-valuenow={counts.done}
+            aria-label={`Temas completados en ${activeRoadmap.career}`}
+          >
+            <span className="roadmap-progress-fill" style={{ width: `${percent}%` }} />
+          </div>
+
+          <div className="roadmap-progress-foot">
+            <span className="roadmap-progress-meta">{counts.skipped} omitidos</span>
+            <button
+              type="button"
+              className={`roadmap-progress-reset${confirmingReset ? " is-confirming" : ""}`}
+              onClick={handleReset}
+            >
+              {confirmingReset ? "Confirmar reinicio" : "Reiniciar progreso"}
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="roadmap-body">
-        <aside className="roadmap-outline" aria-label="Outline de conceptos">
-          <h2 className="roadmap-outline-title">Ruta sugerida</h2>
-          <ol className="roadmap-outline-list">
-            <li className="roadmap-outline-layer">
-              <span className="roadmap-outline-layer-label">Inicio</span>
-              <p className="roadmap-outline-anchor-copy">
-                Punto de partida compartido para todos los caminos del roadmap.
-              </p>
-            </li>
-            {outlineLayers.map((layer, layerIndex) => (
-              <li key={`layer-${layerIndex}`} className="roadmap-outline-layer">
-                <span className="roadmap-outline-layer-label">Etapa {layerIndex + 1}</span>
-                <ul>
-                  {layer.map((title) => {
-                    const concept = activeRoadmap.concepts.find((item) => item.title === title);
-                    const prereqText =
-                      concept && concept.dependsOn.length > 0
-                        ? `Requiere: ${concept.dependsOn.join(", ")}`
-                        : "Sin prerequisitos";
+      <p className="roadmap-toolbar-help">
+        Tres caminos arrancan en paralelo desde el inicio, se unen en un solo eje y bajan hasta el
+        objetivo; los temas laterales cuelgan una sola vez de un nodo del eje. Elegí una
+        tarjeta para ver sus notas y resaltar sus prerequisitos.
+      </p>
 
-                    return (
-                      <li key={title}>
-                        <button
-                          type="button"
-                          className={`roadmap-outline-button${
-                            selectedConcept === title ? " is-active" : ""
-                          }`}
-                          onClick={() => handleConceptSelect(title)}
-                        >
-                          <span className="roadmap-outline-button-title">
-                            {capitalizeWords(title)}
-                          </span>
-                          <span className="roadmap-outline-button-meta">{prereqText}</span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </li>
-            ))}
-            <li className="roadmap-outline-layer">
-              <span className="roadmap-outline-layer-label">Objetivo</span>
-              <p className="roadmap-outline-anchor-copy">
-                Meta común al completar los conceptos terminales del roadmap.
-              </p>
-            </li>
-          </ol>
-        </aside>
+      <RoadmapLegend />
 
-        <section className="roadmap-canvas-panel" aria-label="Mapa de conceptos">
+      <section className="roadmap-canvas-panel" aria-label="Mapa de conceptos">
+        <RoadmapProgressContext.Provider value={progress}>
           <ReactFlow
-            nodes={nodes}
-            edges={edges}
+            nodes={flow.nodes}
+            edges={flow.edges}
             nodeTypes={nodeTypes}
             nodesDraggable={false}
             nodesConnectable={false}
             elementsSelectable
-            fitView
-            fitViewOptions={{ padding: 0.2 }}
             minZoom={0.2}
             maxZoom={1.5}
             onNodeClick={(_, node) => {
-              if (node.id === ROADMAP_START_ID || node.id === ROADMAP_END_ID) {
-                return;
+              if (node.type === "roadmapTopic") {
+                handleConceptSelect(node.id);
               }
-              handleConceptSelect(node.id);
             }}
             proOptions={{ hideAttribution: true }}
           >
-            <MiniMap pannable zoomable className="roadmap-minimap" />
+            <CanvasViewport bounds={layout.bounds} />
+            <MiniMap pannable zoomable className="roadmap-minimap" nodeStrokeWidth={0} />
             <Controls className="roadmap-controls" showInteractive={false} />
-            <Background gap={18} size={1} className="roadmap-background" />
+            <Background gap={20} size={1} className="roadmap-background" />
           </ReactFlow>
-        </section>
-      </div>
+        </RoadmapProgressContext.Provider>
+      </section>
     </div>
   );
 }

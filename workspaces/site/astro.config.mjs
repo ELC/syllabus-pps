@@ -23,7 +23,7 @@ export default defineConfig({
     strictPort: true,
   },
   vite: {
-    ...sharedViteEnv(repoRoot),
+    ...sharedViteEnv(rootDir),
     plugins: [
       ...withSharedVitePlugins(repoRoot),
       quietEmbeddedDevPlugin({ scope: "site", disableHmr: false }),

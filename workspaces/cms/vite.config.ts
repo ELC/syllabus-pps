@@ -17,7 +17,7 @@ const base = process.env.CMS_BASE ?? "/cms/";
 
 export default defineConfig({
   base,
-  ...sharedViteEnv(repoRoot),
+  ...sharedViteEnv(workspaceDir),
   plugins: [
     ...withSharedVitePlugins(repoRoot),
     quietEmbeddedDevPlugin(),
