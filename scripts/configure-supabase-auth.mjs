@@ -21,6 +21,9 @@ const redirectUrls = [
   "https://elc.github.io/syllabus-pps/**",
 ].join(",");
 
+const googleClientId = process.env.SUPABASE_GOOGLE_CLIENT_ID?.trim();
+const googleClientSecret = process.env.SUPABASE_GOOGLE_CLIENT_SECRET?.trim();
+
 const body = {
   site_url: "https://elc.github.io/syllabus-pps/",
   uri_allow_list: redirectUrls,
@@ -28,6 +31,14 @@ const body = {
   hook_before_user_created_enabled: true,
   hook_before_user_created_uri: "pg-functions://postgres/public/hook_restrict_signup_by_allowed_email",
 };
+
+if (googleClientId && googleClientSecret) {
+  body.external_google_enabled = true;
+  body.external_google_client_id = googleClientId;
+  body.external_google_secret = googleClientSecret;
+} else if (googleClientId || googleClientSecret) {
+  console.warn("Set both SUPABASE_GOOGLE_CLIENT_ID and SUPABASE_GOOGLE_CLIENT_SECRET to enable Google OAuth.");
+}
 
 const skipTemplate = process.argv.includes("--skip-template");
 const magicLinkTemplate = `<h2>Your sign-in code</h2>

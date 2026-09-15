@@ -70,7 +70,7 @@ Set GitHub Actions secrets `PUBLIC_SUPABASE_PROJECT_URL` and `PUBLIC_SUPABASE_PU
 
 ## Site sign-in (AuthN)
 
-The shell gates every surface behind email magic links. Allowed addresses live in Supabase Postgres (`public.allowed_emails`), enforced by the `before-user-created` Auth Hook — not in the frontend bundle.
+The shell gates every surface behind Supabase Auth. Users can sign in with **Google OAuth** or an **email magic link**. Allowed addresses live in Supabase Postgres (`public.allowed_emails`), enforced by the `before-user-created` Auth Hook — not in the frontend bundle.
 
 Unauthenticated visits to `/analytics/`, `/cms/`, and other app routes redirect to the **site home** (`/`), where the login form is shown. After sign-in, the browser returns to the original URL.
 
@@ -78,7 +78,11 @@ Unauthenticated visits to `/analytics/`, `/cms/`, and other app routes redirect 
 
 1. Apply [`workspaces/login/sql/001_allowed_emails.sql`](workspaces/login/sql/001_allowed_emails.sql) and [`workspaces/login/sql/002_display_name.sql`](workspaces/login/sql/002_display_name.sql) in the Supabase SQL editor.
 2. **Authentication → Providers → Email**: enable email; disable password sign-in.
-3. **Authentication → Providers**: disable Google, GitHub, and other OAuth providers.
+3. **Authentication → Providers → Google**: enable Google and paste the OAuth client ID and secret from [Google Cloud Console](https://console.cloud.google.com/auth/clients):
+   - Create a **Web application** OAuth client.
+   - **Authorized JavaScript origins**: `http://localhost:4321`, `http://127.0.0.1:4321`, and your production origin (e.g. `https://elc.github.io`).
+   - **Authorized redirect URI**: copy the callback URL from the Supabase Google provider page (`https://<project-ref>.supabase.co/auth/v1/callback`).
+   - Disable GitHub and other OAuth providers you do not use.
 4. **Authentication → URL Configuration**:
    - **Site URL**: hosted production origin (e.g. `https://elc.github.io/syllabus-pps/`).
    - **Redirect URLs** (allow list): must include local dev or magic links fall back to Site URL:
@@ -93,6 +97,8 @@ Unauthenticated visits to `/analytics/`, `/cms/`, and other app routes redirect 
    SUPABASE_ACCESS_TOKEN=sbp_... node scripts/configure-supabase-auth.mjs
    ```
 
+   To enable Google programmatically, also set `SUPABASE_GOOGLE_CLIENT_ID` and `SUPABASE_GOOGLE_CLIENT_SECRET` before running the script.
+
 ### Allow list
 
 Add rows in **Table Editor → allowed_emails** (do not commit real addresses to git). Set optional **display_name** for the sidebar label. New sign-ups get `full_name` in auth metadata automatically via the `on_auth_user_apply_display_name` trigger in `002_display_name.sql`.
@@ -103,7 +109,9 @@ The navbar reads `user.user_metadata.full_name` from the Supabase session in loc
 
 This project uses **Supabase’s built-in mailer** (no custom SMTP). Auth emails are capped at **2 sends per hour** project-wide. After a successful login, sessions persist via refresh tokens — users do not need a new email on every visit.
 
-If you hit the limit while testing, wait about an hour or use an earlier magic link from your inbox. The login UI shows a rate-limit message when Supabase returns `over_email_send_rate_limit`.
+If you hit the limit while testing, wait about an hour, use an earlier magic link from your inbox, or sign in with Google instead. The login UI shows a rate-limit message when Supabase returns `over_email_send_rate_limit`.
+
+Google sign-in uses the same allow list: the Google account email must already exist in `allowed_emails`.
 
 ### Client env
 
@@ -121,7 +129,7 @@ Copy `.env.example` to `.env` at the repository root for local dev. GitHub Actio
 pnpm dev
 ```
 
-Open `http://localhost:4321/`, request a magic link, sign in, then visit Analytics, Network, Roadmap, and CMS. Repeat on the GitHub Pages URL after deploy.
+Open `http://localhost:4321/`, sign in with Google or a magic link, then visit Analytics, Network, Roadmap, and CMS. Repeat on the GitHub Pages URL after deploy.
 
 Hosted CMS remains read-only; local `pnpm dev` still writes `content/pages/` after sign-in.
 

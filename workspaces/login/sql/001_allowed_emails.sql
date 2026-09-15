@@ -1,4 +1,4 @@
--- Allow-list for email OTP sign-in. Apply in the Supabase SQL editor, then register
+-- Allow-list for email OTP and Google OAuth sign-in. Apply in the Supabase SQL editor, then register
 -- public.hook_restrict_signup_by_allowed_email as the "before-user-created" Auth Hook
 -- in Dashboard → Authentication → Hooks.
 
