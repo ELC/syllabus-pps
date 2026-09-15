@@ -66,7 +66,7 @@ Analytics, network, and roadmap apps read those artifacts from `workspaces/analy
 
 Daily cron workflow: `.github/workflows/pages.yml` (optional Supabase pull → build → deploy).
 
-Set GitHub Actions secrets `PUBLIC_SUPABASE_PROJECT_URL` and `PUBLIC_SUPABASE_PUBLISHABLE_KEY` (same values as local `.env`). `pnpm build:pages` fails if either is missing.
+Set GitHub Actions secrets `PUBLIC_SUPABASE_PROJECT_URL` and `PUBLIC_SUPABASE_PUBLISHABLE_KEY` (same values as local `.env`). `pnpm build:pages` fails if either is missing. Optionally add `PUBLIC_GA_MEASUREMENT_ID` to enable Google Analytics on the deployed site.
 
 ## Site sign-in (AuthN)
 
@@ -111,6 +111,7 @@ The browser bundle needs only the publishable keys (never the service role):
 
 - `PUBLIC_SUPABASE_PROJECT_URL`
 - `PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `PUBLIC_GA_MEASUREMENT_ID` (optional GA4 id, e.g. `G-XXXXXXXX`; production builds only)
 
 Copy `.env.example` to `.env` at the repository root for local dev. GitHub Actions uses the same variables as repository secrets for `pnpm build:pages`.
 

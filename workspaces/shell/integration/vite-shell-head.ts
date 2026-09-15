@@ -4,13 +4,16 @@ import { fileURLToPath } from "node:url";
 import { OPTIMISTIC_AUTH_BOOTSTRAP_SCRIPT } from "@pps/login/sessionStorage";
 import * as sass from "sass";
 import type { HtmlTagDescriptor, IndexHtmlTransformHook, Plugin } from "vite";
+import { loadEnv } from "vite";
 
+import { googleAnalyticsHeadTags, readGoogleAnalyticsId } from "./google-analytics.js";
 import { SHELL_FONT_MARKUP } from "./vite-font-links.js";
 import { renderStaticShell } from "./shell-static-html.js";
 
 const integrationDir = dirname(fileURLToPath(import.meta.url));
 const shellRoot = join(integrationDir, "..", "..");
 const workspacesRoot = join(shellRoot, "..");
+const repoRoot = join(workspacesRoot, "..");
 
 const AUTH_CRITICAL_CSS = sass.compile(
   join(workspacesRoot, "login/src/styles/auth-critical.scss"),
@@ -87,6 +90,7 @@ export function shellHeadPlugin(
   options: ShellHeadPluginOptions = {},
 ): Plugin {
   const { activeNav, prerenderShell = false, sidebarExtraId, mainClass } = options;
+  let analyticsHeadTags: HtmlTagDescriptor[] = [];
 
   const logoSrcForSite = (): string =>
     shellLogoHref(siteRootFromBase(process.env.SITE_BASE ?? "/"));
@@ -117,12 +121,19 @@ export function shellHeadPlugin(
 
     return {
       html: out,
-      tags: shellHeadTags(),
+      tags: [...shellHeadTags(), ...analyticsHeadTags],
     };
   };
 
   return {
     name: "pps-shell-head",
+    config(_config, { mode }) {
+      const env = loadEnv(mode, repoRoot, "");
+      analyticsHeadTags = googleAnalyticsHeadTags(
+        readGoogleAnalyticsId(env),
+        mode === "production",
+      );
+    },
     transformIndexHtml: {
       order: "pre",
       handler: transformPre,

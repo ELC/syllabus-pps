@@ -9,6 +9,7 @@ import {
   shellLogoHref,
 } from "./logo-meta";
 import shellCss from "@pps/shell/styles/shell.scss?url";
+import GoogleAnalytics from "./GoogleAnalytics.astro";
 import { NAV_ITEMS, navHref } from "./nav";
 import type { NavId } from "./site-root";
 import { siteRootFromEnv } from "./site-root";
@@ -38,6 +39,7 @@ const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
     <link rel="stylesheet" href={shellCss} />
     <link rel="stylesheet" href={authCss} />
     <script is:inline set:html={OPTIMISTIC_AUTH_BOOTSTRAP_SCRIPT} />
+    <GoogleAnalytics />
     <slot name="head" />
   </head>
   <body class="dashboard--body auth-pending">

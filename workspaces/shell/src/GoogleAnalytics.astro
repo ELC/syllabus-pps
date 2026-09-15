@@ -1,0 +1,22 @@
+---
+import {
+  googleAnalyticsInitScript,
+  isGoogleAnalyticsEnabled,
+  readGoogleAnalyticsId,
+} from "../integration/google-analytics.ts";
+
+const measurementId = readGoogleAnalyticsId(import.meta.env);
+const enabled = isGoogleAnalyticsEnabled(measurementId, import.meta.env.PROD);
+---
+
+{
+  enabled ? (
+    <>
+      <script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+      />
+      <script is:inline set:html={googleAnalyticsInitScript(measurementId)} />
+    </>
+  ) : null
+}
