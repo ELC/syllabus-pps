@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 
 import {
@@ -15,9 +15,28 @@ import {
   type ResourceCatalogEntry,
 } from "@pps/core";
 import { readPageParam, writePageParam } from "./page-param";
+import { filterDiagnosticsForPage, pageHasDiagnostics } from "./validation/filterDiagnostics";
 import { runDiagnosticsForEditor } from "./validation/runDiagnostics";
 
 const severityClass = createSeverityClassNameResolver("cms__diagnostics-severity");
+
+function PageDiagnosticWarning(): ReactElement {
+  return (
+    <svg
+      className="cms__page-warning-icon"
+      viewBox="0 0 24 24"
+      width="14"
+      height="14"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        fill="currentColor"
+        d="M12 2.25 2.25 19.5h19.5L12 2.25Zm0 4.2 6.45 11.05H5.55L12 6.45ZM11.1 10v3.6h1.8V10h-1.8Zm0 4.8v1.8h1.8v-1.8h-1.8Z"
+      />
+    </svg>
+  );
+}
 
 export function App() {
   const [pages, setPages] = useState<Array<{ slug: string; path: string }>>([]);
@@ -79,8 +98,29 @@ export function App() {
     return runDiagnosticsForEditor(selectedSlug, content, allSources, resources);
   }, [allSources, content, resources, selectedSlug]);
 
+  const pageDiagnostics = useMemo(() => {
+    if (!selectedSlug) {
+      return [];
+    }
+    return filterDiagnosticsForPage(diagnostics, selectedSlug, content);
+  }, [content, diagnostics, selectedSlug]);
+
+  const diagnosticPageSlugs = useMemo(() => {
+    if (allSources.length === 0 || diagnostics.length === 0) {
+      return new Set<string>();
+    }
+
+    return new Set(
+      pages
+        .filter((page) =>
+          pageHasDiagnostics(diagnostics, page.slug, selectedSlug, content, allSources),
+        )
+        .map((page) => page.slug),
+    );
+  }, [allSources, content, diagnostics, pages, selectedSlug]);
+
   const readOnly = isReadOnlyCms();
-  const canSave = !readOnly && !hasBlockingDiagnostics(diagnostics);
+  const canSave = !readOnly && !hasBlockingDiagnostics(pageDiagnostics);
 
   const pageNav = (
     <nav className="dashboard__nav dashboard__nav--sub dashboard__nav--scroll" aria-label="Pages">
@@ -94,7 +134,12 @@ export function App() {
           }
           onClick={() => setSelectedSlug(page.slug)}
         >
-          {page.slug}
+          <span className="cms__page-link-label">{page.slug}</span>
+          {diagnosticPageSlugs.has(page.slug) ? (
+            <span className="cms__page-warning" title="Has diagnostics" aria-label="Has diagnostics">
+              <PageDiagnosticWarning />
+            </span>
+          ) : null}
         </button>
       ))}
     </nav>
@@ -109,23 +154,56 @@ export function App() {
       <div className="dashboard__content">
       <div className="cms__workspace">
       <header className="cms__header">
-        <h1 className="cms__header-title">{selectedSlug || "CMS"}</h1>
-        <p className="cms__header-lead">
+        <div className="cms__header-main">
+          <h1 className="cms__header-title">{selectedSlug || "CMS"}</h1>
+          <p className="cms__header-lead">
+            {readOnly ? (
+              <>
+                Read-only snapshot from the last <code className="cms__code">pnpm build:pages</code>.
+                Run <code className="cms__code">pnpm dev</code> to edit{" "}
+                <code className="cms__code">content/pages</code> locally.
+              </>
+            ) : (
+              <>
+                Edits write to <code className="cms__code">content/pages</code> through the local dev
+                API. Run <code className="cms__code">pnpm dev</code> and open{" "}
+                <code className="cms__code">/cms/</code> on the host port, or{" "}
+                <code className="cms__code">pnpm dev:cms</code> for CMS-only on port 5173.
+              </>
+            )}
+          </p>
+        </div>
+        <div className="cms__header-actions">
           {readOnly ? (
-            <>
-              Read-only snapshot from the last <code className="cms__code">pnpm build:pages</code>.
-              Run <code className="cms__code">pnpm dev</code> to edit{" "}
-              <code className="cms__code">content/pages</code> locally.
-            </>
+            <p className="cms__hint">Saving is disabled on the hosted site.</p>
           ) : (
             <>
-              Edits write to <code className="cms__code">content/pages</code> through the local dev
-              API. Run <code className="cms__code">pnpm dev</code> and open{" "}
-              <code className="cms__code">/cms/</code> on the host port, or{" "}
-              <code className="cms__code">pnpm dev:cms</code> for CMS-only on port 5173.
+              <button
+                type="button"
+                className="cms__button cms__button--save"
+                disabled={!canSave}
+                onClick={() => {
+                  void writePage(selectedSlug, content).then(() => {
+                    setStatus(`Saved ${selectedSlug}.`);
+                    setAllSources((sources) =>
+                      sources.map((page) =>
+                        page.path.replace(/\.md$/i, "") === selectedSlug
+                          ? { ...page, content }
+                          : page,
+                      ),
+                    );
+                  });
+                }}
+              >
+                Save page
+              </button>
+              {status ? <span className="cms__status">{status}</span> : null}
+              {!canSave ? (
+                <p className="cms__hint">Fix errors and warnings on this page before saving.</p>
+              ) : null}
             </>
           )}
-        </p>
+        </div>
       </header>
 
       {loadingPages ? <p className="cms__loading">Loading pages…</p> : null}
@@ -148,7 +226,7 @@ export function App() {
           value={content}
           onChange={(event) => setContent(event.target.value)}
           readOnly={readOnly}
-          rows={24}
+          rows={14}
           spellCheck={false}
         />
       </section>
@@ -156,24 +234,25 @@ export function App() {
       <section className="cms__diagnostics">
         <header className="cms__diagnostics-head">
           <h2 className="cms__diagnostics-title">Diagnostics</h2>
-          <p className="cms__diagnostics-lead">Errors and warnings block save until resolved.</p>
+          <p className="cms__diagnostics-lead">
+            Errors and warnings on this page block save until resolved.
+          </p>
         </header>
         <div className="cms__diagnostics-wrap">
-          {diagnostics.length === 0 ? (
-            <p className="cms__diagnostics-empty">No diagnostics.</p>
+          {pageDiagnostics.length === 0 ? (
+            <p className="cms__diagnostics-empty">No diagnostics on this page.</p>
           ) : (
             <table className="cms__diagnostics-table">
               <thead>
                 <tr>
                   <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Severity</th>
                   <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Code</th>
-                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Page</th>
                   <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Line</th>
                   <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Message</th>
                 </tr>
               </thead>
               <tbody>
-                {diagnostics.map((diagnostic, index) => (
+                {pageDiagnostics.map((diagnostic, index) => (
                   <tr
                     key={`${diagnostic.code}-${diagnostic.page}-${diagnostic.line}-${index}`}
                     className="cms__diagnostics-row"
@@ -182,7 +261,6 @@ export function App() {
                       {diagnostic.severity}
                     </td>
                     <td className="cms__diagnostics-cell">{diagnostic.code}</td>
-                    <td className="cms__diagnostics-cell">{diagnostic.page ?? ""}</td>
                     <td className="cms__diagnostics-cell">{diagnostic.line ?? ""}</td>
                     <td className="cms__diagnostics-cell">{diagnostic.message}</td>
                   </tr>
@@ -193,27 +271,6 @@ export function App() {
         </div>
       </section>
 
-      {readOnly ? (
-        <p className="cms__hint">Saving is disabled on the hosted site.</p>
-      ) : (
-        <div className="cms__actions">
-          <button
-            type="button"
-            className="cms__button"
-            disabled={!canSave}
-            onClick={() => {
-              void writePage(selectedSlug, content).then(() => {
-                setStatus("Saved.");
-                return loadAllPageSources().then(setAllSources);
-              });
-            }}
-          >
-            Save
-          </button>
-          {status ? <span className="cms__status">{status}</span> : null}
-          {!canSave ? <p className="cms__hint">Fix errors and warnings before saving.</p> : null}
-        </div>
-      )}
       </div>
       </div>
     </>

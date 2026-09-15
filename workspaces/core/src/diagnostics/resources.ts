@@ -32,20 +32,18 @@ export function resourceCatalogDiagnostics(graph: CurriculumGraph): Diagnostic[]
 }
 
 export function unresolvedCitationDiagnostics(graph: CurriculumGraph): Diagnostic[] {
-  return graph.pages
-    .filter((page) => page.kind === "concept")
-    .flatMap((page) =>
-      page.blocks.flatMap((block) =>
-        block.citations
-          .filter((citation) => !citation.resolved)
-          .map((citation) => ({
-            severity: "error" as const,
-            code: "citation-unresolved" as const,
-            message: `Concept page "${page.title}" cites unknown resource "${citation.id}".`,
-            page: page.title,
-            line: block.line,
-            details: { citationId: citation.id, text: block.text },
-          })),
-      ),
-    );
+  return graph.pages.flatMap((page) =>
+    page.blocks.flatMap((block) =>
+      block.citations
+        .filter((citation) => citation.resolved === undefined)
+        .map((citation) => ({
+          severity: "error" as const,
+          code: "citation-unresolved" as const,
+          message: `Page "${page.title}" cites resource "${citation.id}" that is missing from content/resources.json.`,
+          page: page.title,
+          line: block.line,
+          details: { citationId: citation.id, text: block.text },
+        })),
+    ),
+  );
 }
