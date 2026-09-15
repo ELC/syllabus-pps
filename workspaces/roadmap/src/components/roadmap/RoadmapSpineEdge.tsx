@@ -5,16 +5,18 @@ import {
   type EdgeProps,
 } from "@xyflow/react";
 
-export function RoadmapSpineEdge({
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition = Position.Bottom,
-  targetPosition = Position.Top,
-  pathOptions,
-  ...props
-}: EdgeProps) {
+import { pickBaseEdgeProps } from "./pick-base-edge-props";
+
+export function RoadmapSpineEdge(props: EdgeProps) {
+  const {
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition = Position.Bottom,
+    targetPosition = Position.Top,
+    pathOptions,
+  } = props;
   const [path, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
@@ -29,5 +31,7 @@ export function RoadmapSpineEdge({
     stepPosition: pathOptions?.stepPosition,
   });
 
-  return <BaseEdge {...props} path={path} labelX={labelX} labelY={labelY} />;
+  return (
+    <BaseEdge {...pickBaseEdgeProps(props)} path={path} labelX={labelX} labelY={labelY} />
+  );
 }

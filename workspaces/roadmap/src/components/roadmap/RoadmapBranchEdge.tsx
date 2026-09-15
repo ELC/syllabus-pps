@@ -1,6 +1,7 @@
 import { BaseEdge, useInternalNode, useStore, type EdgeProps } from "@xyflow/react";
 import { useCallback } from "react";
 
+import { pickBaseEdgeProps } from "./pick-base-edge-props";
 import {
   belowBranchPath,
   branchSideFromHandle,
@@ -41,13 +42,8 @@ function useInternalNodeBoxes(ids: string[]): LayoutBox[] {
   );
 }
 
-export function RoadmapBranchEdge({
-  source,
-  target,
-  sourceHandleId,
-  data,
-  ...props
-}: EdgeProps) {
+export function RoadmapBranchEdge(props: EdgeProps) {
+  const { source, target, sourceHandleId, data } = props;
   const branchData = data as RoadmapBranchEdgeData | undefined;
   const branchKind = branchData?.branchKind ?? "solo";
   const groupTargets = branchData?.groupTargets ?? [target];
@@ -87,5 +83,5 @@ export function RoadmapBranchEdge({
     return null;
   }
 
-  return <BaseEdge {...props} path={path} />;
+  return <BaseEdge {...pickBaseEdgeProps(props)} path={path} />;
 }

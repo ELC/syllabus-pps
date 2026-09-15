@@ -522,7 +522,6 @@ export function RoadmapApp({
                 handleCapstoneOpen(node.id);
               }
             }}
-            proOptions={{ hideAttribution: true }}
           >
             <CanvasViewport bounds={layout.bounds} />
             <MiniMap pannable zoomable className="roadmap__minimap" nodeStrokeWidth={0} />
