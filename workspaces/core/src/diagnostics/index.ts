@@ -34,6 +34,19 @@ import {
 import { uuidReferenceDiagnostics } from "./uuid";
 
 export { compareDiagnostics } from "./compare";
+export {
+  blockingDiagnosticSeverities,
+  countDiagnosticsBySeverity,
+  hasBlockingDiagnostics,
+  hasDiagnosticsWithSeverity,
+  hasErrorDiagnostics,
+} from "./helpers";
+export {
+  createSeverityClassNameResolver,
+  isStyledDiagnosticSeverity,
+  styledDiagnosticSeverities,
+  type StyledDiagnosticSeverity,
+} from "./view";
 
 export function collectDiagnostics(graph: CurriculumGraph): Diagnostic[] {
   const diagnostics: Diagnostic[] = [];

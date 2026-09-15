@@ -1,3 +1,5 @@
+import { staticFilterAllValue } from "@pps/core";
+
 import { Diagnostic } from "../../types";
 import { ConceptMapRow } from "../projections";
 
@@ -19,9 +21,9 @@ ${indentSql(
 )
 SELECT severity, code, page, line, message
 FROM diagnostics
-WHERE ('{{ filters.severity }}' = 'All' OR severity = '{{ filters.severity }}')
-  AND ('{{ filters.code }}' = 'All' OR code = '{{ filters.code }}')
-  AND ('{{ filters.page }}' = 'All' OR page = '{{ filters.page }}')
+WHERE ('{{ filters.severity }}' = '${staticFilterAllValue}' OR severity = '{{ filters.severity }}')
+  AND ('{{ filters.code }}' = '${staticFilterAllValue}' OR code = '{{ filters.code }}')
+  AND ('{{ filters.page }}' = '${staticFilterAllValue}' OR page = '{{ filters.page }}')
 ORDER BY severity, code, page, line`;
 }
 
@@ -31,9 +33,9 @@ ${indentSql(renderRowsSql(["year", "course", "concept"], rows), 2)}
 )
 SELECT year, course, concept
 FROM expected
-WHERE ('{{ filters.year }}' = 'All' OR year = '{{ filters.year }}')
-  AND ('{{ filters.course }}' = 'All' OR course = '{{ filters.course }}')
-  AND ('{{ filters.concept }}' = 'All' OR concept = '{{ filters.concept }}')
+WHERE ('{{ filters.year }}' = '${staticFilterAllValue}' OR year = '{{ filters.year }}')
+  AND ('{{ filters.course }}' = '${staticFilterAllValue}' OR course = '{{ filters.course }}')
+  AND ('{{ filters.concept }}' = '${staticFilterAllValue}' OR concept = '{{ filters.concept }}')
 ORDER BY year, course, concept`;
 }
 
@@ -54,7 +56,7 @@ ${indentSql(
 )
 SELECT concept, source_type, source, line
 FROM concept_sources
-WHERE ('{{ filters.source_type }}' = 'All' OR source_type = '{{ filters.source_type }}')
+WHERE ('{{ filters.source_type }}' = '${staticFilterAllValue}' OR source_type = '{{ filters.source_type }}')
 ORDER BY concept, source_type, source`;
 }
 

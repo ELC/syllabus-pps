@@ -2,12 +2,7 @@ import { LoadedConfig } from "../config/loaded-config";
 import { indexResourceCatalog, ResourceCatalogEntry } from "../resources";
 import { parsePages, PageSource } from "../parser";
 import { CurriculumGraph, GraphEdge, PageKind, ZettelPage } from "../types";
-
-const STRUCTURAL_KIND_RANK: Partial<Record<PageKind, number>> = {
-  career: 0,
-  year: 1,
-  course: 2,
-};
+import { structuralPageKindRankByKind } from "./structural-kind-rank";
 
 export function canonicalStructuralEdgeDirection(
   source: string,
@@ -20,8 +15,8 @@ export function canonicalStructuralEdgeDirection(
     return { source, target };
   }
 
-  const sourceRank = STRUCTURAL_KIND_RANK[sourceKind];
-  const targetRank = STRUCTURAL_KIND_RANK[targetKind];
+  const sourceRank = structuralPageKindRankByKind[sourceKind];
+  const targetRank = structuralPageKindRankByKind[targetKind];
   if (sourceRank === undefined || targetRank === undefined || sourceRank <= targetRank) {
     return { source, target };
   }

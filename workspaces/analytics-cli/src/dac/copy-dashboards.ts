@@ -20,5 +20,5 @@ export function copyDashboardSources(dashboardsDir: string, generatedAt: string)
 }
 
 function prepareDashboardSource(source: string): string {
-  return source.replace(/^import ["']\.\/dac["'];\r?\n/, "");
+  return source.replace(/^import ["']\.\/dac["'];\r?\n/gm, "");
 }

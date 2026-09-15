@@ -9,8 +9,10 @@
     "typecheck": "astro check"
   },
   "dependencies": {
+    "@pps/core": "workspace:*",
     "@pps/shell": "workspace:*",
-    "astro": "catalog:"
+    "astro": "catalog:",
+    "ts-pattern": "catalog:"
   },
   "devDependencies": {
     "@astrojs/check": "catalog:",

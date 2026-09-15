@@ -1,3 +1,5 @@
+import { metricFormat } from "@pps/core";
+
 import "./dac";
 
 export default (
@@ -11,28 +13,28 @@ export default (
         name="Linked Concept Notes"
         description="Distinct concept note blocks reachable from all course-linked concepts."
         sql={include("queries/source-coverage/linked-concept-notes.sql")}
-        value={{ field: "value", type: "number", format: ",.0f" }}
+        value={{ field: "value", type: "number", format: metricFormat.integer }}
         col={3}
       />
       <Metric
         name="Notes With Sources"
         description="Reachable concept notes that include at least one detected source link."
         sql={include("queries/source-coverage/notes-with-sources.sql")}
-        value={{ field: "value", type: "number", format: ",.0f" }}
+        value={{ field: "value", type: "number", format: metricFormat.integer }}
         col={3}
       />
       <Metric
         name="Missing Source Links"
         description="Reachable concept notes without a detected source link."
         sql={include("queries/source-coverage/missing-source-links.sql")}
-        value={{ field: "value", type: "number", format: ",.0f" }}
+        value={{ field: "value", type: "number", format: metricFormat.integer }}
         col={3}
       />
       <Metric
         name="Source Coverage Percent"
         description="Share of reachable concept notes that have source links. Higher is better."
         sql={include("queries/source-coverage/source-coverage-percent.sql")}
-        value={{ field: "value", type: "number", format: ".1f" }}
+        value={{ field: "value", type: "number", format: metricFormat.oneDecimal }}
         col={3}
       />
     </Row>

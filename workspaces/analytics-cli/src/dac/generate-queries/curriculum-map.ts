@@ -1,3 +1,4 @@
+import { staticFilterAllValue } from "@pps/core";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { uniqueSorted } from "../../normalize";
@@ -34,15 +35,15 @@ export function writeCurriculumMapQueries(dashboardsDir: string, graph: Curricul
     join(generatedDir, "curriculum-map-filters.json"),
     `${JSON.stringify(
       {
-        year: ["All", ...graph.expected.years.map((year) => year.title)],
+        year: [staticFilterAllValue, ...graph.expected.years.map((year) => year.title)],
         course: [
-          "All",
+          staticFilterAllValue,
           ...uniqueSorted(
             graph.expected.years.flatMap((year) => year.courses.map((course) => course)),
           ),
         ],
         concept: [
-          "All",
+          staticFilterAllValue,
           ...uniqueSorted(courseConceptRows.map(([, , concept]) => concept)),
         ],
       },

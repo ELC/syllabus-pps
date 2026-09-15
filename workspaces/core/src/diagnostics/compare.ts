@@ -1,7 +1,10 @@
-import { Diagnostic, DiagnosticSeverity } from "../types";
+import { Diagnostic, diagnosticSeverities, DiagnosticSeverity } from "../types";
+
+const severityRank = Object.fromEntries(
+  diagnosticSeverities.map((severity, index) => [severity, index]),
+) as Record<DiagnosticSeverity, number>;
 
 export function compareDiagnostics(a: Diagnostic, b: Diagnostic): number {
-  const severityRank: Record<DiagnosticSeverity, number> = { error: 0, warning: 1, info: 2 };
   const bySeverity = severityRank[a.severity] - severityRank[b.severity];
   if (bySeverity !== 0) {
     return bySeverity;

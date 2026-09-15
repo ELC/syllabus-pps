@@ -1,3 +1,5 @@
+import { metricFormat, staticFilterAllValue } from "@pps/core";
+
 import "./dac";
 
 const filters = require("./generated/curriculum-map-filters.json") as {
@@ -17,28 +19,28 @@ export default (
         name="Expected Years"
         description="Number of curriculum years configured for validation."
         sql={include("queries/curriculum-map/expected-years.sql")}
-        value={{ field: "value", type: "number", format: ",.0f" }}
+        value={{ field: "value", type: "number", format: metricFormat.integer }}
         col={3}
       />
       <Metric
         name="Expected Courses"
         description="Number of configured courses across all years."
         sql={include("queries/curriculum-map/expected-courses.sql")}
-        value={{ field: "value", type: "number", format: ",.0f" }}
+        value={{ field: "value", type: "number", format: metricFormat.integer }}
         col={3}
       />
       <Metric
         name="Unique Linked Concepts"
         description="Distinct concepts linked from all course pages. This is the curriculum's explicit concept vocabulary."
         sql={include("queries/curriculum-map/linked-concepts.sql")}
-        value={{ field: "value", type: "number", format: ",.0f" }}
+        value={{ field: "value", type: "number", format: metricFormat.integer }}
         col={3}
       />
       <Metric
         name="All Pages"
         description="Total parsed pages in the mirror, including years, courses, concepts, and other page kinds."
         sql={include("queries/curriculum-map/all-pages.sql")}
-        value={{ field: "value", type: "number", format: ",.0f" }}
+        value={{ field: "value", type: "number", format: metricFormat.integer }}
         col={3}
       />
     </Row>
@@ -47,21 +49,21 @@ export default (
       name="year"
       description="Show rows for one configured curriculum year."
       type="select"
-      default="All"
+      default={staticFilterAllValue}
       options={{ values: filters.year }}
     />
     <Filter
       name="course"
       description="Show concept rows for one course."
       type="select"
-      default="All"
+      default={staticFilterAllValue}
       options={{ values: filters.course }}
     />
     <Filter
       name="concept"
       description="Show where a specific concept appears across courses."
       type="select"
-      default="All"
+      default={staticFilterAllValue}
       options={{ values: filters.concept }}
     />
 

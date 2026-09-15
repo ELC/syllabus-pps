@@ -6,50 +6,27 @@ import {
   collectPerYearConceptCoverage,
   collectSourceCoverageRows,
   countPagesByKind,
+  countDiagnosticsBySeverity,
+  metricFormat,
+  sourceCoverageGlobalLabel,
+  staticFilterAllValue,
   summarizeSourceCoverageRows,
   uniqueSorted,
+  type StaticColumn,
+  type StaticDashboard,
+  type StaticDashboardExport,
+  type StaticTable,
 } from "@pps/core";
 import { CurriculumGraph, Diagnostic } from "../types";
 
-export interface StaticMetric {
-  name: string;
-  description: string;
-  value: number | string;
-  format?: ",.0f" | ".1f" | ".2f";
-}
-
-export interface StaticFilter {
-  name: string;
-  description: string;
-  defaultValue: string;
-  options: string[];
-}
-
-export interface StaticColumn {
-  name: string;
-  label: string;
-}
-
-export interface StaticTable {
-  name: string;
-  description: string;
-  columns: StaticColumn[];
-  rows: Array<Record<string, string | number>>;
-}
-
-export interface StaticDashboard {
-  id: string;
-  name: string;
-  description: string;
-  metrics: StaticMetric[];
-  filters: StaticFilter[];
-  tables: StaticTable[];
-}
-
-export interface StaticDashboardExport {
-  generatedAt: string;
-  dashboards: StaticDashboard[];
-}
+export type {
+  StaticColumn,
+  StaticDashboard,
+  StaticDashboardExport,
+  StaticFilter,
+  StaticMetric,
+  StaticTable,
+} from "@pps/core";
 
 function table(
   name: string,
@@ -68,8 +45,8 @@ function table(
 }
 
 function buildQualityDashboard(graph: CurriculumGraph, diagnostics: Diagnostic[]): StaticDashboard {
-  const errors = diagnostics.filter((diagnostic) => diagnostic.severity === "error").length;
-  const warnings = diagnostics.filter((diagnostic) => diagnostic.severity === "warning").length;
+  const errors = countDiagnosticsBySeverity(diagnostics, "error");
+  const warnings = countDiagnosticsBySeverity(diagnostics, "warning");
   const expectedCourses = graph.expected.years.flatMap((year) => year.courses).length;
 
   return {
@@ -81,70 +58,70 @@ function buildQualityDashboard(graph: CurriculumGraph, diagnostics: Diagnostic[]
         name: "Pages",
         description: "Total parsed pages. Use this as a quick check that content is being read.",
         value: graph.pages.length,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Edges",
         description: "Total explicit links and hashtags. Higher values indicate a denser zettelkasten graph.",
         value: graph.edges.length,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Expected Courses",
         description: "Courses declared in pps.config.ts. Compare this with course pages and diagnostics.",
         value: expectedCourses,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Red Diagnostics",
         description: "Errors that should block confidence in the current graph. Read the Diagnostics table for details.",
         value: errors,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Warnings",
         description: "Non-blocking issues that still deserve review. Filter the table below by code or page.",
         value: warnings,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Concept Pages",
         description: "Pages classified as concepts. These should contain source links and connect course content.",
         value: countPagesByKind(graph, "concept"),
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Course Pages",
         description: "Pages classified as courses. These are expected to link forward into concept pages.",
         value: countPagesByKind(graph, "course"),
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Year Pages",
         description: "Pages classified as curriculum years. These should reference their expected courses.",
         value: countPagesByKind(graph, "year"),
-        format: ",.0f",
+        format: metricFormat.integer,
       },
     ],
     filters: [
       {
         name: "severity",
         description: "Limit diagnostics to errors, warnings, or all severities.",
-        defaultValue: "All",
-        options: ["All", ...uniqueSorted(diagnostics.map((diagnostic) => diagnostic.severity))],
+        defaultValue: staticFilterAllValue,
+        options: [staticFilterAllValue, ...uniqueSorted(diagnostics.map((diagnostic) => diagnostic.severity))],
       },
       {
         name: "code",
         description: "Focus on one diagnostic rule, such as missing sources or course pages without concepts.",
-        defaultValue: "All",
-        options: ["All", ...uniqueSorted(diagnostics.map((diagnostic) => diagnostic.code))],
+        defaultValue: staticFilterAllValue,
+        options: [staticFilterAllValue, ...uniqueSorted(diagnostics.map((diagnostic) => diagnostic.code))],
       },
       {
         name: "page",
         description: "Inspect diagnostics affecting one page.",
-        defaultValue: "All",
+        defaultValue: staticFilterAllValue,
         options: [
-          "All",
+          staticFilterAllValue,
           ...uniqueSorted(diagnostics.map((diagnostic) => diagnostic.page ?? "").filter(Boolean)),
         ],
       },
@@ -189,25 +166,25 @@ function buildConceptCoverageDashboard(graph: CurriculumGraph): StaticDashboard 
         name: "Course Notes",
         description: "Total note blocks found in course pages. This is the denominator for concept coverage.",
         value: totalBlocks,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Notes With Concepts",
         description: "Course notes that link to at least one concept through a hashtag or concept page link.",
         value: coveredBlocks,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Missing Concept Links",
         description: "Course notes with no explicit concept link. These are candidates for zettelkasten cleanup.",
         value: missingBlocks,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Coverage Percent",
         description: "Share of course notes that have at least one concept link. Higher is better.",
         value: Number(coveragePercent.toFixed(1)),
-        format: ".1f",
+        format: metricFormat.oneDecimal,
       },
     ],
     filters: [],
@@ -288,48 +265,48 @@ function buildCurriculumMapDashboard(graph: CurriculumGraph): StaticDashboard {
         name: "Expected Years",
         description: "Number of curriculum years configured for validation.",
         value: graph.expected.years.length,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Expected Courses",
         description: "Number of configured courses across all years.",
         value: expectedCourseCount,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Unique Linked Concepts",
         description: "Distinct concepts linked from all course pages.",
         value: linkedConceptCount,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "All Pages",
         description: "Total parsed pages in the mirror, including years, courses, concepts, and other page kinds.",
         value: graph.pages.length,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
     ],
     filters: [
       {
         name: "year",
         description: "Show rows for one configured curriculum year.",
-        defaultValue: "All",
-        options: ["All", ...graph.expected.years.map((year) => year.title)],
+        defaultValue: staticFilterAllValue,
+        options: [staticFilterAllValue, ...graph.expected.years.map((year) => year.title)],
       },
       {
         name: "course",
         description: "Show concept rows for one course.",
-        defaultValue: "All",
+        defaultValue: staticFilterAllValue,
         options: [
-          "All",
+          staticFilterAllValue,
           ...uniqueSorted(graph.expected.years.flatMap((year) => year.courses.map((course) => course))),
         ],
       },
       {
         name: "concept",
         description: "Show where a specific concept appears across courses.",
-        defaultValue: "All",
-        options: ["All", ...uniqueSorted(courseConceptRows.map(([, , concept]) => concept))],
+        defaultValue: staticFilterAllValue,
+        options: [staticFilterAllValue, ...uniqueSorted(courseConceptRows.map(([, , concept]) => concept))],
       },
     ],
     tables: [
@@ -350,7 +327,7 @@ function buildCurriculumMapDashboard(graph: CurriculumGraph): StaticDashboard {
 function buildSourceCoverageDashboard(graph: CurriculumGraph): StaticDashboard {
   const rows = collectSourceCoverageRows(graph);
   const globalSummary = summarizeSourceCoverageRows(rows, "global")[0] ?? [
-    "All",
+    sourceCoverageGlobalLabel,
     "0",
     "0",
     "0",
@@ -366,25 +343,25 @@ function buildSourceCoverageDashboard(graph: CurriculumGraph): StaticDashboard {
         name: "Linked Concept Notes",
         description: "Distinct concept note blocks reachable from all course-linked concepts.",
         value: Number(globalSummary[1] ?? 0),
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Notes With Sources",
         description: "Reachable concept notes that include at least one detected source link.",
         value: Number(globalSummary[2] ?? 0),
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Missing Source Links",
         description: "Reachable concept notes without a detected source link.",
         value: Number(globalSummary[3] ?? 0),
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Source Coverage Percent",
         description: "Share of reachable concept notes that have source links. Higher is better.",
         value: Number(globalSummary[4] ?? 0),
-        format: ".1f",
+        format: metricFormat.oneDecimal,
       },
     ],
     filters: [],
@@ -465,33 +442,33 @@ function buildConceptMapDashboard(graph: CurriculumGraph): StaticDashboard {
         name: "Concepts",
         description: "Total concept pages.",
         value: conceptCount,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Concepts With Sources",
         description: "Concepts where at least one source link was detected in the prose.",
         value: sourcedConcepts.size,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Concepts Missing Sources",
         description: "Concepts with no detected source.",
         value: conceptCount - sourcedConcepts.size,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
       {
         name: "Source Links",
         description: "Total source rows found across concept pages.",
         value: sourceLinks,
-        format: ",.0f",
+        format: metricFormat.integer,
       },
     ],
     filters: [
       {
         name: "source_type",
         description: "Filter sources by URL, documentation, bibliography, article, reference, or missing.",
-        defaultValue: "All",
-        options: ["All", ...uniqueSorted(rows.map((row) => row.sourceType))],
+        defaultValue: staticFilterAllValue,
+        options: [staticFilterAllValue, ...uniqueSorted(rows.map((row) => row.sourceType))],
       },
     ],
     tables: [

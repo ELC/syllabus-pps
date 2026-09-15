@@ -1,4 +1,10 @@
-import { panelResourceKind, stripCitationRefs, type ResourceCatalogEntry } from "@pps/core";
+import {
+  panelResourceKind,
+  panelResourceLabels,
+  stripCitationRefs,
+  type PanelResourceKind,
+  type ResourceCatalogEntry,
+} from "@pps/core";
 
 import { capitalizeWords } from "./labels";
 
@@ -27,16 +33,6 @@ export interface ConceptPage {
   blocks: ConceptBlock[];
 }
 
-type ResourceKind = "video" | "wikipedia" | "text" | "book" | "interactive";
-
-const RESOURCE_LABELS: Record<ResourceKind, string> = {
-  video: "Video",
-  wikipedia: "Wikipedia",
-  text: "Texto",
-  book: "Libro",
-  interactive: "Interactivo",
-};
-
 function parseGeneratedPayload<T>(content: string): T {
   const newlineIndex = content.indexOf("\n");
   const json = newlineIndex === -1 ? content : content.slice(newlineIndex + 1);
@@ -47,7 +43,7 @@ function primaryBlockUrl(block: ConceptBlock): string | undefined {
   return block.citations?.[0]?.resolved?.URL ?? block.urls[0]?.target;
 }
 
-function classifyResourceKind(block: ConceptBlock): ResourceKind {
+function classifyResourceKind(block: ConceptBlock): PanelResourceKind {
   const resolved = block.citations?.[0]?.resolved;
   if (resolved) {
     return panelResourceKind(resolved);
@@ -84,7 +80,7 @@ function appendFilledPath(svg: SVGSVGElement, pathData: string): void {
   svg.appendChild(path);
 }
 
-function createResourceIcon(kind: ResourceKind): HTMLElement {
+function createResourceIcon(kind: PanelResourceKind): HTMLElement {
   const badge = document.createElement("span");
   badge.className = `graph__concept-note-badge graph__concept-note-badge--${kind}`;
   badge.setAttribute("aria-hidden", "true");
@@ -175,8 +171,8 @@ function renderConceptNote(block: ConceptBlock): HTMLElement {
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.title = resolvedTitle
-    ? `${RESOURCE_LABELS[resourceKind]}: ${resolvedTitle}`
-    : `${RESOURCE_LABELS[resourceKind]}: ${primaryUrl}`;
+    ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
+    : `${panelResourceLabels[resourceKind]}: ${primaryUrl}`;
   link.append(createResourceIcon(resourceKind), body);
   item.appendChild(link);
   return item;

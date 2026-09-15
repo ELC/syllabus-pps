@@ -1,3 +1,5 @@
-export function hasErrors(diagnostics: Array<{ severity: string }>): boolean {
-  return diagnostics.some((diagnostic) => diagnostic.severity === "error");
+import { hasErrorDiagnostics, type Diagnostic } from "@pps/core";
+
+export function hasErrors(diagnostics: readonly Diagnostic[]): boolean {
+  return hasErrorDiagnostics(diagnostics);
 }

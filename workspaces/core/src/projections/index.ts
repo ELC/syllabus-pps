@@ -8,7 +8,10 @@ export {
 export { collectConceptMapRows, type ConceptMapRow } from "./concept-map";
 export {
   collectSourceCoverageRows,
+  sourceCoverageGlobalLabel,
+  sourceCoverageGroupModes,
   summarizeSourceCoverageRows,
+  type SourceCoverageGroupMode,
   type SourceCoverageRow,
 } from "./source-coverage";
 export {

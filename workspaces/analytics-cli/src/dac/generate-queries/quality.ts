@@ -1,3 +1,4 @@
+import { countDiagnosticsBySeverity, staticFilterAllValue } from "@pps/core";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { uniqueSorted } from "../../normalize";
@@ -16,8 +17,8 @@ export function writeQualityQueries(
   mkdirSync(queriesDir, { recursive: true });
   mkdirSync(generatedDir, { recursive: true });
 
-  const errors = diagnostics.filter((diagnostic) => diagnostic.severity === "error").length;
-  const warnings = diagnostics.filter((diagnostic) => diagnostic.severity === "warning").length;
+  const errors = countDiagnosticsBySeverity(diagnostics, "error");
+  const warnings = countDiagnosticsBySeverity(diagnostics, "warning");
   const expectedCourses = graph.expected.years.flatMap((year) => year.courses).length;
 
   writeMetricSql(join(queriesDir, "pages.sql"), graph.pages.length);
@@ -35,10 +36,10 @@ export function writeQualityQueries(
     join(generatedDir, "quality-filters.json"),
     `${JSON.stringify(
       {
-        severity: ["All", ...uniqueSorted(diagnostics.map((diagnostic) => diagnostic.severity))],
-        code: ["All", ...uniqueSorted(diagnostics.map((diagnostic) => diagnostic.code))],
+        severity: [staticFilterAllValue, ...uniqueSorted(diagnostics.map((diagnostic) => diagnostic.severity))],
+        code: [staticFilterAllValue, ...uniqueSorted(diagnostics.map((diagnostic) => diagnostic.code))],
         page: [
-          "All",
+          staticFilterAllValue,
           ...uniqueSorted(
             diagnostics.map((diagnostic) => diagnostic.page ?? "").filter(Boolean),
           ),

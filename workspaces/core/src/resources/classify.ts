@@ -72,10 +72,26 @@ export function catalogSourceType(entry: ResourceCatalogEntry): CatalogSourceTyp
   }
 }
 
+export const panelResourceKinds = [
+  "video",
+  "wikipedia",
+  "text",
+  "book",
+  "interactive",
+] as const;
+
+export type PanelResourceKind = (typeof panelResourceKinds)[number];
+
+export const panelResourceLabels: Record<PanelResourceKind, string> = {
+  video: "Video",
+  wikipedia: "Wikipedia",
+  text: "Texto",
+  book: "Libro",
+  interactive: "Interactivo",
+};
+
 /** Maps catalog kind to concept-panel icon categories. */
-export function panelResourceKind(
-  entry: ResourceCatalogEntry,
-): "video" | "wikipedia" | "text" | "book" | "interactive" {
+export function panelResourceKind(entry: ResourceCatalogEntry): PanelResourceKind {
   switch (catalogResourceKind(entry)) {
     case "video":
       return "video";

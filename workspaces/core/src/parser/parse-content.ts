@@ -1,7 +1,7 @@
 import { normalizeTitle, stripMarkdownExtension } from "../normalize";
 import { parseFrontmatter } from "./frontmatter";
 import { slugFromPath } from "../slug";
-import { PageKind, ZettelBlock } from "../types";
+import { pageKinds, PageKind, ZettelBlock } from "../types";
 import {
   extractCitationRefs,
   extractConceptTags,
@@ -10,15 +10,7 @@ import {
 } from "./extractors";
 import { RawPage } from "./types";
 
-const VALID_KINDS = new Set<PageKind>([
-  "career",
-  "year",
-  "course",
-  "concept",
-  "journal",
-  "administrative",
-  "unknown",
-]);
+const VALID_KINDS = new Set<PageKind>(pageKinds);
 
 function parseKind(value: unknown): PageKind | undefined {
   if (typeof value !== "string") {

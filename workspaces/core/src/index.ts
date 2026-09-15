@@ -9,3 +9,4 @@ export * from "./diagnostics";
 export * from "./projections";
 export * from "./exports/cytoscape";
 export * from "./resources";
+export * from "./static-dashboard";

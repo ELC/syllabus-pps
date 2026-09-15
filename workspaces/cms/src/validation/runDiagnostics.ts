@@ -34,9 +34,3 @@ export function runDiagnosticsForEditor(
   });
   return collectDiagnostics(graph);
 }
-
-export function hasBlockingDiagnostics(diagnostics: Diagnostic[]): boolean {
-  return diagnostics.some(
-    (diagnostic) => diagnostic.severity === "error" || diagnostic.severity === "warning",
-  );
-}

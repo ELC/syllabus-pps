@@ -1,3 +1,4 @@
+import { sourceCoverageGlobalLabel } from "@pps/core";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { CurriculumGraph } from "../../types";
@@ -14,7 +15,7 @@ export function writeSourceCoverageQueries(dashboardsDir: string, graph: Curricu
 
   const rows = collectSourceCoverageRows(graph);
   const globalSummary = summarizeSourceCoverageRows(rows, "global")[0] ?? [
-    "All",
+    sourceCoverageGlobalLabel,
     "0",
     "0",
     "0",

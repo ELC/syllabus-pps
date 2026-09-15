@@ -1,90 +1,14 @@
-export interface StaticMetric {
-  name: string;
-  description: string;
-  value: number | string;
-  format?: ",.0f" | ".1f" | ".2f";
-}
-
-export interface StaticFilter {
-  name: string;
-  description: string;
-  defaultValue: string;
-  options: string[];
-}
-
-export interface StaticColumn {
-  name: string;
-  label: string;
-}
-
-export interface StaticTable {
-  name: string;
-  description: string;
-  columns: StaticColumn[];
-  rows: Array<Record<string, string | number>>;
-}
-
-export interface StaticDashboard {
-  id: string;
-  name: string;
-  description: string;
-  metrics: StaticMetric[];
-  filters: StaticFilter[];
-  tables: StaticTable[];
-}
-
-export interface StaticDashboardExport {
-  generatedAt: string;
-  dashboards: StaticDashboard[];
-}
+import type { StaticDashboard, StaticDashboardExport, StaticFilter, StaticMetric, StaticTable } from "@pps/core";
+import {
+  formatMetricValue,
+  rowMatchesFilters,
+  tableCellClass,
+} from "./dashboard-view";
 
 function parseGeneratedPayload<T>(content: string): T {
   const newlineIndex = content.indexOf("\n");
   const json = newlineIndex === -1 ? content : content.slice(newlineIndex + 1);
   return JSON.parse(json) as T;
-}
-
-function formatMetricValue(metric: StaticMetric): string {
-  if (typeof metric.value === "string") {
-    return metric.value;
-  }
-
-  if (metric.format === ",.0f") {
-    return metric.value.toLocaleString("en-US", { maximumFractionDigits: 0 });
-  }
-  if (metric.format === ".1f") {
-    return metric.value.toFixed(1);
-  }
-  if (metric.format === ".2f") {
-    return metric.value.toFixed(2);
-  }
-
-  return String(metric.value);
-}
-
-function rowMatchesFilters(
-  row: Record<string, string | number>,
-  filters: Record<string, string>,
-): boolean {
-  for (const [name, value] of Object.entries(filters)) {
-    if (value === "All") {
-      continue;
-    }
-    if (String(row[name] ?? "") !== value) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function severityClass(value: string): string {
-  if (value === "error") {
-    return "analytics__table-severity--error";
-  }
-  if (value === "warning") {
-    return "analytics__table-severity--warning";
-  }
-  return "";
 }
 
 function renderMetrics(metrics: StaticMetric[]): HTMLElement {
@@ -197,8 +121,9 @@ function renderTable(table: StaticTable, filters: Record<string, string>): HTMLE
     tr.className = "analytics__table-row";
     for (const column of table.columns) {
       const td = document.createElement("td");
-      td.className = `analytics__table-cell ${column.name === "severity" ? severityClass(String(row[column.name] ?? "")) : ""}`.trim();
-      td.textContent = String(row[column.name] ?? "");
+      const cellValue = String(row[column.name] ?? "");
+      td.className = tableCellClass(column.name, cellValue);
+      td.textContent = cellValue;
       tr.appendChild(td);
     }
     tbody.appendChild(tr);

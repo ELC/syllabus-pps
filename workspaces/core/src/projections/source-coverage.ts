@@ -1,7 +1,15 @@
+import { match } from "ts-pattern";
+
 import { buildCurriculumIndexes } from "../analysis/indexes";
 import { collectSourcesForBlock } from "../analysis/sources";
 import { normalizeTitle, uniqueSorted } from "../normalize";
 import { CurriculumGraph } from "../types";
+
+export const sourceCoverageGroupModes = ["global", "year", "course"] as const;
+
+export type SourceCoverageGroupMode = (typeof sourceCoverageGroupModes)[number];
+
+export const sourceCoverageGlobalLabel = "All" as const;
 
 export interface SourceCoverageRow {
   year: string;
@@ -71,7 +79,7 @@ export function collectSourceCoverageRows(graph: CurriculumGraph): SourceCoverag
 
 export function summarizeSourceCoverageRows(
   rows: SourceCoverageRow[],
-  groupBy: "global" | "year" | "course",
+  groupBy: SourceCoverageGroupMode,
   seedLabels: string[][] = [],
 ): string[][] {
   const groups = new Map<string, { labels: string[]; rows: Map<string, SourceCoverageRow> }>();
@@ -81,15 +89,17 @@ export function summarizeSourceCoverageRows(
   }
 
   for (const row of rows) {
-    const labels =
-      groupBy === "global" ? ["All"] : groupBy === "year" ? [row.year] : [row.year, row.course];
+    const labels = match(groupBy)
+      .with("global", () => [sourceCoverageGlobalLabel])
+      .with("year", () => [row.year])
+      .with("course", () => [row.year, row.course])
+      .exhaustive();
     const groupKey = labels.join("\u0000");
-    const rowKey =
-      groupBy === "global"
-        ? `${row.concept}\u0000${row.line}`
-        : groupBy === "year"
-          ? `${row.year}\u0000${row.concept}\u0000${row.line}`
-          : `${row.course}\u0000${row.concept}\u0000${row.line}`;
+    const rowKey = match(groupBy)
+      .with("global", () => `${row.concept}\u0000${row.line}`)
+      .with("year", () => `${row.year}\u0000${row.concept}\u0000${row.line}`)
+      .with("course", () => `${row.course}\u0000${row.concept}\u0000${row.line}`)
+      .exhaustive();
     const group = groups.get(groupKey) ?? { labels, rows: new Map<string, SourceCoverageRow>() };
     group.rows.set(rowKey, row);
     groups.set(groupKey, group);

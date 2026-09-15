@@ -9,19 +9,15 @@ import {
   readPage,
   writePage,
 } from "./api/content";
-import type { ResourceCatalogEntry } from "@pps/core";
+import {
+  createSeverityClassNameResolver,
+  hasBlockingDiagnostics,
+  type ResourceCatalogEntry,
+} from "@pps/core";
 import { readPageParam, writePageParam } from "./page-param";
-import { hasBlockingDiagnostics, runDiagnosticsForEditor } from "./validation/runDiagnostics";
+import { runDiagnosticsForEditor } from "./validation/runDiagnostics";
 
-function severityClass(severity: string): string {
-  if (severity === "error") {
-    return "cms__diagnostics-severity--error";
-  }
-  if (severity === "warning") {
-    return "cms__diagnostics-severity--warning";
-  }
-  return "";
-}
+const severityClass = createSeverityClassNameResolver("cms__diagnostics-severity");
 
 export function App() {
   const [pages, setPages] = useState<Array<{ slug: string; path: string }>>([]);

@@ -1,3 +1,4 @@
+import { staticFilterAllValue } from "@pps/core";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { uniqueSorted } from "../../normalize";
@@ -30,7 +31,7 @@ export function writeConceptMapQueries(dashboardsDir: string, graph: CurriculumG
     join(generatedDir, "concept-map-filters.json"),
     `${JSON.stringify(
       {
-        source_type: ["All", ...uniqueSorted(rows.map((row) => row.sourceType))],
+        source_type: [staticFilterAllValue, ...uniqueSorted(rows.map((row) => row.sourceType))],
       },
       null,
       2,

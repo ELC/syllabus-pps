@@ -1,3 +1,4 @@
+import { structuralPageKindRank } from "@pps/core";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 
@@ -1221,21 +1222,6 @@ function compareNodes(left: string, right: string): number {
   return left.localeCompare(right, "es-AR");
 }
 
-function structuralKindRank(kind: string | undefined): number | undefined {
-  if (kind === "career") {
-    return 0;
-  }
-
-  if (kind === "year") {
-    return 1;
-  }
-
-  if (kind === "course") {
-    return 2;
-  }
-
-  return undefined;
-}
 
 function canonicalizeLoadedEdgeDirection(
   source: string,
@@ -1247,8 +1233,8 @@ function canonicalizeLoadedEdgeDirection(
     return [source, target];
   }
 
-  const sourceRank = structuralKindRank(kindById.get(source));
-  const targetRank = structuralKindRank(kindById.get(target));
+  const sourceRank = structuralPageKindRank(kindById.get(source));
+  const targetRank = structuralPageKindRank(kindById.get(target));
   if (
     sourceRank !== undefined &&
     targetRank !== undefined &&
