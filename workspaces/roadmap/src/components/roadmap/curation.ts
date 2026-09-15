@@ -17,20 +17,25 @@ export interface RoadmapCuration {
   careerSlug: string;
   parallelLanes: RoadmapParallelLane[];
   postMergeSpine: string[];
+  /** Ordered main trunk after the post-merge prefix; when set, replaces automatic ordering. */
+  trunkSpine?: string[];
   trunkForks?: RoadmapTrunkFork[];
   branches: Record<string, string[]>;
   branchOwnerOverrides: Record<string, string>;
   spineJoins: Record<string, string>;
+  spinePromotions?: string[];
 }
 
 export const EMPTY_ROADMAP_CURATION: RoadmapCuration = {
   careerSlug: "",
   parallelLanes: [],
   postMergeSpine: [],
+  trunkSpine: [],
   trunkForks: [],
   branches: {},
   branchOwnerOverrides: {},
   spineJoins: {},
+  spinePromotions: [],
 };
 
 const curatedModules = import.meta.glob("../../curations/*.json", {
@@ -92,6 +97,10 @@ export function validateRoadmapCuration(
     assertKnownTitle(titles, title, `post-merge spine for ${roadmap.careerSlug}`);
   }
 
+  for (const title of curation.trunkSpine ?? []) {
+    assertKnownTitle(titles, title, `trunk spine for ${roadmap.careerSlug}`);
+  }
+
   for (const [owner, branches] of Object.entries(curation.branches)) {
     assertKnownTitle(titles, owner, `branch owner for ${roadmap.careerSlug}`);
     for (const branch of branches) {
@@ -107,6 +116,10 @@ export function validateRoadmapCuration(
   for (const [from, to] of Object.entries(curation.spineJoins)) {
     assertKnownTitle(titles, from, `spine join source for ${roadmap.careerSlug}`);
     assertKnownTitle(titles, to, `spine join target for ${roadmap.careerSlug}`);
+  }
+
+  for (const title of curation.spinePromotions ?? []) {
+    assertKnownTitle(titles, title, `spine promotion for ${roadmap.careerSlug}`);
   }
 
   for (const fork of curation.trunkForks ?? []) {

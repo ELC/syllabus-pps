@@ -79,18 +79,159 @@ function stackHeight(count: number): number {
   return count === 0 ? 0 : count * BRANCH_NODE_HEIGHT + (count - 1) * BRANCH_ROW_GAP;
 }
 
-function branchTreeHeight(title: string, attached: Map<string, string[]>): number {
+/** Flatten direct side notes and one level of nested branch owners for balanced trunk splits. */
+function expandedSplitPool(terminals: string[], attached: Map<string, string[]>): string[] {
+  const pool: string[] = [];
+
+  for (const terminal of terminals) {
+    pool.push(terminal);
+    pool.push(...(attached.get(terminal) ?? []));
+  }
+
+  return pool;
+}
+
+function splitExpandedPool(
+  terminals: string[],
+  attached: Map<string, string[]>,
+): { left: string[]; right: string[] } {
+  const left: string[] = [];
+  const right: string[] = [];
+
+  for (const title of expandedSplitPool(terminals, attached)) {
+    if (left.length <= right.length) {
+      left.push(title);
+    } else {
+      right.push(title);
+    }
+  }
+
+  return { left, right };
+}
+
+/** Places a flat side column without nesting children below their parent. */
+function placeFlatTerminalColumn(
+  placements: Map<string, RoadmapPlacement>,
+  stageOf: Map<string, number>,
+  terminals: string[],
+  x: number,
+  startY: number,
+  visiting: Set<string>,
+): number {
+  let y = startY;
+
+  for (let index = 0; index < terminals.length; index += 1) {
+    const terminal = terminals[index];
+    if (terminal === undefined || visiting.has(terminal)) {
+      continue;
+    }
+
+    visiting.add(terminal);
+
+    placements.set(terminal, {
+      title: terminal,
+      role: "branch",
+      stage: stageOf.get(terminal) ?? 0,
+      x,
+      y,
+      width: BRANCH_NODE_WIDTH,
+      height: BRANCH_NODE_HEIGHT,
+    });
+
+    y += BRANCH_NODE_HEIGHT;
+
+    if (index < terminals.length - 1) {
+      y += BRANCH_ROW_GAP;
+    }
+  }
+
+  return y;
+}
+
+/** Places a vertical side column; nested branch owners continue below at the same x. */
+function placeTerminalColumn(
+  placements: Map<string, RoadmapPlacement>,
+  attached: Map<string, string[]>,
+  stageOf: Map<string, number>,
+  terminals: string[],
+  x: number,
+  startY: number,
+  visiting: Set<string>,
+): number {
+  let y = startY;
+
+  for (let index = 0; index < terminals.length; index += 1) {
+    const terminal = terminals[index];
+    if (terminal === undefined || visiting.has(terminal)) {
+      continue;
+    }
+
+    visiting.add(terminal);
+
+    placements.set(terminal, {
+      title: terminal,
+      role: "branch",
+      stage: stageOf.get(terminal) ?? 0,
+      x,
+      y,
+      width: BRANCH_NODE_WIDTH,
+      height: BRANCH_NODE_HEIGHT,
+    });
+
+    y += BRANCH_NODE_HEIGHT;
+
+    const nested = attached.get(terminal) ?? [];
+    if (nested.length > 0) {
+      y += BRANCH_ROW_GAP;
+      y = placeTerminalColumn(placements, attached, stageOf, nested, x, y, visiting);
+    }
+
+    if (index < terminals.length - 1) {
+      y += BRANCH_ROW_GAP;
+    }
+  }
+
+  return y;
+}
+
+function terminalStackHeight(
+  terminals: string[],
+  attached: Map<string, string[]>,
+  visiting: Set<string>,
+): number {
+  return terminals.reduce((height, terminal, index) => {
+    const nestedBranches = attached.get(terminal) ?? [];
+    const nested =
+      nestedBranches.length > 0 ? branchTreeHeight(terminal, attached, visiting) : 0;
+    const gap = index > 0 ? BRANCH_ROW_GAP : 0;
+    const nestedBlock = nested > 0 ? BRANCH_ROW_GAP + nested : 0;
+    return height + gap + BRANCH_NODE_HEIGHT + nestedBlock;
+  }, 0);
+}
+
+function branchTreeHeight(
+  title: string,
+  attached: Map<string, string[]>,
+  visiting = new Set<string>(),
+  splitSides = false,
+): number {
+  if (visiting.has(title)) {
+    return 0;
+  }
+
   const terminals = attached.get(title) ?? [];
   if (terminals.length === 0) {
     return 0;
   }
 
-  return terminals.reduce((height, terminal, index) => {
-    const nested = branchTreeHeight(terminal, attached);
-    const gap = index > 0 ? BRANCH_ROW_GAP : 0;
-    const nestedBlock = nested > 0 ? BRANCH_ROW_GAP + nested : 0;
-    return height + gap + BRANCH_NODE_HEIGHT + nestedBlock;
-  }, 0);
+  visiting.add(title);
+
+  if (splitSides && terminals.length > 1) {
+    const { left, right } = splitExpandedPool(terminals, attached);
+    return Math.max(stackHeight(left.length), stackHeight(right.length));
+  }
+
+  return terminalStackHeight(terminals, attached, visiting);
 }
 
 function sortAttached(attached: Map<string, string[]>): void {
@@ -129,6 +270,27 @@ function applyBranchOwnerOverrides(
   sortAttached(attached);
 }
 
+function applySpinePromotions(
+  attached: Map<string, string[]>,
+  ownerOf: Map<string, string>,
+  spinePromotions: string[],
+): void {
+  for (const title of spinePromotions) {
+    const owner = ownerOf.get(title);
+    if (owner === undefined) {
+      continue;
+    }
+
+    ownerOf.delete(title);
+    attached.set(
+      owner,
+      (attached.get(owner) ?? []).filter((terminal) => terminal !== title),
+    );
+  }
+
+  sortAttached(attached);
+}
+
 function applySpineBranches(
   attached: Map<string, string[]>,
   ownerOf: Map<string, string>,
@@ -153,6 +315,20 @@ function applySpineBranches(
   for (const [owner, branches] of Object.entries(spineBranches)) {
     const kept = (attached.get(owner) ?? []).filter((title) => !forcedBranches.has(title));
     attached.set(owner, [...kept, ...branches]);
+
+    for (const branch of branches) {
+      const inverse = attached.get(branch) ?? [];
+      if (inverse.includes(owner)) {
+        attached.set(
+          branch,
+          inverse.filter((title) => title !== owner),
+        );
+      }
+
+      if (ownerOf.get(owner) === branch) {
+        ownerOf.delete(owner);
+      }
+    }
   }
 
   for (const [owner, terminals] of attached) {
@@ -240,27 +416,39 @@ function pickParallelTracks(tracks: TrackInfo[], curation: RoadmapCuration): Tra
     return tracks.slice(0, 2);
   }
 
-  const picked = curation.parallelLanes.flatMap(({ root }) => {
-    const track = tracks.find((entry) => entry.lead === root);
-    return track ? [track] : [];
+  return curation.parallelLanes.map(({ root, spine }) => {
+    const byLead = tracks.find((entry) => entry.lead === root);
+    if (byLead) {
+      return byLead;
+    }
+
+    const byMember = tracks.find((entry) => entry.members.includes(root));
+    if (byMember) {
+      return { ...byMember, lead: root };
+    }
+
+    const curatedSpine = spine.length > 0 ? spine : [root];
+    return {
+      members: curatedSpine,
+      spine: curatedSpine,
+      depth: 0,
+      lead: root,
+    };
   });
-
-  if (picked.length >= Math.min(2, curation.parallelLanes.length)) {
-    return picked;
-  }
-
-  return tracks.slice(0, curation.parallelLanes.length);
 }
 
 function laneSpine(
   track: TrackInfo,
   deferred: ReadonlySet<string>,
   curation: RoadmapCuration,
+  laneIndex: number,
+  spineCandidates: readonly string[],
 ): string[] {
-  const lane = curation.parallelLanes.find((entry) => entry.root === track.lead);
-  const spine = lane?.spine ?? track.spine;
+  const onSpine = new Set(spineCandidates);
+  const curated = curation.parallelLanes[laneIndex];
+  const spine = curated?.spine ?? track.spine;
 
-  return spine.filter((title) => !deferred.has(title));
+  return spine.filter((title) => onSpine.has(title) && !deferred.has(title));
 }
 
 /**
@@ -669,55 +857,90 @@ function placeBranchStack(
     rowHeight: number;
     sideFlip?: number;
     nested?: boolean;
+    visiting?: Set<string>;
+    /** Split side notes across left and right; only for the center trunk spine. */
+    splitSides?: boolean;
   },
 ): number {
-  const { title, owner, laneCenter, branch, cursorY, rowHeight, nested = false } = options;
+  const {
+    title,
+    owner,
+    laneCenter,
+    branch,
+    cursorY,
+    rowHeight,
+    nested = false,
+    splitSides = false,
+  } = options;
   let sideFlip = options.sideFlip ?? 0;
+  const visiting = options.visiting ?? new Set<string>();
+
+  if (visiting.has(title)) {
+    return sideFlip;
+  }
+
+  visiting.add(title);
+
   const terminals = attached.get(title) ?? [];
 
   if (terminals.length === 0) {
     return sideFlip;
   }
 
-  const stackBox = nested
-    ? branchBelowOwnerStackBox(owner, terminals.length)
-    : branch.mode === "below"
-      ? branchBelowStackBox(owner, branch.side, laneCenter, terminals.length)
-      : branchSideStackBox(owner, branch.side, cursorY, rowHeight, terminals.length);
+  if (splitSides && !nested && terminals.length > 1) {
+    const { left, right } = splitExpandedPool(terminals, attached);
+    const spineMidY = owner.y + owner.height / 2;
+    const columnVisiting = new Set(visiting);
 
-  terminals.forEach((terminal, index) => {
-    placements.set(terminal, {
-      title: terminal,
-      role: "branch",
-      stage: stageOf.get(terminal) ?? 0,
-      x: stackBox.x,
-      y: stackBox.y + index * (BRANCH_NODE_HEIGHT + BRANCH_ROW_GAP),
-      width: BRANCH_NODE_WIDTH,
-      height: BRANCH_NODE_HEIGHT,
-    });
-  });
+    const leftHeight = stackHeight(left.length);
+    placeFlatTerminalColumn(
+      placements,
+      stageOf,
+      left,
+      branchSideX(owner, "left"),
+      spineMidY - leftHeight / 2,
+      columnVisiting,
+    );
 
-  for (const terminal of terminals) {
-    if ((attached.get(terminal) ?? []).length === 0) {
-      continue;
-    }
+    const rightHeight = stackHeight(right.length);
+    placeFlatTerminalColumn(
+      placements,
+      stageOf,
+      right,
+      branchSideX(owner, "right"),
+      spineMidY - rightHeight / 2,
+      columnVisiting,
+    );
 
-    const terminalPlacement = placements.get(terminal);
-    if (terminalPlacement === undefined) {
-      continue;
-    }
-
-    sideFlip = placeBranchStack(placements, attached, stageOf, {
-      title: terminal,
-      owner: terminalPlacement,
-      laneCenter: terminalPlacement.x + terminalPlacement.width / 2,
-      branch: { mode: "below", side: "right" },
-      cursorY,
-      rowHeight,
-      sideFlip,
-      nested: true,
-    });
+    return sideFlip;
   }
+
+  const columnHeight = terminalStackHeight(terminals, attached, new Set(visiting));
+  let columnX: number;
+  let columnStartY: number;
+
+  if (nested) {
+    columnX = owner.x;
+    columnStartY = owner.y + owner.height + BRANCH_ROW_GAP;
+  } else if (branch.mode === "below") {
+    const belowBox = branchBelowStackBox(owner, branch.side, laneCenter, terminals.length);
+    columnX = belowBox.x;
+    columnStartY = belowBox.y;
+  } else {
+    const spineMidY = owner.y + owner.height / 2;
+    columnX = branchSideX(owner, branch.side);
+    columnStartY = spineMidY - columnHeight / 2;
+  }
+
+  placeTerminalColumn(
+    placements,
+    attached,
+    stageOf,
+    terminals,
+    columnX,
+    columnStartY,
+    visiting,
+  );
 
   return sideFlip;
 }
@@ -767,6 +990,7 @@ export function buildRoadmapLayout(
 
   sortAttached(attached);
   applyBranchOwnerOverrides(attached, ownerOf, curation.branchOwnerOverrides);
+  applySpinePromotions(attached, ownerOf, curation.spinePromotions ?? []);
 
   const branchForced = new Set<string>();
   applySpineBranches(attached, ownerOf, branchForced, curation.branches);
@@ -793,7 +1017,9 @@ export function buildRoadmapLayout(
     );
 
   const parallelTracks = pickParallelTracks(tracks, curation);
-  const parallelLanes = parallelTracks.map((track) => laneSpine(track, deferredSpine, curation));
+  const parallelLanes = parallelTracks.map((track, laneIndex) =>
+    laneSpine(track, deferredSpine, curation, laneIndex, spineCandidates),
+  );
   const parallelSpineTitles = new Set(parallelLanes.flat());
   const lateJoins = Object.entries(curation.spineJoins).flatMap(([from, to]) =>
     to === undefined ? [] : [{ from, to }],
@@ -811,18 +1037,17 @@ export function buildRoadmapLayout(
       !deferredSpine.has(title) &&
       !trunkForkLaneTitles.has(title),
   );
+  const curatedTrunkTail = (curation.trunkSpine ?? []).filter((title) =>
+    spineCandidates.includes(title),
+  );
+  const trunkTail =
+    curatedTrunkTail.length > 0
+      ? curatedTrunkTail
+      : orderTrunk(trunkTailCandidates, adjacency, stageOf);
   const trunk =
     parallelLanes.length > 0
-      ? composeTrunk(
-          postMerge,
-          orderTrunk(trunkTailCandidates, adjacency, stageOf),
-          trunkForks,
-        )
-      : composeTrunk(
-          [],
-          orderTrunk(trunkTailCandidates, adjacency, stageOf),
-          trunkForks,
-        );
+      ? composeTrunk(postMerge, trunkTail, trunkForks)
+      : composeTrunk([], trunkTail, trunkForks);
   const trunkForkByAfter = new Map(trunkForks.map((fork) => [fork.after, fork]));
 
   const placements = new Map<string, RoadmapPlacement>();
@@ -844,32 +1069,31 @@ export function buildRoadmapLayout(
 
   for (const title of trunk) {
     const terminals = attached.get(title) ?? [];
-    const provisionalRowHeight = Math.max(SPINE_NODE_HEIGHT, branchTreeHeight(title, attached));
+    const willSplit = terminals.length > 1;
+    const branchSubtreeHeight = branchTreeHeight(title, attached, new Set(), willSplit);
+    const rowHeight = Math.max(SPINE_NODE_HEIGHT, branchSubtreeHeight);
     const ownerBox: LayoutBox = {
       x: spineX,
-      y: cursorY + (provisionalRowHeight - SPINE_NODE_HEIGHT) / 2,
+      y: cursorY + (rowHeight - SPINE_NODE_HEIGHT) / 2,
       width: SPINE_NODE_WIDTH,
       height: SPINE_NODE_HEIGHT,
     };
     const branch =
       terminals.length === 0
         ? ({ mode: "side", side: "left" } as BranchPlacement)
-        : pickBranchPlacement(
-            ownerBox,
-            0,
-            sideFlip % 2,
-            2,
-            [-SPINE_NODE_WIDTH, SPINE_NODE_WIDTH],
-            cursorY,
-            provisionalRowHeight,
-            terminals.length,
-            placements,
-          );
-    const rowHeight = Math.max(
-      provisionalRowHeight,
-      branch.mode === "below" ? SPINE_NODE_HEIGHT + branchBelowHeight(terminals.length) : 0,
-      provisionalRowHeight + nestedBelowOverflow(terminals, attached, provisionalRowHeight),
-    );
+        : willSplit
+          ? ({ mode: "side", side: "left" } as BranchPlacement)
+          : pickBranchPlacement(
+              ownerBox,
+              0,
+              sideFlip % 2,
+              2,
+              [-SPINE_NODE_WIDTH, SPINE_NODE_WIDTH],
+              cursorY,
+              rowHeight,
+              terminals.length,
+              placements,
+            );
 
     placements.set(title, {
       title,
@@ -893,12 +1117,14 @@ export function buildRoadmapLayout(
         cursorY,
         rowHeight,
         sideFlip,
+        splitSides: willSplit,
       });
     }
 
-    cursorY += rowHeight + STAGE_GAP;
-
     const fork = trunkForkByAfter.get(title);
+    const forkClearance = fork !== undefined && branchSubtreeHeight > SPINE_NODE_HEIGHT ? STAGE_GAP / 2 : 0;
+    cursorY += rowHeight + STAGE_GAP + forkClearance;
+
     if (fork !== undefined) {
       cursorY = placeParallelLaneRows({
         parallelLanes: fork.lanes,
