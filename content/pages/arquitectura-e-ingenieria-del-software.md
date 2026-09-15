@@ -1,6 +1,8 @@
 ---
 title: arquitectura e ingeniería del software
 kind: course
+correlativas:
+  - introducción a devops
 ---
 - evalúa diseño de software y decisiones técnicas a partir de [[introducción a devops]] y el producto full-stack de [[proyecto laboratorio]]
 - #arquitectura-de-software organiza componentes, interfaces y estilos de diseño

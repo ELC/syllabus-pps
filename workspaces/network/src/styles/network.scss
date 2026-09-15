@@ -119,8 +119,22 @@
     overflow: hidden;
   }
 
+  @media (max-width: 760px) {
+    &__sidebar-filters {
+      min-height: 0;
+    }
+
+    &__filters-list {
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-gutter: stable;
+    }
+  }
+
   &__sidebar-refresh,
   &__sidebar-toggle-concepts,
+  &__sidebar-toggle-course-links,
   &__sidebar-reset-filters {
     appearance: none;
     display: inline-flex;
@@ -155,7 +169,8 @@
     }
   }
 
-  &__sidebar-toggle-concepts {
+  &__sidebar-toggle-concepts,
+  &__sidebar-toggle-course-links {
     margin: 0 0 0.75rem;
     border: 1px solid rgba(255, 255, 255, 0.28);
     background: transparent;

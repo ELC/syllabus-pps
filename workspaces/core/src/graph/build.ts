@@ -57,6 +57,22 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
   const titleSet = new Set(pages.map((page) => page.title));
 
   const edges = pages.flatMap((page) => [
+    ...(page.kind === "course" ? (page.correlativas ?? []) : []).flatMap((correlativa) => {
+      const prerequisite = correlativa.resolvedTarget ?? correlativa.target;
+      if (!titleSet.has(prerequisite)) {
+        return [];
+      }
+
+      return [
+        {
+          source: prerequisite,
+          target: page.title,
+          kind: "course-prerequisite" as const,
+          rawTarget: correlativa.target,
+          line: 0,
+        },
+      ];
+    }),
     ...(page.kind === "concept" ? (page.dependsOn ?? []) : []).flatMap((dep) => {
       const prerequisite = dep.resolvedTarget ?? dep.target;
       if (!titleSet.has(prerequisite)) {

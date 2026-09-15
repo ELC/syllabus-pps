@@ -1,6 +1,8 @@
 ---
 title: estadística ii
 kind: course
+correlativas:
+  - estadística i
 ---
 - profundiza probabilidad y simulación a partir de [[estadística i]] e #inferencia-estadistica
 - #probabilidad formaliza eventos, independencia y teorema de Bayes

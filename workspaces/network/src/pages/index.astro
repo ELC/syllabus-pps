@@ -24,6 +24,15 @@ import networkCss from "../styles/network.scss?url";
     >
       Ocultar conceptos
     </button>
+    <button
+      id="graph-toggle-course-links"
+      type="button"
+      class="graph__sidebar-toggle-course-links"
+      aria-pressed="false"
+      title="Alternar entre menciones (wikilinks) y correlativas entre materias"
+    >
+      Mostrar Correlativas
+    </button>
     <p class="graph__sidebar-label">Filtros</p>
     <p class="graph__filters-help">
       Cada filtro muestra el nodo elegido y todos los que tienen un camino dirigido hacia él. No
@@ -111,6 +120,7 @@ import networkCss from "../styles/network.scss?url";
       refreshButtonId: "graph-refresh-layout",
       resetFiltersButtonId: "graph-reset-filters",
       toggleConceptsButtonId: "graph-toggle-concepts",
+      toggleCourseLinksButtonId: "graph-toggle-course-links",
       conceptPanelId: "graph-concept-panel",
       conceptNotesUrl: "./data/curriculum-graph.json",
     }).catch((error) => {

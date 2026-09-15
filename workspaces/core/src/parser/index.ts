@@ -3,7 +3,7 @@ import { ZettelPage } from "../types";
 import { classifyPage } from "./classify";
 import { buildPageIndex } from "./page-index";
 import { parsePageContent } from "./parse-content";
-import { resolveBlock, resolveDependsOn } from "./resolve";
+import { resolveBlock, resolveCorrelativa, resolveDependsOn } from "./resolve";
 import { PageSource, ParseOptions } from "./types";
 
 export type { PageSource, ParseOptions, RawPage } from "./types";
@@ -70,6 +70,11 @@ export function parsePages(
       const dependsOn = dependsOnInvalid
         ? []
         : page.dependsOnTargets?.map((target) => resolveDependsOn(target, index));
+      const correlativasInvalid =
+        page.correlativasRaw !== undefined && page.correlativasTargets === undefined;
+      const correlativas = correlativasInvalid
+        ? []
+        : page.correlativasTargets?.map((target) => resolveCorrelativa(target, index));
 
       return {
         id: page.id,
@@ -87,6 +92,8 @@ export function parsePages(
         nonBulletLines: page.nonBulletLines,
         dependsOn,
         dependsOnInvalid,
+        correlativas,
+        correlativasInvalid,
       };
     })
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));

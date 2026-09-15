@@ -10,7 +10,12 @@ export const pageKinds = [
 
 export type PageKind = (typeof pageKinds)[number];
 
-export const edgeKinds = ["page-ref", "concept-tag", "concept-dependency"] as const;
+export const edgeKinds = [
+  "page-ref",
+  "concept-tag",
+  "concept-dependency",
+  "course-prerequisite",
+] as const;
 
 export type EdgeKind = (typeof edgeKinds)[number];
 
@@ -46,6 +51,11 @@ export const diagnosticCodes = [
   "concept-depends-on-non-concept",
   "concept-depends-on-self",
   "concept-depends-on-cycle",
+  "course-correlativas-invalid",
+  "course-correlativas-unresolved",
+  "course-correlativas-non-course",
+  "course-correlativas-self",
+  "course-correlativas-on-non-course",
   "citation-unresolved",
   "resource-catalog-invalid",
   "resource-catalog-unused",
@@ -100,6 +110,8 @@ export interface ConceptDependency {
   resolvedTarget?: string;
 }
 
+export type CourseCorrelativa = ConceptDependency;
+
 export interface PageFrontmatter {
   title?: string;
   slug?: string;
@@ -109,6 +121,8 @@ export interface PageFrontmatter {
   updatedAt?: string;
   /** Direct prerequisite concept titles for kind: concept pages. */
   dependsOn: string[];
+  /** Courses that must be completed before this course (kind: course only). */
+  correlativas?: string[];
 }
 
 export interface ZettelPage {
@@ -129,6 +143,10 @@ export interface ZettelPage {
   dependsOn?: ConceptDependency[];
   /** True when frontmatter dependsOn is present but malformed. */
   dependsOnInvalid?: boolean;
+  /** Parsed from frontmatter; undefined when the field is absent. */
+  correlativas?: CourseCorrelativa[];
+  /** True when frontmatter correlativas is present but malformed. */
+  correlativasInvalid?: boolean;
 }
 
 export interface GraphEdge {

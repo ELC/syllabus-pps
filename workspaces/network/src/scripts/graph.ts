@@ -22,6 +22,7 @@ import {
 import {
   parseGraphUrlState,
   writeGraphUrlState,
+  type CourseLinkMode,
   type GraphUrlState,
 } from "./graph-url";
 
@@ -44,6 +45,7 @@ export interface MountGraphOptions {
   refreshButtonId?: string;
   resetFiltersButtonId?: string;
   toggleConceptsButtonId?: string;
+  toggleCourseLinksButtonId?: string;
   conceptPanelId?: string;
   conceptNotesUrl?: string;
 }
@@ -82,6 +84,7 @@ interface GraphViewState {
   kindFilters: KindFilters;
   searchQuery: string;
   conceptsHidden: boolean;
+  courseLinkMode: CourseLinkMode;
 }
 
 function createKindFilters(): KindFilters {
@@ -134,6 +137,7 @@ function urlStateFromViewState(cy: cytoscape.Core, viewState: GraphViewState): G
     expansionSlugs,
     filterSlugs,
     conceptsHidden: viewState.conceptsHidden,
+    courseLinkMode: viewState.courseLinkMode,
   };
 }
 
@@ -143,7 +147,7 @@ function applyUrlStateToViewState(
   urlState: GraphUrlState,
 ): boolean {
   const kindFilters = createKindFilters();
-  let restored = urlState.conceptsHidden;
+  let restored = urlState.conceptsHidden || urlState.courseLinkMode === "correlativas";
 
   for (const { kind } of GRAPH_FILTER_KINDS) {
     const slug = urlState.filterSlugs[kind];
@@ -166,6 +170,7 @@ function applyUrlStateToViewState(
 
   viewState.kindFilters = kindFilters;
   viewState.conceptsHidden = urlState.conceptsHidden;
+  viewState.courseLinkMode = urlState.courseLinkMode;
   viewState.expansionNodeIds = expansionNodeIds.length > 0 ? expansionNodeIds : null;
   viewState.focusedNodeId =
     expansionNodeIds.length > 0 ? expansionNodeIds[expansionNodeIds.length - 1]! : null;
@@ -307,14 +312,25 @@ function inducedNodeIdsForNode(node: cytoscape.NodeSingular): Set<string> {
   return nodeIds;
 }
 
-function buildInducedSubgraph(
+function visibleLayoutElements(
   cy: cytoscape.Core,
+  viewState: GraphViewState,
+): cytoscape.Collection {
+  applyElementVisibility(cy, viewState);
+  return cy.elements().not(".filtered-out");
+}
+
+function visibleLayoutSubgraph(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
   nodeIds: Set<string>,
 ): cytoscape.Collection {
-  const nodes = cy.nodes().filter((node) => nodeIds.has(node.id()));
-  const edges = cy.edges().filter((edge) => {
-    return nodeIds.has(edge.source().id()) && nodeIds.has(edge.target().id());
-  });
+  const visible = visibleLayoutElements(cy, viewState);
+  const nodes = visible.nodes().filter((node) => nodeIds.has(node.id()));
+  const activeNodeIds = new Set(nodes.map((node) => node.id()));
+  const edges = visible.edges().filter(
+    (edge) => activeNodeIds.has(edge.source().id()) && activeNodeIds.has(edge.target().id()),
+  );
 
   return nodes.union(edges);
 }
@@ -468,8 +484,24 @@ function applyElementVisibility(cy: cytoscape.Core, viewState: GraphViewState): 
   });
 
   cy.edges().forEach((edge) => {
-    const visible =
+    let visible =
       !edge.source().hasClass("filtered-out") && !edge.target().hasClass("filtered-out");
+
+    if (visible) {
+      const edgeKind = String(edge.data("kind"));
+      const [sourceKind, targetKind] = edgeKinds(edge);
+
+      if (viewState.courseLinkMode === "mentions") {
+        if (edgeKind === "course-prerequisite") {
+          visible = false;
+        }
+      } else if (edgeKind === "page-ref" && sourceKind === "course" && targetKind === "course") {
+        visible = false;
+      } else if (edgeKind === "course-prerequisite") {
+        visible = true;
+      }
+    }
+
     edge.toggleClass("filtered-out", !visible);
   });
 
@@ -825,6 +857,30 @@ function mountToggleConceptsButton(
   });
 }
 
+function syncToggleCourseLinksButton(button: HTMLButtonElement, mode: CourseLinkMode): void {
+  const correlativasActive = mode === "correlativas";
+  button.setAttribute("aria-pressed", correlativasActive ? "true" : "false");
+  button.textContent = correlativasActive ? "Mostrar Menciones" : "Mostrar Correlativas";
+  button.title = correlativasActive
+    ? "Mostrar enlaces de mención entre materias (wikilinks)"
+    : "Mostrar correlativas declaradas en el frontmatter de cada materia";
+}
+
+function mountToggleCourseLinksButton(
+  viewState: GraphViewState,
+  ui: GraphUi,
+  button: HTMLButtonElement,
+): void {
+  syncToggleCourseLinksButton(button, viewState.courseLinkMode);
+
+  button.addEventListener("click", () => {
+    viewState.courseLinkMode =
+      viewState.courseLinkMode === "correlativas" ? "mentions" : "correlativas";
+    syncToggleCourseLinksButton(button, viewState.courseLinkMode);
+    ui.syncView(true);
+  });
+}
+
 function positionSearchDropdown(
   searchInput: HTMLInputElement,
   resultsRoot: HTMLElement,
@@ -988,6 +1044,10 @@ function edgeIdealLength(edge: cytoscape.EdgeSingular): number {
     return 35;
   }
 
+  if (edge.data("kind") === "course-prerequisite") {
+    return 62;
+  }
+
   const [sourceKind, targetKind] = edgeKinds(edge);
   const kinds = new Set([sourceKind, targetKind]);
 
@@ -1017,6 +1077,10 @@ function edgeIdealLength(edge: cytoscape.EdgeSingular): number {
 function edgeLayoutElasticity(edge: cytoscape.EdgeSingular): number {
   if (edge.data("kind") === "concept-tag") {
     return 0.85;
+  }
+
+  if (edge.data("kind") === "course-prerequisite") {
+    return 0.68;
   }
 
   const [sourceKind, targetKind] = edgeKinds(edge);
@@ -1053,7 +1117,7 @@ function refreshGraphLayout(
   cy: cytoscape.Core,
   viewState: GraphViewState,
 ): void {
-  const visibleElements = cy.elements().not(".filtered-out");
+  const visibleElements = visibleLayoutElements(cy, viewState);
   if (visibleElements.length === 0) {
     return;
   }
@@ -1121,11 +1185,10 @@ function applyFocusView(
   }
 
   const visibleNodeIds = visibleNodeIdsForExpansions(cy, expansionNodeIds);
-  const focusEles = buildInducedSubgraph(cy, visibleNodeIds);
+  const focusEles = visibleLayoutSubgraph(cy, viewState, visibleNodeIds);
   const sessionKey = expansionSessionKey(expansionNodeIds);
 
   cy.elements().removeClass("focused");
-  applyElementVisibility(cy, viewState);
 
   if (options.focusNode) {
     options.focusNode.addClass("focused");
@@ -1466,6 +1529,14 @@ export async function mountGraph(
           "target-arrow-color": "data(expansionColor)",
         },
       },
+      {
+        selector: "edge[kind = 'course-prerequisite']",
+        style: {
+          width: 2,
+          "line-color": kindStyle("course").border,
+          "target-arrow-color": kindStyle("course").border,
+        },
+      },
     ],
   });
 
@@ -1508,6 +1579,7 @@ export async function mountGraph(
     kindFilters: createKindFilters(),
     searchQuery: "",
     conceptsHidden: false,
+    courseLinkMode: "mentions",
   };
   let urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
 
@@ -1566,6 +1638,14 @@ export async function mountGraph(
   if (toggleConceptsButton instanceof HTMLButtonElement) {
     mountToggleConceptsButton(cy, viewState, ui, toggleConceptsButton);
     syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
+  }
+
+  const toggleCourseLinksButton = options.toggleCourseLinksButtonId
+    ? document.getElementById(options.toggleCourseLinksButtonId)
+    : null;
+
+  if (toggleCourseLinksButton instanceof HTMLButtonElement) {
+    mountToggleCourseLinksButton(viewState, ui, toggleCourseLinksButton);
   }
 
   if (urlRestorePending && !isExpansionActive(viewState)) {
@@ -1653,7 +1733,7 @@ export async function mountGraph(
     openInCms(cmsBase, slug);
   });
 
-  runGraphLayout(cy.elements(), {
+  runGraphLayout(visibleLayoutElements(cy, viewState), {
     quality: "proof",
     randomize: true,
   });

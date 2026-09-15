@@ -2,6 +2,9 @@ import { GRAPH_FILTER_KINDS } from "./graph-styles";
 
 export const GRAPH_URL_EXPAND_PARAM = "expand";
 export const GRAPH_URL_HIDE_CONCEPTS_PARAM = "hideConcepts";
+export const GRAPH_URL_COURSE_LINKS_PARAM = "courseLinks";
+
+export type CourseLinkMode = "mentions" | "correlativas";
 
 type KindFilterKey = (typeof GRAPH_FILTER_KINDS)[number]["kind"];
 
@@ -9,6 +12,7 @@ export interface GraphUrlState {
   expansionSlugs: string[];
   filterSlugs: Record<KindFilterKey, string>;
   conceptsHidden: boolean;
+  courseLinkMode: CourseLinkMode;
 }
 
 function emptyFilterSlugs(): Record<KindFilterKey, string> {
@@ -60,10 +64,13 @@ export function parseGraphUrlState(
     filterSlugs[kind] = params.get(kind)?.trim() ?? "";
   }
 
+  const courseLinksParam = params.get(GRAPH_URL_COURSE_LINKS_PARAM)?.trim().toLowerCase() ?? "";
+
   return {
     expansionSlugs: parseSlugList(params.get(GRAPH_URL_EXPAND_PARAM)),
     filterSlugs,
     conceptsHidden: parseTruthyFlag(params.get(GRAPH_URL_HIDE_CONCEPTS_PARAM)),
+    courseLinkMode: courseLinksParam === "correlativas" ? "correlativas" : "mentions",
   };
 }
 
@@ -90,6 +97,12 @@ export function writeGraphUrlState(state: GraphUrlState): void {
     params.set(GRAPH_URL_HIDE_CONCEPTS_PARAM, "1");
   } else {
     params.delete(GRAPH_URL_HIDE_CONCEPTS_PARAM);
+  }
+
+  if (state.courseLinkMode === "correlativas") {
+    params.set(GRAPH_URL_COURSE_LINKS_PARAM, "correlativas");
+  } else {
+    params.delete(GRAPH_URL_COURSE_LINKS_PARAM);
   }
 
   const next = `${url.pathname}${params.toString() ? `?${params.toString()}` : ""}${url.hash}`;

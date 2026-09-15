@@ -22,6 +22,10 @@ export interface RawPage {
   dependsOnRaw?: unknown;
   /** Parsed string targets from frontmatter dependsOn. */
   dependsOnTargets?: string[];
+  /** Raw correlativas value from frontmatter; undefined when absent. */
+  correlativasRaw?: unknown;
+  /** Parsed string targets from frontmatter correlativas. */
+  correlativasTargets?: string[];
   blocks: ZettelBlock[];
   nonBulletLines: number[];
 }

@@ -13,6 +13,7 @@ import {
   conceptDependsOnCycleDiagnostics,
   conceptDependsOnDiagnostics,
 } from "./dependencies";
+import { courseCorrelativasDiagnostics } from "./course-correlativas";
 import { courseWithoutConceptLinks, courseYearDiagnostics } from "./courses";
 import { missingExpectedPages } from "./expected";
 import {
@@ -62,6 +63,7 @@ export function collectDiagnostics(graph: CurriculumGraph): Diagnostic[] {
   diagnostics.push(...selfLinkDiagnostics(graph));
   diagnostics.push(...nonBulletContentDiagnostics(graph));
   diagnostics.push(...courseWithoutConceptLinks(graph));
+  diagnostics.push(...courseCorrelativasDiagnostics(graph));
   diagnostics.push(...conceptMissingKind(graph));
   diagnostics.push(...conceptDependsOnDiagnostics(graph));
   diagnostics.push(...conceptDependsOnCycleDiagnostics(graph));
