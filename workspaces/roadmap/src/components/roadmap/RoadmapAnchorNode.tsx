@@ -21,7 +21,7 @@ export function RoadmapAnchorNode({ data }: NodeProps) {
           isConnectable={false}
         />
       ) : null}
-      <span className="roadmap__anchor-label">{nodeData.label}</span>
+      <span className="roadmap__node-label roadmap__anchor-label">{nodeData.label}</span>
       {nodeData.variant === "start" ? (
         <Handle
           id={HANDLE_BOTTOM_OUT}

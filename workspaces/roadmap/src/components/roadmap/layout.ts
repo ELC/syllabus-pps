@@ -6,6 +6,8 @@ import {
   ANCHOR_GAP,
   ANCHOR_NODE_HEIGHT,
   ANCHOR_NODE_WIDTH,
+  CAPSTONE_NODE_HEIGHT,
+  CAPSTONE_NODE_WIDTH,
   BRANCH_COLUMN_GAP,
   BRANCH_NODE_HEIGHT,
   BRANCH_NODE_WIDTH,
@@ -16,7 +18,7 @@ import {
   STAGE_GAP,
 } from "./constants";
 
-export type RoadmapRole = "spine" | "branch";
+export type RoadmapRole = "spine" | "branch" | "capstone";
 
 export interface RoadmapPlacement {
   title: string;
@@ -26,6 +28,9 @@ export interface RoadmapPlacement {
   y: number;
   width: number;
   height: number;
+  /** Capstone nodes only. Stable id for panel lookup and spine edges. */
+  capstoneId?: string;
+  description?: string;
 }
 
 export interface RoadmapBounds {
@@ -53,6 +58,8 @@ export interface RoadmapLayout {
   lateJoins: Array<{ from: string; to: string }>;
   /** Mid-trunk forks that split and merge back into one spine node. */
   trunkForks: RoadmapTrunkForkLayout[];
+  /** Capstone id keyed by the trunk node they follow. */
+  capstoneByAfter: Map<string, string>;
   start: { x: number; y: number };
   end: { x: number; y: number };
   bounds: RoadmapBounds;
@@ -65,6 +72,7 @@ const EMPTY_LAYOUT: RoadmapLayout = {
   trunk: [],
   lateJoins: [],
   trunkForks: [],
+  capstoneByAfter: new Map(),
   start: { x: -ANCHOR_NODE_WIDTH / 2, y: 0 },
   end: { x: -ANCHOR_NODE_WIDTH / 2, y: ANCHOR_NODE_HEIGHT + ANCHOR_GAP },
   bounds: {
@@ -578,6 +586,7 @@ function placeParallelLaneRows(context: ParallelLaneRowsContext): number {
 
       return {
         title,
+        laneIndex,
         laneCenter,
         owner,
         terminals,
@@ -618,7 +627,7 @@ function placeParallelLaneRows(context: ParallelLaneRowsContext): number {
       });
     }
 
-    for (const { title, laneCenter, owner, terminals, branch } of rowBranchLayouts) {
+    for (const { title, laneIndex, laneCenter, owner, terminals, branch } of rowBranchLayouts) {
       if (terminals.length === 0) {
         continue;
       }
@@ -631,6 +640,8 @@ function placeParallelLaneRows(context: ParallelLaneRowsContext): number {
         branch,
         cursorY,
         rowHeight,
+        laneIndex,
+        laneCenters: centers,
       });
     }
 
@@ -671,15 +682,59 @@ function branchSideX(owner: LayoutBox, side: "left" | "right"): number {
     : owner.x + owner.width + BRANCH_COLUMN_GAP;
 }
 
+/** Centers side columns in the gap between parallel lane spines when there is room. */
+function branchColumnX(
+  owner: LayoutBox,
+  side: "left" | "right",
+  laneIndex?: number,
+  laneCenters?: number[],
+): number {
+  if (laneCenters === undefined || laneIndex === undefined || laneCenters.length <= 1) {
+    return branchSideX(owner, side);
+  }
+
+  if (side === "left") {
+    const neighborCenter = laneCenters[laneIndex - 1];
+    if (neighborCenter === undefined) {
+      return branchSideX(owner, side);
+    }
+
+    const corridorLeft = neighborCenter + SPINE_NODE_WIDTH / 2;
+    const corridorRight = owner.x;
+    const corridorWidth = corridorRight - corridorLeft;
+    if (corridorWidth >= BRANCH_NODE_WIDTH) {
+      return corridorLeft + (corridorWidth - BRANCH_NODE_WIDTH) / 2;
+    }
+
+    return branchSideX(owner, side);
+  }
+
+  const neighborCenter = laneCenters[laneIndex + 1];
+  if (neighborCenter === undefined) {
+    return branchSideX(owner, side);
+  }
+
+  const corridorLeft = owner.x + owner.width;
+  const corridorRight = neighborCenter - SPINE_NODE_WIDTH / 2;
+  const corridorWidth = corridorRight - corridorLeft;
+  if (corridorWidth >= BRANCH_NODE_WIDTH) {
+    return corridorLeft + (corridorWidth - BRANCH_NODE_WIDTH) / 2;
+  }
+
+  return branchSideX(owner, side);
+}
+
 function branchSideStackBox(
   owner: LayoutBox,
   side: "left" | "right",
   cursorY: number,
   rowHeight: number,
   terminalCount: number,
+  laneIndex?: number,
+  laneCenters?: number[],
 ): LayoutBox {
   return {
-    x: branchSideX(owner, side),
+    x: branchColumnX(owner, side, laneIndex, laneCenters),
     y: cursorY + (rowHeight - stackHeight(terminalCount)) / 2,
     width: BRANCH_NODE_WIDTH,
     height: stackHeight(terminalCount),
@@ -799,16 +854,26 @@ function pickBranchPlacement(
   const existing = [...placements.values(), ...rowBlockers];
 
   for (const side of preference) {
-    const candidate = branchSideStackBox(owner, side, cursorY, rowHeight, terminalCount);
+    const candidate = branchSideStackBox(
+      owner,
+      side,
+      cursorY,
+      rowHeight,
+      terminalCount,
+      laneIndex,
+      laneCenters,
+    );
     if (!existing.some((box) => boxesOverlap(candidate, box))) {
       return { mode: "side", side };
     }
   }
 
-  for (const side of preference) {
-    const candidate = branchBelowStackBox(owner, side, laneCenter, terminalCount);
-    if (!existing.some((box) => boxesOverlap(candidate, box))) {
-      return { mode: "below", side };
+  if (terminalCount > 1) {
+    for (const side of preference) {
+      const candidate = branchBelowStackBox(owner, side, laneCenter, terminalCount);
+      if (!existing.some((box) => boxesOverlap(candidate, box))) {
+        return { mode: "below", side };
+      }
     }
   }
 
@@ -860,6 +925,8 @@ function placeBranchStack(
     visiting?: Set<string>;
     /** Split side notes across left and right; only for the center trunk spine. */
     splitSides?: boolean;
+    laneIndex?: number;
+    laneCenters?: number[];
   },
 ): number {
   const {
@@ -871,6 +938,8 @@ function placeBranchStack(
     rowHeight,
     nested = false,
     splitSides = false,
+    laneIndex,
+    laneCenters,
   } = options;
   let sideFlip = options.sideFlip ?? 0;
   const visiting = options.visiting ?? new Set<string>();
@@ -928,7 +997,7 @@ function placeBranchStack(
     columnStartY = belowBox.y;
   } else {
     const spineMidY = owner.y + owner.height / 2;
-    columnX = branchSideX(owner, branch.side);
+    columnX = branchColumnX(owner, branch.side, laneIndex, laneCenters);
     columnStartY = spineMidY - columnHeight / 2;
   }
 
@@ -1049,6 +1118,9 @@ export function buildRoadmapLayout(
       ? composeTrunk(postMerge, trunkTail, trunkForks)
       : composeTrunk([], trunkTail, trunkForks);
   const trunkForkByAfter = new Map(trunkForks.map((fork) => [fork.after, fork]));
+  const capstoneByAfter = new Map(
+    (curation.capstones ?? []).map((capstone) => [capstone.after, capstone]),
+  );
 
   const placements = new Map<string, RoadmapPlacement>();
   let cursorY = ANCHOR_NODE_HEIGHT + ANCHOR_GAP;
@@ -1125,6 +1197,23 @@ export function buildRoadmapLayout(
     const forkClearance = fork !== undefined && branchSubtreeHeight > SPINE_NODE_HEIGHT ? STAGE_GAP / 2 : 0;
     cursorY += rowHeight + STAGE_GAP + forkClearance;
 
+    const capstone = capstoneByAfter.get(title);
+    if (capstone !== undefined) {
+      const capstoneX = spineX + (SPINE_NODE_WIDTH - CAPSTONE_NODE_WIDTH) / 2;
+      placements.set(capstone.id, {
+        title: capstone.title,
+        role: "capstone",
+        stage: stageOf.get(title) ?? 0,
+        x: capstoneX,
+        y: cursorY,
+        width: CAPSTONE_NODE_WIDTH,
+        height: CAPSTONE_NODE_HEIGHT,
+        capstoneId: capstone.id,
+        description: capstone.description,
+      });
+      cursorY += CAPSTONE_NODE_HEIGHT + STAGE_GAP;
+    }
+
     if (fork !== undefined) {
       cursorY = placeParallelLaneRows({
         parallelLanes: fork.lanes,
@@ -1152,6 +1241,9 @@ export function buildRoadmapLayout(
     trunk,
     lateJoins,
     trunkForks,
+    capstoneByAfter: new Map(
+      [...capstoneByAfter.entries()].map(([after, capstone]) => [after, capstone.id]),
+    ),
     start: { x: anchorX, y: 0 },
     end,
     bounds: {

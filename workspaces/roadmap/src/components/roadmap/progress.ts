@@ -16,23 +16,79 @@ export interface RoadmapProgressCounts {
   total: number;
 }
 
+export interface RoadmapConceptProgress {
+  status: RoadmapStatus;
+  done: number;
+  skipped: number;
+  total: number;
+  /** Done over remaining resources (total minus omitted). */
+  percent: number;
+}
+
 /** Done over remaining (total minus omitted). All omitted → 0. */
 export function remainingProgressPercent(done: number, total: number, skipped: number): number {
   const remaining = total - skipped;
   return remaining <= 0 ? 0 : Math.round((done / remaining) * 100);
 }
 
+export function deriveConceptProgress(
+  resourceLines: readonly number[],
+  resourceStatuses: Readonly<Record<string, RoadmapStatus>>,
+): RoadmapConceptProgress {
+  const total = resourceLines.length;
+  if (total === 0) {
+    return { status: "pending", done: 0, skipped: 0, total: 0, percent: 0 };
+  }
+
+  let done = 0;
+  let skipped = 0;
+
+  for (const line of resourceLines) {
+    switch (normalizeStatus(resourceStatuses[String(line)])) {
+      case "done":
+        done += 1;
+        break;
+      case "skipped":
+        skipped += 1;
+        break;
+      default:
+        break;
+    }
+  }
+
+  const pending = total - done - skipped;
+
+  if (skipped === total) {
+    return { status: "skipped", done, skipped, total, percent: 0 };
+  }
+
+  if (done >= 1 && pending === 0) {
+    return { status: "done", done, skipped, total, percent: 100 };
+  }
+
+  return {
+    status: "pending",
+    done,
+    skipped,
+    total,
+    percent: remainingProgressPercent(done, total, skipped),
+  };
+}
+
 export interface RoadmapProgress {
   statusFor: (title: string) => RoadmapStatus;
-  cycle: (title: string) => void;
+  conceptProgressFor: (title: string) => RoadmapConceptProgress;
+  resourceStatusFor: (slug: string, line: number) => RoadmapStatus;
+  cycleResource: (slug: string, line: number) => void;
   reset: () => void;
   counts: RoadmapProgressCounts;
 }
 
-type ProgressStore = Record<string, Record<string, RoadmapStatus>>;
+type ResourceProgressStore = Record<string, Record<string, Record<string, RoadmapStatus>>>;
 
-const STORAGE_KEY = "pps:roadmap-progress:v1";
-const EMPTY_CAREER: Record<string, RoadmapStatus> = {};
+const STORAGE_KEY = "pps:roadmap-resource-progress:v1";
+const EMPTY_CAREER: Record<string, Record<string, RoadmapStatus>> = {};
+const EMPTY_RESOURCE_STATUSES: Record<string, RoadmapStatus> = {};
 
 export const RoadmapProgressContext = createContext<RoadmapProgress | null>(null);
 
@@ -40,16 +96,16 @@ export function useRoadmapProgressContext(): RoadmapProgress | null {
   return useContext(RoadmapProgressContext);
 }
 
-function readStore(): ProgressStore {
+function readStore(): ResourceProgressStore {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as ProgressStore) : {};
+    return raw ? (JSON.parse(raw) as ResourceProgressStore) : {};
   } catch {
     return {};
   }
 }
 
-function writeStore(store: ProgressStore): void {
+function writeStore(store: ResourceProgressStore): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
   } catch {
@@ -71,49 +127,85 @@ function nextStatus(status: unknown): RoadmapStatus {
   return ROADMAP_STATUS_CYCLE[(index + 1) % ROADMAP_STATUS_CYCLE.length] ?? "pending";
 }
 
+function resourceLinesForSlug(
+  slug: string,
+  resourceLinesBySlug: Map<string, readonly number[]>,
+): readonly number[] {
+  return resourceLinesBySlug.get(slug) ?? [];
+}
+
 /**
- * Tracks per-career topic progress in localStorage, keyed by concept slug so renaming a page
- * title does not lose it.
+ * Tracks per-career resource progress in localStorage. Concept status is derived from its
+ * resources: all omitted → omitted; at least one done and the rest done/omitted → completed.
  */
 export function useRoadmapProgress(
   careerSlug: string,
   slugByTitle: Map<string, string>,
+  resourceLinesBySlug: Map<string, readonly number[]>,
 ): RoadmapProgress {
-  const [store, setStore] = useState<ProgressStore>(readStore);
+  const [store, setStore] = useState<ResourceProgressStore>(readStore);
 
   useEffect(() => {
     writeStore(store);
   }, [store]);
 
-  const careerStatuses = store[careerSlug] ?? EMPTY_CAREER;
+  const careerResources = store[careerSlug] ?? EMPTY_CAREER;
 
-  const statusFor = useCallback(
-    (title: string): RoadmapStatus => {
-      const slug = slugByTitle.get(title);
-      return slug ? normalizeStatus(careerStatuses[slug]) : "pending";
+  const resourceStatusFor = useCallback(
+    (slug: string, line: number): RoadmapStatus => {
+      return normalizeStatus(careerResources[slug]?.[String(line)]);
     },
-    [careerStatuses, slugByTitle],
+    [careerResources],
   );
 
-  const cycle = useCallback(
-    (title: string) => {
+  const conceptProgressFor = useCallback(
+    (title: string): RoadmapConceptProgress => {
       const slug = slugByTitle.get(title);
+      if (!slug) {
+        return { status: "pending", done: 0, skipped: 0, total: 0, percent: 0 };
+      }
+
+      return deriveConceptProgress(
+        resourceLinesForSlug(slug, resourceLinesBySlug),
+        careerResources[slug] ?? EMPTY_RESOURCE_STATUSES,
+      );
+    },
+    [careerResources, resourceLinesBySlug, slugByTitle],
+  );
+
+  const statusFor = useCallback(
+    (title: string): RoadmapStatus => conceptProgressFor(title).status,
+    [conceptProgressFor],
+  );
+
+  const cycleResource = useCallback(
+    (slug: string, line: number) => {
       if (!careerSlug || !slug) {
         return;
       }
 
       setStore((current) => {
         const career = current[careerSlug] ?? {};
-        const updated = nextStatus(career[slug]);
-        const { [slug]: _dropped, ...rest } = career;
+        const conceptResources = career[slug] ?? {};
+        const resourceKey = String(line);
+        const updated = nextStatus(conceptResources[resourceKey]);
+        const { [resourceKey]: _dropped, ...restResources } = conceptResources;
+
+        const nextConceptResources =
+          updated === "pending" ? restResources : { ...restResources, [resourceKey]: updated };
+
+        const { [slug]: _droppedConcept, ...restCareer } = career;
 
         return {
           ...current,
-          [careerSlug]: updated === "pending" ? rest : { ...rest, [slug]: updated },
+          [careerSlug]:
+            Object.keys(nextConceptResources).length === 0
+              ? restCareer
+              : { ...restCareer, [slug]: nextConceptResources },
         };
       });
     },
-    [careerSlug, slugByTitle],
+    [careerSlug],
   );
 
   const reset = useCallback(() => {
@@ -130,8 +222,8 @@ export function useRoadmapProgress(
       total: slugByTitle.size,
     };
 
-    for (const slug of slugByTitle.values()) {
-      switch (normalizeStatus(careerStatuses[slug])) {
+    for (const title of slugByTitle.keys()) {
+      switch (conceptProgressFor(title).status) {
         case "done":
           tally.done += 1;
           break;
@@ -144,10 +236,10 @@ export function useRoadmapProgress(
     }
 
     return tally;
-  }, [careerStatuses, slugByTitle]);
+  }, [conceptProgressFor, slugByTitle]);
 
   return useMemo(
-    () => ({ statusFor, cycle, reset, counts }),
-    [counts, cycle, reset, statusFor],
+    () => ({ statusFor, conceptProgressFor, resourceStatusFor, cycleResource, reset, counts }),
+    [conceptProgressFor, counts, cycleResource, reset, resourceStatusFor, statusFor],
   );
 }

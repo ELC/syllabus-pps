@@ -1,5 +1,4 @@
 import { Handle, Position, type NodeProps } from "@xyflow/react";
-import { useRef } from "react";
 
 import {
   HANDLE_BOTTOM_OUT,
@@ -11,7 +10,6 @@ import {
 } from "./constants";
 import { ROADMAP_STATUS_LABELS, useRoadmapProgressContext } from "./progress";
 import type { RoadmapRole } from "./layout";
-import { useTwoLineLabelFontSize } from "./useTwoLineLabel";
 
 export interface RoadmapTopicNodeData extends Record<string, unknown> {
   label: string;
@@ -29,24 +27,20 @@ const HANDLES = [
   { id: HANDLE_RIGHT_OUT, type: "source", position: Position.Right },
 ] as const;
 
-const SPINE_LABEL_MAX_REM = 1.05;
-const SPINE_LABEL_MIN_REM = 0.68;
-const BRANCH_LABEL_MAX_REM = 0.92;
-const BRANCH_LABEL_MIN_REM = 0.58;
-
 export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
   const nodeData = data as unknown as RoadmapTopicNodeData;
   const progress = useRoadmapProgressContext();
   const isSpine = nodeData.role === "spine";
-  const status = progress?.statusFor(id) ?? "pending";
+  const conceptProgress = progress?.conceptProgressFor(id) ?? {
+    status: "pending" as const,
+    done: 0,
+    skipped: 0,
+    total: 0,
+    percent: 0,
+  };
+  const { status, percent, total } = conceptProgress;
   const state = selected ? "selected" : nodeData.state;
-  const labelRef = useRef<HTMLSpanElement>(null);
-
-  useTwoLineLabelFontSize(labelRef, {
-    maxRem: isSpine ? SPINE_LABEL_MAX_REM : BRANCH_LABEL_MAX_REM,
-    minRem: isSpine ? SPINE_LABEL_MIN_REM : BRANCH_LABEL_MIN_REM,
-    text: nodeData.label,
-  });
+  const showProgressBar = total > 0 && status === "pending";
 
   return (
     <div
@@ -55,8 +49,17 @@ export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
         `roadmap__topic--${nodeData.role}`,
         `roadmap__topic--${state}`,
         status !== "pending" ? `roadmap__topic--${status}` : "",
+        showProgressBar ? "roadmap__topic--in-progress" : "",
       ].join(" ")}
+      aria-label={`${nodeData.label}: ${ROADMAP_STATUS_LABELS[status]}`}
+      title={ROADMAP_STATUS_LABELS[status]}
     >
+      {showProgressBar ? (
+        <div className="roadmap__topic-progress" aria-hidden="true">
+          <span className="roadmap__topic-progress-fill" style={{ width: `${percent}%` }} />
+        </div>
+      ) : null}
+
       {HANDLES.map((handle) => (
         <Handle
           key={handle.id}
@@ -68,30 +71,9 @@ export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
         />
       ))}
 
-      <button
-        type="button"
-        className={[
-          "roadmap__topic-check",
-          `roadmap__topic-check--${status}`,
-          status === "done" ? "roadmap__topic-check--on-topic" : "",
-          "nodrag",
-          "nopan",
-        ].join(" ")}
-        aria-label={`${nodeData.label}: ${ROADMAP_STATUS_LABELS[status]}. Cambiar estado`}
-        title={`${ROADMAP_STATUS_LABELS[status]} — tocá para cambiar`}
-        onClick={(event) => {
-          event.stopPropagation();
-          progress?.cycle(id);
-        }}
-      >
-        <span className="roadmap__topic-check-glyph" aria-hidden="true">
-          {status === "done" ? "✓" : status === "skipped" ? "✕" : ""}
-        </span>
-      </button>
-
       <span
-        ref={labelRef}
         className={[
+          "roadmap__node-label",
           "roadmap__topic-label",
           isSpine ? "roadmap__topic-label--spine" : "",
           status === "done" ? "roadmap__topic-label--done" : "",
@@ -99,12 +81,6 @@ export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
       >
         {nodeData.label}
       </span>
-
-      {isSpine ? (
-        <span className="roadmap__topic-stage" aria-label={`Etapa ${nodeData.stage}`}>
-          {nodeData.stage}
-        </span>
-      ) : null}
     </div>
   );
 }

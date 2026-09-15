@@ -6,6 +6,8 @@ import {
   type ResourceCatalogEntry,
 } from "@pps/core";
 
+import type { RoadmapStatus } from "../components/roadmap/progress";
+import { ROADMAP_STATUS_LABELS } from "../components/roadmap/progress";
 import { capitalizeWords } from "./labels";
 
 interface ConceptUrlLink {
@@ -31,6 +33,11 @@ export interface ConceptPage {
   title: string;
   kind: string;
   blocks: ConceptBlock[];
+}
+
+export interface ConceptPanelProgress {
+  resourceStatusFor: (slug: string, line: number) => RoadmapStatus;
+  cycleResource: (slug: string, line: number) => void;
 }
 
 function parseGeneratedPayload<T>(content: string): T {
@@ -146,7 +153,29 @@ function createResourceIcon(kind: PanelResourceKind): HTMLElement {
   return badge;
 }
 
-function renderConceptNote(block: ConceptBlock): HTMLElement {
+function createExternalLinkIcon(): HTMLAnchorElement {
+  const link = document.createElement("a");
+  link.className = "graph__concept-note-open";
+  link.setAttribute("aria-label", "Abrir recurso");
+  link.title = "Abrir recurso";
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+
+  const svg = createSvgRoot();
+  svg.classList.add("graph__concept-note-open-icon");
+  appendFilledPath(
+    svg,
+    "M14 3.25a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V5.56l-6.22 6.22a.75.75 0 1 1-1.06-1.06l6.22-6.22h-1.94a.75.75 0 0 1 0-1.5h3.5a.75.75 0 0 1 .75.75Zm-8.5 4a2.25 2.25 0 0 0-2.25 2.25v9A2.25 2.25 0 0 0 5.75 21h9A2.25 2.25 0 0 0 17 18.75v-4.5a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 1-.75.75h-9a.75.75 0 0 1-.75-.75v-9a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 0 0-1.5h-4.5Z",
+  );
+  link.appendChild(svg);
+  return link;
+}
+
+function renderConceptNote(
+  block: ConceptBlock,
+  slug: string,
+  progress?: ConceptPanelProgress,
+): HTMLElement {
   const item = document.createElement("li");
   item.className = "graph__concept-note";
 
@@ -157,28 +186,75 @@ function renderConceptNote(block: ConceptBlock): HTMLElement {
   body.className = "graph__concept-note-body";
   body.textContent = blockDisplayText(block);
 
-  if (!primaryUrl) {
-    const content = document.createElement("div");
-    content.className = "graph__concept-note-static";
-    content.append(createResourceIcon(resourceKind), body);
-    item.appendChild(content);
+  if (!progress) {
+    if (!primaryUrl) {
+      const content = document.createElement("div");
+      content.className = "graph__concept-note-static";
+      content.append(createResourceIcon(resourceKind), body);
+      item.appendChild(content);
+      return item;
+    }
+
+    const link = document.createElement("a");
+    link.className = "graph__concept-note-link";
+    link.href = primaryUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.title = resolvedTitle
+      ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
+      : `${panelResourceLabels[resourceKind]}: ${primaryUrl}`;
+    link.append(createResourceIcon(resourceKind), body);
+    item.appendChild(link);
     return item;
   }
 
-  const link = document.createElement("a");
-  link.className = "graph__concept-note-link";
-  link.href = primaryUrl;
-  link.target = "_blank";
-  link.rel = "noopener noreferrer";
-  link.title = resolvedTitle
-    ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
-    : `${panelResourceLabels[resourceKind]}: ${primaryUrl}`;
-  link.append(createResourceIcon(resourceKind), body);
-  item.appendChild(link);
+  const status = progress.resourceStatusFor(slug, block.line);
+  const action = document.createElement("button");
+  action.type = "button";
+  action.className = [
+    "graph__concept-note-action",
+    `graph__concept-note-action--${status}`,
+  ].join(" ");
+  action.title = `${ROADMAP_STATUS_LABELS[status]} — tocá para cambiar`;
+  action.setAttribute(
+    "aria-label",
+    `${blockDisplayText(block) || resolvedTitle || "Recurso"}: ${ROADMAP_STATUS_LABELS[status]}. Cambiar estado`,
+  );
+  action.append(createResourceIcon(resourceKind), body);
+
+  const statusGlyph = document.createElement("span");
+  statusGlyph.className = "graph__concept-note-status";
+  statusGlyph.setAttribute("aria-hidden", "true");
+  statusGlyph.textContent = status === "done" ? "✓" : status === "skipped" ? "✕" : "";
+  action.appendChild(statusGlyph);
+
+  action.addEventListener("click", () => {
+    progress.cycleResource(slug, block.line);
+  });
+
+  if (primaryUrl) {
+    const row = document.createElement("div");
+    row.className = "graph__concept-note-row";
+    const openLink = createExternalLinkIcon();
+    openLink.href = primaryUrl;
+    openLink.title = resolvedTitle
+      ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
+      : `${panelResourceLabels[resourceKind]}: ${primaryUrl}`;
+    row.append(action, openLink);
+    item.appendChild(row);
+    return item;
+  }
+
+  item.appendChild(action);
   return item;
 }
 
-function renderConceptNotes(notesRoot: HTMLElement, blocks: ConceptBlock[]): void {
+function renderConceptNotes(
+  notesRoot: HTMLElement,
+  blocks: ConceptBlock[],
+  slug: string,
+  progress?: ConceptPanelProgress,
+): void {
   notesRoot.replaceChildren();
 
   if (blocks.length === 0) {
@@ -193,7 +269,7 @@ function renderConceptNotes(notesRoot: HTMLElement, blocks: ConceptBlock[]): voi
   list.className = "graph__concept-note-list";
 
   for (const block of blocks) {
-    list.appendChild(renderConceptNote(block));
+    list.appendChild(renderConceptNote(block, slug, progress));
   }
 
   notesRoot.appendChild(list);
@@ -222,9 +298,13 @@ export async function loadConceptPages(dataUrl: string): Promise<Map<string, Con
 export interface ConceptPanel {
   open: (page: ConceptPage) => void;
   close: () => void;
+  refresh: () => void;
 }
 
-export function mountConceptPanel(root: HTMLElement): ConceptPanel {
+export function mountConceptPanel(
+  root: HTMLElement,
+  progress?: ConceptPanelProgress,
+): ConceptPanel {
   const title = root.querySelector<HTMLElement>(".graph__concept-title");
   const notesRoot = root.querySelector<HTMLElement>(".graph__concept-body");
   const closeButton = root.querySelector<HTMLButtonElement>(".graph__concept-close");
@@ -235,6 +315,8 @@ export function mountConceptPanel(root: HTMLElement): ConceptPanel {
     throw new Error("Concept panel markup is incomplete");
   }
 
+  let currentPage: ConceptPage | null = null;
+
   const setPanelOpen = (open: boolean) => {
     root.classList.toggle("graph__concept-panel--open", open);
     backdrop.classList.toggle("graph__concept-backdrop--open", open);
@@ -242,13 +324,23 @@ export function mountConceptPanel(root: HTMLElement): ConceptPanel {
     root.setAttribute("aria-hidden", open ? "false" : "true");
   };
 
+  const refresh = () => {
+    if (!currentPage) {
+      return;
+    }
+
+    renderConceptNotes(notesRoot, currentPage.blocks, currentPage.slug, progress);
+  };
+
   const close = () => {
+    currentPage = null;
     setPanelOpen(false);
   };
 
   const open = (page: ConceptPage) => {
+    currentPage = page;
     title.textContent = capitalizeWords(page.title);
-    renderConceptNotes(notesRoot, page.blocks);
+    renderConceptNotes(notesRoot, page.blocks, page.slug, progress);
     setPanelOpen(true);
   };
 
@@ -261,5 +353,5 @@ export function mountConceptPanel(root: HTMLElement): ConceptPanel {
     }
   });
 
-  return { open, close };
+  return { open, close, refresh };
 }

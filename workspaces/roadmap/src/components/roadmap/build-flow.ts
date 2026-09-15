@@ -31,6 +31,7 @@ import {
   type BranchEdgeKind,
   type BranchSide,
 } from "./branch-path";
+import type { RoadmapCapstoneNodeData } from "./RoadmapCapstoneNode";
 import type { RoadmapTopicNodeData } from "./RoadmapTopicNode";
 
 interface BuildRoadmapFlowOptions {
@@ -189,6 +190,25 @@ function isSameSpineColumn(leftCenterX: number, rightCenterX: number): boolean {
   return Math.abs(leftCenterX - rightCenterX) <= JUNCTION_AXIS_EPSILON;
 }
 
+function capstoneNode(
+  id: string,
+  placement: RoadmapPlacement,
+  state: RoadmapCapstoneNodeData["state"],
+): Node<RoadmapCapstoneNodeData> {
+  return {
+    id,
+    type: "roadmapCapstone",
+    position: { x: placement.x, y: placement.y },
+    width: placement.width,
+    height: placement.height,
+    style: { width: placement.width, height: placement.height },
+    data: {
+      label: capitalizeWords(placement.title),
+      state,
+    },
+  };
+}
+
 function topicNode(
   placement: RoadmapPlacement,
   state: RoadmapTopicNodeData["state"],
@@ -240,8 +260,13 @@ function isSpineNode(title: string, placement: RoadmapPlacement | undefined): bo
   return (
     title === ROADMAP_START_ID ||
     title === ROADMAP_END_ID ||
-    placement?.role === "spine"
+    placement?.role === "spine" ||
+    placement?.role === "capstone"
   );
+}
+
+function resolvePlacement(layout: RoadmapLayout, id: string): RoadmapPlacement | undefined {
+  return layout.placements.get(id);
 }
 
 function spineAncestor(title: string, layout: RoadmapLayout): string | undefined {
@@ -647,7 +672,7 @@ export function buildRoadmapFlow({
 
   for (const concept of roadmap.concepts) {
     const placement = layout.placements.get(concept.title);
-    if (!placement) {
+    if (!placement || (placement.role !== "spine" && placement.role !== "branch")) {
       continue;
     }
 
@@ -663,6 +688,16 @@ export function buildRoadmapFlow({
     );
   }
 
+  for (const [id, placement] of layout.placements) {
+    if (placement.role !== "capstone") {
+      continue;
+    }
+
+    nodes.push(
+      capstoneNode(id, placement, focusTitle === id ? "selected" : "default"),
+    );
+  }
+
   const edges: Edge[] = [];
   const spineLinks: SpineLink[] = [];
 
@@ -670,11 +705,11 @@ export function buildRoadmapFlow({
     const sourcePlacement =
       source === ROADMAP_START_ID || source === ROADMAP_END_ID
         ? ({ role: "spine" } as RoadmapPlacement)
-        : layout.placements.get(source);
+        : resolvePlacement(layout, source);
     const targetPlacement =
       target === ROADMAP_START_ID || target === ROADMAP_END_ID
         ? ({ role: "spine" } as RoadmapPlacement)
-        : layout.placements.get(target);
+        : resolvePlacement(layout, target);
 
     if (!isSpineNode(source, sourcePlacement) || !isSpineNode(target, targetPlacement)) {
       return;
@@ -682,6 +717,10 @@ export function buildRoadmapFlow({
 
     spineLinks.push({ source, target });
   };
+
+  for (const [after, capstoneId] of layout.capstoneByAfter) {
+    queueSpineLink(after, capstoneId);
+  }
 
   for (const lane of layout.parallelLanes) {
     const first = lane[0];
@@ -719,10 +758,11 @@ export function buildRoadmapFlow({
   );
 
   for (const fork of layout.trunkForks) {
+    const forkSource = layout.capstoneByAfter.get(fork.after) ?? fork.after;
     for (const lane of fork.lanes) {
       const first = lane[0];
       if (first !== undefined) {
-        queueSpineLink(fork.after, first);
+        queueSpineLink(forkSource, first);
       }
 
       for (let index = 0; index < lane.length - 1; index += 1) {
@@ -758,7 +798,12 @@ export function buildRoadmapFlow({
 
   const trunkTail = layout.trunk[layout.trunk.length - 1];
   if (trunkTail !== undefined) {
-    queueSpineLink(trunkTail, ROADMAP_END_ID);
+    const tailCapstone = layout.capstoneByAfter.get(trunkTail);
+    if (tailCapstone !== undefined) {
+      queueSpineLink(tailCapstone, ROADMAP_END_ID);
+    } else {
+      queueSpineLink(trunkTail, ROADMAP_END_ID);
+    }
   } else if (layout.parallelLanes.length > 0) {
     for (const lane of layout.parallelLanes) {
       const last = lane[lane.length - 1];

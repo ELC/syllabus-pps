@@ -29,13 +29,17 @@ import {
   remainingProgressPercent,
   RoadmapProgressContext,
   useRoadmapProgress,
+  type RoadmapProgress,
 } from "./progress";
+import { RoadmapCapstoneNode } from "./RoadmapCapstoneNode";
 import { RoadmapTopicNode } from "./RoadmapTopicNode";
+import type { CapstoneProject } from "../../scripts/capstone-panel";
 
 import "@xyflow/react/dist/style.css";
 
 const nodeTypes: NodeTypes = {
   roadmapTopic: RoadmapTopicNode,
+  roadmapCapstone: RoadmapCapstoneNode,
   roadmapAnchor: RoadmapAnchorNode,
   roadmapJunction: RoadmapJunctionNode,
 };
@@ -90,12 +94,20 @@ function CanvasViewport({ bounds }: { bounds: RoadmapBounds }) {
 interface RoadmapAppProps {
   dataUrl: string;
   onConceptOpen?: (page: ConceptPage) => void;
+  onCapstoneOpen?: (capstone: CapstoneProject) => void;
+  onProgressChange?: (progress: RoadmapProgress) => void;
 }
 
-export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
+export function RoadmapApp({
+  dataUrl,
+  onConceptOpen,
+  onCapstoneOpen,
+  onProgressChange,
+}: RoadmapAppProps) {
   const [graph, setGraph] = useState<CurriculumGraph | null>(null);
   const [selectedCareer, setSelectedCareer] = useState<string>("");
   const [selectedConcept, setSelectedConcept] = useState<string>("");
+  const [selectedCapstone, setSelectedCapstone] = useState<string>("");
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [loadError, setLoadError] = useState<string>("");
 
@@ -193,7 +205,36 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
     [activeRoadmap],
   );
 
-  const progress = useRoadmapProgress(activeRoadmap?.careerSlug ?? "", slugByTitle);
+  const resourceLinesBySlug = useMemo(() => {
+    const linesBySlug = new Map<string, number[]>();
+
+    for (const page of conceptPages.values()) {
+      linesBySlug.set(
+        page.slug,
+        page.blocks.map((block) => block.line),
+      );
+    }
+
+    return linesBySlug;
+  }, [conceptPages]);
+
+  const capstonesById = useMemo(() => {
+    const map = new Map<string, CapstoneProject>();
+    for (const capstone of curation?.capstones ?? []) {
+      map.set(capstone.id, capstone);
+    }
+    return map;
+  }, [curation]);
+
+  const progress = useRoadmapProgress(
+    activeRoadmap?.careerSlug ?? "",
+    slugByTitle,
+    resourceLinesBySlug,
+  );
+
+  useEffect(() => {
+    onProgressChange?.(progress);
+  }, [onProgressChange, progress]);
 
   const flow = useMemo(
     () =>
@@ -202,11 +243,19 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
             roadmap: activeRoadmap,
             adjacency,
             layout,
-            focusTitle: selectedConcept,
+            focusTitle: selectedConcept || selectedCapstone,
             isTopicDone: (title) => progress.statusFor(title) === "done",
           })
         : { nodes: [], edges: [] },
-    [activeRoadmap, adjacency, layout, progress.counts, progress.statusFor, selectedConcept],
+    [
+      activeRoadmap,
+      adjacency,
+      layout,
+      progress.counts,
+      progress.statusFor,
+      selectedCapstone,
+      selectedConcept,
+    ],
   );
 
   useEffect(() => {
@@ -222,8 +271,9 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
     return () => window.clearTimeout(timer);
   }, [confirmingReset]);
 
-  const handleConceptSelect = useCallback(
+  const handleConceptOpen = useCallback(
     (title: string) => {
+      setSelectedCapstone("");
       setSelectedConcept(title);
       const page = conceptPages.get(title);
       if (page && onConceptOpen) {
@@ -231,6 +281,18 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
       }
     },
     [conceptPages, onConceptOpen],
+  );
+
+  const handleCapstoneOpen = useCallback(
+    (id: string) => {
+      setSelectedConcept("");
+      setSelectedCapstone(id);
+      const capstone = capstonesById.get(id);
+      if (capstone && onCapstoneOpen) {
+        onCapstoneOpen(capstone);
+      }
+    },
+    [capstonesById, onCapstoneOpen],
   );
 
   const handleReset = useCallback(() => {
@@ -274,6 +336,7 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
             onChange={(event) => {
               setSelectedCareer(event.target.value);
               setSelectedConcept("");
+              setSelectedCapstone("");
             }}
           >
             {roadmaps.map((roadmap) => (
@@ -318,8 +381,9 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
 
       <p className="roadmap__toolbar-help">
         Tres caminos arrancan en paralelo desde el inicio, se unen en un solo eje y bajan hasta el
-        objetivo; los temas laterales cuelgan una sola vez de un nodo del eje. Elegí una
-        tarjeta para ver sus notas y resaltar sus prerequisitos.
+        objetivo; los temas laterales cuelgan una sola vez de un nodo del eje. Elegí una tarjeta
+        para ver sus recursos y marcarlos como hechos u omitidos. Los hexágonos son proyectos
+        integradores con la consigna de qué construir.
       </p>
 
       <RoadmapLegend />
@@ -338,7 +402,12 @@ export function RoadmapApp({ dataUrl, onConceptOpen }: RoadmapAppProps) {
             maxZoom={1.5}
             onNodeClick={(_, node) => {
               if (node.type === "roadmapTopic") {
-                handleConceptSelect(node.id);
+                handleConceptOpen(node.id);
+                return;
+              }
+
+              if (node.type === "roadmapCapstone") {
+                handleCapstoneOpen(node.id);
               }
             }}
             proOptions={{ hideAttribution: true }}

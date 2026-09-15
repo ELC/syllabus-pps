@@ -3,15 +3,18 @@ export const ROADMAP_END_ID = "__roadmap_end__";
 
 export const SPINE_NODE_WIDTH = 236;
 export const SPINE_NODE_HEIGHT = 64;
-export const BRANCH_NODE_WIDTH = 196;
-export const BRANCH_NODE_HEIGHT = 52;
+export const BRANCH_NODE_WIDTH = SPINE_NODE_WIDTH;
+export const BRANCH_NODE_HEIGHT = SPINE_NODE_HEIGHT;
 export const ANCHOR_NODE_WIDTH = 184;
 export const ANCHOR_NODE_HEIGHT = 48;
+/** Pointy-top regular hexagon: height = width * sqrt(3) / 2. */
+export const CAPSTONE_NODE_WIDTH = 176;
+export const CAPSTONE_NODE_HEIGHT = 152;
 
-export const BRANCH_COLUMN_GAP = 40;
-export const BRANCH_ROW_GAP = 14;
+export const BRANCH_COLUMN_GAP = 48;
+export const BRANCH_ROW_GAP = 22;
 /** Horizontal space between parallel lane spines. */
-export const LANE_GAP = 280;
+export const LANE_GAP = 300;
 export const STAGE_GAP = 64;
 export const ANCHOR_GAP = 72;
 export const JUNCTION_NODE_SIZE = 18;

@@ -13,6 +13,7 @@ interface LegendEntry {
 const LEGEND_SECTIONS: LegendEntry[][] = [
   [
     { marker: { kind: "swatch", key: "spine" }, label: "Eje" },
+    { marker: { kind: "swatch", key: "capstone" }, label: "Proyecto integrador" },
     { marker: { kind: "swatch", key: "done" }, label: "Completado" },
   ],
   [
