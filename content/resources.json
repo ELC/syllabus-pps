@@ -2959,5 +2959,1721 @@
       "raw": "2026-09-14"
     },
     "URL": "https://www.youtube.com/watch?v=q26147zlcMU"
+  },
+  {
+    "id": "probabilidad",
+    "type": "webpage",
+    "title": "Probabilidad",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Probabilidad"
+  },
+  {
+    "id": "teorema-de-bayes",
+    "type": "webpage",
+    "title": "Teorema de Bayes",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Teorema_de_Bayes"
+  },
+  {
+    "id": "variable-aleatoria",
+    "type": "webpage",
+    "title": "Variable aleatoria",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Variable_aleatoria"
+  },
+  {
+    "id": "distribucion-de-probabilidad",
+    "type": "webpage",
+    "title": "Distribución de probabilidad",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Distribuci%C3%B3n_de_probabilidad"
+  },
+  {
+    "id": "teorema-central-del-limite",
+    "type": "webpage",
+    "title": "Teorema central del límite",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Teorema_central_del_l%C3%ADmite"
+  },
+  {
+    "id": "introduction-to-probability",
+    "type": "book",
+    "title": "Introduction to Probability",
+    "author": [
+      {
+        "given": "Joseph K.",
+        "family": "Blitzstein"
+      },
+      {
+        "given": "Jessica",
+        "family": "Hwang"
+      }
+    ],
+    "publisher": "Harvard University",
+    "issued": {
+      "raw": "2019"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://probabilitybook.net/"
+  },
+  {
+    "id": "seeing-theory-central-limit",
+    "type": "webpage",
+    "title": "Central Limit Theorem",
+    "author": [
+      {
+        "literal": "Seeing Theory"
+      }
+    ],
+    "publisher": "Brown University",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://seeing-theory.brown.edu/probability-distributions/index.html",
+    "genre": "interactive"
+  },
+  {
+    "id": "statquest-bayes-theorem",
+    "type": "motion_picture",
+    "title": "Bayes' Theorem Clearly Explained!!!",
+    "author": [
+      {
+        "literal": "StatQuest with Josh Starmer"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=9wCnvr7Xw4E"
+  },
+  {
+    "id": "statquest-central-limit-theorem",
+    "type": "motion_picture",
+    "title": "Central Limit Theorem Clearly Explained!!!",
+    "author": [
+      {
+        "literal": "StatQuest with Josh Starmer"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=YAlJCEDH2uY"
+  },
+  {
+    "id": "statquest-random-variables",
+    "type": "motion_picture",
+    "title": "Random Variables Clearly Explained!!!",
+    "author": [
+      {
+        "literal": "StatQuest with Josh Starmer"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=oI3hZJqXJuc"
+  },
+  {
+    "id": "metodo-de-montecarlo",
+    "type": "webpage",
+    "title": "Método de Montecarlo",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/M%C3%A9todo_de_Montecarlo"
+  },
+  {
+    "id": "problema-p-np",
+    "type": "webpage",
+    "title": "Problema P = NP",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Problema_P_%3D_NP"
+  },
+  {
+    "id": "np-completo",
+    "type": "webpage",
+    "title": "NP-completo",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/NP-completo"
+  },
+  {
+    "id": "paradigma-funcional",
+    "type": "webpage",
+    "title": "Programación funcional",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_funcional"
+  },
+  {
+    "id": "programacion-concurrente",
+    "type": "webpage",
+    "title": "Programación concurrente",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Programaci%C3%B3n_concurrente"
+  },
+  {
+    "id": "python-functional-programming",
+    "type": "webpage",
+    "title": "Functional Programming in Python",
+    "author": [
+      {
+        "literal": "Real Python"
+      }
+    ],
+    "publisher": "Real Python",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://realpython.com/python-functional-programming/"
+  },
+  {
+    "id": "mit-6-006-2020",
+    "type": "webpage",
+    "title": "MIT 6.006 Introduction to Algorithms, Spring 2020",
+    "author": [
+      {
+        "literal": "MIT OpenCourseWare"
+      }
+    ],
+    "publisher": "MIT OpenCourseWare",
+    "issued": {
+      "raw": "2020"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/"
+  },
+  {
+    "id": "concurrency-in-python",
+    "type": "webpage",
+    "title": "asyncio — Asynchronous I/O",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "publisher": "docs.python.org",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.python.org/3/library/asyncio.html"
+  },
+  {
+    "id": "design-thinking",
+    "type": "webpage",
+    "title": "Pensamiento de diseño",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Pensamiento_de_dise%C3%B1o"
+  },
+  {
+    "id": "lean-startup",
+    "type": "webpage",
+    "title": "Lean startup",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Lean_startup"
+  },
+  {
+    "id": "business-model-canvas",
+    "type": "webpage",
+    "title": "The Business Model Canvas",
+    "author": [
+      {
+        "literal": "Strategyzer"
+      }
+    ],
+    "publisher": "Strategyzer",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.strategyzer.com/library/the-business-model-canvas"
+  },
+  {
+    "id": "value-proposition-canvas",
+    "type": "webpage",
+    "title": "The Value Proposition Canvas",
+    "author": [
+      {
+        "literal": "Strategyzer"
+      }
+    ],
+    "publisher": "Strategyzer",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.strategyzer.com/library/the-value-proposition-canvas"
+  },
+  {
+    "id": "prototyping-101",
+    "type": "webpage",
+    "title": "Prototyping 101",
+    "author": [
+      {
+        "literal": "Nielsen Norman Group"
+      }
+    ],
+    "publisher": "nngroup.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.nngroup.com/articles/prototyping-101/"
+  },
+  {
+    "id": "design-thinking-crash-course",
+    "type": "motion_picture",
+    "title": "Design Thinking Crash Course",
+    "author": [
+      {
+        "literal": "Stanford d.school"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2021"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=_r0VX-aU_T8"
+  },
+  {
+    "id": "extract-transform-load",
+    "type": "webpage",
+    "title": "Extract, transform and load",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Extract,_transform_and_load"
+  },
+  {
+    "id": "nosql",
+    "type": "webpage",
+    "title": "NoSQL",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/NoSQL"
+  },
+  {
+    "id": "teorema-cap",
+    "type": "webpage",
+    "title": "Teorema CAP",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Teorema_CAP"
+  },
+  {
+    "id": "data-warehouse",
+    "type": "webpage",
+    "title": "Data warehouse",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Data_warehouse"
+  },
+  {
+    "id": "gobernanza-de-datos",
+    "type": "webpage",
+    "title": "Gobernanza de datos",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Gobernanza_de_datos"
+  },
+  {
+    "id": "designing-data-intensive-applications",
+    "type": "book",
+    "title": "Designing Data-Intensive Applications",
+    "author": [
+      {
+        "given": "Martin",
+        "family": "Kleppmann"
+      }
+    ],
+    "publisher": "O'Reilly Media",
+    "issued": {
+      "raw": "2017"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://dataintensive.net/"
+  },
+  {
+    "id": "data-engineering-fundamentals",
+    "type": "motion_picture",
+    "title": "Data Engineering Full Course",
+    "author": [
+      {
+        "literal": "freeCodeCamp.org"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=PHsC_t0j1dU"
+  },
+  {
+    "id": "integral",
+    "type": "webpage",
+    "title": "Integral",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Integral"
+  },
+  {
+    "id": "calculo-multivariable",
+    "type": "webpage",
+    "title": "Cálculo multivariable",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/C%C3%A1lculo_multivariable"
+  },
+  {
+    "id": "serie-de-taylor",
+    "type": "webpage",
+    "title": "Serie de Taylor",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Serie_de_Taylor"
+  },
+  {
+    "id": "multiplicadores-de-lagrange",
+    "type": "webpage",
+    "title": "Multiplicadores de Lagrange",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Multiplicadores_de_Lagrange"
+  },
+  {
+    "id": "ecuacion-diferencial",
+    "type": "webpage",
+    "title": "Ecuación diferencial",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Ecuaci%C3%B3n_diferencial"
+  },
+  {
+    "id": "calculus-volume-2-openstax",
+    "type": "book",
+    "title": "Calculus Volume 2",
+    "author": [
+      {
+        "literal": "OpenStax"
+      }
+    ],
+    "publisher": "OpenStax",
+    "issued": {
+      "raw": "2016"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://openstax.org/details/books/calculus-volume-2"
+  },
+  {
+    "id": "calculus-volume-3-openstax",
+    "type": "book",
+    "title": "Calculus Volume 3",
+    "author": [
+      {
+        "literal": "OpenStax"
+      }
+    ],
+    "publisher": "OpenStax",
+    "issued": {
+      "raw": "2016"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://openstax.org/details/books/calculus-volume-3"
+  },
+  {
+    "id": "taylor-series-3blue1brown",
+    "type": "motion_picture",
+    "title": "Taylor series | Chapter 11, Essence of calculus",
+    "author": [
+      {
+        "literal": "3Blue1Brown"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=3d6DsjIBzJ4"
+  },
+  {
+    "id": "partial-derivatives-khan",
+    "type": "motion_picture",
+    "title": "Partial derivatives | Multivariable calculus | Khan Academy",
+    "author": [
+      {
+        "literal": "Khan Academy"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivative-and-gradient/v/partial-derivatives"
+  },
+  {
+    "id": "lagrange-multipliers-khan",
+    "type": "motion_picture",
+    "title": "Lagrange multipliers | Multivariable calculus | Khan Academy",
+    "author": [
+      {
+        "literal": "Khan Academy"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=yuqB-d5MjZA"
+  },
+  {
+    "id": "arquitectura-de-software",
+    "type": "webpage",
+    "title": "Arquitectura de software",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Arquitectura_de_software"
+  },
+  {
+    "id": "microservicio",
+    "type": "webpage",
+    "title": "Arquitectura de microservicios",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Arquitectura_de_microservicios"
+  },
+  {
+    "id": "cloud-native-definition",
+    "type": "webpage",
+    "title": "CNCF Cloud Native Definition",
+    "author": [
+      {
+        "literal": "Cloud Native Computing Foundation"
+      }
+    ],
+    "publisher": "CNCF",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://github.com/cncf/toc/blob/main/DEFINITION.md"
+  },
+  {
+    "id": "requisito-no-funcional",
+    "type": "webpage",
+    "title": "Requisito no funcional",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Requisito_no_funcional"
+  },
+  {
+    "id": "microservices-martin-fowler",
+    "type": "webpage",
+    "title": "Microservices",
+    "author": [
+      {
+        "literal": "Martin Fowler"
+      }
+    ],
+    "publisher": "martinfowler.com",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://martinfowler.com/articles/microservices.html"
+  },
+  {
+    "id": "microservices-explained-bytebytego",
+    "type": "motion_picture",
+    "title": "Microservices Explained in 5 Minutes",
+    "author": [
+      {
+        "literal": "ByteByteGo"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2023"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=rv4LlmLmVWk"
+  },
+  {
+    "id": "modelo-grande-de-lenguaje",
+    "type": "webpage",
+    "title": "Modelo grande de lenguaje",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Modelo_grande_de_lenguaje"
+  },
+  {
+    "id": "agente-inteligente",
+    "type": "webpage",
+    "title": "Agente inteligente",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Agente_inteligente"
+  },
+  {
+    "id": "model-context-protocol",
+    "type": "webpage",
+    "title": "Model Context Protocol",
+    "author": [
+      {
+        "literal": "Anthropic"
+      }
+    ],
+    "publisher": "modelcontextprotocol.io",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://modelcontextprotocol.io/introduction"
+  },
+  {
+    "id": "build-a-large-language-model",
+    "type": "book",
+    "title": "Build a Large Language Model (From Scratch)",
+    "author": [
+      {
+        "given": "Sebastian",
+        "family": "Raschka"
+      }
+    ],
+    "publisher": "Manning Publications",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.manning.com/books/build-a-large-language-model-from-scratch"
+  },
+  {
+    "id": "prompt-engineering-guide",
+    "type": "webpage",
+    "title": "Prompt Engineering Guide",
+    "author": [
+      {
+        "literal": "DAIR.AI"
+      }
+    ],
+    "publisher": "promptingguide.ai",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.promptingguide.ai/"
+  },
+  {
+    "id": "etica-algoritmica",
+    "type": "webpage",
+    "title": "Sesgo algorítmico",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Sesgo_algor%C3%ADtmico"
+  },
+  {
+    "id": "llm-agents-explained",
+    "type": "motion_picture",
+    "title": "What are AI Agents?",
+    "author": [
+      {
+        "literal": "IBM Technology"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=F8NKVhkZZWI"
+  },
+  {
+    "id": "mcp-explained",
+    "type": "motion_picture",
+    "title": "Model Context Protocol (MCP) Explained",
+    "author": [
+      {
+        "literal": "Anthropic"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2025"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=7j_NE6Pjv-E"
+  },
+  {
+    "id": "coma-flotante",
+    "type": "webpage",
+    "title": "Coma flotante",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Coma_flotante"
+  },
+  {
+    "id": "analisis-numerico",
+    "type": "webpage",
+    "title": "Análisis numérico",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/An%C3%A1lisis_num%C3%A9rico"
+  },
+  {
+    "id": "interpolacion",
+    "type": "webpage",
+    "title": "Interpolación",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Interpolaci%C3%B3n"
+  },
+  {
+    "id": "numerical-methods-sauer",
+    "type": "book",
+    "title": "Numerical Analysis",
+    "author": [
+      {
+        "given": "Timothy",
+        "family": "Sauer"
+      }
+    ],
+    "publisher": "Pearson",
+    "issued": {
+      "raw": "2017"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.pearson.com/en-us/subject-catalog/p/numerical-analysis/P200000003380"
+  },
+  {
+    "id": "floating-point-goldberg",
+    "type": "webpage",
+    "title": "What Every Computer Scientist Should Know About Floating-Point Arithmetic",
+    "author": [
+      {
+        "given": "David",
+        "family": "Goldberg"
+      }
+    ],
+    "publisher": "ACM Computing Surveys",
+    "issued": {
+      "raw": "1991"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html"
+  },
+  {
+    "id": "monte-carlo-simulation-statquest",
+    "type": "motion_picture",
+    "title": "6. Monte Carlo Simulation",
+    "author": [
+      {
+        "literal": "MIT OpenCourseWare"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2016"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=OgO1gpXSUzU"
+  },
+  {
+    "id": "system-dynamics-simulation",
+    "type": "webpage",
+    "title": "Systems Thinking and Modeling for a Complex World",
+    "author": [
+      {
+        "literal": "MIT OpenCourseWare"
+      }
+    ],
+    "publisher": "ocw.mit.edu",
+    "issued": {
+      "raw": "2020"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://ocw.mit.edu/courses/res-15-004-system-dynamics-systems-thinking-and-modeling-for-a-complex-world-january-iap-2020/resources/systems-thinking-and-modeling-for-a-complex-world-iap-2020/"
+  },
+  {
+    "id": "huggingface-llm-course",
+    "type": "webpage",
+    "title": "Hugging Face NLP Course",
+    "author": [
+      {
+        "literal": "Hugging Face"
+      }
+    ],
+    "publisher": "huggingface.co",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://huggingface.co/learn/nlp-course/chapter1/1",
+    "genre": "interactive"
+  },
+  {
+    "id": "ibm-data-engineer-coursera",
+    "type": "webpage",
+    "title": "IBM Data Engineering Professional Certificate",
+    "author": [
+      {
+        "literal": "IBM"
+      }
+    ],
+    "publisher": "Coursera",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.coursera.org/professional-certificates/ibm-data-engineer",
+    "genre": "course"
+  },
+  {
+    "id": "knime-analytics-platform",
+    "type": "webpage",
+    "title": "KNIME Analytics Platform User Guide",
+    "author": [
+      {
+        "literal": "KNIME"
+      }
+    ],
+    "publisher": "docs.knime.com",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.knime.com/latest/analytics_platform_user_guide/index.html",
+    "genre": "interactive"
+  },
+  {
+    "id": "delta-lake-lineage",
+    "type": "webpage",
+    "title": "Delta Lake",
+    "author": [
+      {
+        "literal": "Delta Lake"
+      }
+    ],
+    "publisher": "docs.delta.io",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.delta.io/latest/delta-utility.html"
+  },
+  {
+    "id": "bayesian-methods-for-hackers",
+    "type": "book",
+    "title": "Probabilistic Programming and Bayesian Methods for Hackers",
+    "author": [
+      {
+        "given": "Cam",
+        "family": "Davidson-Pilon"
+      }
+    ],
+    "publisher": "GitHub",
+    "issued": {
+      "raw": "2019"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers",
+    "genre": "interactive"
+  },
+  {
+    "id": "agent-to-agent-protocol",
+    "type": "webpage",
+    "title": "Agent2Agent (A2A) Protocol",
+    "author": [
+      {
+        "literal": "Google"
+      }
+    ],
+    "publisher": "google.github.io",
+    "issued": {
+      "raw": "2025"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://a2a-protocol.org/latest/"
+  },
+  {
+    "id": "ag-ui-protocol",
+    "type": "webpage",
+    "title": "AG-UI Overview",
+    "author": [
+      {
+        "literal": "CopilotKit"
+      }
+    ],
+    "publisher": "docs.copilotkit.ai",
+    "issued": {
+      "raw": "2025"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.copilotkit.ai/ag-ui/introduction"
+  },
+  {
+    "id": "a2ui-protocol",
+    "type": "webpage",
+    "title": "A2UI Specification",
+    "author": [
+      {
+        "literal": "Google"
+      }
+    ],
+    "publisher": "a2ui.org",
+    "issued": {
+      "raw": "2025"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://a2ui.org/"
+  },
+  {
+    "id": "lora-qlora-peft",
+    "type": "webpage",
+    "title": "PEFT: Parameter-Efficient Fine-Tuning",
+    "author": [
+      {
+        "literal": "Hugging Face"
+      }
+    ],
+    "publisher": "huggingface.co",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://huggingface.co/docs/peft/main/en/index"
+  },
+  {
+    "id": "small-language-models",
+    "type": "webpage",
+    "title": "Small Language Models",
+    "author": [
+      {
+        "literal": "Hugging Face"
+      }
+    ],
+    "publisher": "huggingface.co",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://huggingface.co/blog/lora"
+  },
+  {
+    "id": "clean-architecture",
+    "type": "webpage",
+    "title": "Clean Architecture",
+    "author": [
+      {
+        "given": "Robert",
+        "family": "Martin"
+      }
+    ],
+    "publisher": "blog.cleancoder.com",
+    "issued": {
+      "raw": "2012"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html"
+  },
+  {
+    "id": "vertical-slice-architecture",
+    "type": "webpage",
+    "title": "Vertical Slice Architecture",
+    "author": [
+      {
+        "given": "Jimmy",
+        "family": "Bogard"
+      }
+    ],
+    "publisher": "jimmybogard.com",
+    "issued": {
+      "raw": "2018"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://jimmybogard.com/vertical-slice-architecture/"
+  },
+  {
+    "id": "azure-fundamentals-cert",
+    "type": "webpage",
+    "title": "Microsoft Certified: Azure Fundamentals",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "publisher": "learn.microsoft.com",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/",
+    "genre": "course"
+  },
+  {
+    "id": "cisco-devnet-associate",
+    "type": "webpage",
+    "title": "Cisco Certified DevNet Associate",
+    "author": [
+      {
+        "literal": "Cisco"
+      }
+    ],
+    "publisher": "cisco.com",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://developer.cisco.com/certification/",
+    "genre": "course"
+  },
+  {
+    "id": "blue-green-deployment",
+    "type": "webpage",
+    "title": "BlueGreenDeployment",
+    "author": [
+      {
+        "given": "Martin",
+        "family": "Fowler"
+      }
+    ],
+    "publisher": "martinfowler.com",
+    "issued": {
+      "raw": "2010"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://martinfowler.com/bliki/BlueGreenDeployment.html"
+  },
+  {
+    "id": "feature-flags-ops",
+    "type": "webpage",
+    "title": "Feature Toggles (aka Feature Flags)",
+    "author": [
+      {
+        "given": "Pete",
+        "family": "Hodgson"
+      }
+    ],
+    "publisher": "martinfowler.com",
+    "issued": {
+      "raw": "2017"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://martinfowler.com/articles/feature-toggles.html"
+  },
+  {
+    "id": "scalability-patterns",
+    "type": "webpage",
+    "title": "Scalability",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/Escalabilidad"
+  },
+  {
+    "id": "apache-spark-fundamentals",
+    "type": "webpage",
+    "title": "Apache Spark Tutorial: Getting Started with Apache Spark",
+    "author": [
+      {
+        "literal": "Apache Spark"
+      }
+    ],
+    "publisher": "spark.apache.org",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://spark.apache.org/docs/latest/quick-start.html"
+  },
+  {
+    "id": "power-bi-getting-started",
+    "type": "webpage",
+    "title": "Get started with Power BI Desktop",
+    "author": [
+      {
+        "literal": "Microsoft"
+      }
+    ],
+    "publisher": "learn.microsoft.com",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://learn.microsoft.com/en-us/power-bi/fundamentals/desktop-getting-started",
+    "genre": "interactive"
+  },
+  {
+    "id": "redis-documentation",
+    "type": "webpage",
+    "title": "Redis documentation",
+    "author": [
+      {
+        "literal": "Redis Ltd."
+      }
+    ],
+    "publisher": "redis.io",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://redis.io/docs/latest/"
+  },
+  {
+    "id": "postgres-jsonb",
+    "type": "webpage",
+    "title": "JSON Types",
+    "author": [
+      {
+        "literal": "PostgreSQL Global Development Group"
+      }
+    ],
+    "publisher": "postgresql.org",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.postgresql.org/docs/current/datatype-json.html"
+  },
+  {
+    "id": "dora-metrics",
+    "type": "webpage",
+    "title": "DORA Metrics",
+    "author": [
+      {
+        "literal": "DORA"
+      }
+    ],
+    "publisher": "dora.dev",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://dora.dev/guides/dora-metrics/"
+  },
+  {
+    "id": "space-framework",
+    "type": "webpage",
+    "title": "The SPACE of Developer Productivity",
+    "author": [
+      {
+        "given": "Nicole",
+        "family": "Forsgren"
+      }
+    ],
+    "publisher": "queue.acm.org",
+    "issued": {
+      "raw": "2021"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://queue.acm.org/detail.cfm?id=3454124"
+  },
+  {
+    "id": "mcp-python-sdk",
+    "type": "webpage",
+    "title": "Build an MCP server",
+    "author": [
+      {
+        "literal": "Anthropic"
+      }
+    ],
+    "publisher": "modelcontextprotocol.io",
+    "issued": {
+      "raw": "2025"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://modelcontextprotocol.io/docs/develop/build-server"
+  },
+  {
+    "id": "mcp-apps",
+    "type": "webpage",
+    "title": "MCP Apps",
+    "author": [
+      {
+        "literal": "Anthropic"
+      }
+    ],
+    "publisher": "modelcontextprotocol.io",
+    "issued": {
+      "raw": "2025"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://modelcontextprotocol.io/docs/learn/server-concepts"
+  },
+  {
+    "id": "harness-engineering",
+    "type": "webpage",
+    "title": "What is Agentic RAG?",
+    "author": [
+      {
+        "literal": "IBM Technology"
+      }
+    ],
+    "publisher": "YouTube",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://www.youtube.com/watch?v=0z9_MhcYvcY"
+  },
+  {
+    "id": "mit-numerical-methods",
+    "type": "webpage",
+    "title": "MIT 18.330 Introduction to Numerical Analysis",
+    "author": [
+      {
+        "literal": "MIT OpenCourseWare"
+      }
+    ],
+    "publisher": "MIT OpenCourseWare",
+    "issued": {
+      "raw": "2012"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://ocw.mit.edu/courses/18-330-introduction-to-numerical-analysis-spring-2012/"
+  },
+  {
+    "id": "actor-model",
+    "type": "webpage",
+    "title": "Actor model",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://en.wikipedia.org/wiki/Actor_model"
+  },
+  {
+    "id": "reactive-programming",
+    "type": "webpage",
+    "title": "Reactive programming",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://en.wikipedia.org/wiki/Reactive_programming"
+  },
+  {
+    "id": "typed-driven-python",
+    "type": "webpage",
+    "title": "typing — Support for type hints",
+    "author": [
+      {
+        "literal": "Python Software Foundation"
+      }
+    ],
+    "publisher": "docs.python.org",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://docs.python.org/3/library/typing.html"
+  },
+  {
+    "id": "ts-pattern-library",
+    "type": "webpage",
+    "title": "ts-pattern",
+    "author": [
+      {
+        "given": "Gabriel",
+        "family": "Vergnaud"
+      }
+    ],
+    "publisher": "GitHub",
+    "issued": {
+      "raw": "2024"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://github.com/gvergnaud/ts-pattern"
+  },
+  {
+    "id": "analisis-de-datos-power-bi",
+    "type": "webpage",
+    "title": "Análisis de datos",
+    "author": [
+      {
+        "literal": "Wikipedia"
+      }
+    ],
+    "publisher": "Wikipedia",
+    "issued": {
+      "raw": "2026-09-14"
+    },
+    "accessed": {
+      "raw": "2026-09-14"
+    },
+    "URL": "https://es.wikipedia.org/wiki/An%C3%A1lisis_de_datos"
   }
 ]
