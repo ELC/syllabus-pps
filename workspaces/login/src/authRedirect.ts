@@ -1,3 +1,4 @@
+import { isAuthDisabled } from "./authDisabled";
 import { hasPersistedSupabaseSession } from "./sessionStorage";
 import { isLoginEntryLocation, readBrowserSiteRoot } from "./siteRoot";
 
@@ -60,6 +61,10 @@ export function redirectToLoginEntry(): void {
 export type UnauthenticatedAccessAction = "show-login" | "redirecting";
 
 export function redirectSubsiteToLoginIfNeeded(): boolean {
+  if (isAuthDisabled()) {
+    return false;
+  }
+
   if (isLoginEntryLocation()) {
     return false;
   }
@@ -73,6 +78,10 @@ export function redirectSubsiteToLoginIfNeeded(): boolean {
 }
 
 export function handleUnauthenticatedAccess(): UnauthenticatedAccessAction {
+  if (isAuthDisabled()) {
+    return "show-login";
+  }
+
   if (isLoginEntryLocation()) {
     return "show-login";
   }

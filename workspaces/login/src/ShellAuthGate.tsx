@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 
+import { isAuthDisabled, readDevAuthProfile } from "./authDisabled";
 import {
   handleUnauthenticatedAccess,
   maybeReturnAfterLogin,
@@ -21,8 +22,18 @@ interface ShellAuthGateProps {
 }
 
 export function ShellAuthGate({ children, logoUrl, siteRoot, renderShell }: ShellAuthGateProps) {
+  const devAuthProfile = readDevAuthProfile();
   const { status, session, displayName, signOut } = useAuthSession();
   const [redirecting, setRedirecting] = useState(() => redirectSubsiteToLoginIfNeeded());
+
+  if (isAuthDisabled()) {
+    return renderShell({
+      children,
+      userEmail: devAuthProfile.email,
+      userName: devAuthProfile.userName,
+      onSignOut: async () => undefined,
+    });
+  }
 
   useEffect(() => {
     if (status === "authenticated") {

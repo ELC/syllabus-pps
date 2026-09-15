@@ -2,6 +2,7 @@ import type { User } from "@supabase/supabase-js";
 import { createElement, StrictMode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 
+import { isAuthDisabled, readDevAuthProfile } from "./authDisabled";
 import {
   handleUnauthenticatedAccess,
   maybeReturnAfterLogin,
@@ -36,6 +37,12 @@ export async function mountShellAuth(): Promise<void> {
 }
 
 async function runShellAuthGate(dashboardMain: HTMLElement): Promise<void> {
+  if (isAuthDisabled()) {
+    revealAuthenticatedShell();
+    activateSidebarFooter(readDevAuthProfile(), async () => undefined);
+    return;
+  }
+
   const config = readSupabaseConfig();
   const optimisticAuth = hasPersistedSupabaseSession();
   if (optimisticAuth) {
