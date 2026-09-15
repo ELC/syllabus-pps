@@ -10,6 +10,7 @@
     "./logo-meta": "./src/logo-meta.ts",
     "./nav": "./src/nav.ts",
     "./austral-tokens": "./src/austral-tokens.ts",
+    "./concept-panel-icons": "./src/concept-panel-icons.ts",
     "./styles/shell.scss": "./src/styles/shell.scss",
     "./shell-chrome": "./src/shell-chrome.ts",
     "./astro": {
@@ -27,6 +28,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@pps/core": "workspace:*",
     "@pps/login": "workspace:*",
     "react": "catalog:"
   },

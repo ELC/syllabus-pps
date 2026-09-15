@@ -284,6 +284,9 @@ importers:
 
   workspaces/shell:
     dependencies:
+      '@pps/core':
+        specifier: workspace:*
+        version: link:../core
       '@pps/login':
         specifier: workspace:*
         version: link:../login
