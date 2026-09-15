@@ -66,6 +66,10 @@
   --austral-badge-interactive-fg: #5599db;
   --austral-badge-text-bg: #dde1f5;
   --austral-badge-text-fg: #2e3092;
+  --austral-badge-edit-bg: color-mix(in srgb, var(--austral-graph-course-base) 20%, white);
+  --austral-badge-edit-fg: var(--austral-graph-course-base);
+  --austral-badge-edit-bg-hover: color-mix(in srgb, var(--austral-graph-course-base) 32%, white);
+  --austral-badge-edit-fg-hover: var(--austral-severity-warning);
 
   --austral-severity-error: #c41e3a;
   --austral-severity-warning: #b45309;

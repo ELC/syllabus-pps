@@ -11,6 +11,7 @@
     "./nav": "./src/nav.ts",
     "./austral-tokens": "./src/austral-tokens.ts",
     "./concept-panel-icons": "./src/concept-panel-icons.ts",
+    "./cites-link": "./src/cites-link.ts",
     "./styles/shell.scss": "./src/styles/shell.scss",
     "./shell-chrome": "./src/shell-chrome.ts",
     "./astro": {

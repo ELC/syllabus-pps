@@ -5,7 +5,9 @@ import {
   type PanelResourceKind,
   type ResourceCatalogEntry,
 } from "@pps/core";
+import { citesEditHref } from "@pps/shell/cites-link";
 import {
+  createEditIconSvg,
   createOmitIconSvg,
   createOpenIconSvg,
   createResourceIconSvg,
@@ -54,6 +56,11 @@ function parseGeneratedPayload<T>(content: string): T {
 
 function primaryBlockUrl(block: ConceptBlock): string | undefined {
   return block.citations?.[0]?.resolved?.URL ?? block.urls[0]?.target;
+}
+
+function primaryResourceId(block: ConceptBlock): string | undefined {
+  const id = block.citations?.[0]?.id?.trim();
+  return id || undefined;
 }
 
 function classifyResourceKind(block: ConceptBlock): PanelResourceKind {
@@ -140,6 +147,20 @@ function createExternalLinkIcon(): HTMLAnchorElement {
   return link;
 }
 
+function createCitesEditLink(resourceId: string, title?: string): HTMLAnchorElement {
+  const link = document.createElement("a");
+  link.className = "graph__concept-note-edit";
+  const label = title ? `Editar en Cites: ${title}` : "Editar en Cites";
+  link.href = citesEditHref(resourceId);
+  link.title = label;
+  link.setAttribute("aria-label", label);
+  link.appendChild(createEditIconSvg());
+  link.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+  return link;
+}
+
 function renderConceptNote(
   block: ConceptBlock,
   slug: string,
@@ -218,6 +239,12 @@ function renderConceptNote(
 
   const rail = document.createElement("div");
   rail.className = "graph__concept-note-rail";
+  const resourceId = primaryResourceId(block);
+
+  if (resourceId) {
+    rail.classList.add("graph__concept-note-rail--with-edit");
+    rail.appendChild(createCitesEditLink(resourceId, resolvedTitle));
+  }
 
   if (primaryUrl) {
     const openLink = createExternalLinkIcon();
@@ -225,6 +252,9 @@ function renderConceptNote(
     openLink.title = resolvedTitle
       ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
       : `${panelResourceLabels[resourceKind]}: ${primaryUrl}`;
+    openLink.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
     rail.appendChild(openLink);
   } else {
     rail.classList.add("graph__concept-note-rail--omit-only");

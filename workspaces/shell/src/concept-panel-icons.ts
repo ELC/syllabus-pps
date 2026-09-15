@@ -2,6 +2,7 @@ import type { PanelResourceKind } from "@pps/core";
 
 import bookSvg from "../assets/icons/resource-book.svg?raw";
 import interactiveSvg from "../assets/icons/resource-interactive.svg?raw";
+import editSvg from "../assets/icons/resource-edit.svg?raw";
 import omitSvg from "../assets/icons/resource-omit.svg?raw";
 import openSvg from "../assets/icons/resource-open.svg?raw";
 import textSvg from "../assets/icons/resource-text.svg?raw";
@@ -45,4 +46,8 @@ export function createOmitIconSvg(): SVGSVGElement {
 
 export function createOpenIconSvg(): SVGSVGElement {
   return parseSvgMarkup(openSvg, "graph__concept-note-icon", "graph__concept-note-open-icon");
+}
+
+export function createEditIconSvg(): SVGSVGElement {
+  return parseSvgMarkup(editSvg, "graph__concept-note-icon", "graph__concept-note-edit-icon");
 }

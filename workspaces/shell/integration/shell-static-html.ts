@@ -11,6 +11,7 @@ export interface StaticShellOptions {
   sidebarExtraId?: string;
   mainClass?: string;
   logoSrc?: string;
+  authDisabled?: boolean;
 }
 
 const SHELL_LOGO_WIDTH = 5000;
@@ -61,7 +62,9 @@ export function renderStaticShell(
     ? `\n    <div id="${sidebarExtraId}" class="dashboard__extra"></div>`
     : "";
 
-  return `${renderAuthRedirectScript(siteRoot)}
+  const authRedirect = options.authDisabled ? "" : renderAuthRedirectScript(siteRoot);
+
+  return `${authRedirect}
 <div class="dashboard auth-shell-prerender">
   <aside class="dashboard__sidebar">
     <a class="dashboard__brand" href="${siteRoot}" aria-label="Universidad Austral — PPS Curriculum">

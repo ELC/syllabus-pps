@@ -91,6 +91,7 @@ export function shellHeadPlugin(
 ): Plugin {
   const { activeNav, prerenderShell = false, sidebarExtraId, mainClass } = options;
   let analyticsHeadTags: HtmlTagDescriptor[] = [];
+  let authDisabled = false;
 
   const logoSrcForSite = (): string =>
     shellLogoHref(siteRootFromBase(process.env.SITE_BASE ?? "/"));
@@ -109,6 +110,7 @@ export function shellHeadPlugin(
         sidebarExtraId,
         mainClass,
         logoSrc: logoSrcForSite(),
+        authDisabled,
       });
       out = out.replace(/<body([^>]*)>/, (match, attrs: string) => {
         if (/class="/i.test(attrs)) {
@@ -129,6 +131,10 @@ export function shellHeadPlugin(
     name: "pps-shell-head",
     config(_config, { mode }) {
       const env = loadEnv(mode, repoRoot, "");
+      authDisabled =
+        mode === "development" &&
+        (env.PUBLIC_AUTH_DISABLED?.trim().toLowerCase() === "true" ||
+          env.PUBLIC_AUTH_DISABLED === "1");
       analyticsHeadTags = googleAnalyticsHeadTags(
         readGoogleAnalyticsId(env),
         mode === "production",
