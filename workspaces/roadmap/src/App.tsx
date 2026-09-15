@@ -11,6 +11,7 @@ import {
   type ConceptPage,
   type ConceptPanelProgress,
 } from "./scripts/concept-panel";
+import { readRoadmapPanelUrl, writeRoadmapPanelUrl } from "./scripts/roadmap-panel-url";
 import { defaultCurriculumUrl } from "./site-base";
 
 interface AppProps {
@@ -23,7 +24,37 @@ export function App({ dataUrl }: AppProps) {
   const capstonePanelRef = useRef<HTMLElement>(null);
   const conceptPanelControllerRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
   const capstonePanelControllerRef = useRef<ReturnType<typeof mountCapstonePanel> | null>(null);
+  const panelUrlSyncRef = useRef<{ markApplied: (state: ReturnType<typeof readRoadmapPanelUrl>) => void } | null>(
+    null,
+  );
   const progressRef = useRef<RoadmapProgress | null>(null);
+
+  const handleConceptPanelUrlClose = useCallback(() => {
+    const url = readRoadmapPanelUrl();
+    if (!url.concept) {
+      return;
+    }
+
+    const next = { career: url.career, capstone: url.capstone };
+    writeRoadmapPanelUrl(next);
+    panelUrlSyncRef.current?.markApplied(next);
+  }, []);
+
+  const handleCapstonePanelUrlClose = useCallback(() => {
+    const url = readRoadmapPanelUrl();
+    if (!url.capstone) {
+      return;
+    }
+
+    const next = { career: url.career, concept: url.concept };
+    writeRoadmapPanelUrl(next);
+    panelUrlSyncRef.current?.markApplied(next);
+  }, []);
+
+  const handleClosePanels = useCallback(() => {
+    conceptPanelControllerRef.current?.close({ updateUrl: false });
+    capstonePanelControllerRef.current?.close({ updateUrl: false });
+  }, []);
 
   const panelProgress = useMemo<ConceptPanelProgress>(
     () => ({
@@ -43,8 +74,12 @@ export function App({ dataUrl }: AppProps) {
       return;
     }
 
-    const conceptPanel = mountConceptPanel(conceptRoot, panelProgress);
-    const capstonePanel = mountCapstonePanel(capstoneRoot);
+    const conceptPanel = mountConceptPanel(conceptRoot, panelProgress, {
+      onClose: handleConceptPanelUrlClose,
+    });
+    const capstonePanel = mountCapstonePanel(capstoneRoot, {
+      onClose: handleCapstonePanelUrlClose,
+    });
     conceptPanelControllerRef.current = conceptPanel;
     capstonePanelControllerRef.current = capstonePanel;
 
@@ -52,15 +87,15 @@ export function App({ dataUrl }: AppProps) {
       conceptPanelControllerRef.current = null;
       capstonePanelControllerRef.current = null;
     };
-  }, [panelProgress]);
+  }, [handleCapstonePanelUrlClose, handleConceptPanelUrlClose, panelProgress]);
 
   const handleConceptOpen = useCallback((page: ConceptPage) => {
-    capstonePanelControllerRef.current?.close();
+    capstonePanelControllerRef.current?.close({ updateUrl: false });
     conceptPanelControllerRef.current?.open(page);
   }, []);
 
   const handleCapstoneOpen = useCallback((capstone: CapstoneProject) => {
-    conceptPanelControllerRef.current?.close();
+    conceptPanelControllerRef.current?.close({ updateUrl: false });
     capstonePanelControllerRef.current?.open(capstone);
   }, []);
 
@@ -84,7 +119,11 @@ export function App({ dataUrl }: AppProps) {
           dataUrl={resolvedUrl}
           onConceptOpen={handleConceptOpen}
           onCapstoneOpen={handleCapstoneOpen}
+          onClosePanels={handleClosePanels}
           onProgressChange={handleProgressChange}
+          onRegisterPanelUrlSync={(sync) => {
+            panelUrlSyncRef.current = sync;
+          }}
         />
       </section>
 

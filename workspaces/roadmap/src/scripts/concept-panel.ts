@@ -295,15 +295,24 @@ export async function loadConceptPages(dataUrl: string): Promise<Map<string, Con
   return pagesBySlug;
 }
 
+export interface ConceptPanelCloseOptions {
+  updateUrl?: boolean;
+}
+
 export interface ConceptPanel {
   open: (page: ConceptPage) => void;
-  close: () => void;
+  close: (options?: ConceptPanelCloseOptions) => void;
   refresh: () => void;
+}
+
+export interface ConceptPanelHandlers {
+  onClose?: () => void;
 }
 
 export function mountConceptPanel(
   root: HTMLElement,
   progress?: ConceptPanelProgress,
+  handlers?: ConceptPanelHandlers,
 ): ConceptPanel {
   const title = root.querySelector<HTMLElement>(".graph__concept-title");
   const notesRoot = root.querySelector<HTMLElement>(".graph__concept-body");
@@ -332,9 +341,12 @@ export function mountConceptPanel(
     renderConceptNotes(notesRoot, currentPage.blocks, currentPage.slug, progress);
   };
 
-  const close = () => {
+  const close = (options?: ConceptPanelCloseOptions) => {
     currentPage = null;
     setPanelOpen(false);
+    if (options?.updateUrl !== false) {
+      handlers?.onClose?.();
+    }
   };
 
   const open = (page: ConceptPage) => {
@@ -344,8 +356,8 @@ export function mountConceptPanel(
     setPanelOpen(true);
   };
 
-  closeButton.addEventListener("click", close);
-  backdrop.addEventListener("click", close);
+  closeButton.addEventListener("click", () => close());
+  backdrop.addEventListener("click", () => close());
 
   window.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && root.classList.contains("graph__concept-panel--open")) {

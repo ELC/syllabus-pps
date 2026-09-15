@@ -1,4 +1,4 @@
-.roadmap {
+﻿.roadmap {
   --roadmap-node-label-size: 0.875rem;
   --roadmap-node-label-line-height: 1.25;
 
@@ -355,16 +355,6 @@
       }
     }
 
-    &--prerequisite {
-      border-color: var(--austral-azul-claro);
-    }
-
-    &--selected {
-      border-color: var(--austral-azul-primario);
-      border-style: solid;
-      box-shadow: 0 0 0 3px rgba(46, 48, 146, 0.18);
-    }
-
     &--in-progress {
       background: var(--austral-blanco);
     }
@@ -431,16 +421,6 @@
     background: transparent;
     cursor: pointer;
 
-    &--selected {
-      .roadmap__capstone-polygon {
-        stroke: color-mix(in srgb, var(--austral-graph-course-base) 82%, black);
-        stroke-width: 2.5;
-      }
-
-      .roadmap__capstone-shape {
-        filter: drop-shadow(0 0 0 3px rgba(217, 119, 6, 0.22));
-      }
-    }
   }
 
   &__capstone-shape {

@@ -15,7 +15,7 @@ export interface RoadmapTopicNodeData extends Record<string, unknown> {
   label: string;
   role: RoadmapRole;
   stage: number;
-  state: "default" | "selected" | "prerequisite";
+  state: "default";
 }
 
 const HANDLES = [
@@ -27,7 +27,7 @@ const HANDLES = [
   { id: HANDLE_RIGHT_OUT, type: "source", position: Position.Right },
 ] as const;
 
-export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
+export function RoadmapTopicNode({ id, data }: NodeProps) {
   const nodeData = data as unknown as RoadmapTopicNodeData;
   const progress = useRoadmapProgressContext();
   const isSpine = nodeData.role === "spine";
@@ -39,7 +39,6 @@ export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
     percent: 0,
   };
   const { status, percent, total } = conceptProgress;
-  const state = selected ? "selected" : nodeData.state;
   const showProgressBar = total > 0 && status === "pending";
 
   return (
@@ -47,7 +46,6 @@ export function RoadmapTopicNode({ id, data, selected }: NodeProps) {
       className={[
         "roadmap__topic",
         `roadmap__topic--${nodeData.role}`,
-        `roadmap__topic--${state}`,
         status !== "pending" ? `roadmap__topic--${status}` : "",
         showProgressBar ? "roadmap__topic--in-progress" : "",
       ].join(" ")}

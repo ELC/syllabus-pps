@@ -6,12 +6,23 @@ export interface CapstoneProject {
   description: string;
 }
 
-export interface CapstonePanel {
-  open: (capstone: CapstoneProject) => void;
-  close: () => void;
+export interface CapstonePanelCloseOptions {
+  updateUrl?: boolean;
 }
 
-export function mountCapstonePanel(root: HTMLElement): CapstonePanel {
+export interface CapstonePanel {
+  open: (capstone: CapstoneProject) => void;
+  close: (options?: CapstonePanelCloseOptions) => void;
+}
+
+export interface CapstonePanelHandlers {
+  onClose?: () => void;
+}
+
+export function mountCapstonePanel(
+  root: HTMLElement,
+  handlers?: CapstonePanelHandlers,
+): CapstonePanel {
   const title = root.querySelector<HTMLElement>(".graph__capstone-title");
   const body = root.querySelector<HTMLElement>(".graph__capstone-body");
   const closeButton = root.querySelector<HTMLButtonElement>(".graph__capstone-close");
@@ -29,8 +40,11 @@ export function mountCapstonePanel(root: HTMLElement): CapstonePanel {
     root.setAttribute("aria-hidden", open ? "false" : "true");
   };
 
-  const close = () => {
+  const close = (options?: CapstonePanelCloseOptions) => {
     setPanelOpen(false);
+    if (options?.updateUrl !== false) {
+      handlers?.onClose?.();
+    }
   };
 
   const open = (capstone: CapstoneProject) => {
@@ -39,8 +53,8 @@ export function mountCapstonePanel(root: HTMLElement): CapstonePanel {
     setPanelOpen(true);
   };
 
-  closeButton.addEventListener("click", close);
-  backdrop.addEventListener("click", close);
+  closeButton.addEventListener("click", () => close());
+  backdrop.addEventListener("click", () => close());
 
   window.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && root.classList.contains("graph__capstone-panel--open")) {

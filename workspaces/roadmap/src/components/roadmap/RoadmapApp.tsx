@@ -9,7 +9,7 @@ import {
   type NodeTypes,
 } from "@xyflow/react";
 import { projectAllDegreeRoadmaps, type CurriculumGraph } from "@pps/core";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { ConceptPage } from "../../scripts/concept-panel";
 import { buildAdjacency } from "./adjacency";
@@ -34,6 +34,12 @@ import {
 import { RoadmapCapstoneNode } from "./RoadmapCapstoneNode";
 import { RoadmapTopicNode } from "./RoadmapTopicNode";
 import type { CapstoneProject } from "../../scripts/capstone-panel";
+import {
+  readRoadmapPanelUrl,
+  roadmapPanelUrlKey,
+  writeRoadmapPanelUrl,
+  type RoadmapPanelUrlState,
+} from "../../scripts/roadmap-panel-url";
 
 import "@xyflow/react/dist/style.css";
 
@@ -91,25 +97,33 @@ function CanvasViewport({ bounds }: { bounds: RoadmapBounds }) {
   return null;
 }
 
+interface RoadmapPanelUrlSync {
+  markApplied: (state: RoadmapPanelUrlState) => void;
+}
+
 interface RoadmapAppProps {
   dataUrl: string;
   onConceptOpen?: (page: ConceptPage) => void;
   onCapstoneOpen?: (capstone: CapstoneProject) => void;
+  onClosePanels?: () => void;
   onProgressChange?: (progress: RoadmapProgress) => void;
+  onRegisterPanelUrlSync?: (sync: RoadmapPanelUrlSync) => void;
 }
 
 export function RoadmapApp({
   dataUrl,
   onConceptOpen,
   onCapstoneOpen,
+  onClosePanels,
   onProgressChange,
+  onRegisterPanelUrlSync,
 }: RoadmapAppProps) {
   const [graph, setGraph] = useState<CurriculumGraph | null>(null);
   const [selectedCareer, setSelectedCareer] = useState<string>("");
-  const [selectedConcept, setSelectedConcept] = useState<string>("");
-  const [selectedCapstone, setSelectedCapstone] = useState<string>("");
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [loadError, setLoadError] = useState<string>("");
+  const [urlRevision, setUrlRevision] = useState(0);
+  const lastAppliedUrlKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     void fetch(dataUrl)
@@ -132,10 +146,41 @@ export function RoadmapApp({
   );
 
   useEffect(() => {
+    if (roadmaps.length === 0) {
+      return;
+    }
+
+    const url = readRoadmapPanelUrl();
+    if (url.career) {
+      const match = roadmaps.find((roadmap) => roadmap.careerSlug === url.career);
+      if (match) {
+        setSelectedCareer(match.career);
+        return;
+      }
+    }
+
     if (!selectedCareer && roadmaps[0]) {
       setSelectedCareer(roadmaps[0].career);
     }
   }, [roadmaps, selectedCareer]);
+
+  useEffect(() => {
+    onRegisterPanelUrlSync?.({
+      markApplied: (state) => {
+        lastAppliedUrlKeyRef.current = roadmapPanelUrlKey(state);
+      },
+    });
+  }, [onRegisterPanelUrlSync]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      lastAppliedUrlKeyRef.current = null;
+      setUrlRevision((revision) => revision + 1);
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   const conceptPages = useMemo(() => {
     if (!graph) {
@@ -205,6 +250,12 @@ export function RoadmapApp({
     [activeRoadmap],
   );
 
+  const titleBySlug = useMemo(
+    () =>
+      new Map((activeRoadmap?.concepts ?? []).map((concept) => [concept.slug, concept.title])),
+    [activeRoadmap],
+  );
+
   const resourceLinesBySlug = useMemo(() => {
     const linesBySlug = new Map<string, number[]>();
 
@@ -243,19 +294,10 @@ export function RoadmapApp({
             roadmap: activeRoadmap,
             adjacency,
             layout,
-            focusTitle: selectedConcept || selectedCapstone,
             isTopicDone: (title) => progress.statusFor(title) === "done",
           })
         : { nodes: [], edges: [] },
-    [
-      activeRoadmap,
-      adjacency,
-      layout,
-      progress.counts,
-      progress.statusFor,
-      selectedCapstone,
-      selectedConcept,
-    ],
+    [activeRoadmap, adjacency, layout, progress.counts, progress.statusFor],
   );
 
   useEffect(() => {
@@ -271,29 +313,95 @@ export function RoadmapApp({
     return () => window.clearTimeout(timer);
   }, [confirmingReset]);
 
+  const syncPanelUrl = useCallback(
+    (state: RoadmapPanelUrlState) => {
+      writeRoadmapPanelUrl(state);
+      lastAppliedUrlKeyRef.current = roadmapPanelUrlKey(state);
+    },
+    [],
+  );
+
   const handleConceptOpen = useCallback(
     (title: string) => {
-      setSelectedCapstone("");
-      setSelectedConcept(title);
       const page = conceptPages.get(title);
+      const slug = slugByTitle.get(title);
+      if (activeRoadmap && slug) {
+        syncPanelUrl({ career: activeRoadmap.careerSlug, concept: slug });
+      }
+
       if (page && onConceptOpen) {
         onConceptOpen(page);
       }
     },
-    [conceptPages, onConceptOpen],
+    [activeRoadmap, conceptPages, onConceptOpen, slugByTitle, syncPanelUrl],
   );
 
   const handleCapstoneOpen = useCallback(
     (id: string) => {
-      setSelectedConcept("");
-      setSelectedCapstone(id);
+      if (activeRoadmap) {
+        syncPanelUrl({ career: activeRoadmap.careerSlug, capstone: id });
+      }
+
       const capstone = capstonesById.get(id);
       if (capstone && onCapstoneOpen) {
         onCapstoneOpen(capstone);
       }
     },
-    [capstonesById, onCapstoneOpen],
+    [activeRoadmap, capstonesById, onCapstoneOpen, syncPanelUrl],
   );
+
+  useEffect(() => {
+    if (!activeRoadmap) {
+      return;
+    }
+
+    const url = readRoadmapPanelUrl();
+    if (url.career && url.career !== activeRoadmap.careerSlug) {
+      const match = roadmaps.find((roadmap) => roadmap.careerSlug === url.career);
+      if (match && match.career !== activeRoadmap.career) {
+        setSelectedCareer(match.career);
+      }
+      return;
+    }
+
+    const urlKey = roadmapPanelUrlKey(url);
+    if (lastAppliedUrlKeyRef.current === urlKey) {
+      return;
+    }
+
+    lastAppliedUrlKeyRef.current = urlKey;
+
+    if (url.concept) {
+      const title = titleBySlug.get(url.concept);
+      if (title) {
+        const page = conceptPages.get(title);
+        if (page) {
+          onConceptOpen?.(page);
+        }
+        return;
+      }
+    }
+
+    if (url.capstone) {
+      const capstone = capstonesById.get(url.capstone);
+      if (capstone) {
+        onCapstoneOpen?.(capstone);
+        return;
+      }
+    }
+
+    onClosePanels?.();
+  }, [
+    activeRoadmap,
+    capstonesById,
+    conceptPages,
+    onCapstoneOpen,
+    onClosePanels,
+    onConceptOpen,
+    roadmaps,
+    titleBySlug,
+    urlRevision,
+  ]);
 
   const handleReset = useCallback(() => {
     if (!confirmingReset) {
@@ -334,9 +442,13 @@ export function RoadmapApp({
             className="roadmap__degree-select"
             value={activeRoadmap.career}
             onChange={(event) => {
-              setSelectedCareer(event.target.value);
-              setSelectedConcept("");
-              setSelectedCapstone("");
+              const career = event.target.value;
+              setSelectedCareer(career);
+              const roadmap = roadmaps.find((entry) => entry.career === career);
+              if (roadmap) {
+                syncPanelUrl({ career: roadmap.careerSlug });
+              }
+              onClosePanels?.();
             }}
           >
             {roadmaps.map((roadmap) => (
@@ -397,7 +509,7 @@ export function RoadmapApp({
             edgeTypes={edgeTypes}
             nodesDraggable={false}
             nodesConnectable={false}
-            elementsSelectable
+            elementsSelectable={false}
             minZoom={0.2}
             maxZoom={1.5}
             onNodeClick={(_, node) => {

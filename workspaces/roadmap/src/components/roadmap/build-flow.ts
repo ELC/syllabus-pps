@@ -2,7 +2,7 @@ import type { DegreeRoadmap } from "@pps/core";
 import type { Edge, Node } from "@xyflow/react";
 
 import { capitalizeWords } from "../../scripts/labels";
-import { collectUpstream, type RoadmapAdjacency } from "./adjacency";
+import type { RoadmapAdjacency } from "./adjacency";
 import {
   ANCHOR_NODE_HEIGHT,
   ANCHOR_NODE_WIDTH,
@@ -38,7 +38,6 @@ interface BuildRoadmapFlowOptions {
   roadmap: DegreeRoadmap;
   adjacency: RoadmapAdjacency;
   layout: RoadmapLayout;
-  focusTitle: string;
   isTopicDone: (title: string) => boolean;
 }
 
@@ -54,46 +53,36 @@ function isRoadmapTopicId(id: string): boolean {
 function edgeStyleSuffix(
   source: string,
   target: string,
-  focusNeighborhood: Set<string>,
   isTopicDone: (title: string) => boolean,
 ): string {
   const topics = [source, target].filter(isRoadmapTopicId);
-  let suffix = "";
 
   if (topics.some(isTopicDone)) {
-    suffix += " roadmap__edge--done";
+    return " roadmap__edge--done";
   }
 
-  if (focusNeighborhood.has(source) && focusNeighborhood.has(target)) {
-    suffix += " roadmap__edge--active";
-  }
-
-  return suffix;
+  return "";
 }
 
 function branchEdgeStyleSuffix(
-  source: string,
   target: string,
-  focusNeighborhood: Set<string>,
   isTopicDone: (title: string) => boolean,
   branchKind: BranchEdgeKind,
   groupTargets: string[],
 ): string {
-  let suffix = "";
-
   if (branchKind === "trunk") {
     if (groupTargets.length > 0 && groupTargets.every(isTopicDone)) {
-      suffix += " roadmap__edge--done";
+      return " roadmap__edge--done";
     }
-  } else if (isRoadmapTopicId(target) && isTopicDone(target)) {
-    suffix += " roadmap__edge--done";
+
+    return "";
   }
 
-  if (focusNeighborhood.has(source) && focusNeighborhood.has(target)) {
-    suffix += " roadmap__edge--active";
+  if (isRoadmapTopicId(target) && isTopicDone(target)) {
+    return " roadmap__edge--done";
   }
 
-  return suffix;
+  return "";
 }
 
 interface LayoutBox {
@@ -655,15 +644,10 @@ export function buildRoadmapFlow({
   roadmap,
   adjacency,
   layout,
-  focusTitle,
   isTopicDone,
 }: BuildRoadmapFlowOptions): { nodes: Node[]; edges: Edge[] } {
-  const upstream = focusTitle
-    ? collectUpstream(adjacency.prerequisites, focusTitle)
-    : new Set<string>();
-  const focusNeighborhood = new Set<string>(focusTitle ? [focusTitle, ...upstream] : []);
   const styleSuffix = (source: string, target: string) =>
-    edgeStyleSuffix(source, target, focusNeighborhood, isTopicDone);
+    edgeStyleSuffix(source, target, isTopicDone);
 
   const nodes: Node[] = [
     anchorNode(ROADMAP_START_ID, "start", "Inicio", layout.start),
@@ -676,16 +660,7 @@ export function buildRoadmapFlow({
       continue;
     }
 
-    nodes.push(
-      topicNode(
-        placement,
-        concept.title === focusTitle
-          ? "selected"
-          : upstream.has(concept.title)
-            ? "prerequisite"
-            : "default",
-      ),
-    );
+    nodes.push(topicNode(placement, "default"));
   }
 
   for (const [id, placement] of layout.placements) {
@@ -693,9 +668,7 @@ export function buildRoadmapFlow({
       continue;
     }
 
-    nodes.push(
-      capstoneNode(id, placement, focusTitle === id ? "selected" : "default"),
-    );
+    nodes.push(capstoneNode(id, placement, "default"));
   }
 
   const edges: Edge[] = [];
@@ -814,15 +787,8 @@ export function buildRoadmapFlow({
   }
 
   emitSpineLinks(spineLinks, layout, adjacency, nodes, edges, styleSuffix);
-  emitBranchEdges(layout, edges, (source, target, branchKind, groupTargets) =>
-    branchEdgeStyleSuffix(
-      source,
-      target,
-      focusNeighborhood,
-      isTopicDone,
-      branchKind,
-      groupTargets,
-    ),
+  emitBranchEdges(layout, edges, (_source, target, branchKind, groupTargets) =>
+    branchEdgeStyleSuffix(target, isTopicDone, branchKind, groupTargets),
   );
 
   return { nodes, edges };

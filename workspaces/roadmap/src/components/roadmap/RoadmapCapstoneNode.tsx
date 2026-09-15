@@ -4,7 +4,7 @@ import { HANDLE_BOTTOM_OUT, HANDLE_TOP_IN } from "./constants";
 
 export interface RoadmapCapstoneNodeData extends Record<string, unknown> {
   label: string;
-  state: "default" | "selected";
+  state: "default";
 }
 
 const HANDLES = [
@@ -15,12 +15,11 @@ const HANDLES = [
 /** Pointy-top regular hexagon matching CAPSTONE_NODE_WIDTH × CAPSTONE_NODE_HEIGHT. */
 const HEX_POINTS = "88,2 174,39 174,113 88,150 2,113 2,39";
 
-export function RoadmapCapstoneNode({ data, selected }: NodeProps) {
+export function RoadmapCapstoneNode({ data }: NodeProps) {
   const nodeData = data as unknown as RoadmapCapstoneNodeData;
-  const state = selected ? "selected" : nodeData.state;
 
   return (
-    <div className={["roadmap__capstone", `roadmap__capstone--${state}`].join(" ")}>
+    <div className="roadmap__capstone">
       <svg
         className="roadmap__capstone-shape"
         viewBox="0 0 176 152"
