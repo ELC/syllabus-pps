@@ -11,6 +11,7 @@ Source pages live in [`content/pages/`](content/pages/). Shared parsing, diagnos
 | `@pps/network` | `http://localhost:4321/network/` |
 | `@pps/roadmap` | `http://localhost:4321/roadmap/` |
 | `@pps/cms` | `http://localhost:4321/cms/` |
+| `@pps/cites` | `http://localhost:4321/cites/` |
 
 Shared chrome lives in [`workspaces/shell/`](workspaces/shell/) (`@pps/shell`). Email OTP sign-in lives in [`workspaces/login/`](workspaces/login/) (`@pps/login`).
 
@@ -62,7 +63,7 @@ Analytics, network, and roadmap apps read those artifacts from `workspaces/analy
 
 ## GitHub Pages
 
-`pnpm build:pages` builds all five sites and merges them into `dist/` for GitHub Pages (`/`, `/analytics/`, `/network/`, `/roadmap/`, `/cms/`).
+`pnpm build:pages` builds all public sites and merges them into `dist/` for GitHub Pages (`/`, `/analytics/`, `/network/`, `/roadmap/`, `/cms/`, `/cites/`).
 
 Daily cron workflow: `.github/workflows/pages.yml` (optional Supabase pull → build → deploy).
 
@@ -129,9 +130,9 @@ Copy `.env.example` to `.env` at the repository root for local dev. GitHub Actio
 pnpm dev
 ```
 
-Open `http://localhost:4321/`, sign in with Google or a magic link, then visit Analytics, Network, Roadmap, and CMS. Repeat on the GitHub Pages URL after deploy.
+Open `http://localhost:4321/`, sign in with Google or a magic link, then visit Analytics, Network, Roadmap, CMS, and Cites. Repeat on the GitHub Pages URL after deploy.
 
-Hosted CMS remains read-only; local `pnpm dev` still writes `content/pages/` after sign-in.
+Hosted CMS and Cites remain read-only; local `pnpm dev` still writes `content/pages/` and `content/resources.json` after sign-in.
 
 ## Supabase sync
 

@@ -28,6 +28,15 @@ export function indexResourceCatalog(entries: ResourceCatalogEntry[]): ResourceC
   return { byId, byUrl };
 }
 
+export function parseResourceCatalogEntries(text: string): ResourceCatalogEntry[] {
+  const parsed = JSON.parse(text) as unknown;
+  if (!Array.isArray(parsed)) {
+    throw new Error("Resource catalog must be a JSON array of CSL entries.");
+  }
+
+  return parsed as ResourceCatalogEntry[];
+}
+
 export function loadResourceCatalog(raw: unknown): ResourceCatalog {
   if (!Array.isArray(raw)) {
     throw new Error("Resource catalog must be a JSON array of CSL entries.");
@@ -39,6 +48,5 @@ export function loadResourceCatalog(raw: unknown): ResourceCatalog {
 }
 
 export function parseResourceCatalogJson(text: string): ResourceCatalog {
-  const parsed = JSON.parse(text) as unknown;
-  return loadResourceCatalog(parsed);
+  return loadResourceCatalog(parseResourceCatalogEntries(text));
 }

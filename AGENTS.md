@@ -10,7 +10,7 @@ Keep human-facing setup and operations docs in the root [README.md](README.md). 
 
 Shared chrome styles live in `@pps/shell` (`styles/shell.scss` and partials) and auth UI styles in `@pps/login/styles/login.scss`. Import them through the bundler (`import shellCss from "@pps/shell/styles/shell.scss?url"` in Astro, or `import "@pps/shell/shell-chrome"` in Vite SPAs). Do not copy CSS into app `public/` folders.
 
-Astro apps register `import ppsShell from "@pps/shell/astro"` in `integrations`. Vite SPAs (CMS, roadmap) import `shellHeadPlugin` from `@pps/shell/vite`. Integration sources live in `workspaces/shell/integration/`.
+Astro apps register `import ppsShell from "@pps/shell/astro"` in `integrations`. Vite SPAs (CMS, cites, roadmap) import `shellHeadPlugin` from `@pps/shell/vite`. Integration sources live in `workspaces/shell/integration/`.
 
 ## Dependency versions
 
@@ -24,7 +24,7 @@ The CLI writes JSON to `workspaces/analytics-cli/_generated/`. Apps load them at
 
 Prefer `workspace:*` dependencies and package `exports` over Vite aliases. `@pps/core` exposes `./src/index.ts` under the `development` export condition for Vite dev; production builds use `dist/`. Shared Vite env helpers and plugins live in `@pps/config` (built to `dist/` before app builds). `@pps/shell` Astro/Vite integration sources live in `workspaces/shell/integration/` and compile to `integration/dist/` for nested Vite config loading.
 
-Local dev runs only `@pps/site` on port 4321; CMS, roadmap, analytics, and network mount into that server via `subsitesDevPlugins()` from `@pps/config`.
+Local dev runs only `@pps/site` on port 4321; CMS, cites, roadmap, analytics, and network mount into that server via `subsitesDevPlugins()` from `@pps/config`.
 
 ## Workspace packages
 
@@ -33,6 +33,7 @@ Prefer `workspace:*` dependencies and package `exports` over Vite aliases. `@pps
 ## Working With Content
 
 - Edit local files in `content/pages/` for agent workflows, or use the CMS (`workspaces/cms`) for authors.
+- Edit `content/resources.json` locally, or use the cite manager (`workspaces/cites`) at `/cites/`.
 - Run `pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync --push` when local edits should update Supabase.
 - Keep notes zettelkasten-style: small connected ideas, not Notion-like database records.
 - Use bullet-only bodies (`- ` lines). Non-bullet lines trigger `non-bullet-content` diagnostics.

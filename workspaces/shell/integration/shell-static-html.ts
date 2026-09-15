@@ -4,6 +4,7 @@ const NAV_ITEMS = [
   { id: "network", label: "Network", segment: "network/" },
   { id: "roadmap", label: "Roadmaps", segment: "roadmap/" },
   { id: "cms", label: "CMS", segment: "cms/" },
+  { id: "cites", label: "Cites", segment: "cites/" },
 ];
 
 export interface StaticShellOptions {

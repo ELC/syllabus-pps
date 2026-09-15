@@ -19,7 +19,7 @@ const AUTH_CRITICAL_CSS = sass.compile(
   join(workspacesRoot, "login/src/styles/auth-critical.scss"),
 ).css;
 
-const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/"];
+const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/", "cites/"];
 const SHELL_LOGO_PATH = "assets/shell/logo-horizontal-blanco.png";
 
 function shellLogoHref(siteRoot: string): string {

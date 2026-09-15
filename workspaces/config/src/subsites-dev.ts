@@ -228,6 +228,12 @@ export function subsitesDevPlugins(repoRoot: string): Plugin[] {
       base: "/cms/",
     }),
     createViteSpaDevMiddleware(repoRoot, {
+      name: "cites",
+      workspace: "cites",
+      configFile: "vite.config.ts",
+      base: "/cites/",
+    }),
+    createViteSpaDevMiddleware(repoRoot, {
       name: "roadmap",
       workspace: "roadmap",
       configFile: "vite.config.ts",
