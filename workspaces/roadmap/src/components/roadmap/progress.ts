@@ -79,7 +79,8 @@ export interface RoadmapProgress {
   statusFor: (title: string) => RoadmapStatus;
   conceptProgressFor: (title: string) => RoadmapConceptProgress;
   resourceStatusFor: (slug: string, line: number) => RoadmapStatus;
-  cycleResource: (slug: string, line: number) => void;
+  toggleResourceDone: (slug: string, line: number) => void;
+  toggleResourceSkipped: (slug: string, line: number) => void;
   reset: () => void;
   counts: RoadmapProgressCounts;
 }
@@ -121,10 +122,30 @@ function normalizeStatus(status: unknown): RoadmapStatus {
   return "pending";
 }
 
-function nextStatus(status: unknown): RoadmapStatus {
-  const current = normalizeStatus(status);
-  const index = ROADMAP_STATUS_CYCLE.indexOf(current);
-  return ROADMAP_STATUS_CYCLE[(index + 1) % ROADMAP_STATUS_CYCLE.length] ?? "pending";
+function applyResourceStatus(
+  current: ResourceProgressStore,
+  careerSlug: string,
+  slug: string,
+  line: number,
+  updated: RoadmapStatus,
+): ResourceProgressStore {
+  const career = current[careerSlug] ?? {};
+  const conceptResources = career[slug] ?? {};
+  const resourceKey = String(line);
+  const { [resourceKey]: _dropped, ...restResources } = conceptResources;
+
+  const nextConceptResources =
+    updated === "pending" ? restResources : { ...restResources, [resourceKey]: updated };
+
+  const { [slug]: _droppedConcept, ...restCareer } = career;
+
+  return {
+    ...current,
+    [careerSlug]:
+      Object.keys(nextConceptResources).length === 0
+        ? restCareer
+        : { ...restCareer, [slug]: nextConceptResources },
+  };
 }
 
 function resourceLinesForSlug(
@@ -178,31 +199,31 @@ export function useRoadmapProgress(
     [conceptProgressFor],
   );
 
-  const cycleResource = useCallback(
+  const toggleResourceDone = useCallback(
     (slug: string, line: number) => {
       if (!careerSlug || !slug) {
         return;
       }
 
       setStore((current) => {
-        const career = current[careerSlug] ?? {};
-        const conceptResources = career[slug] ?? {};
-        const resourceKey = String(line);
-        const updated = nextStatus(conceptResources[resourceKey]);
-        const { [resourceKey]: _dropped, ...restResources } = conceptResources;
+        const currentStatus = normalizeStatus(current[careerSlug]?.[slug]?.[String(line)]);
+        const updated = currentStatus === "done" ? "pending" : "done";
+        return applyResourceStatus(current, careerSlug, slug, line, updated);
+      });
+    },
+    [careerSlug],
+  );
 
-        const nextConceptResources =
-          updated === "pending" ? restResources : { ...restResources, [resourceKey]: updated };
+  const toggleResourceSkipped = useCallback(
+    (slug: string, line: number) => {
+      if (!careerSlug || !slug) {
+        return;
+      }
 
-        const { [slug]: _droppedConcept, ...restCareer } = career;
-
-        return {
-          ...current,
-          [careerSlug]:
-            Object.keys(nextConceptResources).length === 0
-              ? restCareer
-              : { ...restCareer, [slug]: nextConceptResources },
-        };
+      setStore((current) => {
+        const currentStatus = normalizeStatus(current[careerSlug]?.[slug]?.[String(line)]);
+        const updated = currentStatus === "skipped" ? "pending" : "skipped";
+        return applyResourceStatus(current, careerSlug, slug, line, updated);
       });
     },
     [careerSlug],
@@ -239,7 +260,15 @@ export function useRoadmapProgress(
   }, [conceptProgressFor, slugByTitle]);
 
   return useMemo(
-    () => ({ statusFor, conceptProgressFor, resourceStatusFor, cycleResource, reset, counts }),
-    [conceptProgressFor, counts, cycleResource, reset, resourceStatusFor, statusFor],
+    () => ({
+      statusFor,
+      conceptProgressFor,
+      resourceStatusFor,
+      toggleResourceDone,
+      toggleResourceSkipped,
+      reset,
+      counts,
+    }),
+    [conceptProgressFor, counts, reset, resourceStatusFor, statusFor, toggleResourceDone, toggleResourceSkipped],
   );
 }

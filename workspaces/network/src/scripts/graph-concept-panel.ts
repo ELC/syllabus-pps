@@ -66,8 +66,8 @@ function blockDisplayText(block: ConceptBlock): string {
 function createSvgRoot(): SVGSVGElement {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("width", "20");
-  svg.setAttribute("height", "20");
+  svg.setAttribute("width", "28");
+  svg.setAttribute("height", "28");
   svg.setAttribute("focusable", "false");
   svg.classList.add("graph__concept-note-icon");
   return svg;
@@ -80,11 +80,7 @@ function appendFilledPath(svg: SVGSVGElement, pathData: string): void {
   svg.appendChild(path);
 }
 
-function createResourceIcon(kind: PanelResourceKind): HTMLElement {
-  const badge = document.createElement("span");
-  badge.className = `graph__concept-note-badge graph__concept-note-badge--${kind}`;
-  badge.setAttribute("aria-hidden", "true");
-
+function createResourceIconSvg(kind: PanelResourceKind): SVGSVGElement {
   const svg = createSvgRoot();
 
   switch (kind) {
@@ -142,8 +138,28 @@ function createResourceIcon(kind: PanelResourceKind): HTMLElement {
       break;
   }
 
-  badge.appendChild(svg);
-  return badge;
+  return svg;
+}
+
+function createResourceMark(kind: PanelResourceKind): HTMLElement {
+  const mark = document.createElement("span");
+  mark.className = `graph__concept-note-mark graph__concept-note-mark--${kind}`;
+  mark.setAttribute("aria-hidden", "true");
+  mark.appendChild(createResourceIconSvg(kind));
+  return mark;
+}
+
+function appendResourceLayout(
+  container: HTMLElement,
+  kind: PanelResourceKind,
+  body: HTMLElement,
+): void {
+  container.append(createResourceMark(kind));
+
+  const copy = document.createElement("span");
+  copy.className = "graph__concept-note-copy";
+  copy.append(body);
+  container.append(copy);
 }
 
 function renderConceptNote(block: ConceptBlock): HTMLElement {
@@ -153,14 +169,14 @@ function renderConceptNote(block: ConceptBlock): HTMLElement {
   const primaryUrl = primaryBlockUrl(block);
   const resourceKind = classifyResourceKind(block);
   const resolvedTitle = block.citations?.[0]?.resolved?.title;
-  const body = document.createElement("div");
+  const body = document.createElement("span");
   body.className = "graph__concept-note-body";
   body.textContent = blockDisplayText(block);
 
   if (!primaryUrl) {
     const content = document.createElement("div");
     content.className = "graph__concept-note-static";
-    content.append(createResourceIcon(resourceKind), body);
+    appendResourceLayout(content, resourceKind, body);
     item.appendChild(content);
     return item;
   }
@@ -173,7 +189,7 @@ function renderConceptNote(block: ConceptBlock): HTMLElement {
   link.title = resolvedTitle
     ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
     : `${panelResourceLabels[resourceKind]}: ${primaryUrl}`;
-  link.append(createResourceIcon(resourceKind), body);
+  appendResourceLayout(link, resourceKind, body);
   item.appendChild(link);
   return item;
 }

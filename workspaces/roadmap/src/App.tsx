@@ -60,8 +60,11 @@ export function App({ dataUrl }: AppProps) {
     () => ({
       resourceStatusFor: (slug, line) =>
         progressRef.current?.resourceStatusFor(slug, line) ?? "pending",
-      cycleResource: (slug, line) => {
-        progressRef.current?.cycleResource(slug, line);
+      toggleResourceDone: (slug, line) => {
+        progressRef.current?.toggleResourceDone(slug, line);
+      },
+      toggleResourceSkipped: (slug, line) => {
+        progressRef.current?.toggleResourceSkipped(slug, line);
       },
     }),
     [],

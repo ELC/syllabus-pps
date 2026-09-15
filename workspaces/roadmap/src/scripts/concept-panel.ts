@@ -37,7 +37,8 @@ export interface ConceptPage {
 
 export interface ConceptPanelProgress {
   resourceStatusFor: (slug: string, line: number) => RoadmapStatus;
-  cycleResource: (slug: string, line: number) => void;
+  toggleResourceDone: (slug: string, line: number) => void;
+  toggleResourceSkipped: (slug: string, line: number) => void;
 }
 
 function parseGeneratedPayload<T>(content: string): T {
@@ -73,8 +74,8 @@ function blockDisplayText(block: ConceptBlock): string {
 function createSvgRoot(): SVGSVGElement {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("width", "20");
-  svg.setAttribute("height", "20");
+  svg.setAttribute("width", "28");
+  svg.setAttribute("height", "28");
   svg.setAttribute("focusable", "false");
   svg.classList.add("graph__concept-note-icon");
   return svg;
@@ -87,11 +88,7 @@ function appendFilledPath(svg: SVGSVGElement, pathData: string): void {
   svg.appendChild(path);
 }
 
-function createResourceIcon(kind: PanelResourceKind): HTMLElement {
-  const badge = document.createElement("span");
-  badge.className = `graph__concept-note-badge graph__concept-note-badge--${kind}`;
-  badge.setAttribute("aria-hidden", "true");
-
+function createResourceIconSvg(kind: PanelResourceKind): SVGSVGElement {
   const svg = createSvgRoot();
 
   switch (kind) {
@@ -149,8 +146,83 @@ function createResourceIcon(kind: PanelResourceKind): HTMLElement {
       break;
   }
 
-  badge.appendChild(svg);
-  return badge;
+  return svg;
+}
+
+function createResourceMark(kind: PanelResourceKind): HTMLElement {
+  const mark = document.createElement("span");
+  mark.className = `graph__concept-note-mark graph__concept-note-mark--${kind}`;
+  mark.setAttribute("aria-hidden", "true");
+  mark.appendChild(createResourceIconSvg(kind));
+  return mark;
+}
+
+function appendResourceLayout(
+  container: HTMLElement,
+  kind: PanelResourceKind,
+  body: HTMLElement,
+  statusGlyph?: HTMLElement,
+): void {
+  container.append(createResourceMark(kind));
+
+  const copy = document.createElement("span");
+  copy.className = "graph__concept-note-copy";
+  copy.append(body);
+  if (statusGlyph) {
+    copy.append(statusGlyph);
+  }
+  container.append(copy);
+}
+
+function createOmitIcon(): SVGSVGElement {
+  const svg = createSvgRoot();
+  svg.classList.add("graph__concept-note-omit-icon");
+
+  const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  circle.setAttribute("cx", "12");
+  circle.setAttribute("cy", "12");
+  circle.setAttribute("r", "8.25");
+  circle.setAttribute("fill", "none");
+  circle.setAttribute("stroke", "currentColor");
+  circle.setAttribute("stroke-width", "1.75");
+  svg.appendChild(circle);
+
+  const slash = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  slash.setAttribute("d", "M7.5 16.5 16.5 7.5");
+  slash.setAttribute("fill", "none");
+  slash.setAttribute("stroke", "currentColor");
+  slash.setAttribute("stroke-width", "1.75");
+  slash.setAttribute("stroke-linecap", "round");
+  svg.appendChild(slash);
+
+  return svg;
+}
+
+function createOmitButton(
+  block: ConceptBlock,
+  slug: string,
+  status: RoadmapStatus,
+  progress: ConceptPanelProgress,
+): HTMLButtonElement {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = [
+    "graph__concept-note-omit",
+    status === "skipped" ? "graph__concept-note-omit--active" : "",
+  ].join(" ");
+  button.title = status === "skipped" ? "Quitar omisión" : "Omitir recurso";
+  button.setAttribute(
+    "aria-label",
+    status === "skipped"
+      ? "Quitar omisión del recurso"
+      : "Omitir recurso",
+  );
+  button.appendChild(createOmitIcon());
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    progress.toggleResourceSkipped(slug, block.line);
+  });
+  return button;
 }
 
 function createExternalLinkIcon(): HTMLAnchorElement {
@@ -182,7 +254,7 @@ function renderConceptNote(
   const primaryUrl = primaryBlockUrl(block);
   const resourceKind = classifyResourceKind(block);
   const resolvedTitle = block.citations?.[0]?.resolved?.title;
-  const body = document.createElement("div");
+  const body = document.createElement("span");
   body.className = "graph__concept-note-body";
   body.textContent = blockDisplayText(block);
 
@@ -190,7 +262,7 @@ function renderConceptNote(
     if (!primaryUrl) {
       const content = document.createElement("div");
       content.className = "graph__concept-note-static";
-      content.append(createResourceIcon(resourceKind), body);
+      appendResourceLayout(content, resourceKind, body);
       item.appendChild(content);
       return item;
     }
@@ -203,49 +275,67 @@ function renderConceptNote(
     link.title = resolvedTitle
       ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
       : `${panelResourceLabels[resourceKind]}: ${primaryUrl}`;
-    link.append(createResourceIcon(resourceKind), body);
+    appendResourceLayout(link, resourceKind, body);
     item.appendChild(link);
     return item;
   }
 
   const status = progress.resourceStatusFor(slug, block.line);
+  const card = document.createElement("div");
+  card.className = [
+    "graph__concept-note-card",
+    `graph__concept-note-card--${status}`,
+  ].join(" ");
+
+  card.appendChild(createResourceMark(resourceKind));
+
   const action = document.createElement("button");
   action.type = "button";
-  action.className = [
-    "graph__concept-note-action",
-    `graph__concept-note-action--${status}`,
-  ].join(" ");
-  action.title = `${ROADMAP_STATUS_LABELS[status]} — tocá para cambiar`;
+  action.className = "graph__concept-note-action";
+  action.title =
+    status === "done"
+      ? "Marcar como pendiente"
+      : status === "skipped"
+        ? "Marcar como hecho"
+        : "Marcar como hecho";
   action.setAttribute(
     "aria-label",
-    `${blockDisplayText(block) || resolvedTitle || "Recurso"}: ${ROADMAP_STATUS_LABELS[status]}. Cambiar estado`,
+    `${blockDisplayText(block) || resolvedTitle || "Recurso"}: ${ROADMAP_STATUS_LABELS[status]}. ${
+      status === "done" ? "Marcar como pendiente" : "Marcar como hecho"
+    }`,
   );
-  action.append(createResourceIcon(resourceKind), body);
 
   const statusGlyph = document.createElement("span");
   statusGlyph.className = "graph__concept-note-status";
   statusGlyph.setAttribute("aria-hidden", "true");
-  statusGlyph.textContent = status === "done" ? "✓" : status === "skipped" ? "✕" : "";
-  action.appendChild(statusGlyph);
+  statusGlyph.textContent = status === "done" ? "✓" : "";
+
+  const copy = document.createElement("span");
+  copy.className = "graph__concept-note-copy";
+  copy.append(body, statusGlyph);
+  action.appendChild(copy);
 
   action.addEventListener("click", () => {
-    progress.cycleResource(slug, block.line);
+    progress.toggleResourceDone(slug, block.line);
   });
 
+  const rail = document.createElement("div");
+  rail.className = "graph__concept-note-rail";
+
   if (primaryUrl) {
-    const row = document.createElement("div");
-    row.className = "graph__concept-note-row";
     const openLink = createExternalLinkIcon();
     openLink.href = primaryUrl;
     openLink.title = resolvedTitle
       ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
       : `${panelResourceLabels[resourceKind]}: ${primaryUrl}`;
-    row.append(action, openLink);
-    item.appendChild(row);
-    return item;
+    rail.appendChild(openLink);
+  } else {
+    rail.classList.add("graph__concept-note-rail--omit-only");
   }
 
-  item.appendChild(action);
+  rail.appendChild(createOmitButton(block, slug, status, progress));
+  card.append(action, rail);
+  item.appendChild(card);
   return item;
 }
 
