@@ -7,4 +7,5 @@ kind: course
 - #bases-de-datos-nosql amplía modelos documentales, clave-valor y grafos
 - #teorema-cap guía trade-offs de consistencia y disponibilidad en sistemas distribuidos
 - #data-warehouse consolida datos históricos para análisis
+- #analisis-de-datos-con-power-bi conecta el warehouse con tableros y reportes interactivos para usuarios de negocio
 - #gobernanza-de-datos define calidad, acceso y responsabilidad sobre activos de información
