@@ -25,6 +25,8 @@ export interface RoadmapConceptProgress {
   percent: number;
 }
 
+export type RoadmapCourseProgress = RoadmapConceptProgress;
+
 /** Done over remaining (total minus omitted). All omitted → 0. */
 export function remainingProgressPercent(done: number, total: number, skipped: number): number {
   const remaining = total - skipped;
@@ -75,9 +77,81 @@ export function deriveConceptProgress(
   };
 }
 
+/** A course is completed when every linked concept is completed. */
+export function deriveCourseProgress(
+  conceptTitles: readonly string[],
+  conceptProgressFor: (title: string) => RoadmapConceptProgress,
+): RoadmapCourseProgress {
+  const total = conceptTitles.length;
+  if (total === 0) {
+    return { status: "pending", done: 0, skipped: 0, total: 0, percent: 0 };
+  }
+
+  let done = 0;
+  let skipped = 0;
+
+  for (const title of conceptTitles) {
+    switch (conceptProgressFor(title).status) {
+      case "done":
+        done += 1;
+        break;
+      case "skipped":
+        skipped += 1;
+        break;
+      default:
+        break;
+    }
+  }
+
+  const pending = total - done - skipped;
+
+  if (skipped === total) {
+    return { status: "skipped", done, skipped, total, percent: 0 };
+  }
+
+  if (done === total) {
+    return { status: "done", done, skipped, total, percent: 100 };
+  }
+
+  return {
+    status: "pending",
+    done,
+    skipped,
+    total,
+    percent: remainingProgressPercent(done, total, skipped),
+  };
+}
+
+export function tallyStatuses(
+  titles: readonly string[],
+  statusFor: (title: string) => RoadmapStatus,
+): RoadmapProgressCounts {
+  const tally: RoadmapProgressCounts = {
+    done: 0,
+    skipped: 0,
+    total: titles.length,
+  };
+
+  for (const title of titles) {
+    switch (statusFor(title)) {
+      case "done":
+        tally.done += 1;
+        break;
+      case "skipped":
+        tally.skipped += 1;
+        break;
+      default:
+        break;
+    }
+  }
+
+  return tally;
+}
+
 export interface RoadmapProgress {
   statusFor: (title: string) => RoadmapStatus;
   conceptProgressFor: (title: string) => RoadmapConceptProgress;
+  courseProgressFor: (courseTitle: string) => RoadmapCourseProgress;
   resourceStatusFor: (slug: string, line: number) => RoadmapStatus;
   toggleResourceDone: (slug: string, line: number) => void;
   toggleResourceSkipped: (slug: string, line: number) => void;
@@ -163,6 +237,7 @@ export function useRoadmapProgress(
   careerSlug: string,
   slugByTitle: Map<string, string>,
   resourceLinesBySlug: Map<string, readonly number[]>,
+  courseConceptsByTitle?: Map<string, readonly string[]>,
 ): RoadmapProgress {
   const [store, setStore] = useState<ResourceProgressStore>(readStore);
 
@@ -197,6 +272,14 @@ export function useRoadmapProgress(
   const statusFor = useCallback(
     (title: string): RoadmapStatus => conceptProgressFor(title).status,
     [conceptProgressFor],
+  );
+
+  const courseProgressFor = useCallback(
+    (courseTitle: string): RoadmapCourseProgress => {
+      const concepts = courseConceptsByTitle?.get(courseTitle) ?? [];
+      return deriveCourseProgress(concepts, conceptProgressFor);
+    },
+    [conceptProgressFor, courseConceptsByTitle],
   );
 
   const toggleResourceDone = useCallback(
@@ -263,12 +346,22 @@ export function useRoadmapProgress(
     () => ({
       statusFor,
       conceptProgressFor,
+      courseProgressFor,
       resourceStatusFor,
       toggleResourceDone,
       toggleResourceSkipped,
       reset,
       counts,
     }),
-    [conceptProgressFor, counts, reset, resourceStatusFor, statusFor, toggleResourceDone, toggleResourceSkipped],
+    [
+      conceptProgressFor,
+      counts,
+      courseProgressFor,
+      reset,
+      resourceStatusFor,
+      statusFor,
+      toggleResourceDone,
+      toggleResourceSkipped,
+    ],
   );
 }

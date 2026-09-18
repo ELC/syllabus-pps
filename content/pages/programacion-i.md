@@ -1,6 +1,8 @@
 ---
 title: programación i
 kind: course
+correlativas:
+  - algoritmos y estructuras de datos
 ---
 - #python implementa #algoritmos diseñados en [[algoritmos y estructuras de datos]] con control de flujo, funciones y módulos
 - los entregables de [[análisis de sistemas]] se implementan en #python como producto funcional de cierre del año

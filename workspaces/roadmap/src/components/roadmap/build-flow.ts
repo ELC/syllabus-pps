@@ -23,7 +23,9 @@ import {
   ROADMAP_START_ID,
   STEP_EDGE_OFFSET,
 } from "./constants";
-import type { RoadmapLayout, RoadmapPlacement } from "./layout";
+import { COURSE_YEAR_LABEL_GUTTER } from "./course-layout";
+import type { CourseYearBand, RoadmapLayout, RoadmapPlacement } from "./layout";
+import type { RoadmapYearBandNodeData } from "./RoadmapYearBandNode";
 import type { RoadmapAnchorNodeData } from "./RoadmapAnchorNode";
 import {
   branchEdgeData,
@@ -32,6 +34,7 @@ import {
   type BranchSide,
 } from "./branch-path";
 import type { RoadmapCapstoneNodeData } from "./RoadmapCapstoneNode";
+import type { RoadmapCourseNodeData } from "./RoadmapCourseNode";
 import type { RoadmapTopicNodeData } from "./RoadmapTopicNode";
 
 interface BuildRoadmapFlowOptions {
@@ -39,6 +42,10 @@ interface BuildRoadmapFlowOptions {
   adjacency: RoadmapAdjacency;
   layout: RoadmapLayout;
   isTopicDone: (title: string) => boolean;
+  topicNodeType?: "roadmapTopic" | "roadmapCourse";
+  courseYearsByTitle?: Map<string, string>;
+  /** Draw correlativa prerequisite edges directly between staged course nodes. */
+  courseDagEdges?: boolean;
 }
 
 function isRoadmapTopicId(id: string): boolean {
@@ -123,6 +130,10 @@ function boxCenterX(box: LayoutBox): number {
   return box.x + box.width / 2;
 }
 
+function boxCenterY(box: LayoutBox): number {
+  return box.y + box.height / 2;
+}
+
 function junctionRunwayCenterY(sourceBottom: number, targetTop?: number): number {
   const minimum = sourceBottom + STEP_EDGE_OFFSET;
   if (targetTop === undefined || targetTop <= sourceBottom + STEP_EDGE_OFFSET) {
@@ -201,7 +212,27 @@ function capstoneNode(
 function topicNode(
   placement: RoadmapPlacement,
   state: RoadmapTopicNodeData["state"],
-): Node<RoadmapTopicNodeData> {
+  options: Pick<BuildRoadmapFlowOptions, "topicNodeType" | "courseYearsByTitle">,
+): Node<RoadmapTopicNodeData | RoadmapCourseNodeData> {
+  const nodeType = options.topicNodeType ?? "roadmapTopic";
+
+  if (nodeType === "roadmapCourse") {
+    return {
+      id: placement.title,
+      type: "roadmapCourse",
+      position: { x: placement.x, y: placement.y },
+      width: placement.width,
+      height: placement.height,
+      style: { width: placement.width, height: placement.height },
+      data: {
+        label: capitalizeWords(placement.title),
+        year: options.courseYearsByTitle?.get(placement.title) ?? "",
+        role: placement.role,
+        stage: placement.stage + 1,
+      },
+    };
+  }
+
   return {
     id: placement.title,
     type: "roadmapTopic",
@@ -482,6 +513,183 @@ function junctionNode(id: string, centerX: number, centerY: number): Node {
   };
 }
 
+const COURSE_DAG_EDGE_OFFSET_STEP = 22;
+const COURSE_DAG_ALIGNED_X_THRESHOLD = 12;
+const COURSE_DAG_SAME_BAND_Y_THRESHOLD = 16;
+const COURSE_DAG_CROSS_YEAR_CURVATURE = 0.52;
+const COURSE_DAG_SAME_BAND_CURVATURE = 0.38;
+const COURSE_DAG_VERTICAL_CURVATURE = 0.44;
+
+function nodeCenterX(layout: RoadmapLayout, nodeId: string): number | undefined {
+  const box = resolveNodeBox(nodeId, layout);
+  return box ? boxCenterX(box) : undefined;
+}
+
+function nodeCenterY(layout: RoadmapLayout, nodeId: string): number | undefined {
+  const box = resolveNodeBox(nodeId, layout);
+  return box ? boxCenterY(box) : undefined;
+}
+
+function pickCourseDagHandles(
+  layout: RoadmapLayout,
+  source: string,
+  target: string,
+): { sourceHandle: string; targetHandle: string } {
+  const sourceBox = resolveNodeBox(source, layout);
+  const targetBox = resolveNodeBox(target, layout);
+  if (!sourceBox || !targetBox) {
+    return { sourceHandle: HANDLE_BOTTOM_OUT, targetHandle: HANDLE_TOP_IN };
+  }
+
+  const sameBand = Math.abs(sourceBox.y - targetBox.y) <= COURSE_DAG_SAME_BAND_Y_THRESHOLD;
+  if (!sameBand) {
+    return { sourceHandle: HANDLE_BOTTOM_OUT, targetHandle: HANDLE_TOP_IN };
+  }
+
+  const deltaX = Math.abs(boxCenterX(sourceBox) - boxCenterX(targetBox));
+  if (deltaX <= COURSE_DAG_ALIGNED_X_THRESHOLD) {
+    return { sourceHandle: HANDLE_BOTTOM_OUT, targetHandle: HANDLE_TOP_IN };
+  }
+
+  if (boxCenterX(sourceBox) < boxCenterX(targetBox)) {
+    return { sourceHandle: HANDLE_RIGHT_OUT, targetHandle: HANDLE_LEFT_IN };
+  }
+
+  return { sourceHandle: HANDLE_LEFT_OUT, targetHandle: HANDLE_RIGHT_IN };
+}
+
+function courseDagBezierOptions(
+  layout: RoadmapLayout,
+  link: SpineLink,
+  handles: { sourceHandle: string; targetHandle: string },
+  offset: number,
+): { curvature: number; offset?: number } {
+  const sourceX = nodeCenterX(layout, link.source);
+  const targetX = nodeCenterX(layout, link.target);
+  const sourceY = nodeCenterY(layout, link.source);
+  const targetY = nodeCenterY(layout, link.target);
+
+  const horizontalEdge =
+    handles.sourceHandle === HANDLE_RIGHT_OUT || handles.sourceHandle === HANDLE_LEFT_OUT;
+
+  if (horizontalEdge) {
+    return {
+      curvature: COURSE_DAG_SAME_BAND_CURVATURE,
+      offset: offset || undefined,
+    };
+  }
+
+  if (
+    sourceX === undefined ||
+    targetX === undefined ||
+    sourceY === undefined ||
+    targetY === undefined
+  ) {
+    return { curvature: COURSE_DAG_VERTICAL_CURVATURE, offset: offset || undefined };
+  }
+
+  const deltaX = Math.abs(sourceX - targetX);
+  if (deltaX <= COURSE_DAG_ALIGNED_X_THRESHOLD) {
+    return {
+      curvature: COURSE_DAG_VERTICAL_CURVATURE,
+      offset: offset || undefined,
+    };
+  }
+
+  return {
+    curvature: COURSE_DAG_CROSS_YEAR_CURVATURE,
+    offset: offset || undefined,
+  };
+}
+
+function yearBandNode(band: CourseYearBand, minNodeX: number): Node<RoadmapYearBandNodeData> {
+  return {
+    id: `__year-band__${band.year}`,
+    type: "roadmapYearBand",
+    position: {
+      x: minNodeX - COURSE_YEAR_LABEL_GUTTER,
+      y: band.y - 12,
+    },
+    width: COURSE_YEAR_LABEL_GUTTER - 24,
+    height: band.height + 24,
+    selectable: false,
+    draggable: false,
+    focusable: false,
+    zIndex: -1,
+    data: { label: band.year },
+  };
+}
+
+function emitCourseDagLinks(
+  links: SpineLink[],
+  layout: RoadmapLayout,
+  edges: Edge[],
+  activeSuffix: (source: string, target: string) => string,
+): void {
+  const offsets = new Map<string, number>();
+
+  const bySource = new Map<string, SpineLink[]>();
+  const byTarget = new Map<string, SpineLink[]>();
+  for (const link of links) {
+    bySource.set(link.source, [...(bySource.get(link.source) ?? []), link]);
+    byTarget.set(link.target, [...(byTarget.get(link.target) ?? []), link]);
+  }
+
+  const assignParallelOffsets = (
+    batch: SpineLink[],
+    axis: "source" | "target",
+  ) => {
+    const sorted = [...batch].sort((left, right) => {
+      const leftX =
+        axis === "source"
+          ? (nodeCenterX(layout, left.target) ?? 0)
+          : (nodeCenterX(layout, left.source) ?? 0);
+      const rightX =
+        axis === "source"
+          ? (nodeCenterX(layout, right.target) ?? 0)
+          : (nodeCenterX(layout, right.source) ?? 0);
+      return leftX - rightX || left.target.localeCompare(right.target, "es-AR");
+    });
+
+    const spread = (sorted.length - 1) * COURSE_DAG_EDGE_OFFSET_STEP;
+    sorted.forEach((link, index) => {
+      const key = spineLinkKey(link);
+      const next = index * COURSE_DAG_EDGE_OFFSET_STEP - spread / 2;
+      offsets.set(key, (offsets.get(key) ?? 0) + next);
+    });
+  };
+
+  for (const batch of bySource.values()) {
+    if (batch.length > 1) {
+      assignParallelOffsets(batch, "source");
+    }
+  }
+
+  for (const batch of byTarget.values()) {
+    if (batch.length > 1) {
+      assignParallelOffsets(batch, "target");
+    }
+  }
+
+  for (const link of links) {
+    const offset = offsets.get(spineLinkKey(link)) ?? 0;
+    const handles = pickCourseDagHandles(layout, link.source, link.target);
+    edges.push({
+      id: `${link.source}->${link.target}`,
+      source: link.source,
+      target: link.target,
+      sourceHandle: handles.sourceHandle,
+      targetHandle: handles.targetHandle,
+      className: `roadmap__edge roadmap__edge--spine roadmap__edge--course-dag${activeSuffix(link.source, link.target)}`,
+      focusable: false,
+      interactionWidth: 0,
+      selectable: false,
+      type: "roadmapCourse",
+      pathOptions: courseDagBezierOptions(layout, link, handles, offset),
+    });
+  }
+}
+
 function emitSpineLinks(
   links: SpineLink[],
   layout: RoadmapLayout,
@@ -645,7 +853,11 @@ export function buildRoadmapFlow({
   adjacency,
   layout,
   isTopicDone,
+  topicNodeType,
+  courseYearsByTitle,
+  courseDagEdges = false,
 }: BuildRoadmapFlowOptions): { nodes: Node[]; edges: Edge[] } {
+  const topicNodeOptions = { topicNodeType, courseYearsByTitle };
   const styleSuffix = (source: string, target: string) =>
     edgeStyleSuffix(source, target, isTopicDone);
 
@@ -654,21 +866,33 @@ export function buildRoadmapFlow({
     anchorNode(ROADMAP_END_ID, "end", "Objetivo", layout.end),
   ];
 
+  if (courseDagEdges && layout.courseYearBands) {
+    const minNodeX = Math.min(
+      ...[...layout.placements.values()].map((placement) => placement.x),
+      layout.start.x,
+    );
+    for (const band of layout.courseYearBands) {
+      nodes.push(yearBandNode(band, minNodeX));
+    }
+  }
+
   for (const concept of roadmap.concepts) {
     const placement = layout.placements.get(concept.title);
     if (!placement || (placement.role !== "spine" && placement.role !== "branch")) {
       continue;
     }
 
-    nodes.push(topicNode(placement, "default"));
+    nodes.push(topicNode(placement, "default", topicNodeOptions));
   }
 
-  for (const [id, placement] of layout.placements) {
-    if (placement.role !== "capstone") {
-      continue;
-    }
+  if (topicNodeType !== "roadmapCourse") {
+    for (const [id, placement] of layout.placements) {
+      if (placement.role !== "capstone") {
+        continue;
+      }
 
-    nodes.push(capstoneNode(id, placement, "default"));
+      nodes.push(capstoneNode(id, placement, "default"));
+    }
   }
 
   const edges: Edge[] = [];
@@ -693,6 +917,17 @@ export function buildRoadmapFlow({
 
   for (const [after, capstoneId] of layout.capstoneByAfter) {
     queueSpineLink(after, capstoneId);
+  }
+
+  if (courseDagEdges) {
+    for (const course of roadmap.concepts) {
+      for (const prerequisite of adjacency.prerequisites.get(course.title) ?? []) {
+        queueSpineLink(prerequisite, course.title);
+      }
+    }
+
+    emitCourseDagLinks(spineLinks, layout, edges, styleSuffix);
+    return { nodes, edges };
   }
 
   for (const lane of layout.parallelLanes) {

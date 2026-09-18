@@ -43,13 +43,21 @@ function LegendMarkerIcon({ marker }: { marker: LegendMarker }) {
   }
 }
 
-export function RoadmapLegend() {
+const COURSE_LEGEND: LegendEntry[] = [
+  { marker: { kind: "swatch", key: "course" }, label: "Materia" },
+];
+
+export function RoadmapLegend({ showCourseMarkers = false }: { showCourseMarkers?: boolean }) {
+  const sections = showCourseMarkers
+    ? [[...COURSE_LEGEND, ...LEGEND_SECTIONS[0]!], LEGEND_SECTIONS[1]!]
+    : LEGEND_SECTIONS;
+
   return (
     <details className="roadmap__legend">
       <summary className="roadmap__legend-summary">Referencias</summary>
 
       <div className="roadmap__legend-body">
-        {LEGEND_SECTIONS.map((section, index) => (
+        {sections.map((section, index) => (
           <ul key={index} className="roadmap__legend-group">
             {section.map((entry) => (
               <li key={`${entry.marker.kind}-${entry.marker.key}`} className="roadmap__legend-item">

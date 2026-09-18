@@ -1,0 +1,119 @@
+{
+  "careerSlug": "lds",
+  "grid": {
+    "nodeWidth": 177,
+    "columnGap": 70
+  },
+  "courses": {
+    "algebra": {
+      "slug": "algebra-y-geometria"
+    },
+    "antropologia": {
+      "slug": "antropologia"
+    },
+    "filosofia": {
+      "slug": "filosofia"
+    },
+    "storytelling": {
+      "slug": "tecnicas-de-comunicacion-y-storytelling"
+    },
+    "algoritmos": {
+      "slug": "algoritmos-y-estructuras-de-datos"
+    },
+    "analisis": {
+      "slug": "analisis-de-sistemas"
+    },
+    "bases-datos": {
+      "slug": "bases-de-datos"
+    },
+    "am1": {
+      "slug": "analisis-matematico-i"
+    },
+    "pi": {
+      "slug": "programacion-i"
+    },
+    "est1": {
+      "slug": "estadistica-i"
+    },
+    "discreta": {
+      "slug": "matematica-discreta"
+    },
+    "piii": {
+      "slug": "programacion-iii-web-frontend"
+    },
+    "pii": {
+      "slug": "programacion-ii-web-backend"
+    },
+    "devops": {
+      "slug": "introduccion-a-devops"
+    },
+    "gestion": {
+      "slug": "gestion-de-proyectos"
+    },
+    "ux": {
+      "slug": "user-experience"
+    },
+    "etica": {
+      "slug": "etica-general"
+    },
+    "proyecto": {
+      "slug": "proyecto-laboratorio"
+    },
+    "am2": {
+      "slug": "analisis-matematico-ii"
+    },
+    "calculo-num": {
+      "slug": "calculo-numerico-y-simulacion"
+    },
+    "est2": {
+      "slug": "estadistica-ii"
+    },
+    "algoritmos-avanzados": {
+      "slug": "algoritmos-avanzados-y-paradigmas-de-programacion"
+    },
+    "pia": {
+      "slug": "programacion-asistida-por-ia-y-agentes"
+    },
+    "arquitectura": {
+      "slug": "arquitectura-e-ingenieria-del-software"
+    },
+    "product-dev": {
+      "slug": "product-development"
+    },
+    "datos": {
+      "slug": "ingenieria-de-datos"
+    },
+    "teo1": {
+      "slug": "teologia-i"
+    },
+    "teo2": {
+      "slug": "teologia-ii"
+    }
+  },
+  "years": {
+    "año 1": {
+      "templateAreas": [
+        "filosofia algebra storytelling algoritmos . analisis antropologia .",
+        "am1 . . pi . . . bases-datos"
+      ],
+      "templateRows": [104],
+      "yearGap": 150
+    },
+    "año 2": {
+      "templateAreas": [
+        ". discreta devops pii piii gestion ux",
+        "est1 etica . . proyecto . . ."
+      ],
+      "templateRows": [104],
+      "yearGap": 150
+    },
+    "año 3": {
+      "templateAreas": [
+        ". . am2 arquitectura pia algoritmos-avanzados product-dev datos",
+        "est2 calculo-num . . . . teo1 teo2 .",
+        ". . . . . . . ."
+      ],
+      "templateRows": [104, 104]
+    }
+  }
+}

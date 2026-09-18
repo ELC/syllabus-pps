@@ -15,7 +15,7 @@ export interface DegreeRoadmap {
   edges: GraphEdge[];
 }
 
-function reachableFromCareer(graph: CurriculumGraph, careerTitle: string): Set<string> {
+export function reachableFromCareer(graph: CurriculumGraph, careerTitle: string): Set<string> {
   const { pagesByTitle } = buildCurriculumIndexes(graph);
   const career = pagesByTitle.get(normalizeTitle(careerTitle));
   if (!career || career.kind !== "career") {

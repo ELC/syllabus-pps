@@ -1,6 +1,8 @@
 ---
 title: análisis matemático i
 kind: course
+correlativas:
+  - álgebra y geometría
 ---
 - el #pensamiento-matematico extiende [[álgebra y geometría]] hacia funciones, límites y derivadas con rigor formal
 - la #logica introduce lógica formal y razonamiento deductivo que reaparece en [[matemática discreta]]

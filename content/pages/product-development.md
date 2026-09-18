@@ -2,7 +2,6 @@
 title: product development
 kind: course
 correlativas:
-  - análisis de sistemas
   - gestión de proyectos
   - user experience
 ---

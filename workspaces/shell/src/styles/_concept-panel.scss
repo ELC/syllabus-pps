@@ -175,17 +175,41 @@
   }
 
   &__concept-note-card {
+    position: relative;
     grid-template-columns: 1fr 5fr 1.35fr;
     grid-template-rows: minmax(0, 1fr);
     transition:
       border-color 0.15s ease,
       box-shadow 0.15s ease;
 
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      transition:
+        opacity 0.15s ease,
+        background-color 0.15s ease;
+    }
+
+    &:hover:not(&--done)::after {
+      opacity: 1;
+      background: rgba(15, 76, 129, 0.05);
+    }
+
     &--done {
       border-color: var(--austral-graph-concept-base);
 
-      .graph__concept-note-copy {
+      &::after {
+        opacity: 1;
         background: rgba(46, 48, 146, 0.06);
+      }
+
+      .graph__concept-note-copy {
+        background: transparent;
       }
     }
 
@@ -212,12 +236,6 @@
     color: inherit;
     cursor: pointer;
     transition: background-color 0.15s ease;
-
-    &:hover {
-      .graph__concept-note-copy {
-        background: var(--dash-table-head);
-      }
-    }
 
     &:focus-visible {
       outline: 2px solid var(--austral-ing-secondary);

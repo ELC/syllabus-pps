@@ -18,7 +18,7 @@
 
   &__toolbar {
     display: grid;
-    grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: end;
     gap: 0.75rem 1.5rem;
 
@@ -28,10 +28,45 @@
     }
   }
 
+  &__toolbar-selectors {
+    display: grid;
+    grid-template-columns: minmax(7rem, 9.5rem) minmax(6.5rem, 8.5rem);
+    gap: 0.75rem;
+    align-items: end;
+    min-width: 0;
+
+    @media (max-width: 900px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
+  &__back-button {
+    appearance: none;
+    border: 1px solid var(--dash-border);
+    border-radius: 0.5rem;
+    background: var(--dash-surface);
+    color: var(--dash-text);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.55rem 0.75rem;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--austral-ing-secondary);
+      background: var(--austral-celeste-suave);
+    }
+  }
+
   &__degree-field {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    min-width: 0;
+  }
+
+  &__course-field {
+    max-width: 8.5rem;
   }
 
   &__degree-label {
@@ -51,6 +86,16 @@
     font: inherit;
     background: var(--dash-surface);
     color: var(--dash-text);
+    width: 100%;
+    min-width: 0;
+  }
+
+  &__course-select {
+    padding-inline: 0.55rem 1.5rem;
+    font-size: 0.8125rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__toolbar-help,
@@ -149,6 +194,32 @@
   &__controls,
   &__minimap {
     box-shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
+  }
+
+  &__graph-back {
+    margin: 0.75rem;
+
+    .roadmap__back-button {
+      box-shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
+    }
+  }
+
+  &__canvas-panel--empty {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 420px;
+
+    .roadmap__graph-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .roadmap__empty {
+      max-width: 28rem;
+      text-align: center;
+    }
   }
 
   &__legend {
@@ -250,6 +321,11 @@
     border: 1.5px solid var(--austral-ing-secondary);
     background: var(--austral-blanco);
 
+    &--course {
+      border-color: var(--austral-graph-course-base, #d97706);
+      background: rgba(217, 119, 6, 0.16);
+    }
+
     &--spine {
       border-color: var(--austral-azul-primario);
       background: linear-gradient(
@@ -309,6 +385,120 @@
     display: inline-flex;
     font-size: 0.58rem;
     line-height: 1;
+  }
+
+  &__course {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 0.7rem;
+    border: 2px solid var(--austral-graph-course-base, #d97706);
+    background: rgba(217, 119, 6, 0.08);
+    box-shadow: 0 8px 20px rgba(30, 41, 59, 0.08);
+    overflow: hidden;
+    cursor: pointer;
+
+    &--spine {
+      border-color: var(--austral-graph-course-base, #d97706);
+      background: rgba(217, 119, 6, 0.16);
+    }
+
+    &--done {
+      border-color: var(--austral-graph-concept-base);
+      background: var(--austral-graph-concept-base);
+    }
+
+    &--skipped {
+      opacity: 0.6;
+    }
+
+    &--in-progress {
+      background: rgba(217, 119, 6, 0.08);
+    }
+  }
+
+  &__course-progress {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: rgba(217, 119, 6, 0.08);
+  }
+
+  &__course-progress-fill {
+    display: block;
+    height: 100%;
+    background: rgba(217, 119, 6, 0.24);
+    transition: width 0.2s ease;
+  }
+
+  &__course-year {
+    font-family: var(--font-heading);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--dash-muted);
+  }
+
+  &__year-band {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 0.35rem 0.5rem 0 0;
+    border-top: 2px solid rgba(15, 76, 129, 0.12);
+    border-radius: 0.35rem 0 0 0.35rem;
+    background: linear-gradient(
+      90deg,
+      rgba(15, 76, 129, 0.05) 0%,
+      rgba(15, 76, 129, 0) 72%
+    );
+    pointer-events: none;
+  }
+
+  &__year-band-label {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--austral-azul-primario);
+    white-space: nowrap;
+  }
+
+  &__course-label {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-width: 0;
+    color: var(--dash-text);
+
+    &--spine {
+      font-weight: 700;
+    }
+
+    &--done {
+      color: var(--austral-blanco);
+    }
+  }
+
+  &__course-handle {
+    opacity: 0;
+    pointer-events: none;
+    width: 6px;
+    height: 6px;
+    min-width: 0;
+    min-height: 0;
   }
 
   &__topic {
@@ -525,6 +715,11 @@
     &--spine .react-flow__edge-path {
       stroke: var(--austral-azul-primario);
       stroke-width: 3;
+    }
+
+    &--course-dag .react-flow__edge-path {
+      stroke-width: 1.75;
+      stroke-opacity: 0.62;
     }
 
     &--branch .react-flow__edge-path {

@@ -46,8 +46,16 @@ export interface RoadmapTrunkForkLayout {
   mergeInto: string;
 }
 
+export interface CourseYearBand {
+  year: string;
+  y: number;
+  height: number;
+}
+
 export interface RoadmapLayout {
   placements: Map<string, RoadmapPlacement>;
+  /** Visual grouping labels for the course roadmap. */
+  courseYearBands?: CourseYearBand[];
   /** Spine title -> terminal topics hanging off it. */
   attached: Map<string, string[]>;
   /** Parallel lanes from the start, each ordered top to bottom. */
@@ -463,6 +471,20 @@ function laneSpine(
  * Orders the merged spine so every concept sits below its prerequisites, following a dependency
  * chain for as long as there is one before starting the next track.
  */
+export function orderTrunkTitles(
+  candidates: string[],
+  adjacency: RoadmapAdjacency,
+  stageOf: Map<string, number>,
+  finalTitle?: string,
+): string[] {
+  const trunk = orderTrunk(candidates, adjacency, stageOf);
+  if (finalTitle === undefined || !candidates.includes(finalTitle)) {
+    return trunk;
+  }
+
+  return [...trunk.filter((title) => title !== finalTitle), finalTitle];
+}
+
 function orderTrunk(
   candidates: string[],
   adjacency: RoadmapAdjacency,
@@ -1018,10 +1040,16 @@ function placeBranchStack(
  * Lays out parallel lanes at the top that merge into one solid spine. Concepts that other concepts
  * depend on sit on a lane or the spine; terminal concepts hang off the side.
  */
+export interface RoadmapLayoutOptions {
+  /** Course correlativas DAGs keep every node on a lane or the trunk. */
+  disableBranches?: boolean;
+}
+
 export function buildRoadmapLayout(
   roadmap: DegreeRoadmap,
   adjacency: RoadmapAdjacency,
   curation: RoadmapCuration,
+  options: RoadmapLayoutOptions = {},
 ): RoadmapLayout {
   const titles = roadmap.concepts.map((concept) => concept.title);
   if (titles.length === 0) {
@@ -1040,20 +1068,22 @@ export function buildRoadmapLayout(
   const attached = new Map<string, string[]>();
   const ownerOf = new Map<string, string>();
 
-  for (const title of titles) {
-    if (!isTerminal(title)) {
-      continue;
-    }
+  if (!options.disableBranches) {
+    for (const title of titles) {
+      if (!isTerminal(title)) {
+        continue;
+      }
 
-    const [owner] = [...(adjacency.prerequisites.get(title) ?? [])].sort(
-      (left, right) =>
-        (stageOf.get(right) ?? 0) - (stageOf.get(left) ?? 0) ||
-        left.localeCompare(right, "es-AR"),
-    );
+      const [owner] = [...(adjacency.prerequisites.get(title) ?? [])].sort(
+        (left, right) =>
+          (stageOf.get(right) ?? 0) - (stageOf.get(left) ?? 0) ||
+          left.localeCompare(right, "es-AR"),
+      );
 
-    if (owner !== undefined) {
-      ownerOf.set(title, owner);
-      attached.set(owner, [...(attached.get(owner) ?? []), title]);
+      if (owner !== undefined) {
+        ownerOf.set(title, owner);
+        attached.set(owner, [...(attached.get(owner) ?? []), title]);
+      }
     }
   }
 

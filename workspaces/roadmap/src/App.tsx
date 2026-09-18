@@ -35,7 +35,7 @@ export function App({ dataUrl }: AppProps) {
       return;
     }
 
-    const next = { career: url.career, capstone: url.capstone };
+    const next = { career: url.career, course: url.course, capstone: url.capstone };
     writeRoadmapPanelUrl(next);
     panelUrlSyncRef.current?.markApplied(next);
   }, []);
@@ -46,7 +46,7 @@ export function App({ dataUrl }: AppProps) {
       return;
     }
 
-    const next = { career: url.career, concept: url.concept };
+    const next = { career: url.career, course: url.course, concept: url.concept };
     writeRoadmapPanelUrl(next);
     panelUrlSyncRef.current?.markApplied(next);
   }, []);
@@ -112,8 +112,8 @@ export function App({ dataUrl }: AppProps) {
       <header className="dashboard__header">
         <h1 className="dashboard__header-title">Degree roadmaps</h1>
         <p className="dashboard__header-lead dashboard__header-lead--wide">
-          Self-paced learning paths built from concept prerequisites. Follow the main track from top
-          to bottom, branch out into the related topics of each stage, and mark resources as you go.
+          Explore the curriculum by course, organized by correlativas. Open a course to see its
+          concept sub-roadmap and track resource progress as you study.
         </p>
       </header>
 
@@ -121,7 +121,6 @@ export function App({ dataUrl }: AppProps) {
         <RoadmapApp
           dataUrl={resolvedUrl}
           onConceptOpen={handleConceptOpen}
-          onCapstoneOpen={handleCapstoneOpen}
           onClosePanels={handleClosePanels}
           onProgressChange={handleProgressChange}
           onRegisterPanelUrlSync={(sync) => {

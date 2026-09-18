@@ -2,7 +2,6 @@
 title: proyecto laboratorio
 kind: course
 correlativas:
-  - programación i
   - programación ii - web backend
   - programación iii - web frontend
 ---
