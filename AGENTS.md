@@ -74,7 +74,7 @@ kind: concept
 ```
 
 - Slug filenames on disk; `title` is the display name and wikilink target.
-- `kind` is required for `career`, `year`, `course`, and `concept`.
+- `kind` is required for `degree`, `year`, `course`, and `concept`.
 - Wikilinks resolve by title, then slug, then normalized match.
 
 ## PPS Analytics And DAC

@@ -17,7 +17,7 @@ export interface GraphUrlState {
 
 function emptyFilterSlugs(): Record<KindFilterKey, string> {
   return {
-    career: "",
+    degree: "",
     year: "",
     course: "",
     concept: "",

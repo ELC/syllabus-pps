@@ -1,6 +1,6 @@
 ---
 title: LDS
-kind: career
+kind: degree
 ---
 - [[LDS]]
 - [[algoritmos y estructuras de datos]]

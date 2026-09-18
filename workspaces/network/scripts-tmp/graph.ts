@@ -77,7 +77,7 @@ interface GraphViewState {
 
 function createKindFilters(): KindFilters {
   return {
-    career: "",
+    degree: "",
     year: "",
     course: "",
     concept: "",
@@ -503,7 +503,7 @@ function updateExpansionListUI(
 
 function buildKindFilterOptions(cy: cytoscape.Core): Record<KindFilterKey, cytoscape.NodeSingular[]> {
   const options: Record<KindFilterKey, cytoscape.NodeSingular[]> = {
-    career: [],
+    degree: [],
     year: [],
     course: [],
     concept: [],
@@ -772,11 +772,11 @@ function edgeIdealLength(edge: cytoscape.EdgeSingular): number {
     return 88;
   }
 
-  if (kinds.has("career") && kinds.has("year")) {
+  if (kinds.has("degree") && kinds.has("year")) {
     return 72;
   }
 
-  if (kinds.has("career") && kinds.has("course")) {
+  if (kinds.has("degree") && kinds.has("course")) {
     return 96;
   }
 
@@ -992,7 +992,7 @@ function compareNodes(left: string, right: string): number {
 }
 
 function structuralKindRank(kind: string | undefined): number | undefined {
-  if (kind === "career") {
+  if (kind === "degree") {
     return 0;
   }
 
@@ -1195,9 +1195,9 @@ export async function mountGraph(
         },
       },
       {
-        selector: "node[kind = 'career']",
+        selector: "node[kind = 'degree']",
         style: {
-          "border-color": kindStyle("career").border,
+          "border-color": kindStyle("degree").border,
         },
       },
       {

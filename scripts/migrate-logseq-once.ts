@@ -11,7 +11,7 @@ import { createLoadedConfig, slugifyTitle } from "@pps/core";
 function inferKind(title: string, config: ReturnType<typeof createLoadedConfig>): string | undefined {
   const normalized = title.trim().toLocaleLowerCase("es-AR");
   if (normalized === "lds") {
-    return "career";
+    return "degree";
   }
   if (config.expectedYearTitles.has(normalized)) {
     return "year";

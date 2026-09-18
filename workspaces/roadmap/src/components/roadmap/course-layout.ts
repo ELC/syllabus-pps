@@ -577,7 +577,7 @@ export function buildStagedCourseRoadmapLayout(
 
   orderCourseRowsByBarycenter(rows, adjacency);
   const groupByYear = shouldGroupCoursesByYear(titles, yearsByTitle);
-  const courseCuration = getCourseRoadmapCuration(roadmap.careerSlug);
+  const courseCuration = getCourseRoadmapCuration(roadmap.degreeSlug);
   const useCuratedGrid =
     groupByYear &&
     yearsByTitle &&

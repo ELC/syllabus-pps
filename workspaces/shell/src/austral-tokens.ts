@@ -59,7 +59,7 @@ export function shade(hex: string, baseWeight: number): string {
 
 /** Okabe–Ito base hues (colorblind-safe). Borders and edges derive from these. */
 const GRAPH_KIND_BASES = [
-  { kind: "career", label: "Carrera", base: AUSTRAL.azulPrimario },
+  { kind: "degree", label: "Carrera", base: AUSTRAL.azulPrimario },
   { kind: "year", label: "Año", base: "#9D4470" },
   { kind: "course", label: "Materia", base: "#D97706" },
   { kind: "concept", label: "Concepto", base: "#009E73" },

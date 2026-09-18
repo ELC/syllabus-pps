@@ -5,12 +5,12 @@ import type { PageKind } from "@pps/core";
 
 describe("canonicalStructuralEdgeDirection", () => {
   const kinds = new Map<string, PageKind>([
-    ["LDS", "career"],
+    ["LDS", "degree"],
     ["año 1", "year"],
     ["bases de datos", "course"],
   ]);
 
-  it("keeps career to year", () => {
+  it("keeps degree to year", () => {
     expect(canonicalStructuralEdgeDirection("LDS", "año 1", kinds)).toEqual({
       source: "LDS",
       target: "año 1",
@@ -31,7 +31,7 @@ describe("canonicalStructuralEdgeDirection", () => {
     });
   });
 
-  it("reverses year to career", () => {
+  it("reverses year to degree", () => {
     expect(canonicalStructuralEdgeDirection("año 1", "LDS", kinds)).toEqual({
       source: "LDS",
       target: "año 1",

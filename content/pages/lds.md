@@ -1,6 +1,6 @@
 ---
 title: LDS
-kind: career
+kind: degree
 ---
 - [[año 1]]
 - [[año 2]]

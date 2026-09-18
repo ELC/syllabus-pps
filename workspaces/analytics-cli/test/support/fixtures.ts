@@ -26,7 +26,7 @@ export const expectedPageKinds: Array<[string, string]> = [
   ["algoritmos", "concept"],
   ["algoritmos y estructuras de datos", "course"],
   ["año 1", "year"],
-  ["LDS", "career"],
+  ["LDS", "degree"],
   ["programación i", "course"],
 ];
 

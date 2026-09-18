@@ -35,7 +35,7 @@ export function App({ dataUrl }: AppProps) {
       return;
     }
 
-    const next = { career: url.career, course: url.course, capstone: url.capstone };
+    const next = { degree: url.degree, course: url.course, capstone: url.capstone };
     writeRoadmapPanelUrl(next);
     panelUrlSyncRef.current?.markApplied(next);
   }, []);
@@ -46,7 +46,7 @@ export function App({ dataUrl }: AppProps) {
       return;
     }
 
-    const next = { career: url.career, course: url.course, concept: url.concept };
+    const next = { degree: url.degree, course: url.course, concept: url.concept };
     writeRoadmapPanelUrl(next);
     panelUrlSyncRef.current?.markApplied(next);
   }, []);

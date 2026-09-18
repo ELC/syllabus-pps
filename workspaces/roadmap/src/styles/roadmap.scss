@@ -222,171 +222,6 @@
     }
   }
 
-  &__legend {
-    width: 100%;
-    border: 1px solid var(--dash-border);
-    border-radius: 0.5rem;
-    background: var(--dash-surface);
-    padding: 0.25rem 0.55rem;
-    font-size: 0.68rem;
-    color: var(--dash-text);
-
-    &[open] .roadmap__legend-summary::after {
-      transform: rotate(180deg);
-    }
-  }
-
-  &__legend-summary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-family: var(--font-heading);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    color: var(--dash-muted);
-    cursor: pointer;
-    list-style: none;
-
-    &::-webkit-details-marker {
-      display: none;
-    }
-
-    &::after {
-      content: "▾";
-      font-size: 0.62rem;
-      line-height: 1;
-      transition: transform 120ms ease-out;
-    }
-  }
-
-  &__legend-body {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: center;
-    gap: 0.65rem;
-    margin-top: 0.35rem;
-    padding-top: 0.35rem;
-    border-top: 1px solid var(--dash-border);
-
-    @media (max-width: 900px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  &__legend-group {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem 0.55rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    & + & {
-      padding-left: 0.65rem;
-      border-left: 1px solid var(--dash-border);
-
-      @media (max-width: 900px) {
-        padding-left: 0;
-        padding-top: 0.35rem;
-        border-left: 0;
-        border-top: 1px solid var(--dash-border);
-      }
-    }
-
-    @media (max-width: 900px) {
-      justify-content: flex-start;
-    }
-  }
-
-  &__legend-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    line-height: 1.2;
-    white-space: nowrap;
-
-    @media (max-width: 900px) {
-      white-space: normal;
-    }
-  }
-
-  &__legend-swatch {
-    flex: none;
-    width: 0.95rem;
-    height: 0.62rem;
-    border-radius: 0.2rem;
-    border: 1.5px solid var(--austral-ing-secondary);
-    background: var(--austral-blanco);
-
-    &--course {
-      border-color: var(--austral-graph-course-base, #d97706);
-      background: rgba(217, 119, 6, 0.16);
-    }
-
-    &--spine {
-      border-color: var(--austral-azul-primario);
-      background: linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--austral-graph-concept-base) 34%, var(--austral-celeste-suave)) 0 55%,
-        var(--austral-celeste-suave) 55% 100%
-      );
-    }
-
-    &--capstone {
-      border: 2px solid var(--austral-graph-course-base);
-      background: var(--austral-graph-course-swatch);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    }
-
-    &--done {
-      border-color: var(--austral-graph-concept-base);
-      background: var(--austral-graph-concept-base);
-    }
-  }
-
-  &__legend-line {
-    flex: none;
-    width: 1rem;
-    border-top: 2px solid var(--austral-azul-primario);
-
-    &--branch {
-      border-color: var(--austral-ing-secondary);
-    }
-  }
-
-  &__legend-check {
-    flex: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 0.95rem;
-    height: 0.95rem;
-    border: 1.5px solid var(--dash-border);
-    border-radius: 0.2rem;
-    background: var(--austral-blanco);
-    color: var(--dash-text);
-
-    &--done {
-      border-color: var(--austral-graph-concept-base);
-      background: var(--austral-graph-concept-base);
-      color: var(--austral-blanco);
-    }
-
-    &--skipped {
-      border-color: var(--austral-muted);
-      color: var(--austral-muted);
-    }
-  }
-
-  &__legend-check-glyph {
-    display: inline-flex;
-    font-size: 0.58rem;
-    line-height: 1;
-  }
-
   &__course {
     position: relative;
     width: 100%;
@@ -413,6 +248,11 @@
     &--done {
       border-color: var(--austral-graph-concept-base);
       background: var(--austral-graph-concept-base);
+
+      .roadmap__course-year {
+        color: var(--austral-blanco);
+        opacity: 0.88;
+      }
     }
 
     &--skipped {

@@ -14,8 +14,8 @@ function courseRoadmap(
   courses: Array<{ title: string; year?: string; correlativas?: string[] }>,
 ): DegreeRoadmap {
   return {
-    career: "LDS",
-    careerSlug: "test",
+    degree: "LDS",
+    degreeSlug: "test",
     concepts: courses.map((course) => ({
       title: course.title,
       slug: course.title,
@@ -220,8 +220,8 @@ describe("buildStagedCourseRoadmapLayout", () => {
             ? "programacion-i"
             : "algoritmos-y-estructuras-de-datos";
     }
-    roadmap.careerSlug = "lds";
-    roadmap.career = "LDS";
+    roadmap.degreeSlug = "lds";
+    roadmap.degree = "LDS";
 
     const adjacency = buildAdjacency(roadmap);
     const yearsByTitle = new Map([

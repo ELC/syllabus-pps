@@ -23,7 +23,7 @@ export interface CourseGridMetrics {
 }
 
 export interface CourseRoadmapCuration {
-  careerSlug: string;
+  degreeSlug: string;
   /** Grid sizing for course nodes and horizontal spacing. */
   grid?: CourseGridMetrics;
   courses: Record<string, CourseCurationEntry>;
@@ -53,11 +53,11 @@ function loadCourseCurations(): Map<string, CourseRoadmapCuration> {
   const curations = new Map<string, CourseRoadmapCuration>();
 
   for (const curation of Object.values(curatedModules)) {
-    curations.set(curation.careerSlug, curation);
+    curations.set(curation.degreeSlug, curation);
   }
 
-  if (!curations.has(ldsCourseCuration.careerSlug)) {
-    curations.set(ldsCourseCuration.careerSlug, ldsCourseCuration);
+  if (!curations.has(ldsCourseCuration.degreeSlug)) {
+    curations.set(ldsCourseCuration.degreeSlug, ldsCourseCuration);
   }
 
   return curations;
@@ -66,9 +66,9 @@ function loadCourseCurations(): Map<string, CourseRoadmapCuration> {
 const curationsBySlug = loadCourseCurations();
 
 export function getCourseRoadmapCuration(
-  careerSlug: string,
+  degreeSlug: string,
 ): CourseRoadmapCuration | null {
-  return curationsBySlug.get(careerSlug) ?? null;
+  return curationsBySlug.get(degreeSlug) ?? null;
 }
 
 export function hasCuratedCourseGrid(curation: CourseRoadmapCuration | null): boolean {

@@ -1,5 +1,5 @@
 export const pageKinds = [
-  "career",
+  "degree",
   "year",
   "course",
   "concept",

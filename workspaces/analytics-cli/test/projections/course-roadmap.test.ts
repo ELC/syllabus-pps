@@ -17,7 +17,7 @@ describe("projectCourseRoadmap", () => {
           path: "lds.md",
           content: `---
 title: LDS
-kind: career
+kind: degree
 ---
 - [[año 1]]
 `,
@@ -108,7 +108,7 @@ dependsOn: []
           path: "lds.md",
           content: `---
 title: LDS
-kind: career
+kind: degree
 ---
 - [[programación i]]
 `,

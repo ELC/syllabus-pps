@@ -9,21 +9,21 @@ export interface DegreeRoadmapConcept {
 }
 
 export interface DegreeRoadmap {
-  career: string;
-  careerSlug: string;
+  degree: string;
+  degreeSlug: string;
   concepts: DegreeRoadmapConcept[];
   edges: GraphEdge[];
 }
 
-export function reachableFromCareer(graph: CurriculumGraph, careerTitle: string): Set<string> {
+export function reachableFromDegree(graph: CurriculumGraph, degreeTitle: string): Set<string> {
   const { pagesByTitle } = buildCurriculumIndexes(graph);
-  const career = pagesByTitle.get(normalizeTitle(careerTitle));
-  if (!career || career.kind !== "career") {
+  const degreePage = pagesByTitle.get(normalizeTitle(degreeTitle));
+  if (!degreePage || degreePage.kind !== "degree") {
     return new Set();
   }
 
-  const reachable = new Set<string>([career.title]);
-  const queue = [career.title];
+  const reachable = new Set<string>([degreePage.title]);
+  const queue = [degreePage.title];
 
   while (queue.length > 0) {
     const current = queue.shift();
@@ -60,20 +60,20 @@ function conceptsForDegree(reachable: Set<string>, graph: CurriculumGraph): Zett
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
 }
 
-export function listCareerPages(graph: CurriculumGraph): ZettelPage[] {
+export function listDegreePages(graph: CurriculumGraph): ZettelPage[] {
   return graph.pages
-    .filter((page) => page.kind === "career")
+    .filter((page) => page.kind === "degree")
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
 }
 
-export function projectDegreeRoadmap(graph: CurriculumGraph, careerTitle: string): DegreeRoadmap | null {
+export function projectDegreeRoadmap(graph: CurriculumGraph, degreeTitle: string): DegreeRoadmap | null {
   const { pagesByTitle } = buildCurriculumIndexes(graph);
-  const career = pagesByTitle.get(normalizeTitle(careerTitle));
-  if (!career || career.kind !== "career") {
+  const degreePage = pagesByTitle.get(normalizeTitle(degreeTitle));
+  if (!degreePage || degreePage.kind !== "degree") {
     return null;
   }
 
-  const reachable = reachableFromCareer(graph, career.title);
+  const reachable = reachableFromDegree(graph, degreePage.title);
   const concepts = conceptsForDegree(reachable, graph);
   const conceptTitles = new Set(concepts.map((page) => page.title));
 
@@ -85,8 +85,8 @@ export function projectDegreeRoadmap(graph: CurriculumGraph, careerTitle: string
   );
 
   return {
-    career: career.title,
-    careerSlug: career.slug,
+    degree: degreePage.title,
+    degreeSlug: degreePage.slug,
     concepts: concepts.map((page) => ({
       title: page.title,
       slug: page.slug,
@@ -101,14 +101,14 @@ export function projectDegreeRoadmap(graph: CurriculumGraph, careerTitle: string
 }
 
 export function projectAllDegreeRoadmaps(graph: CurriculumGraph): DegreeRoadmap[] {
-  return listCareerPages(graph)
-    .map((career) => projectDegreeRoadmap(graph, career.title))
+  return listDegreePages(graph)
+    .map((degreePage) => projectDegreeRoadmap(graph, degreePage.title))
     .filter((roadmap): roadmap is DegreeRoadmap => roadmap !== null);
 }
 
 export function kindRankForRoadmap(kind: PageKind): number {
   switch (kind) {
-    case "career":
+    case "degree":
       return 0;
     case "year":
       return 1;

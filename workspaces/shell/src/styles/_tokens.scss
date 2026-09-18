@@ -41,17 +41,17 @@
   --austral-ing-secondary: #7eb8e8;
   --austral-ing-tertiary: #a8d0f0;
 
-  --austral-graph-career-base: #2e3092;
+  --austral-graph-degree-base: #2e3092;
   --austral-graph-year-base: #9d4470;
   --austral-graph-course-base: #d97706;
   --austral-graph-concept-base: #009e73;
   --austral-graph-node-default-base: #64748b;
-  --austral-graph-career-border: var(--austral-graph-career-base);
+  --austral-graph-degree-border: var(--austral-graph-degree-base);
   --austral-graph-year-border: var(--austral-graph-year-base);
   --austral-graph-course-border: var(--austral-graph-course-base);
   --austral-graph-concept-border: var(--austral-graph-concept-base);
   --austral-graph-node-default-border: var(--austral-graph-node-default-base);
-  --austral-graph-career-swatch: color-mix(in srgb, var(--austral-graph-career-base) 22%, white);
+  --austral-graph-degree-swatch: color-mix(in srgb, var(--austral-graph-degree-base) 22%, white);
   --austral-graph-year-swatch: color-mix(in srgb, var(--austral-graph-year-base) 22%, white);
   --austral-graph-course-swatch: color-mix(in srgb, var(--austral-graph-course-base) 22%, white);
   --austral-graph-concept-swatch: color-mix(in srgb, var(--austral-graph-concept-base) 22%, white);

@@ -32,7 +32,7 @@ describe("resolveCuratedGridMetrics", () => {
     expect(
       resolveCuratedGridMetrics(
         {
-          careerSlug: "lds",
+          degreeSlug: "lds",
           grid: { nodeWidth: 200, columnGap: 96 },
           courses: {},
           years: {},
@@ -45,7 +45,7 @@ describe("resolveCuratedGridMetrics", () => {
   it("falls back to layout defaults when grid is omitted", () => {
     expect(
       resolveCuratedGridMetrics(
-        { careerSlug: "lds", courses: {}, years: {} },
+        { degreeSlug: "lds", courses: {}, years: {} },
         { nodeWidth: 236, columnGap: 140 },
       ),
     ).toEqual({ nodeWidth: 236, columnGap: 140, stride: 376 });
@@ -61,7 +61,7 @@ describe("resolveCuratedRowStride", () => {
   };
 
   const curation = {
-    careerSlug: "lds",
+    degreeSlug: "lds",
     courses: {},
     years: {
       "año 1": {

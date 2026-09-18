@@ -5,7 +5,7 @@ import {
   type DegreeRoadmap,
   type DegreeRoadmapConcept,
   projectDegreeRoadmap,
-  reachableFromCareer,
+  reachableFromDegree,
 } from "./degree-roadmap";
 
 export interface CourseRoadmapCourse {
@@ -17,8 +17,8 @@ export interface CourseRoadmapCourse {
 }
 
 export interface CourseRoadmap {
-  career: string;
-  careerSlug: string;
+  degree: string;
+  degreeSlug: string;
   courses: CourseRoadmapCourse[];
   edges: GraphEdge[];
 }
@@ -45,15 +45,15 @@ function conceptsLinkedToCourse(
 
 export function projectCourseRoadmap(
   graph: CurriculumGraph,
-  careerTitle: string,
+  degreeTitle: string,
 ): CourseRoadmap | null {
   const { pagesByTitle, conceptTitles, yearByCourse } = buildCurriculumIndexes(graph);
-  const career = pagesByTitle.get(normalizeTitle(careerTitle));
-  if (!career || career.kind !== "career") {
+  const degreePage = pagesByTitle.get(normalizeTitle(degreeTitle));
+  if (!degreePage || degreePage.kind !== "degree") {
     return null;
   }
 
-  const reachable = reachableFromCareer(graph, career.title);
+  const reachable = reachableFromDegree(graph, degreePage.title);
   const courses = coursesForDegree(reachable, graph);
   const courseTitles = new Set(courses.map((page) => page.title));
 
@@ -65,8 +65,8 @@ export function projectCourseRoadmap(
   );
 
   return {
-    career: career.title,
-    careerSlug: career.slug,
+    degree: degreePage.title,
+    degreeSlug: degreePage.slug,
     courses: courses.map((page) => ({
       title: page.title,
       slug: page.slug,
@@ -84,16 +84,16 @@ export function projectCourseRoadmap(
 
 export function projectAllCourseRoadmaps(graph: CurriculumGraph): CourseRoadmap[] {
   return graph.pages
-    .filter((page) => page.kind === "career")
+    .filter((page) => page.kind === "degree")
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"))
-    .map((career) => projectCourseRoadmap(graph, career.title))
+    .map((degreePage) => projectCourseRoadmap(graph, degreePage.title))
     .filter((roadmap): roadmap is CourseRoadmap => roadmap !== null);
 }
 
 export function courseRoadmapAsDegreeRoadmap(roadmap: CourseRoadmap): DegreeRoadmap {
   return {
-    career: roadmap.career,
-    careerSlug: roadmap.careerSlug,
+    degree: roadmap.degree,
+    degreeSlug: roadmap.degreeSlug,
     concepts: roadmap.courses.map((course) => ({
       title: course.title,
       slug: course.slug,
@@ -105,10 +105,10 @@ export function courseRoadmapAsDegreeRoadmap(roadmap: CourseRoadmap): DegreeRoad
 
 export function projectCourseConceptRoadmap(
   graph: CurriculumGraph,
-  careerTitle: string,
+  degreeTitle: string,
   courseTitle: string,
 ): DegreeRoadmap | null {
-  const courseRoadmap = projectCourseRoadmap(graph, careerTitle);
+  const courseRoadmap = projectCourseRoadmap(graph, degreeTitle);
   if (!courseRoadmap) {
     return null;
   }
@@ -120,7 +120,7 @@ export function projectCourseConceptRoadmap(
     return null;
   }
 
-  const degreeRoadmap = projectDegreeRoadmap(graph, careerTitle);
+  const degreeRoadmap = projectDegreeRoadmap(graph, degreeTitle);
   if (!degreeRoadmap) {
     return null;
   }
@@ -139,8 +139,8 @@ export function projectCourseConceptRoadmap(
   );
 
   return {
-    career: course.title,
-    careerSlug: course.slug,
+    degree: course.title,
+    degreeSlug: course.slug,
     concepts,
     edges,
   };

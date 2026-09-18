@@ -13,7 +13,7 @@ export function buildCurriculumIndexes(graph: CurriculumGraph): CurriculumIndexe
   const pagesByTitle = new Map(graph.pages.map((page) => [page.normalizedTitle, page]));
   const curriculumTitles = new Set(
     graph.pages
-      .filter((page) => page.kind === "career" || page.kind === "course" || page.kind === "year")
+      .filter((page) => page.kind === "degree" || page.kind === "course" || page.kind === "year")
       .map((page) => page.normalizedTitle),
   );
   const conceptPages = graph.pages.filter((page) => page.kind === "concept");

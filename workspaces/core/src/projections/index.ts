@@ -16,10 +16,10 @@ export {
 } from "./source-coverage";
 export {
   kindRankForRoadmap,
-  listCareerPages,
+  listDegreePages,
   projectAllDegreeRoadmaps,
   projectDegreeRoadmap,
-  reachableFromCareer,
+  reachableFromDegree,
   type DegreeRoadmap,
   type DegreeRoadmapConcept,
 } from "./degree-roadmap";

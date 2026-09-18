@@ -31,7 +31,6 @@ import { RoadmapCourseEdge } from "./RoadmapCourseEdge";
 import { RoadmapSpineEdge } from "./RoadmapSpineEdge";
 import { RoadmapCourseNode } from "./RoadmapCourseNode";
 import { RoadmapJunctionNode } from "./RoadmapJunctionNode";
-import { RoadmapLegend } from "./RoadmapLegend";
 import {
   remainingProgressPercent,
   RoadmapProgressContext,
@@ -130,7 +129,7 @@ export function RoadmapApp({
   onRegisterPanelUrlSync,
 }: RoadmapAppProps) {
   const [graph, setGraph] = useState<CurriculumGraph | null>(null);
-  const [selectedCareer, setSelectedCareer] = useState<string>("");
+  const [selectedDegree, setSelectedDegree] = useState<string>("");
   const [focusedCourseSlug, setFocusedCourseSlug] = useState<string | null>(null);
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [loadError, setLoadError] = useState<string>("");
@@ -157,10 +156,10 @@ export function RoadmapApp({
   );
   const activeCourseRoadmap = useMemo(
     () =>
-      courseRoadmaps.find((roadmap) => roadmap.career === selectedCareer) ??
+      courseRoadmaps.find((roadmap) => roadmap.degree === selectedDegree) ??
       courseRoadmaps[0] ??
       null,
-    [courseRoadmaps, selectedCareer],
+    [courseRoadmaps, selectedDegree],
   );
 
   const isConceptView = focusedCourseSlug !== null;
@@ -178,7 +177,7 @@ export function RoadmapApp({
         return null;
       }
 
-      return projectCourseConceptRoadmap(graph, activeCourseRoadmap.career, course.title);
+      return projectCourseConceptRoadmap(graph, activeCourseRoadmap.degree, course.title);
     }
 
     return courseRoadmapAsDegreeRoadmap(activeCourseRoadmap);
@@ -196,10 +195,10 @@ export function RoadmapApp({
     }
 
     const url = readRoadmapPanelUrl();
-    if (url.career) {
-      const match = courseRoadmaps.find((roadmap) => roadmap.careerSlug === url.career);
+    if (url.degree) {
+      const match = courseRoadmaps.find((roadmap) => roadmap.degreeSlug === url.degree);
       if (match) {
-        setSelectedCareer(match.career);
+        setSelectedDegree(match.degree);
         if (url.course) {
           const course = match.courses.find((entry) => entry.slug === url.course);
           setFocusedCourseSlug(course ? url.course : null);
@@ -210,10 +209,10 @@ export function RoadmapApp({
       }
     }
 
-    if (!selectedCareer && courseRoadmaps[0]) {
-      setSelectedCareer(courseRoadmaps[0].career);
+    if (!selectedDegree && courseRoadmaps[0]) {
+      setSelectedDegree(courseRoadmaps[0].degree);
     }
-  }, [courseRoadmaps, selectedCareer]);
+  }, [courseRoadmaps, selectedDegree]);
 
   useEffect(() => {
     onRegisterPanelUrlSync?.({
@@ -287,12 +286,12 @@ export function RoadmapApp({
     return buildCourseRoadmapLayout(activeDegreeRoadmap, adjacency, courseYearsByTitle);
   }, [activeDegreeRoadmap, adjacency, courseYearsByTitle, isConceptView]);
 
-  const careerConceptSlugByTitle = useMemo(() => {
+  const degreeConceptSlugByTitle = useMemo(() => {
     if (!graph || !activeCourseRoadmap) {
       return new Map<string, string>();
     }
 
-    const degreeRoadmap = projectDegreeRoadmap(graph, activeCourseRoadmap.career);
+    const degreeRoadmap = projectDegreeRoadmap(graph, activeCourseRoadmap.degree);
     return new Map(
       (degreeRoadmap?.concepts ?? []).map((concept) => [concept.title, concept.slug]),
     );
@@ -325,8 +324,8 @@ export function RoadmapApp({
   }, [conceptPages]);
 
   const progress = useRoadmapProgress(
-    activeCourseRoadmap?.careerSlug ?? "",
-    careerConceptSlugByTitle,
+    activeCourseRoadmap?.degreeSlug ?? "",
+    degreeConceptSlugByTitle,
     resourceLinesBySlug,
     conceptsByCourseTitle,
   );
@@ -397,10 +396,10 @@ export function RoadmapApp({
   const handleConceptOpen = useCallback(
     (title: string) => {
       const page = conceptPages.get(title);
-      const slug = careerConceptSlugByTitle.get(title);
+      const slug = degreeConceptSlugByTitle.get(title);
       if (activeCourseRoadmap && slug && focusedCourseSlug) {
         syncPanelUrl({
-          career: activeCourseRoadmap.careerSlug,
+          degree: activeCourseRoadmap.degreeSlug,
           course: focusedCourseSlug,
           concept: slug,
         });
@@ -415,7 +414,7 @@ export function RoadmapApp({
       conceptPages,
       focusedCourseSlug,
       onConceptOpen,
-      careerConceptSlugByTitle,
+      degreeConceptSlugByTitle,
       syncPanelUrl,
     ],
   );
@@ -428,7 +427,7 @@ export function RoadmapApp({
       }
 
       setFocusedCourseSlug(course.slug);
-      syncPanelUrl({ career: activeCourseRoadmap.careerSlug, course: course.slug }, "push");
+      syncPanelUrl({ degree: activeCourseRoadmap.degreeSlug, course: course.slug }, "push");
       onClosePanels?.();
     },
     [activeCourseRoadmap, onClosePanels, syncPanelUrl],
@@ -440,7 +439,7 @@ export function RoadmapApp({
     }
 
     setFocusedCourseSlug(null);
-    syncPanelUrl({ career: activeCourseRoadmap.careerSlug }, "push");
+    syncPanelUrl({ degree: activeCourseRoadmap.degreeSlug }, "push");
     onClosePanels?.();
   }, [activeCourseRoadmap, onClosePanels, syncPanelUrl]);
 
@@ -479,10 +478,10 @@ export function RoadmapApp({
     }
 
     const url = readRoadmapPanelUrl();
-    if (url.career && url.career !== activeCourseRoadmap.careerSlug) {
-      const match = courseRoadmaps.find((roadmap) => roadmap.careerSlug === url.career);
-      if (match && match.career !== activeCourseRoadmap.career) {
-        setSelectedCareer(match.career);
+    if (url.degree && url.degree !== activeCourseRoadmap.degreeSlug) {
+      const match = courseRoadmaps.find((roadmap) => roadmap.degreeSlug === url.degree);
+      if (match && match.degree !== activeCourseRoadmap.degree) {
+        setSelectedDegree(match.degree);
       }
       return;
     }
@@ -556,9 +555,9 @@ export function RoadmapApp({
   );
   const progressUnit = isConceptView ? "temas" : "materias";
   const progressScopeLabel = isConceptView
-    ? (focusedCourse?.title ?? activeCourseRoadmap.career)
-    : activeCourseRoadmap.career;
-  const viewportKey = `${activeCourseRoadmap.careerSlug}:${focusedCourseSlug ?? "courses"}`;
+    ? (focusedCourse?.title ?? activeCourseRoadmap.degree)
+    : activeCourseRoadmap.degree;
+  const viewportKey = `${activeCourseRoadmap.degreeSlug}:${focusedCourseSlug ?? "courses"}`;
 
   return (
     <div className="roadmap">
@@ -568,21 +567,21 @@ export function RoadmapApp({
             <span className="roadmap__degree-label">Carrera</span>
             <select
               className="roadmap__degree-select"
-              value={activeCourseRoadmap.career}
+              value={activeCourseRoadmap.degree}
               onChange={(event) => {
-                const career = event.target.value;
-                setSelectedCareer(career);
+                const degree = event.target.value;
+                setSelectedDegree(degree);
                 setFocusedCourseSlug(null);
-                const roadmap = courseRoadmaps.find((entry) => entry.career === career);
+                const roadmap = courseRoadmaps.find((entry) => entry.degree === degree);
                 if (roadmap) {
-                  syncPanelUrl({ career: roadmap.careerSlug });
+                  syncPanelUrl({ degree: roadmap.degreeSlug });
                 }
                 onClosePanels?.();
               }}
             >
               {courseRoadmaps.map((roadmap) => (
-                <option key={roadmap.career} value={roadmap.career}>
-                  {roadmap.career}
+                <option key={roadmap.degree} value={roadmap.degree}>
+                  {roadmap.degree}
                 </option>
               ))}
             </select>
@@ -642,8 +641,6 @@ export function RoadmapApp({
           ? "Los caminos siguen las dependencias entre conceptos de la materia. Elegí un concepto para ver recursos y marcar progreso."
           : "Las materias se agrupan por año y, dentro de cada año, por correlativas. Hacé clic en una materia o elegila en el menú para ver sus conceptos."}
       </p>
-
-      <RoadmapLegend showCourseMarkers={!isConceptView} />
 
       <section
         className={`roadmap__canvas-panel${hasConceptGraph ? "" : " roadmap__canvas-panel--empty"}`}

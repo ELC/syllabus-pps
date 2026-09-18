@@ -33,7 +33,7 @@ export function orphanDiagnostics(
   incomingCounts: Map<string, number>,
 ): Diagnostic[] {
   return graph.pages
-    .filter((page) => page.kind !== "career")
+    .filter((page) => page.kind !== "degree")
     .filter((page) => (incomingCounts.get(page.title) ?? 0) === 0)
     .map((page) => ({
       severity: page.kind === "course" || page.kind === "year" ? "error" : "warning",
