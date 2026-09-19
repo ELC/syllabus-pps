@@ -23,6 +23,7 @@ import { buildAdjacency } from "./adjacency";
 import { buildRoadmapFlow } from "./build-flow";
 import { EMPTY_ROADMAP_CURATION } from "./curation";
 import { buildCourseRoadmapLayout } from "./course-layout";
+import { readCuratedCourseLayoutMetrics } from "./course-layout-metrics";
 import { buildRoadmapLayout, type RoadmapBounds } from "./layout";
 import { RoadmapAnchorNode } from "./RoadmapAnchorNode";
 import { RoadmapYearBandNode } from "./RoadmapYearBandNode";
@@ -274,6 +275,16 @@ export function RoadmapApp({
     [activeCourseRoadmap],
   );
 
+  const courseTrayectoByTitle = useMemo(
+    () =>
+      new Map(
+        (activeCourseRoadmap?.courses ?? []).map((course) => [course.title, course.trayecto]),
+      ),
+    [activeCourseRoadmap],
+  );
+
+  const curatedLayoutMetrics = useMemo(() => readCuratedCourseLayoutMetrics(), []);
+
   const layout = useMemo(() => {
     if (!activeDegreeRoadmap || !adjacency) {
       return null;
@@ -283,8 +294,19 @@ export function RoadmapApp({
       return buildRoadmapLayout(activeDegreeRoadmap, adjacency, EMPTY_ROADMAP_CURATION);
     }
 
-    return buildCourseRoadmapLayout(activeDegreeRoadmap, adjacency, courseYearsByTitle);
-  }, [activeDegreeRoadmap, adjacency, courseYearsByTitle, isConceptView]);
+    return buildCourseRoadmapLayout(
+      activeDegreeRoadmap,
+      adjacency,
+      courseYearsByTitle,
+      curatedLayoutMetrics,
+    );
+  }, [
+    activeDegreeRoadmap,
+    adjacency,
+    courseYearsByTitle,
+    curatedLayoutMetrics,
+    isConceptView,
+  ]);
 
   const degreeConceptSlugByTitle = useMemo(() => {
     if (!graph || !activeCourseRoadmap) {
@@ -357,6 +379,7 @@ export function RoadmapApp({
                 : progress.courseProgressFor(title).status === "done",
             topicNodeType: isConceptView ? "roadmapTopic" : "roadmapCourse",
             courseYearsByTitle,
+            courseTrayectoByTitle,
             courseDagEdges: !isConceptView,
           })
         : { nodes: [], edges: [] },
@@ -364,6 +387,7 @@ export function RoadmapApp({
       activeDegreeRoadmap,
       adjacency,
       courseYearsByTitle,
+      courseTrayectoByTitle,
       isConceptView,
       layout,
       progress.conceptProgressFor,

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import { parseTemplateAreas } from "../../../roadmap/src/components/roadmap/course-curation";
 import {
-  parseTemplateAreas,
   resolveCuratedGridMetrics,
   resolveCuratedRowStride,
-  type CourseRoadmapCuration,
-} from "../../../roadmap/src/components/roadmap/course-curation";
+  type CuratedCourseLayoutMetrics,
+} from "../../../roadmap/src/components/roadmap/course-layout-metrics";
 
 describe("parseTemplateAreas", () => {
   const courses = {
@@ -28,81 +28,63 @@ describe("parseTemplateAreas", () => {
 });
 
 describe("resolveCuratedGridMetrics", () => {
-  it("uses configured node width and column gap", () => {
-    expect(
-      resolveCuratedGridMetrics(
-        {
-          degreeSlug: "lds",
-          grid: { nodeWidth: 200, columnGap: 96 },
-          courses: {},
-          years: {},
-        },
-        { nodeWidth: 236, columnGap: 140 },
-      ),
-    ).toEqual({ nodeWidth: 200, columnGap: 96, stride: 296 });
-  });
+  const metrics: CuratedCourseLayoutMetrics = {
+    nodeWidth: 195,
+    columnGap: 70,
+    rowStride: 104,
+    yearGap: 150,
+  };
 
-  it("falls back to layout defaults when grid is omitted", () => {
-    expect(
-      resolveCuratedGridMetrics(
-        { degreeSlug: "lds", courses: {}, years: {} },
-        { nodeWidth: 236, columnGap: 140 },
-      ),
-    ).toEqual({ nodeWidth: 236, columnGap: 140, stride: 376 });
+  it("derives stride from layout metrics", () => {
+    expect(resolveCuratedGridMetrics(metrics)).toEqual({
+      nodeWidth: 195,
+      columnGap: 70,
+      stride: 265,
+    });
   });
 });
 
 describe("resolveCuratedRowStride", () => {
-  const defaults = {
-    nodeHeight: 64,
-    stageGap: 144,
-    subrowGap: 64,
-    yearGap: 112,
+  const metrics: CuratedCourseLayoutMetrics = {
+    nodeWidth: 195,
+    columnGap: 70,
+    rowStride: 104,
+    yearGap: 150,
   };
 
-  const curation = {
-    degreeSlug: "lds",
-    courses: {},
-    years: {
-      "año 1": {
-        templateAreas: ["algebra", "pi"],
-        templateRows: [240],
-        yearGap: 200,
-      },
-      "año 2": {
-        templateAreas: ["devops"],
-      },
-    },
-  } satisfies CourseRoadmapCuration;
+  const defaults = {
+    nodeHeight: 64,
+    subrowGap: 64,
+  };
 
-  it("uses templateRows within a year", () => {
+  it("uses row stride within a year", () => {
     expect(
       resolveCuratedRowStride(
-        curation,
-        { year: "año 1", withinYearStage: 1, stage: 1, titles: ["programación i"] },
-        { year: "año 1", withinYearStage: 0, stage: 0, titles: ["álgebra y geometría"] },
+        metrics,
+        { year: "año 1", withinYearStage: 1 },
+        { year: "año 1", withinYearStage: 0 },
         defaults,
       ),
-    ).toBe(240);
+    ).toBe(104);
   });
 
-  it("uses yearGap between year bands", () => {
+  it("uses year gap between year bands", () => {
     expect(
       resolveCuratedRowStride(
-        curation,
-        { year: "año 2", withinYearStage: 0, stage: 0, titles: ["introducción a devops"] },
-        { year: "año 1", withinYearStage: 1, stage: 1, titles: ["programación i"] },
+        metrics,
+        { year: "año 2", withinYearStage: 0 },
+        { year: "año 1", withinYearStage: 1 },
         defaults,
       ),
-    ).toBe(200);
+    ).toBe(150);
   });
 
-  it("falls back to auto stride when rows are omitted", () => {
+  it("falls back to subrow stride for parallel rows", () => {
     expect(
       resolveCuratedRowStride(
-        curation,
-        { year: "año 2", withinYearStage: 0, stage: 0, titles: ["introducción a devops"] },
-        { year: "año 2", withinYearStage: 0, stage: 0, titles: ["other"] },
+        metrics,
+        { year: "año 2", withinYearStage: 0 },
+        { year: "año 2", withinYearStage: 0 },
         defaults,
       ),
     ).toBe(128);

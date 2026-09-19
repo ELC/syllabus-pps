@@ -12,3 +12,4 @@ kind: year
 - [[cálculo numérico y simulación]]
 - [[teología i]]
 - [[teología ii]]
+- [[introducción a la contabilidad]]

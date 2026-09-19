@@ -26,6 +26,12 @@ export interface RawPage {
   correlativasRaw?: unknown;
   /** Parsed string targets from frontmatter correlativas. */
   correlativasTargets?: string[];
+  /** Raw trayecto value from frontmatter; undefined when absent. */
+  trayectoRaw?: unknown;
+  /** Parsed trayecto from frontmatter. */
+  trayecto?: import("../types").CourseTrayecto;
+  /** True when frontmatter trayecto is present but malformed. */
+  trayectoInvalid?: boolean;
   blocks: ZettelBlock[];
   nonBulletLines: number[];
 }

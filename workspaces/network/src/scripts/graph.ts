@@ -1,4 +1,4 @@
-import { structuralPageKindRank } from "@pps/core";
+import { isTrayectoNoEstructurado, structuralPageKindRank } from "@pps/core";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 
@@ -10,6 +10,8 @@ import {
 import {
   AUSTRAL,
   expansionShadesForBase,
+  AUSTRAL_GRAPH_TNE,
+  courseNodeStyle,
   kindStyleForKind,
 } from "@pps/shell/austral-tokens";
 import { siteRootFromEnv } from "@pps/shell/site-root";
@@ -387,7 +389,11 @@ function matchingNodes(
   );
 }
 
-function kindLabel(kind: string): string {
+function kindLabel(kind: string, trayecto?: string): string {
+  if (kind === "course" && isTrayectoNoEstructurado(trayecto)) {
+    return "TNE";
+  }
+
   const match = GRAPH_NODE_KINDS.find((item) => item.kind === kind);
   return match?.label ?? kind;
 }
@@ -519,7 +525,7 @@ function assignExpansionAnchorColor(
   }
 
   const anchor = cy.getElementById(anchorId);
-  const { base } = kindStyleForKind(String(anchor.data("kind") ?? ""));
+  const { base } = nodeStyle(anchor);
   const usedColors = new Set(viewState.expansionAnchorColors.values());
   const nextColor =
     expansionShadesForBase(base).find((color) => !usedColors.has(color)) ?? base;
@@ -568,6 +574,15 @@ function kindStyle(kind: string) {
   return kindStyleForKind(kind);
 }
 
+function nodeStyle(node: cytoscape.SingularElementArgument) {
+  const kind = String(node.data("kind") ?? "");
+  if (kind === "course") {
+    return courseNodeStyle(String(node.data("trayecto") ?? ""));
+  }
+
+  return kindStyleForKind(kind);
+}
+
 function nodeTitle(node: cytoscape.SingularElementArgument, fallback: string): string {
   if (!node.isNode()) {
     return fallback;
@@ -613,8 +628,7 @@ function updateExpansionListUI(
     const chip = document.createElement("div");
     chip.className = "graph__expansion-chip";
     chip.style.borderColor =
-      viewState.expansionAnchorColors.get(nodeId) ??
-      kindStyle(String(node.data("kind"))).border;
+      viewState.expansionAnchorColors.get(nodeId) ?? nodeStyle(node).border;
     if (nodeId === viewState.focusedNodeId) {
       chip.classList.add("graph__expansion-chip--active");
     }
@@ -624,7 +638,7 @@ function updateExpansionListUI(
     selectButton.className = "graph__expansion-chip-main";
 
     const swatch = document.createElement("span");
-    const style = kindStyle(String(node.data("kind")));
+    const style = nodeStyle(node);
     swatch.className = "graph__expansion-swatch";
     swatch.style.background = style.swatchFill;
     swatch.style.borderColor = style.border;
@@ -938,7 +952,7 @@ function updateSearchResultsUI(
     item.setAttribute("role", "option");
 
     const swatch = document.createElement("span");
-    const style = kindStyle(String(node.data("kind")));
+    const style = nodeStyle(node);
     swatch.className = "graph__search-result-swatch";
     swatch.style.background = style.swatchFill;
     swatch.style.borderColor = style.border;
@@ -949,7 +963,7 @@ function updateSearchResultsUI(
 
     const meta = document.createElement("span");
     meta.className = "graph__search-result-kind";
-    meta.textContent = kindLabel(String(node.data("kind")));
+    meta.textContent = kindLabel(String(node.data("kind")), String(node.data("trayecto") ?? ""));
 
     item.append(swatch, label, meta);
     item.addEventListener("mousedown", (event) => {
@@ -1377,8 +1391,22 @@ function prepareGraphElements(elements: cytoscape.ElementsDefinition): cytoscape
     nodes: elements.nodes?.map((node) => {
       const label = node.data.label;
       const rawTitle = typeof label === "string" ? label : String(label ?? node.data.id ?? "");
+      const existingClasses =
+        typeof node.classes === "string"
+          ? node.classes.split(/\s+/).filter(Boolean)
+          : Array.isArray(node.classes)
+            ? node.classes.filter((entry): entry is string => typeof entry === "string")
+            : [];
+      const classes = [
+        ...existingClasses,
+        ...(String(node.data.kind) === "course" && isTrayectoNoEstructurado(node.data.trayecto)
+          ? ["tne"]
+          : []),
+      ];
+
       return {
         ...node,
+        classes: [...new Set(classes)].join(" "),
         data: {
           ...node.data,
           title: capitalizeWords(rawTitle),
@@ -1486,6 +1514,12 @@ export async function mountGraph(
           height: 76,
           "font-size": 8,
           "text-max-width": 58,
+        },
+      },
+      {
+        selector: "node.tne",
+        style: {
+          "border-color": AUSTRAL_GRAPH_TNE.border,
         },
       },
       {

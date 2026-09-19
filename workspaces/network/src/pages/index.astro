@@ -1,5 +1,6 @@
 ---
 import ShellLayout from "@pps/shell/ShellLayout.astro";
+import { AUSTRAL_GRAPH_TNE } from "@pps/shell/austral-tokens";
 import { GRAPH_NODE_KINDS } from "../scripts/graph-styles";
 import networkCss from "../styles/network.scss?url";
 ---
@@ -69,6 +70,13 @@ import networkCss from "../styles/network.scss?url";
             </li>
           ))
         }
+        <li class="graph__legend-item">
+          <span
+            class="graph__legend-swatch"
+            style={`background:${AUSTRAL_GRAPH_TNE.swatchFill};border-color:${AUSTRAL_GRAPH_TNE.border}`}
+          />
+          TNE
+        </li>
       </ul>
       <div class="graph__search">
         <label class="u-visually-hidden" for="graph-search">Buscar</label>

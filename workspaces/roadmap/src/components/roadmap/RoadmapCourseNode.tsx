@@ -1,3 +1,4 @@
+import { isTrayectoNoEstructurado, type CourseTrayecto } from "@pps/core";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 
 import {
@@ -16,6 +17,7 @@ export interface RoadmapCourseNodeData extends Record<string, unknown> {
   year: string;
   role: RoadmapRole;
   stage: number;
+  trayecto?: CourseTrayecto;
 }
 
 const HANDLES = [
@@ -40,6 +42,7 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
   };
   const { status, percent, total } = courseProgress;
   const showProgressBar = total > 0 && status === "pending";
+  const isTne = isTrayectoNoEstructurado(nodeData.trayecto);
 
   return (
     <div
@@ -47,6 +50,7 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
         "roadmap__course",
         `roadmap__course--${nodeData.role}`,
         isSpine ? "roadmap__course--spine" : "",
+        isTne ? "roadmap__course--tne" : "",
         status !== "pending" ? `roadmap__course--${status}` : "",
         showProgressBar ? "roadmap__course--in-progress" : "",
       ].join(" ")}

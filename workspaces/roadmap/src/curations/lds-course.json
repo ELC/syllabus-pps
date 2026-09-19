@@ -1,9 +1,5 @@
 {
   "degreeSlug": "lds",
-  "grid": {
-    "nodeWidth": 177,
-    "columnGap": 70
-  },
   "courses": {
     "algebra": {
       "slug": "algebra-y-geometria"
@@ -88,32 +84,73 @@
     },
     "teo2": {
       "slug": "teologia-ii"
+    },
+    "admin1": {
+      "slug": "administracion-i"
+    },
+    "contabilidad": {
+      "slug": "introduccion-a-la-contabilidad"
+    },
+    "pl2": {
+      "slug": "proyecto-laboratorio-ii"
+    },
+    "calidad": {
+      "slug": "calidad-del-software-testing-y-performance"
+    },
+    "entrepreneurship": {
+      "slug": "entrepreneurship"
+    },
+    "doctrina": {
+      "slug": "doctrina-social"
+    },
+    "etica-pro": {
+      "slug": "etica-profesional-y-aspectos-legales"
+    },
+    "redes": {
+      "slug": "redes-y-sistemas-operativos"
+    },
+    "optimizacion": {
+      "slug": "optimizacion-e-investigacion-operativa"
+    },
+    "automatizacion": {
+      "slug": "automatizacion-y-herramientas-inteligentes"
+    },
+    "cloud": {
+      "slug": "computo-en-la-nube-y-sistemas-distribuidos"
+    },
+    "cv": {
+      "slug": "computer-vision"
+    },
+    "ciberseg": {
+      "slug": "administracion-infraestructura-y-ciberseguridad"
     }
   },
   "years": {
     "año 1": {
       "templateAreas": [
-        "filosofia algebra storytelling algoritmos . analisis antropologia .",
-        "am1 . . pi . . . bases-datos"
-      ],
-      "templateRows": [104],
-      "yearGap": 150
+        "filosofia algebra storytelling . . algoritmos antropologia analisis",
+        "am1 . . bases-datos . pi . . ."
+      ]
     },
     "año 2": {
       "templateAreas": [
-        ". discreta devops pii piii gestion ux",
-        "est1 etica . . proyecto . . ."
-      ],
-      "templateRows": [104],
-      "yearGap": 150
+        ". . discreta . . pii piii gestion ux",
+        "est1 . . . devops proyecto admin1 . . etica"
+      ]
     },
     "año 3": {
       "templateAreas": [
-        ". . am2 arquitectura pia algoritmos-avanzados product-dev datos",
-        "est2 calculo-num . . . . teo1 teo2 .",
+        ". calculo-num am2 datos . . . product-dev  teo1",
+        "est2 . contabilidad . arquitectura pia algoritmos-avanzados . teo2",
         ". . . . . . . ."
-      ],
-      "templateRows": [104, 104]
+      ]
+    },
+    "año 4": {
+      "templateAreas": [
+        ". optimizacion . ciberseg . pl2 . entrepreneurship doctrina",
+        ". . . . calidad . . .  . etica-pro",
+        ". . . automatizacion . cloud cv redes"
+      ]
     }
   }
 }

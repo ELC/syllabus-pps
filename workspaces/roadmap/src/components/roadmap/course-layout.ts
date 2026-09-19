@@ -12,10 +12,13 @@ import {
   buildCuratedCourseGrid,
   getCourseRoadmapCuration,
   hasCuratedCourseGrid,
-  resolveCuratedGridMetrics,
-  resolveCuratedRowStride,
   type CuratedCourseDisplayRow,
 } from "./course-curation";
+import {
+  resolveCuratedGridMetrics,
+  resolveCuratedRowStride,
+  type CuratedCourseLayoutMetrics,
+} from "./course-layout-metrics";
 import type { CourseYearBand, RoadmapLayout, RoadmapPlacement } from "./layout";
 
 /** Horizontal gap between course nodes in the same row. */
@@ -545,6 +548,7 @@ export function buildStagedCourseRoadmapLayout(
   roadmap: DegreeRoadmap,
   adjacency: RoadmapAdjacency,
   yearsByTitle?: ReadonlyMap<string, string>,
+  curatedLayoutMetrics?: CuratedCourseLayoutMetrics | null,
 ): RoadmapLayout {
   const titles = roadmap.concepts.map((concept) => concept.title);
   if (titles.length === 0) {
@@ -622,11 +626,8 @@ export function buildStagedCourseRoadmapLayout(
 
   const placements = new Map<string, RoadmapPlacement>();
   const curatedMetrics =
-    useCuratedGrid && courseCuration
-      ? resolveCuratedGridMetrics(courseCuration, {
-          nodeWidth: SPINE_NODE_WIDTH,
-          columnGap: COURSE_COLUMN_GAP,
-        })
+    useCuratedGrid && curatedLayoutMetrics
+      ? resolveCuratedGridMetrics(curatedLayoutMetrics)
       : null;
   const stride = curatedMetrics?.stride ?? SPINE_NODE_WIDTH + COURSE_COLUMN_GAP;
   const nodeWidth = curatedMetrics?.nodeWidth ?? SPINE_NODE_WIDTH;
@@ -639,12 +640,10 @@ export function buildStagedCourseRoadmapLayout(
     if (rowIndex > 0) {
       const previousRow = displayRows[rowIndex - 1]!;
 
-      if (useCuratedGrid && courseCuration) {
-        cursorY += resolveCuratedRowStride(courseCuration, row, previousRow, {
+      if (useCuratedGrid && curatedLayoutMetrics) {
+        cursorY += resolveCuratedRowStride(curatedLayoutMetrics, row, previousRow, {
           nodeHeight: SPINE_NODE_HEIGHT,
-          stageGap: COURSE_STAGE_GAP,
           subrowGap: COURSE_SUBROW_GAP,
-          yearGap: COURSE_YEAR_GAP,
         });
       } else {
         let gap = COURSE_STAGE_GAP;
@@ -728,6 +727,12 @@ export function buildCourseRoadmapLayout(
   roadmap: DegreeRoadmap,
   adjacency: RoadmapAdjacency,
   yearsByTitle?: ReadonlyMap<string, string>,
+  curatedLayoutMetrics?: CuratedCourseLayoutMetrics | null,
 ): RoadmapLayout {
-  return buildStagedCourseRoadmapLayout(roadmap, adjacency, yearsByTitle);
+  return buildStagedCourseRoadmapLayout(
+    roadmap,
+    adjacency,
+    yearsByTitle,
+    curatedLayoutMetrics,
+  );
 }

@@ -18,13 +18,12 @@ export function RoadmapCourseEdge(props: EdgeProps) {
     pathOptions,
   } = props;
 
-  const offset = pathOptions?.offset ?? 0;
   const curvature = pathOptions?.curvature ?? 0.45;
 
   const [path, labelX, labelY] = getBezierPath({
-    sourceX: sourceX + offset * 0.4,
+    sourceX,
     sourceY,
-    targetX: targetX + offset * 0.4,
+    targetX,
     targetY,
     sourcePosition,
     targetPosition,

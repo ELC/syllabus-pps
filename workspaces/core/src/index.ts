@@ -1,4 +1,5 @@
 export * from "./types";
+export * from "./course-trayecto";
 export * from "./normalize";
 export { slugFromPath, slugifyTitle } from "./slug";
 export * from "./config/loaded-config";

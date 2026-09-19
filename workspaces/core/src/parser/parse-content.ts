@@ -1,7 +1,8 @@
 import { normalizeTitle, stripMarkdownExtension } from "../normalize";
 import { parseFrontmatter } from "./frontmatter";
 import { slugFromPath } from "../slug";
-import { pageKinds, PageKind, ZettelBlock } from "../types";
+import { parseCourseTrayectoValue } from "../course-trayecto";
+import { CourseTrayecto, pageKinds, PageKind, ZettelBlock } from "../types";
 import {
   extractCitationRefs,
   extractConceptTags,
@@ -17,6 +18,27 @@ function parseKind(value: unknown): PageKind | undefined {
     return undefined;
   }
   return VALID_KINDS.has(value as PageKind) ? (value as PageKind) : undefined;
+}
+
+function parseTrayecto(value: unknown): {
+  raw: unknown;
+  trayecto?: CourseTrayecto;
+  invalid?: boolean;
+} {
+  if (value === undefined) {
+    return { raw: undefined };
+  }
+
+  if (typeof value !== "string") {
+    return { raw: value, invalid: true };
+  }
+
+  const trayecto = parseCourseTrayectoValue(value);
+  if (!trayecto) {
+    return { raw: value, invalid: true };
+  }
+
+  return { raw: value, trayecto };
 }
 
 function parseStringListField(value: unknown): { raw: unknown; targets?: string[] } {
@@ -53,6 +75,7 @@ export function parsePageContent(source: { path: string; content: string }): Raw
   const frontmatterKind = parseKind(parsed.data.kind);
   const dependsOn = parseStringListField(parsed.data.dependsOn);
   const correlativas = parseStringListField(parsed.data.correlativas);
+  const trayecto = parseTrayecto(parsed.data.trayecto);
   const blocks: ZettelBlock[] = [];
   const nonBulletLines: number[] = [];
 
@@ -91,6 +114,9 @@ export function parsePageContent(source: { path: string; content: string }): Raw
     dependsOnTargets: dependsOn.targets,
     correlativasRaw: correlativas.raw,
     correlativasTargets: correlativas.targets,
+    trayectoRaw: trayecto.raw,
+    trayecto: trayecto.trayecto,
+    trayectoInvalid: trayecto.invalid,
     blocks,
     nonBulletLines,
   };

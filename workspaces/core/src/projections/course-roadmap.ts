@@ -1,6 +1,7 @@
 import { buildCurriculumIndexes } from "../analysis";
+import { resolveCourseTrayecto } from "../course-trayecto";
 import { normalizeTitle, uniqueSorted } from "../normalize";
-import { CurriculumGraph, GraphEdge, ZettelPage } from "../types";
+import { CourseTrayecto, CurriculumGraph, GraphEdge, ZettelPage } from "../types";
 import {
   type DegreeRoadmap,
   type DegreeRoadmapConcept,
@@ -14,6 +15,7 @@ export interface CourseRoadmapCourse {
   year: string;
   correlativas: string[];
   concepts: string[];
+  trayecto: CourseTrayecto;
 }
 
 export interface CourseRoadmap {
@@ -77,6 +79,7 @@ export function projectCourseRoadmap(
           .filter((title) => courseTitles.has(title)),
       ),
       concepts: conceptsLinkedToCourse(page, conceptTitles),
+      trayecto: resolveCourseTrayecto(page.kind, page.trayecto, page.trayectoInvalid),
     })),
     edges,
   };

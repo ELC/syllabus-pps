@@ -1,5 +1,7 @@
 /** Mirror of @pps/shell/styles/_tokens.scss for Cytoscape runtime. */
 
+import { isTrayectoNoEstructurado } from "@pps/core";
+
 export const AUSTRAL = {
   azulPrimario: "#2E3092",
   azulHover: "#2429AA",
@@ -75,6 +77,13 @@ export const AUSTRAL_GRAPH_NODE_KINDS = GRAPH_KIND_BASES.map(({ kind, label, bas
   border: base,
 }));
 
+export const AUSTRAL_GRAPH_TNE = {
+  base: "#7B4FB3",
+  fill: "transparent",
+  swatchFill: tint("#7B4FB3", 0.22),
+  border: "#7B4FB3",
+} as const;
+
 export function kindStyleForKind(kind: string): {
   base: string;
   fill: string;
@@ -93,6 +102,19 @@ export function kindStyleForKind(kind: string): {
     swatchFill: tint(base, 0.22),
     border: base,
   };
+}
+
+export function courseNodeStyle(trayecto?: string): {
+  base: string;
+  fill: string;
+  swatchFill: string;
+  border: string;
+} {
+  if (isTrayectoNoEstructurado(trayecto)) {
+    return AUSTRAL_GRAPH_TNE;
+  }
+
+  return kindStyleForKind("course");
 }
 
 /** Expansion / focus accents — only shades and tints of the anchor node's base. */

@@ -44,6 +44,7 @@ interface BuildRoadmapFlowOptions {
   isTopicDone: (title: string) => boolean;
   topicNodeType?: "roadmapTopic" | "roadmapCourse";
   courseYearsByTitle?: Map<string, string>;
+  courseTrayectoByTitle?: Map<string, string>;
   /** Draw correlativa prerequisite edges directly between staged course nodes. */
   courseDagEdges?: boolean;
 }
@@ -212,7 +213,10 @@ function capstoneNode(
 function topicNode(
   placement: RoadmapPlacement,
   state: RoadmapTopicNodeData["state"],
-  options: Pick<BuildRoadmapFlowOptions, "topicNodeType" | "courseYearsByTitle">,
+  options: Pick<
+    BuildRoadmapFlowOptions,
+    "topicNodeType" | "courseYearsByTitle" | "courseTrayectoByTitle"
+  >,
 ): Node<RoadmapTopicNodeData | RoadmapCourseNodeData> {
   const nodeType = options.topicNodeType ?? "roadmapTopic";
 
@@ -227,6 +231,7 @@ function topicNode(
       data: {
         label: capitalizeWords(placement.title),
         year: options.courseYearsByTitle?.get(placement.title) ?? "",
+        trayecto: options.courseTrayectoByTitle?.get(placement.title),
         role: placement.role,
         stage: placement.stage + 1,
       },
@@ -513,7 +518,6 @@ function junctionNode(id: string, centerX: number, centerY: number): Node {
   };
 }
 
-const COURSE_DAG_EDGE_OFFSET_STEP = 22;
 const COURSE_DAG_ALIGNED_X_THRESHOLD = 12;
 const COURSE_DAG_SAME_BAND_Y_THRESHOLD = 16;
 const COURSE_DAG_CROSS_YEAR_CURVATURE = 0.52;
@@ -562,8 +566,7 @@ function courseDagBezierOptions(
   layout: RoadmapLayout,
   link: SpineLink,
   handles: { sourceHandle: string; targetHandle: string },
-  offset: number,
-): { curvature: number; offset?: number } {
+): { curvature: number } {
   const sourceX = nodeCenterX(layout, link.source);
   const targetX = nodeCenterX(layout, link.target);
   const sourceY = nodeCenterY(layout, link.source);
@@ -573,10 +576,7 @@ function courseDagBezierOptions(
     handles.sourceHandle === HANDLE_RIGHT_OUT || handles.sourceHandle === HANDLE_LEFT_OUT;
 
   if (horizontalEdge) {
-    return {
-      curvature: COURSE_DAG_SAME_BAND_CURVATURE,
-      offset: offset || undefined,
-    };
+    return { curvature: COURSE_DAG_SAME_BAND_CURVATURE };
   }
 
   if (
@@ -585,21 +585,15 @@ function courseDagBezierOptions(
     sourceY === undefined ||
     targetY === undefined
   ) {
-    return { curvature: COURSE_DAG_VERTICAL_CURVATURE, offset: offset || undefined };
+    return { curvature: COURSE_DAG_VERTICAL_CURVATURE };
   }
 
   const deltaX = Math.abs(sourceX - targetX);
   if (deltaX <= COURSE_DAG_ALIGNED_X_THRESHOLD) {
-    return {
-      curvature: COURSE_DAG_VERTICAL_CURVATURE,
-      offset: offset || undefined,
-    };
+    return { curvature: COURSE_DAG_VERTICAL_CURVATURE };
   }
 
-  return {
-    curvature: COURSE_DAG_CROSS_YEAR_CURVATURE,
-    offset: offset || undefined,
-  };
+  return { curvature: COURSE_DAG_CROSS_YEAR_CURVATURE };
 }
 
 function yearBandNode(band: CourseYearBand, minNodeX: number): Node<RoadmapYearBandNodeData> {
@@ -626,53 +620,7 @@ function emitCourseDagLinks(
   edges: Edge[],
   activeSuffix: (source: string, target: string) => string,
 ): void {
-  const offsets = new Map<string, number>();
-
-  const bySource = new Map<string, SpineLink[]>();
-  const byTarget = new Map<string, SpineLink[]>();
   for (const link of links) {
-    bySource.set(link.source, [...(bySource.get(link.source) ?? []), link]);
-    byTarget.set(link.target, [...(byTarget.get(link.target) ?? []), link]);
-  }
-
-  const assignParallelOffsets = (
-    batch: SpineLink[],
-    axis: "source" | "target",
-  ) => {
-    const sorted = [...batch].sort((left, right) => {
-      const leftX =
-        axis === "source"
-          ? (nodeCenterX(layout, left.target) ?? 0)
-          : (nodeCenterX(layout, left.source) ?? 0);
-      const rightX =
-        axis === "source"
-          ? (nodeCenterX(layout, right.target) ?? 0)
-          : (nodeCenterX(layout, right.source) ?? 0);
-      return leftX - rightX || left.target.localeCompare(right.target, "es-AR");
-    });
-
-    const spread = (sorted.length - 1) * COURSE_DAG_EDGE_OFFSET_STEP;
-    sorted.forEach((link, index) => {
-      const key = spineLinkKey(link);
-      const next = index * COURSE_DAG_EDGE_OFFSET_STEP - spread / 2;
-      offsets.set(key, (offsets.get(key) ?? 0) + next);
-    });
-  };
-
-  for (const batch of bySource.values()) {
-    if (batch.length > 1) {
-      assignParallelOffsets(batch, "source");
-    }
-  }
-
-  for (const batch of byTarget.values()) {
-    if (batch.length > 1) {
-      assignParallelOffsets(batch, "target");
-    }
-  }
-
-  for (const link of links) {
-    const offset = offsets.get(spineLinkKey(link)) ?? 0;
     const handles = pickCourseDagHandles(layout, link.source, link.target);
     edges.push({
       id: `${link.source}->${link.target}`,
@@ -685,7 +633,7 @@ function emitCourseDagLinks(
       interactionWidth: 0,
       selectable: false,
       type: "roadmapCourse",
-      pathOptions: courseDagBezierOptions(layout, link, handles, offset),
+      pathOptions: courseDagBezierOptions(layout, link, handles),
     });
   }
 }
@@ -855,9 +803,10 @@ export function buildRoadmapFlow({
   isTopicDone,
   topicNodeType,
   courseYearsByTitle,
+  courseTrayectoByTitle,
   courseDagEdges = false,
 }: BuildRoadmapFlowOptions): { nodes: Node[]; edges: Edge[] } {
-  const topicNodeOptions = { topicNodeType, courseYearsByTitle };
+  const topicNodeOptions = { topicNodeType, courseYearsByTitle, courseTrayectoByTitle };
   const styleSuffix = (source: string, target: string) =>
     edgeStyleSuffix(source, target, isTopicDone);
 

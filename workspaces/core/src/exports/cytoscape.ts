@@ -1,4 +1,5 @@
-import { CurriculumGraph, EdgeKind, PageKind } from "../types";
+import { resolveCourseTrayecto } from "../course-trayecto";
+import { CourseTrayecto, CurriculumGraph, EdgeKind, PageKind } from "../types";
 
 export interface CytoscapeElementNode {
   data: {
@@ -7,6 +8,7 @@ export interface CytoscapeElementNode {
     kind: PageKind;
     slug: string;
     path: string;
+    trayecto: CourseTrayecto;
   };
 }
 
@@ -36,6 +38,7 @@ export function exportToCytoscape(graph: CurriculumGraph): CytoscapeGraphExport 
       kind: page.kind,
       slug: page.slug,
       path: page.path,
+      trayecto: resolveCourseTrayecto(page.kind, page.trayecto, page.trayectoInvalid),
     },
   }));
 

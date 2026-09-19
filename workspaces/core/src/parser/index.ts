@@ -94,6 +94,8 @@ export function parsePages(
         dependsOnInvalid,
         correlativas,
         correlativasInvalid,
+        trayecto: page.trayectoInvalid ? undefined : page.trayecto,
+        trayectoInvalid: page.trayectoInvalid,
       };
     })
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));

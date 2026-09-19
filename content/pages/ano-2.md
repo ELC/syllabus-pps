@@ -11,3 +11,4 @@ kind: year
 - [[proyecto laboratorio]]
 - [[matemática discreta]]
 - [[estadística i]]
+- [[administración i]]

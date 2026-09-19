@@ -4,28 +4,13 @@ export interface CourseCurationEntry {
   slug: string;
 }
 
-export type GridTrackSize = number | "auto";
-
 /** One year band expressed like CSS grid templates. */
 export interface YearGridTemplate {
   templateAreas: string[];
-  /** Vertical stride (px) from each row to the next; parallels `templateAreas`. */
-  templateRows?: GridTrackSize[];
-  /** Vertical stride (px) after the last row before the next year band. */
-  yearGap?: GridTrackSize;
-}
-
-export interface CourseGridMetrics {
-  /** Course node width in px (`auto` = layout default). */
-  nodeWidth?: GridTrackSize;
-  /** Horizontal gap between column tracks in px (`auto` = layout default). */
-  columnGap?: GridTrackSize;
 }
 
 export interface CourseRoadmapCuration {
   degreeSlug: string;
-  /** Grid sizing for course nodes and horizontal spacing. */
-  grid?: CourseGridMetrics;
   courses: Record<string, CourseCurationEntry>;
   years: Record<string, YearGridTemplate>;
 }
@@ -192,59 +177,4 @@ export function buildCuratedCourseGrid(
   }
 
   return { displayRows, columnOf };
-}
-
-export interface CuratedRowStrideDefaults {
-  nodeHeight: number;
-  stageGap: number;
-  subrowGap: number;
-  yearGap: number;
-}
-
-function resolveTrackSize(
-  size: GridTrackSize | undefined,
-  fallback: number,
-): number {
-  return size === undefined || size === "auto" ? fallback : size;
-}
-
-export function resolveCuratedGridMetrics(
-  curation: CourseRoadmapCuration,
-  defaults: { nodeWidth: number; columnGap: number },
-): { nodeWidth: number; columnGap: number; stride: number } {
-  const nodeWidth = resolveTrackSize(curation.grid?.nodeWidth, defaults.nodeWidth);
-  const columnGap = resolveTrackSize(curation.grid?.columnGap, defaults.columnGap);
-
-  return {
-    nodeWidth,
-    columnGap,
-    stride: nodeWidth + columnGap,
-  };
-}
-
-/** Distance in px from the previous display row to the current one. */
-export function resolveCuratedRowStride(
-  curation: CourseRoadmapCuration,
-  row: CuratedCourseDisplayRow,
-  previousRow: CuratedCourseDisplayRow,
-  defaults: CuratedRowStrideDefaults,
-): number {
-  if (row.year !== previousRow.year) {
-    const previousYear = curation.years[previousRow.year];
-    return resolveTrackSize(
-      previousYear?.yearGap,
-      defaults.nodeHeight + defaults.yearGap,
-    );
-  }
-
-  const yearTemplate = curation.years[row.year];
-  const fallbackGap =
-    row.withinYearStage === previousRow.withinYearStage
-      ? defaults.subrowGap
-      : defaults.stageGap;
-
-  return resolveTrackSize(
-    yearTemplate?.templateRows?.[previousRow.withinYearStage],
-    defaults.nodeHeight + fallbackGap,
-  );
 }

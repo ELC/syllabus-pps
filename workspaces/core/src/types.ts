@@ -10,6 +10,23 @@ export const pageKinds = [
 
 export type PageKind = (typeof pageKinds)[number];
 
+export const courseTrayectos = [
+  "Trayecto Principal",
+  "Trayecto No Estructurado",
+] as const;
+
+export type CourseTrayecto = (typeof courseTrayectos)[number];
+
+export const COURSE_TRAYECTO_PRINCIPAL = courseTrayectos[0];
+export const COURSE_TRAYECTO_NO_ESTRUCTURADO = courseTrayectos[1];
+export const DEFAULT_COURSE_TRAYECTO = COURSE_TRAYECTO_PRINCIPAL;
+
+/** Legacy and shorthand frontmatter values mapped to canonical trayecto labels. */
+export const courseTrayectoAliases: Record<string, CourseTrayecto> = {
+  principal: COURSE_TRAYECTO_PRINCIPAL,
+  "no-estructurado": COURSE_TRAYECTO_NO_ESTRUCTURADO,
+};
+
 export const edgeKinds = [
   "page-ref",
   "concept-tag",
@@ -56,6 +73,8 @@ export const diagnosticCodes = [
   "course-correlativas-non-course",
   "course-correlativas-self",
   "course-correlativas-on-non-course",
+  "course-trayecto-invalid",
+  "course-trayecto-on-non-course",
   "citation-unresolved",
   "resource-catalog-invalid",
   "resource-catalog-unused",
@@ -123,6 +142,8 @@ export interface PageFrontmatter {
   dependsOn: string[];
   /** Courses that must be completed before this course (kind: course only). */
   correlativas?: string[];
+  /** Course track; defaults to trayecto principal when omitted on course pages. */
+  trayecto?: CourseTrayecto;
 }
 
 export interface ZettelPage {
@@ -147,6 +168,10 @@ export interface ZettelPage {
   correlativas?: CourseCorrelativa[];
   /** True when frontmatter correlativas is present but malformed. */
   correlativasInvalid?: boolean;
+  /** Parsed from frontmatter; undefined when the field is absent. */
+  trayecto?: CourseTrayecto;
+  /** True when frontmatter trayecto is present but malformed. */
+  trayectoInvalid?: boolean;
 }
 
 export interface GraphEdge {

@@ -139,4 +139,41 @@ dependsOn: []
     const subRoadmap = projectCourseConceptRoadmap(graph, "LDS", "programación i");
     expect(subRoadmap?.concepts.map((concept) => concept.title)).toEqual(["algoritmos"]);
   });
+
+  it("projects trayecto metadata for unstructured-track courses", () => {
+    const config = createLoadedConfig({ years: [] });
+    const graph = buildGraphFromPages({
+      config,
+      sources: [
+        {
+          path: "lds.md",
+          content: `---
+title: LDS
+kind: degree
+---
+- [[computer vision]]
+`,
+        },
+        {
+          path: "computer-vision.md",
+          content: `---
+title: computer vision
+kind: course
+trayecto: no-estructurado
+---
+- visión por computadora
+`,
+        },
+      ],
+      resources: [],
+    });
+
+    const roadmap = projectCourseRoadmap(graph, "LDS");
+    expect(roadmap?.courses).toEqual([
+      expect.objectContaining({
+        title: "computer vision",
+        trayecto: "Trayecto No Estructurado",
+      }),
+    ]);
+  });
 });
