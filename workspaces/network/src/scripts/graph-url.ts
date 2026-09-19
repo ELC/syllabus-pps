@@ -68,6 +68,27 @@ function parseBooleanFlag(value: string | null, defaultValue: boolean): boolean 
   return defaultValue;
 }
 
+function writeBooleanUrlParam(
+  params: URLSearchParams,
+  key: string,
+  value: boolean,
+  defaultValue: boolean,
+): void {
+  if (value === defaultValue) {
+    params.delete(key);
+  } else {
+    params.set(key, value ? "1" : "0");
+  }
+}
+
+function writeCourseLinksParam(params: URLSearchParams, mode: CourseLinkMode): void {
+  if (mode === DEFAULT_GRAPH_COURSE_LINK_MODE) {
+    params.delete(GRAPH_URL_COURSE_LINKS_PARAM);
+  } else {
+    params.set(GRAPH_URL_COURSE_LINKS_PARAM, mode);
+  }
+}
+
 export function parseGraphUrlState(
   search: string | URLSearchParams = window.location.search,
 ): GraphUrlState {
@@ -123,23 +144,19 @@ export function writeGraphUrlState(state: GraphUrlState): void {
     }
   }
 
-  if (state.conceptsHidden) {
-    params.set(GRAPH_URL_HIDE_CONCEPTS_PARAM, "1");
-  } else {
-    params.delete(GRAPH_URL_HIDE_CONCEPTS_PARAM);
-  }
-
-  if (state.yearsHidden) {
-    params.set(GRAPH_URL_HIDE_YEARS_PARAM, "1");
-  } else {
-    params.delete(GRAPH_URL_HIDE_YEARS_PARAM);
-  }
-
-  if (state.courseLinkMode === "correlativas") {
-    params.set(GRAPH_URL_COURSE_LINKS_PARAM, "correlativas");
-  } else {
-    params.delete(GRAPH_URL_COURSE_LINKS_PARAM);
-  }
+  writeBooleanUrlParam(
+    params,
+    GRAPH_URL_HIDE_CONCEPTS_PARAM,
+    state.conceptsHidden,
+    DEFAULT_GRAPH_CONCEPTS_HIDDEN,
+  );
+  writeBooleanUrlParam(
+    params,
+    GRAPH_URL_HIDE_YEARS_PARAM,
+    state.yearsHidden,
+    DEFAULT_GRAPH_YEARS_HIDDEN,
+  );
+  writeCourseLinksParam(params, state.courseLinkMode);
 
   const next = `${url.pathname}${params.toString() ? `?${params.toString()}` : ""}${url.hash}`;
   const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;

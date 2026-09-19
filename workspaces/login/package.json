@@ -9,6 +9,8 @@
     "./LoginForm": "./src/LoginForm.tsx",
     "./ShellAuthGate": "./src/ShellAuthGate.tsx",
     "./ShellSidebarFooter": "./src/ShellSidebarFooter.tsx",
+    "./sidebar-footer-html": "./src/sidebar-footer-html.ts",
+    "./sidebar-icons": "./src/sidebar-icons.ts",
     "./bootstrap": "./src/bootstrap.ts",
     "./mountShellAuth": "./src/mountShellAuth.ts",
     "./sessionStorage": "./src/sessionStorage.ts",

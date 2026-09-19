@@ -629,6 +629,10 @@ function nodeStyle(node: cytoscape.SingularElementArgument) {
   return kindStyleForKind(kind);
 }
 
+function edgeLineColor(edge: cytoscape.EdgeSingular): string {
+  return nodeStyle(edge.source()).border;
+}
+
 function nodeTitle(node: cytoscape.SingularElementArgument, fallback: string): string {
   if (!node.isNode()) {
     return fallback;
@@ -966,7 +970,22 @@ function syncToggleCourseLinksButton(button: HTMLButtonElement, mode: CourseLink
     : "Mostrar correlativas declaradas en el frontmatter de cada materia";
 }
 
+function setCourseLinkMode(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  mode: CourseLinkMode,
+): void {
+  viewState.courseLinkMode = mode;
+  ui.syncView(true);
+
+  if (!isExpansionActive(viewState)) {
+    refreshGraphLayout(cy, viewState);
+  }
+}
+
 function mountToggleCourseLinksButton(
+  cy: cytoscape.Core,
   viewState: GraphViewState,
   ui: GraphUi,
   button: HTMLButtonElement,
@@ -974,10 +993,10 @@ function mountToggleCourseLinksButton(
   syncToggleCourseLinksButton(button, viewState.courseLinkMode);
 
   button.addEventListener("click", () => {
-    viewState.courseLinkMode =
+    const nextMode =
       viewState.courseLinkMode === "correlativas" ? "mentions" : "correlativas";
+    setCourseLinkMode(cy, viewState, ui, nextMode);
     syncToggleCourseLinksButton(button, viewState.courseLinkMode);
-    ui.syncView(true);
   });
 }
 
@@ -1501,7 +1520,32 @@ function prepareGraphElements(elements: cytoscape.ElementsDefinition): cytoscape
         },
       };
     }),
-    edges: elements.edges ? unifyBidirectionalEdges(elements.edges, kindById) : elements.edges,
+    edges: elements.edges
+      ? unifyBidirectionalEdges(elements.edges, kindById).map((edge) => {
+          const sourceKind = kindById.get(String(edge.data.source));
+          const targetKind = kindById.get(String(edge.data.target));
+          const kind = String(edge.data.kind);
+          const isCourseInterlink =
+            kind === "course-prerequisite" ||
+            (kind === "page-ref" && sourceKind === "course" && targetKind === "course");
+
+          if (!isCourseInterlink) {
+            return edge;
+          }
+
+          const existingClasses =
+            typeof edge.classes === "string"
+              ? edge.classes.split(/\s+/).filter(Boolean)
+              : Array.isArray(edge.classes)
+                ? edge.classes.filter((entry): entry is string => typeof entry === "string")
+                : [];
+
+          return {
+            ...edge,
+            classes: [...new Set([...existingClasses, "course-interlink"])].join(" "),
+          };
+        })
+      : elements.edges,
   };
 }
 
@@ -1637,8 +1681,8 @@ export async function mountGraph(
         selector: "edge",
         style: {
           width: 1.5,
-          "line-color": AUSTRAL.edgeStructural,
-          "target-arrow-color": AUSTRAL.edgeStructural,
+          "line-color": (edge) => edgeLineColor(edge),
+          "target-arrow-color": (edge) => edgeLineColor(edge),
           "target-arrow-shape": "triangle",
           "curve-style": "bezier",
         },
@@ -1652,11 +1696,9 @@ export async function mountGraph(
         },
       },
       {
-        selector: "edge[kind = 'course-prerequisite']",
+        selector: "edge.course-interlink",
         style: {
           width: 2,
-          "line-color": kindStyle("course").border,
-          "target-arrow-color": kindStyle("course").border,
         },
       },
     ],
@@ -1777,7 +1819,7 @@ export async function mountGraph(
     : null;
 
   if (toggleCourseLinksButton instanceof HTMLButtonElement) {
-    mountToggleCourseLinksButton(viewState, ui, toggleCourseLinksButton);
+    mountToggleCourseLinksButton(cy, viewState, ui, toggleCourseLinksButton);
   }
 
   if (urlRestorePending && !isExpansionActive(viewState)) {

@@ -1,21 +1,23 @@
-const NAV_ITEMS = [
-  { id: "home", label: "Home", segment: "" },
-  { id: "analytics", label: "Analytics", segment: "analytics/" },
-  { id: "network", label: "Network", segment: "network/" },
-  { id: "roadmap", label: "Roadmaps", segment: "roadmap/" },
-  { id: "cms", label: "CMS", segment: "cms/" },
-  { id: "cites", label: "Cites", segment: "cites/" },
-];
+import { SHELL_SIDEBAR_FOOTER_HTML } from "@pps/login/sidebar-footer-html";
+import {
+  shellIsologoHref,
+  shellLogoHref,
+  SHELL_ISOLOGO_ALT,
+  SHELL_ISOLOGO_HEIGHT,
+  SHELL_ISOLOGO_WIDTH,
+  SHELL_LOGO_HEIGHT,
+  SHELL_LOGO_WIDTH,
+} from "./logo-meta.js";
+import { navIconSvg, sidebarCollapseIconSvg } from "./nav-icons.js";
+import { NAV_ITEMS, navHref } from "./nav.js";
 
 export interface StaticShellOptions {
   sidebarExtraId?: string;
   mainClass?: string;
   logoSrc?: string;
+  isologoSrc?: string;
   authDisabled?: boolean;
 }
-
-const SHELL_LOGO_WIDTH = 5000;
-const SHELL_LOGO_HEIGHT = 1837;
 
 export function renderAuthRedirectScript(siteRoot: string): string {
   const loginRoot = JSON.stringify(siteRoot);
@@ -41,6 +43,15 @@ export function renderAuthRedirectScript(siteRoot: string): string {
 </script>`;
 }
 
+function renderSiteNavLinks(activeNav: string, siteRoot: string): string {
+  return NAV_ITEMS.map((item) => {
+    const active = item.id === activeNav;
+    const className = active ? "dashboard__link dashboard__link--active" : "dashboard__link";
+    const aria = active ? ' aria-current="page"' : "";
+    return `<a class="${className}" href="${navHref(siteRoot, item.segment)}"${aria} title="${item.label}"><span class="dashboard__link-icon">${navIconSvg(item.id)}</span><span class="dashboard__link-label">${item.label}</span></a>`;
+  }).join("");
+}
+
 export function renderStaticShell(
   activeNav: string,
   siteRoot: string,
@@ -49,14 +60,10 @@ export function renderStaticShell(
   const {
     sidebarExtraId,
     mainClass = "dashboard__main",
-    logoSrc = "/assets/shell/logo-horizontal-blanco.png",
+    logoSrc = shellLogoHref(siteRoot),
+    isologoSrc = shellIsologoHref(siteRoot),
   } = options;
-  const navLinks = NAV_ITEMS.map((item) => {
-    const active = item.id === activeNav;
-    const aria = active ? ' aria-current="page"' : "";
-    const className = active ? "dashboard__link dashboard__link--active" : "dashboard__link";
-    return `<a class="${className}" href="${siteRoot}${item.segment}"${aria}>${item.label}</a>`;
-  }).join("");
+  const navLinks = renderSiteNavLinks(activeNav, siteRoot);
 
   const sidebarExtra = sidebarExtraId
     ? `\n    <div id="${sidebarExtraId}" class="dashboard__extra"></div>`
@@ -67,22 +74,18 @@ export function renderStaticShell(
   return `${authRedirect}
 <div class="dashboard auth-shell-prerender">
   <aside class="dashboard__sidebar">
-    <a class="dashboard__brand" href="${siteRoot}" aria-label="Universidad Austral — PPS Curriculum">
-      <img class="dashboard__brand-logo" data-pps-shell-logo src="${logoSrc}" alt="Universidad Austral" width="${SHELL_LOGO_WIDTH}" height="${SHELL_LOGO_HEIGHT}" decoding="async" fetchpriority="high" />
-    </a>
-    <nav class="dashboard__nav" aria-label="Site">
+    <div class="dashboard__sidebar-head">
+      <a class="dashboard__brand" href="${siteRoot}" aria-label="Universidad Austral — PPS Curriculum">
+        <img class="dashboard__brand-logo" data-pps-shell-logo src="${logoSrc}" alt="${SHELL_ISOLOGO_ALT}" width="${SHELL_LOGO_WIDTH}" height="${SHELL_LOGO_HEIGHT}" decoding="async" fetchpriority="high" style="max-width:10rem;width:auto;height:auto" />
+        <img class="dashboard__brand-isologo" data-pps-shell-isologo src="${isologoSrc}" alt="" width="${SHELL_ISOLOGO_WIDTH}" height="${SHELL_ISOLOGO_HEIGHT}" decoding="async" aria-hidden="true" style="height:2.5rem;width:auto;max-width:100%" />
+      </a>
+    </div>
+    <nav id="dashboard-site-nav" class="dashboard__nav" aria-label="Site">
       ${navLinks}
     </nav>${sidebarExtra}
-    <div class="dashboard__footer">
-      <div class="dashboard__user" aria-live="polite">
-        <div class="dashboard__user-name" data-pps-user-name hidden>&nbsp;</div>
-        <div class="dashboard__user-email" data-pps-user-email>&nbsp;</div>
-      </div>
-      <div class="dashboard__signout-slot">
-        <button type="button" class="login__sign-out" data-pps-sign-out hidden>Sign out</button>
-      </div>
-    </div>
+    ${SHELL_SIDEBAR_FOOTER_HTML}
   </aside>
+  <button type="button" class="dashboard__sidebar-collapse" aria-expanded="true" aria-controls="dashboard-site-nav" title="Contraer barra lateral"><span class="dashboard__sidebar-collapse-icon">${sidebarCollapseIconSvg(false)}</span></button>
   <main class="${mainClass}"><div id="root" class="app-root"></div></main>
 </div>`;
 }

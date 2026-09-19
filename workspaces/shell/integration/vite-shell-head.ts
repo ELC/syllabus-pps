@@ -8,6 +8,7 @@ import { loadEnv } from "vite";
 
 import { googleAnalyticsHeadTags, readGoogleAnalyticsId } from "./google-analytics.js";
 import { SHELL_FONT_MARKUP } from "./vite-font-links.js";
+import { shellIsologoHref, shellLogoHref } from "./logo-meta.js";
 import { renderStaticShell } from "./shell-static-html.js";
 
 const integrationDir = dirname(fileURLToPath(import.meta.url));
@@ -15,17 +16,19 @@ const shellRoot = join(integrationDir, "..", "..");
 const workspacesRoot = join(shellRoot, "..");
 const repoRoot = join(workspacesRoot, "..");
 
+const shellStylesDir = join(shellRoot, "src/styles");
+
 const AUTH_CRITICAL_CSS = sass.compile(
   join(workspacesRoot, "login/src/styles/auth-critical.scss"),
 ).css;
 
-const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/", "cites/"];
-const SHELL_LOGO_PATH = "assets/shell/logo-horizontal-blanco.png";
+const SHELL_CHROME_CSS = sass.compile(join(shellStylesDir, "shell.scss"), {
+  loadPaths: [shellStylesDir],
+}).css;
 
-function shellLogoHref(siteRoot: string): string {
-  const root = siteRoot.endsWith("/") ? siteRoot : `${siteRoot}/`;
-  return `${root}${SHELL_LOGO_PATH}`;
-}
+const LOGIN_CHROME_CSS = sass.compile(join(workspacesRoot, "login/src/styles/login.scss")).css;
+
+const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/", "cites/"];
 
 export interface ShellHeadPluginOptions {
   activeNav?: string;
@@ -36,10 +39,6 @@ export interface ShellHeadPluginOptions {
 
 function normalizeBase(base: string): string {
   return base.endsWith("/") ? base : `${base}/`;
-}
-
-function devFsAssetHref(absolutePath: string): string {
-  return `@fs/${absolutePath.replace(/\\/g, "/")}`;
 }
 
 export function siteRootFromBase(appBaseUrl: string): string {
@@ -55,9 +54,6 @@ export function siteRootFromBase(appBaseUrl: string): string {
 }
 
 function shellHeadTags(): HtmlTagDescriptor[] {
-  const shellCss = join(shellRoot, "src/styles/shell.scss");
-  const loginCss = join(workspacesRoot, "login/src/styles/login.scss");
-
   return [
     {
       tag: "style",
@@ -72,13 +68,15 @@ function shellHeadTags(): HtmlTagDescriptor[] {
       injectTo: "head-prepend",
     },
     {
-      tag: "link",
-      attrs: { rel: "stylesheet", href: devFsAssetHref(shellCss) },
+      tag: "style",
+      attrs: { "data-pps-shell-chrome": "" },
+      children: SHELL_CHROME_CSS,
       injectTo: "head",
     },
     {
-      tag: "link",
-      attrs: { rel: "stylesheet", href: devFsAssetHref(loginCss) },
+      tag: "style",
+      attrs: { "data-pps-login-chrome": "" },
+      children: LOGIN_CHROME_CSS,
       injectTo: "head",
     },
   ];
@@ -93,8 +91,9 @@ export function shellHeadPlugin(
   let analyticsHeadTags: HtmlTagDescriptor[] = [];
   let authDisabled = false;
 
-  const logoSrcForSite = (): string =>
-    shellLogoHref(siteRootFromBase(process.env.SITE_BASE ?? "/"));
+  const siteRootForAssets = (): string => siteRootFromBase(process.env.SITE_BASE ?? "/");
+  const logoSrcForSite = (): string => shellLogoHref(siteRootForAssets());
+  const isologoSrcForSite = (): string => shellIsologoHref(siteRootForAssets());
 
   const transformPre: IndexHtmlTransformHook = (html) => {
     const appBase = process.env[baseEnvVar] ?? defaultBase;
@@ -110,6 +109,7 @@ export function shellHeadPlugin(
         sidebarExtraId,
         mainClass,
         logoSrc: logoSrcForSite(),
+        isologoSrc: isologoSrcForSite(),
         authDisabled,
       });
       out = out.replace(/<body([^>]*)>/, (match, attrs: string) => {
@@ -147,18 +147,25 @@ export function shellHeadPlugin(
   };
 }
 
-/** Keep prerendered SPA logos on the site public URL after Vite base rewriting. */
+/** Keep prerendered SPA brand assets on the site public URL after Vite base rewriting. */
 export function shellLogoPostPlugin(): Plugin {
   return {
     name: "pps-shell-head-logo",
     transformIndexHtml: {
       order: "post",
       handler(html) {
-        const logoSrc = shellLogoHref(siteRootFromBase(process.env.SITE_BASE ?? "/"));
-        return html.replace(
-          /(<img\b[^>]*\bdata-pps-shell-logo\b[^>]*\ssrc=")[^"]*(")/,
-          `$1${logoSrc}$2`,
-        );
+        const siteRoot = siteRootFromBase(process.env.SITE_BASE ?? "/");
+        const logoSrc = shellLogoHref(siteRoot);
+        const isologoSrc = shellIsologoHref(siteRoot);
+        return html
+          .replace(
+            /(<img\b[^>]*\bdata-pps-shell-logo\b[^>]*\ssrc=")[^"]*(")/,
+            `$1${logoSrc}$2`,
+          )
+          .replace(
+            /(<img\b[^>]*\bdata-pps-shell-isologo\b[^>]*\ssrc=")[^"]*(")/,
+            `$1${isologoSrc}$2`,
+          );
       },
     },
   };

@@ -1,3 +1,5 @@
+import { signOutIconSvg } from "./sidebar-icons";
+
 interface ShellSidebarFooterProps {
   email?: string | null;
   userName?: string | null;
@@ -25,11 +27,16 @@ export function ShellSidebarFooter({ email, userName, onSignOut }: ShellSidebarF
         {active ? (
           <button
             type="button"
-            className="login__sign-out login__sign-out--active"
+            className="dashboard__link login__sign-out login__sign-out--active"
             data-pps-sign-out
+            title="Sign out"
             onClick={() => void onSignOut!()}
           >
-            Sign out
+            <span
+              className="dashboard__link-icon"
+              dangerouslySetInnerHTML={{ __html: signOutIconSvg() }}
+            />
+            <span className="dashboard__link-label">Sign out</span>
           </button>
         ) : null}
       </div>
@@ -37,12 +44,4 @@ export function ShellSidebarFooter({ email, userName, onSignOut }: ShellSidebarF
   );
 }
 
-export const SHELL_SIDEBAR_FOOTER_HTML = `<div class="dashboard__footer">
-  <div class="dashboard__user" aria-live="polite">
-    <div class="dashboard__user-name" data-pps-user-name hidden>&nbsp;</div>
-    <div class="dashboard__user-email" data-pps-user-email>&nbsp;</div>
-  </div>
-  <div class="dashboard__signout-slot">
-    <button type="button" class="login__sign-out" data-pps-sign-out hidden>Sign out</button>
-  </div>
-</div>`;
+export { SHELL_SIDEBAR_FOOTER_HTML } from "./sidebar-footer-html";

@@ -2,14 +2,19 @@
 import authCriticalCss from "@pps/login/styles/auth-critical.scss?inline";
 import authCss from "@pps/login/styles/login.scss?url";
 import { OPTIMISTIC_AUTH_BOOTSTRAP_SCRIPT } from "@pps/login/sessionStorage";
+import { SHELL_SIDEBAR_FOOTER_HTML } from "@pps/login/sidebar-footer-html";
 import {
-  SHELL_LOGO_ALT,
+  SHELL_ISOLOGO_ALT,
+  SHELL_ISOLOGO_HEIGHT,
+  SHELL_ISOLOGO_WIDTH,
   SHELL_LOGO_HEIGHT,
   SHELL_LOGO_WIDTH,
+  shellIsologoHref,
   shellLogoHref,
 } from "./logo-meta";
 import shellCss from "@pps/shell/styles/shell.scss?url";
 import GoogleAnalytics from "./GoogleAnalytics.astro";
+import { navIconSvg, sidebarCollapseIconSvg } from "./nav-icons";
 import { NAV_ITEMS, navHref } from "./nav";
 import type { NavId } from "./site-root";
 import { siteRootFromEnv } from "./site-root";
@@ -21,6 +26,8 @@ interface Props {
 
 const { title, activeNav } = Astro.props;
 const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
+const logoHref = shellLogoHref(siteRoot);
+const isologoHref = shellIsologoHref(siteRoot);
 ---
 
 <!doctype html>
@@ -45,40 +52,56 @@ const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
   <body class="dashboard--body auth-pending">
     <div class="dashboard">
       <aside class="dashboard__sidebar">
-        <a class="dashboard__brand" href={siteRoot} aria-label="Universidad Austral — PPS Curriculum">
-          <img
-            class="dashboard__brand-logo"
-            src={shellLogoHref(siteRoot)}
-            alt={SHELL_LOGO_ALT}
-            width={SHELL_LOGO_WIDTH}
-            height={SHELL_LOGO_HEIGHT}
-            decoding="async"
-          />
-        </a>
-        <nav class="dashboard__nav" aria-label="Site">
+        <div class="dashboard__sidebar-head">
+          <a class="dashboard__brand" href={siteRoot} aria-label="Universidad Austral — PPS Curriculum">
+            <img
+              class="dashboard__brand-logo"
+              data-pps-shell-logo
+              src={logoHref}
+              alt={SHELL_ISOLOGO_ALT}
+              width={SHELL_LOGO_WIDTH}
+              height={SHELL_LOGO_HEIGHT}
+              decoding="async"
+            />
+            <img
+              class="dashboard__brand-isologo"
+              data-pps-shell-isologo
+              src={isologoHref}
+              alt=""
+              width={SHELL_ISOLOGO_WIDTH}
+              height={SHELL_ISOLOGO_HEIGHT}
+              decoding="async"
+              aria-hidden="true"
+            />
+          </a>
+        </div>
+        <nav id="dashboard-site-nav" class="dashboard__nav" aria-label="Site">
           {
             NAV_ITEMS.map((item) => (
               <a
                 class:list={["dashboard__link", { "dashboard__link--active": item.id === activeNav }]}
                 href={navHref(siteRoot, item.segment)}
                 aria-current={item.id === activeNav ? "page" : undefined}
+                title={item.label}
               >
-                {item.label}
+                <span class="dashboard__link-icon" set:html={navIconSvg(item.id)} />
+                <span class="dashboard__link-label">{item.label}</span>
               </a>
             ))
           }
         </nav>
         <slot name="sidebar" />
-        <div class="dashboard__footer">
-          <div class="dashboard__user" aria-live="polite">
-            <div class="dashboard__user-name" data-pps-user-name hidden>&nbsp;</div>
-            <div class="dashboard__user-email" data-pps-user-email>&nbsp;</div>
-          </div>
-          <div class="dashboard__signout-slot">
-            <button type="button" class="login__sign-out" data-pps-sign-out hidden>Sign out</button>
-          </div>
-        </div>
+        <Fragment set:html={SHELL_SIDEBAR_FOOTER_HTML} />
       </aside>
+      <button
+        type="button"
+        class="dashboard__sidebar-collapse"
+        aria-expanded="true"
+        aria-controls="dashboard-site-nav"
+        title="Contraer barra lateral"
+      >
+        <span class="dashboard__sidebar-collapse-icon" set:html={sidebarCollapseIconSvg(false)} />
+      </button>
       <main class="dashboard__main">
         <div class="dashboard__content">
           <slot />
@@ -87,7 +110,9 @@ const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
     </div>
     <script>
       import { mountShellAuth } from "@pps/login/mountShellAuth";
+      import { mountShellSidebar } from "@pps/shell/mount-shell-sidebar";
 
+      mountShellSidebar();
       void mountShellAuth();
     </script>
   </body>

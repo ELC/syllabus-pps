@@ -14,6 +14,7 @@
     "./cites-link": "./src/cites-link.ts",
     "./styles/shell.scss": "./src/styles/shell.scss",
     "./shell-chrome": "./src/shell-chrome.ts",
+    "./mount-shell-sidebar": "./src/mount-shell-sidebar.ts",
     "./astro": {
       "types": "./integration/dist/index.d.ts",
       "default": "./integration/dist/index.js"
@@ -22,7 +23,8 @@
       "types": "./integration/dist/vite.d.ts",
       "default": "./integration/dist/vite.js"
     },
-    "./assets/logo-horizontal-blanco.png": "./assets/logo-horizontal-blanco.png"
+    "./assets/logo-horizontal-blanco.png": "./assets/logo-horizontal-blanco.png",
+    "./assets/isologo-blanco.png": "./assets/isologo-blanco.png"
   },
   "scripts": {
     "build": "tsc -p integration/tsconfig.build.json",

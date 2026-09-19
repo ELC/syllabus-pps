@@ -160,19 +160,21 @@
   &__sidebar-toggle-years,
   &__sidebar-toggle-course-links {
     margin: 0 0 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    background: transparent;
-    color: var(--dash-sidebar-text);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    background: rgba(0, 0, 0, 0.18);
+    color: var(--austral-blanco);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
 
     &:hover {
-      border-color: rgba(255, 255, 255, 0.45);
-      background: var(--dash-sidebar-active);
+      border-color: var(--austral-blanco);
+      background: rgba(255, 255, 255, 0.14);
     }
 
     &[aria-pressed="true"] {
-      border-color: var(--austral-celeste-suave);
-      background: var(--dash-sidebar-active);
-      color: var(--austral-celeste-suave);
+      border-color: var(--austral-blanco);
+      background: var(--austral-blanco);
+      color: var(--austral-azul-primario);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
     }
 
     &:focus-visible {
@@ -183,14 +185,14 @@
 
   &__sidebar-reset-filters {
     margin-top: 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    background: transparent;
-    color: var(--dash-sidebar-muted);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(0, 0, 0, 0.12);
+    color: rgba(255, 255, 255, 0.88);
 
     &:hover {
-      border-color: rgba(255, 255, 255, 0.45);
-      color: var(--dash-sidebar-text);
-      background: var(--dash-sidebar-active);
+      border-color: var(--austral-blanco);
+      color: var(--austral-blanco);
+      background: rgba(255, 255, 255, 0.12);
     }
 
     &:focus {
