@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { ShellSidebarFooter } from "@pps/login/ShellSidebarFooter";
 
-import { NavIcon, SidebarCollapseIcon } from "./NavIcon";
+import { NavIcon, NavToggleIcon, SidebarCollapseIcon } from "./NavIcon";
 import {
   SHELL_ISOLOGO_ALT,
   SHELL_ISOLOGO_HEIGHT,
@@ -37,6 +37,7 @@ export function DashboardSidebar({
   const logoHref = shellLogoHref(siteRoot);
   const isologoHref = shellIsologoHref(siteRoot);
   const [collapsed, setCollapsed] = useState(readSidebarCollapsedPreference);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     mountShellSidebar();
@@ -47,11 +48,17 @@ export function DashboardSidebar({
 
     const sync = () => {
       setCollapsed(dashboard.classList.contains("dashboard--sidebar-collapsed"));
+      setMobileNavOpen(dashboard.classList.contains("dashboard--mobile-nav-open"));
     };
 
     sync();
     dashboard.addEventListener("pps-sidebar-collapsed", sync);
-    return () => dashboard.removeEventListener("pps-sidebar-collapsed", sync);
+    const observer = new MutationObserver(sync);
+    observer.observe(dashboard, { attributes: true, attributeFilter: ["class"] });
+    return () => {
+      dashboard.removeEventListener("pps-sidebar-collapsed", sync);
+      observer.disconnect();
+    };
   }, []);
 
   return (
@@ -81,22 +88,35 @@ export function DashboardSidebar({
           />
         </a>
       </div>
-      <nav id="dashboard-site-nav" className="dashboard__nav" aria-label="Site">
-        {NAV_ITEMS.map((item) => (
-          <a
-            key={item.id}
-            className={item.id === activeNav ? "dashboard__link dashboard__link--active" : "dashboard__link"}
-            href={navHref(siteRoot, item.segment)}
-            aria-current={item.id === activeNav ? "page" : undefined}
-            title={item.label}
-          >
-            <NavIcon id={item.id} />
-            <span className="dashboard__link-label">{item.label}</span>
-          </a>
-        ))}
-      </nav>
-      {sidebarExtra}
-      <ShellSidebarFooter email={userEmail} userName={userName} onSignOut={onSignOut} />
+      <button
+        type="button"
+        className="dashboard__nav-toggle"
+        aria-expanded={mobileNavOpen}
+        aria-controls="dashboard-mobile-nav"
+        title={mobileNavOpen ? "Cerrar menú" : "Abrir menú"}
+      >
+        <NavToggleIcon open={mobileNavOpen} />
+      </button>
+      <div id="dashboard-mobile-nav" className="dashboard__sidebar-drawer">
+        <div className="dashboard__sidebar-drawer-panel">
+          <nav id="dashboard-site-nav" className="dashboard__nav" aria-label="Site">
+            {NAV_ITEMS.map((item) => (
+              <a
+                key={item.id}
+                className={item.id === activeNav ? "dashboard__link dashboard__link--active" : "dashboard__link"}
+                href={navHref(siteRoot, item.segment)}
+                aria-current={item.id === activeNav ? "page" : undefined}
+                title={item.label}
+              >
+                <NavIcon id={item.id} />
+                <span className="dashboard__link-label">{item.label}</span>
+              </a>
+            ))}
+          </nav>
+          {sidebarExtra}
+          <ShellSidebarFooter email={userEmail} userName={userName} onSignOut={onSignOut} />
+        </div>
+      </div>
     </aside>
     <button
       type="button"

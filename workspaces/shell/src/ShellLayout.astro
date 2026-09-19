@@ -14,7 +14,7 @@ import {
 } from "./logo-meta";
 import shellCss from "@pps/shell/styles/shell.scss?url";
 import GoogleAnalytics from "./GoogleAnalytics.astro";
-import { navIconSvg, sidebarCollapseIconSvg } from "./nav-icons";
+import { navIconSvg, navToggleIconSvg, sidebarCollapseIconSvg } from "./nav-icons";
 import { NAV_ITEMS, navHref } from "./nav";
 import type { NavId } from "./site-root";
 import { siteRootFromEnv } from "./site-root";
@@ -75,23 +75,36 @@ const isologoHref = shellIsologoHref(siteRoot);
             />
           </a>
         </div>
-        <nav id="dashboard-site-nav" class="dashboard__nav" aria-label="Site">
-          {
-            NAV_ITEMS.map((item) => (
-              <a
-                class:list={["dashboard__link", { "dashboard__link--active": item.id === activeNav }]}
-                href={navHref(siteRoot, item.segment)}
-                aria-current={item.id === activeNav ? "page" : undefined}
-                title={item.label}
-              >
-                <span class="dashboard__link-icon" set:html={navIconSvg(item.id)} />
-                <span class="dashboard__link-label">{item.label}</span>
-              </a>
-            ))
-          }
-        </nav>
-        <slot name="sidebar" />
-        <Fragment set:html={SHELL_SIDEBAR_FOOTER_HTML} />
+        <button
+          type="button"
+          class="dashboard__nav-toggle"
+          aria-expanded="false"
+          aria-controls="dashboard-mobile-nav"
+          title="Abrir menú"
+        >
+          <span class="dashboard__nav-toggle-icon" set:html={navToggleIconSvg(false)} />
+        </button>
+        <div id="dashboard-mobile-nav" class="dashboard__sidebar-drawer">
+          <div class="dashboard__sidebar-drawer-panel">
+            <nav id="dashboard-site-nav" class="dashboard__nav" aria-label="Site">
+              {
+                NAV_ITEMS.map((item) => (
+                  <a
+                    class:list={["dashboard__link", { "dashboard__link--active": item.id === activeNav }]}
+                    href={navHref(siteRoot, item.segment)}
+                    aria-current={item.id === activeNav ? "page" : undefined}
+                    title={item.label}
+                  >
+                    <span class="dashboard__link-icon" set:html={navIconSvg(item.id)} />
+                    <span class="dashboard__link-label">{item.label}</span>
+                  </a>
+                ))
+              }
+            </nav>
+            <slot name="sidebar" />
+            <Fragment set:html={SHELL_SIDEBAR_FOOTER_HTML} />
+          </div>
+        </div>
       </aside>
       <button
         type="button"

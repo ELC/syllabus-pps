@@ -43,11 +43,26 @@ import networkCss from "../styles/network.scss?url";
     >
       Mostrar Menciones
     </button>
-    <p class="graph__sidebar-label">Filtros</p>
-    <p class="graph__filters-help">
-      Cada filtro muestra el nodo elegido y todos los que tienen un camino dirigido hacia él. No
-      es lo mismo que hacer clic en el grafo, que expande el vecindario de un nodo.
-    </p>
+    <div class="graph__sidebar-label-row">
+      <p class="graph__sidebar-label">Filtros</p>
+      <button
+        type="button"
+        class="graph__filters-info"
+        aria-label="Ayuda sobre los filtros"
+        aria-describedby="graph-filters-help-tooltip"
+      >
+        <span class="graph__filters-info-icon" aria-hidden="true">
+          <svg viewBox="0 0 8 12" width="8" height="12" focusable="false">
+            <circle cx="4" cy="2.25" r="1.15" fill="currentColor"></circle>
+            <rect x="3.1" y="4.75" width="1.8" height="6.5" rx="0.9" fill="currentColor"></rect>
+          </svg>
+        </span>
+      </button>
+      <span class="graph__filters-info-tooltip" role="tooltip" id="graph-filters-help-tooltip">
+        Cada filtro muestra el nodo elegido y todos los que tienen un camino dirigido hacia él. No es
+        lo mismo que hacer clic en el grafo, que expande el vecindario de un nodo.
+      </span>
+    </div>
     <div id="graph-filters" class="graph__filters-list"></div>
     <button
       id="graph-reset-filters"

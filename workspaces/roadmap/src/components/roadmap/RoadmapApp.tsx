@@ -659,12 +659,6 @@ export function RoadmapApp({
         </div>
       </div>
 
-      <p className="roadmap__toolbar-help">
-        {isConceptView
-          ? "Los caminos siguen las dependencias entre conceptos de la materia. Elegí un concepto para ver recursos y marcar progreso."
-          : "Las materias se agrupan por año y, dentro de cada año, por correlativas. Hacé clic en una materia o elegila en el menú para ver sus conceptos."}
-      </p>
-
       <section
         className={`roadmap__canvas-panel${hasConceptGraph ? "" : " roadmap__canvas-panel--empty"}`}
         aria-label={isConceptView ? "Mapa de conceptos de la materia" : "Mapa de materias"}

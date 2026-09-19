@@ -26,6 +26,13 @@ export function sidebarCollapseIconSvg(_collapsed = false): string {
   return `<svg ${SVG_ATTRS} aria-hidden="true">${lines}</svg>`;
 }
 
+export function navToggleIconSvg(open = false): string {
+  const paths = open
+    ? '<line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />'
+    : '<line x1="4" y1="7" x2="20" y2="7" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="17" x2="20" y2="17" />';
+  return `<svg ${SVG_ATTRS} aria-hidden="true">${paths}</svg>`;
+}
+
 export function navIconPaths(id: NavId): string {
   return NAV_ICON_PATHS[id];
 }

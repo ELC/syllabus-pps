@@ -11,7 +11,7 @@ export function ShellSidebarFooter({ email, userName, onSignOut }: ShellSidebarF
   const resolvedName = userName?.trim() || null;
 
   return (
-    <div className="dashboard__footer">
+    <div className="dashboard__footer dashboard__footer--menu">
       <div
         className={active ? "dashboard__user dashboard__user--active" : "dashboard__user"}
         aria-live="polite"

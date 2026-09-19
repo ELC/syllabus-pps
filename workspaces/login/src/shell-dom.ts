@@ -1,3 +1,5 @@
+import { repairShellSignOutMarkup } from "./sidebar-footer-html";
+
 const AUTH_PENDING_CLASS = "auth-pending";
 const AUTH_GUEST_CLASS = "auth-guest";
 const USER_NAME_SELECTOR = "[data-pps-user-name]";
@@ -29,10 +31,12 @@ export function hideShellForGuest(): void {
 }
 
 export function activateSidebarFooter(profile: SidebarUserProfile, onSignOut: () => void | Promise<void>): () => void {
+  repairShellSignOutMarkup();
+
   const userBlock = document.querySelector<HTMLElement>(".dashboard__user");
   const nameEl = document.querySelector<HTMLElement>(USER_NAME_SELECTOR);
   const emailEl = document.querySelector<HTMLElement>(USER_EMAIL_SELECTOR);
-  const button = document.querySelector<HTMLButtonElement>(SIGN_OUT_SELECTOR);
+  const buttons = document.querySelectorAll<HTMLButtonElement>(SIGN_OUT_SELECTOR);
   const resolvedName = profile.userName?.trim() || null;
 
   if (nameEl) {
@@ -51,20 +55,24 @@ export function activateSidebarFooter(profile: SidebarUserProfile, onSignOut: ()
 
   userBlock?.classList.add("dashboard__user--active");
 
-  if (!button) {
+  if (buttons.length === 0) {
     return () => clearSidebarFooter();
   }
-
-  button.hidden = false;
-  button.classList.add("login__sign-out--active");
 
   const handler = () => {
     void onSignOut();
   };
-  button.addEventListener("click", handler);
+
+  for (const button of buttons) {
+    button.removeAttribute("hidden");
+    button.classList.add("login__sign-out--active");
+    button.addEventListener("click", handler);
+  }
 
   return () => {
-    button.removeEventListener("click", handler);
+    for (const button of buttons) {
+      button.removeEventListener("click", handler);
+    }
     clearSidebarFooter();
   };
 }
@@ -73,7 +81,7 @@ export function clearSidebarFooter(): void {
   const userBlock = document.querySelector<HTMLElement>(".dashboard__user");
   const nameEl = document.querySelector<HTMLElement>(USER_NAME_SELECTOR);
   const emailEl = document.querySelector<HTMLElement>(USER_EMAIL_SELECTOR);
-  const button = document.querySelector<HTMLButtonElement>(SIGN_OUT_SELECTOR);
+  const buttons = document.querySelectorAll<HTMLButtonElement>(SIGN_OUT_SELECTOR);
 
   if (nameEl) {
     nameEl.textContent = "\u00a0";
@@ -86,9 +94,9 @@ export function clearSidebarFooter(): void {
 
   userBlock?.classList.remove("dashboard__user--active");
 
-  if (button) {
-    button.hidden = true;
+  for (const button of buttons) {
     button.classList.remove("login__sign-out--active");
+    button.setAttribute("hidden", "");
   }
 }
 

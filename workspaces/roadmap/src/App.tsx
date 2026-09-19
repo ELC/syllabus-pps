@@ -112,8 +112,8 @@ export function App() {
           <AnalyticsRebuildIndicator status={rebuildStatus} />
         </div>
         <p className="dashboard__header-lead dashboard__header-lead--wide">
-          Explore the curriculum by course, organized by correlativas. Open a course to see its
-          concept sub-roadmap and track resource progress as you study.
+          Explorá las materias del plan, agrupadas por año y correlativas. Abrí una materia para
+          ver su mapa de conceptos, consultar recursos y registrar tu avance mientras estudiás.
         </p>
       </header>
 

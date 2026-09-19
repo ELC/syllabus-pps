@@ -8,7 +8,7 @@ import {
   SHELL_LOGO_HEIGHT,
   SHELL_LOGO_WIDTH,
 } from "./logo-meta.js";
-import { navIconSvg, sidebarCollapseIconSvg } from "./nav-icons.js";
+import { navIconSvg, navToggleIconSvg, sidebarCollapseIconSvg } from "./nav-icons.js";
 import { NAV_ITEMS, navHref } from "./nav.js";
 
 export interface StaticShellOptions {
@@ -76,14 +76,19 @@ export function renderStaticShell(
   <aside class="dashboard__sidebar">
     <div class="dashboard__sidebar-head">
       <a class="dashboard__brand" href="${siteRoot}" aria-label="Universidad Austral — PPS Curriculum">
-        <img class="dashboard__brand-logo" data-pps-shell-logo src="${logoSrc}" alt="${SHELL_ISOLOGO_ALT}" width="${SHELL_LOGO_WIDTH}" height="${SHELL_LOGO_HEIGHT}" decoding="async" fetchpriority="high" style="max-width:10rem;width:auto;height:auto" />
-        <img class="dashboard__brand-isologo" data-pps-shell-isologo src="${isologoSrc}" alt="" width="${SHELL_ISOLOGO_WIDTH}" height="${SHELL_ISOLOGO_HEIGHT}" decoding="async" aria-hidden="true" style="height:2.5rem;width:auto;max-width:100%" />
+        <img class="dashboard__brand-logo" data-pps-shell-logo src="${logoSrc}" alt="${SHELL_ISOLOGO_ALT}" width="${SHELL_LOGO_WIDTH}" height="${SHELL_LOGO_HEIGHT}" decoding="async" fetchpriority="high" />
+        <img class="dashboard__brand-isologo" data-pps-shell-isologo src="${isologoSrc}" alt="" width="${SHELL_ISOLOGO_WIDTH}" height="${SHELL_ISOLOGO_HEIGHT}" decoding="async" aria-hidden="true" />
       </a>
     </div>
-    <nav id="dashboard-site-nav" class="dashboard__nav" aria-label="Site">
-      ${navLinks}
-    </nav>${sidebarExtra}
-    ${SHELL_SIDEBAR_FOOTER_HTML}
+    <button type="button" class="dashboard__nav-toggle" aria-expanded="false" aria-controls="dashboard-mobile-nav" title="Abrir menú"><span class="dashboard__nav-toggle-icon">${navToggleIconSvg(false)}</span></button>
+    <div id="dashboard-mobile-nav" class="dashboard__sidebar-drawer">
+      <div class="dashboard__sidebar-drawer-panel">
+        <nav id="dashboard-site-nav" class="dashboard__nav" aria-label="Site">
+          ${navLinks}
+        </nav>${sidebarExtra}
+        ${SHELL_SIDEBAR_FOOTER_HTML}
+      </div>
+    </div>
   </aside>
   <button type="button" class="dashboard__sidebar-collapse" aria-expanded="true" aria-controls="dashboard-site-nav" title="Contraer barra lateral"><span class="dashboard__sidebar-collapse-icon">${sidebarCollapseIconSvg(false)}</span></button>
   <main class="${mainClass}"><div id="root" class="app-root"></div></main>

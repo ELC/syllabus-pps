@@ -84,15 +84,26 @@
   --dash-sidebar-icon-size: 1.25rem;
   --dash-sidebar-icon-inset: 1.25rem;
   --dash-sidebar-link-border: 3px;
+  /* Left padding that aligns icons with the sidebar link border box (inset + border). */
+  --dash-sidebar-icon-track-pad: calc(
+    var(--dash-sidebar-icon-inset) - var(--dash-sidebar-link-border)
+  );
+  /* Same horizontal offset in collapsed and expanded so icons do not shift on toggle. */
+  --dash-sidebar-icon-optical-nudge: calc(
+    var(--dash-sidebar-width-collapsed) / 2 - var(--dash-sidebar-icon-inset) -
+      var(--dash-sidebar-icon-size) / 2
+  );
   --dash-sidebar-link-height: 2.5rem;
   --dash-sidebar-link-font-size: 1rem;
   --dash-sidebar-nav-label-font-size: 0.75rem;
   --dash-sidebar-link-gap: 0.625rem;
   --dash-sidebar-link-pad-right: 1.25rem;
-  --dash-sidebar-brand-height: calc(10rem * 1837 / 5000);
+  /* Fixed brand mark height in expanded and collapsed sidebars (wordmark + isologo). */
+  --dash-sidebar-brand-display-height: 3rem;
+  --dash-sidebar-brand-height: var(--dash-sidebar-brand-display-height);
   --dash-sidebar-head-pad-bottom: 0.5rem;
   --dash-sidebar-head-height: calc(
-    var(--dash-sidebar-brand-height) + var(--dash-sidebar-head-pad-bottom)
+    var(--dash-sidebar-brand-display-height) + var(--dash-sidebar-head-pad-bottom)
   );
   --dash-sidebar-transition-duration: 220ms;
   --dash-sidebar-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);

@@ -32,7 +32,7 @@
     width: 100%;
     margin-top: 0;
 
-    &[hidden] {
+    &:not(.login__sign-out--active) {
       display: none;
     }
 
@@ -310,34 +310,7 @@
   }
 }
 
-/* A sidebar this wide is the small-screen top bar (the docked sidebar is
-   --dash-sidebar-width, 15rem), so sign out becomes a slim pill beside the nav. */
-@container shell-sidebar (min-width: 20rem) {
-  .dashboard__signout-slot {
-    min-height: 0;
-    /* Reserve the pill's footprint so the centered nav does not shift once auth resolves. */
-    min-inline-size: 5.5rem;
-  }
-
-  .login__sign-out.dashboard__link {
-    display: inline-flex;
-    grid-template-columns: none;
-    align-items: center;
-    width: auto;
-    height: auto;
-    min-height: 0;
-    padding: 0.3rem 0.8rem;
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-left: 0;
-    border-radius: 0.35rem;
-    font-size: 0.8125rem;
-    white-space: nowrap;
-
-    .dashboard__link-icon {
-      display: none;
-    }
-  }
-}
+/* Sign out in the mobile drawer is styled in @pps/shell chrome (full-width nav row). */
 
 body.auth-guest,
 html:not(.auth-session-cached) body.auth-pending {
