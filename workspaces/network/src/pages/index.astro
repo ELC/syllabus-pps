@@ -20,19 +20,28 @@ import networkCss from "../styles/network.scss?url";
       id="graph-toggle-concepts"
       type="button"
       class="graph__sidebar-toggle-concepts"
-      aria-pressed="false"
-      title="Ocultar conceptos en la vista general; al hacer clic en un nodo siguen visibles"
+      aria-pressed="true"
+      title="Volver a mostrar los nodos de concepto"
     >
-      Ocultar conceptos
+      Mostrar conceptos
+    </button>
+    <button
+      id="graph-toggle-years"
+      type="button"
+      class="graph__sidebar-toggle-years"
+      aria-pressed="true"
+      title="Volver a mostrar los nodos de carrera y año"
+    >
+      Mostrar carrera y años
     </button>
     <button
       id="graph-toggle-course-links"
       type="button"
       class="graph__sidebar-toggle-course-links"
-      aria-pressed="false"
-      title="Alternar entre menciones (wikilinks) y correlativas entre materias"
+      aria-pressed="true"
+      title="Mostrar enlaces de mención entre materias (wikilinks)"
     >
-      Mostrar Correlativas
+      Mostrar Menciones
     </button>
     <p class="graph__sidebar-label">Filtros</p>
     <p class="graph__filters-help">
@@ -128,6 +137,7 @@ import networkCss from "../styles/network.scss?url";
       refreshButtonId: "graph-refresh-layout",
       resetFiltersButtonId: "graph-reset-filters",
       toggleConceptsButtonId: "graph-toggle-concepts",
+      toggleYearsButtonId: "graph-toggle-years",
       toggleCourseLinksButtonId: "graph-toggle-course-links",
       conceptPanelId: "graph-concept-panel",
       conceptNotesUrl: "./data/curriculum-graph.json",

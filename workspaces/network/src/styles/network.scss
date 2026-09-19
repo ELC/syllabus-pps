@@ -45,9 +45,11 @@
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
     padding: 0.85rem 1.25rem 0.5rem;
-
   }
 
   &__sidebar-label {
@@ -114,26 +116,11 @@
     flex-direction: column;
     gap: 0.55rem;
     padding-top: 0.1rem;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  @media (max-width: 760px) {
-    &__sidebar-filters {
-      min-height: 0;
-    }
-
-    &__filters-list {
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-gutter: stable;
-    }
   }
 
   &__sidebar-refresh,
   &__sidebar-toggle-concepts,
+  &__sidebar-toggle-years,
   &__sidebar-toggle-course-links,
   &__sidebar-reset-filters {
     appearance: none;
@@ -170,6 +157,7 @@
   }
 
   &__sidebar-toggle-concepts,
+  &__sidebar-toggle-years,
   &__sidebar-toggle-course-links {
     margin: 0 0 0.75rem;
     border: 1px solid rgba(255, 255, 255, 0.28);

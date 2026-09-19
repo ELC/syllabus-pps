@@ -22,6 +22,9 @@ import {
   GRAPH_NODE_KINDS,
 } from "./graph-styles";
 import {
+  DEFAULT_GRAPH_CONCEPTS_HIDDEN,
+  DEFAULT_GRAPH_COURSE_LINK_MODE,
+  DEFAULT_GRAPH_YEARS_HIDDEN,
   parseGraphUrlState,
   writeGraphUrlState,
   type CourseLinkMode,
@@ -47,6 +50,7 @@ export interface MountGraphOptions {
   refreshButtonId?: string;
   resetFiltersButtonId?: string;
   toggleConceptsButtonId?: string;
+  toggleYearsButtonId?: string;
   toggleCourseLinksButtonId?: string;
   conceptPanelId?: string;
   conceptNotesUrl?: string;
@@ -86,6 +90,7 @@ interface GraphViewState {
   kindFilters: KindFilters;
   searchQuery: string;
   conceptsHidden: boolean;
+  yearsHidden: boolean;
   courseLinkMode: CourseLinkMode;
 }
 
@@ -139,6 +144,7 @@ function urlStateFromViewState(cy: cytoscape.Core, viewState: GraphViewState): G
     expansionSlugs,
     filterSlugs,
     conceptsHidden: viewState.conceptsHidden,
+    yearsHidden: viewState.yearsHidden,
     courseLinkMode: viewState.courseLinkMode,
   };
 }
@@ -149,7 +155,7 @@ function applyUrlStateToViewState(
   urlState: GraphUrlState,
 ): boolean {
   const kindFilters = createKindFilters();
-  let restored = urlState.conceptsHidden || urlState.courseLinkMode === "correlativas";
+  let restored = false;
 
   for (const { kind } of GRAPH_FILTER_KINDS) {
     const slug = urlState.filterSlugs[kind];
@@ -172,6 +178,7 @@ function applyUrlStateToViewState(
 
   viewState.kindFilters = kindFilters;
   viewState.conceptsHidden = urlState.conceptsHidden;
+  viewState.yearsHidden = urlState.yearsHidden;
   viewState.courseLinkMode = urlState.courseLinkMode;
   viewState.expansionNodeIds = expansionNodeIds.length > 0 ? expansionNodeIds : null;
   viewState.focusedNodeId =
@@ -363,10 +370,45 @@ function isConceptNode(node: cytoscape.NodeSingular): boolean {
   return String(node.data("kind")) === "concept";
 }
 
+function isYearNode(node: cytoscape.NodeSingular): boolean {
+  return String(node.data("kind")) === "year";
+}
+
+function isDegreeNode(node: cytoscape.NodeSingular): boolean {
+  return String(node.data("kind")) === "degree";
+}
+
+function isHierarchyNode(node: cytoscape.NodeSingular): boolean {
+  return isYearNode(node) || isDegreeNode(node);
+}
+
+function shouldHideConceptNodes(
+  viewState: GraphViewState,
+  focusVisibleNodeIds: Set<string> | null,
+): boolean {
+  return (
+    viewState.conceptsHidden &&
+    !focusVisibleNodeIds &&
+    !viewState.kindFilters.concept
+  );
+}
+
+function shouldHideYearNodes(
+  viewState: GraphViewState,
+  focusVisibleNodeIds: Set<string> | null,
+): boolean {
+  return (
+    viewState.yearsHidden &&
+    !focusVisibleNodeIds &&
+    !viewState.kindFilters.year &&
+    !viewState.kindFilters.degree
+  );
+}
+
 function matchingNodes(
   cy: cytoscape.Core,
   query: string,
-  options: { excludeConcepts?: boolean } = {},
+  options: { excludeConcepts?: boolean; excludeYears?: boolean } = {},
 ): cytoscape.NodeSingular[] {
   const normalizedQuery = normalizeSearchText(query.trim());
   if (!normalizedQuery) {
@@ -376,6 +418,10 @@ function matchingNodes(
   const matches: cytoscape.NodeSingular[] = [];
   cy.nodes().forEach((node) => {
     if (options.excludeConcepts && isConceptNode(node)) {
+      return;
+    }
+
+    if (options.excludeYears && isHierarchyNode(node)) {
       return;
     }
 
@@ -470,11 +516,11 @@ function applyElementVisibility(cy: cytoscape.Core, viewState: GraphViewState): 
     const nodeId = node.id();
     let visible = true;
 
-    if (
-      viewState.conceptsHidden &&
-      !focusVisibleNodeIds &&
-      isConceptNode(node)
-    ) {
+    if (shouldHideConceptNodes(viewState, focusVisibleNodeIds) && isConceptNode(node)) {
+      visible = false;
+    }
+
+    if (shouldHideYearNodes(viewState, focusVisibleNodeIds) && isHierarchyNode(node)) {
       visible = false;
     }
 
@@ -784,6 +830,7 @@ function restoreGraphViewFromUrl(
   ui: GraphUi,
   filtersRoot: HTMLElement | null,
   toggleConceptsButton: HTMLButtonElement | null,
+  toggleYearsButton: HTMLButtonElement | null,
 ): boolean {
   const hadExpansion = isExpansionActive(viewState);
   const urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
@@ -791,6 +838,9 @@ function restoreGraphViewFromUrl(
   syncKindFilterControls(filtersRoot, viewState);
   if (toggleConceptsButton) {
     syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
+  }
+  if (toggleYearsButton) {
+    syncToggleYearsButton(toggleYearsButton, viewState.yearsHidden);
   }
 
   if (isExpansionActive(viewState)) {
@@ -871,6 +921,42 @@ function mountToggleConceptsButton(
   });
 }
 
+function setYearsHidden(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  hidden: boolean,
+): void {
+  viewState.yearsHidden = hidden;
+  ui.syncView();
+
+  if (!isExpansionActive(viewState)) {
+    refreshGraphLayout(cy, viewState);
+  }
+}
+
+function syncToggleYearsButton(button: HTMLButtonElement, hidden: boolean): void {
+  button.setAttribute("aria-pressed", hidden ? "true" : "false");
+  button.textContent = hidden ? "Mostrar carrera y años" : "Ocultar carrera y años";
+  button.title = hidden
+    ? "Volver a mostrar los nodos de carrera y año"
+    : "Ocultar nodos de carrera y año en la vista general; al hacer clic en un nodo siguen visibles";
+}
+
+function mountToggleYearsButton(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  button: HTMLButtonElement,
+): void {
+  syncToggleYearsButton(button, viewState.yearsHidden);
+
+  button.addEventListener("click", () => {
+    setYearsHidden(cy, viewState, ui, !viewState.yearsHidden);
+    syncToggleYearsButton(button, viewState.yearsHidden);
+  });
+}
+
 function syncToggleCourseLinksButton(button: HTMLButtonElement, mode: CourseLinkMode): void {
   const correlativasActive = mode === "correlativas";
   button.setAttribute("aria-pressed", correlativasActive ? "true" : "false");
@@ -927,7 +1013,8 @@ function updateSearchResultsUI(
 ): void {
   const query = searchInput.value;
   const matches = matchingNodes(cy, query, {
-    excludeConcepts: viewState.conceptsHidden && !isExpansionActive(viewState),
+    excludeConcepts: shouldHideConceptNodes(viewState, null),
+    excludeYears: shouldHideYearNodes(viewState, null),
   });
   resultsRoot.replaceChildren();
 
@@ -1613,8 +1700,9 @@ export async function mountGraph(
     focusLayoutCache: new Map(),
     kindFilters: createKindFilters(),
     searchQuery: "",
-    conceptsHidden: false,
-    courseLinkMode: "mentions",
+    conceptsHidden: DEFAULT_GRAPH_CONCEPTS_HIDDEN,
+    yearsHidden: DEFAULT_GRAPH_YEARS_HIDDEN,
+    courseLinkMode: DEFAULT_GRAPH_COURSE_LINK_MODE,
   };
   let urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
 
@@ -1675,6 +1763,15 @@ export async function mountGraph(
     syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
   }
 
+  const toggleYearsButton = options.toggleYearsButtonId
+    ? document.getElementById(options.toggleYearsButtonId)
+    : null;
+
+  if (toggleYearsButton instanceof HTMLButtonElement) {
+    mountToggleYearsButton(cy, viewState, ui, toggleYearsButton);
+    syncToggleYearsButton(toggleYearsButton, viewState.yearsHidden);
+  }
+
   const toggleCourseLinksButton = options.toggleCourseLinksButtonId
     ? document.getElementById(options.toggleCourseLinksButtonId)
     : null;
@@ -1711,6 +1808,7 @@ export async function mountGraph(
       ui,
       filtersRoot,
       toggleConceptsButton instanceof HTMLButtonElement ? toggleConceptsButton : null,
+      toggleYearsButton instanceof HTMLButtonElement ? toggleYearsButton : null,
     );
   });
 

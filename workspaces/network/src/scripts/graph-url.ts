@@ -2,9 +2,14 @@ import { GRAPH_FILTER_KINDS } from "./graph-styles";
 
 export const GRAPH_URL_EXPAND_PARAM = "expand";
 export const GRAPH_URL_HIDE_CONCEPTS_PARAM = "hideConcepts";
+export const GRAPH_URL_HIDE_YEARS_PARAM = "hideYears";
 export const GRAPH_URL_COURSE_LINKS_PARAM = "courseLinks";
 
 export type CourseLinkMode = "mentions" | "correlativas";
+
+export const DEFAULT_GRAPH_CONCEPTS_HIDDEN = true;
+export const DEFAULT_GRAPH_YEARS_HIDDEN = true;
+export const DEFAULT_GRAPH_COURSE_LINK_MODE: CourseLinkMode = "correlativas";
 
 type KindFilterKey = (typeof GRAPH_FILTER_KINDS)[number]["kind"];
 
@@ -12,6 +17,7 @@ export interface GraphUrlState {
   expansionSlugs: string[];
   filterSlugs: Record<KindFilterKey, string>;
   conceptsHidden: boolean;
+  yearsHidden: boolean;
   courseLinkMode: CourseLinkMode;
 }
 
@@ -45,13 +51,21 @@ function parseSlugList(value: string | null): string[] {
   return slugs;
 }
 
-function parseTruthyFlag(value: string | null): boolean {
-  if (!value) {
-    return false;
+function parseBooleanFlag(value: string | null, defaultValue: boolean): boolean {
+  if (value === null) {
+    return defaultValue;
   }
 
   const normalized = value.trim().toLowerCase();
-  return normalized === "1" || normalized === "true" || normalized === "yes";
+  if (normalized === "0" || normalized === "false" || normalized === "no") {
+    return false;
+  }
+
+  if (normalized === "1" || normalized === "true" || normalized === "yes") {
+    return true;
+  }
+
+  return defaultValue;
 }
 
 export function parseGraphUrlState(
@@ -64,13 +78,29 @@ export function parseGraphUrlState(
     filterSlugs[kind] = params.get(kind)?.trim() ?? "";
   }
 
-  const courseLinksParam = params.get(GRAPH_URL_COURSE_LINKS_PARAM)?.trim().toLowerCase() ?? "";
+  const courseLinksParam = params.has(GRAPH_URL_COURSE_LINKS_PARAM)
+    ? params.get(GRAPH_URL_COURSE_LINKS_PARAM)?.trim().toLowerCase() ?? ""
+    : null;
 
   return {
     expansionSlugs: parseSlugList(params.get(GRAPH_URL_EXPAND_PARAM)),
     filterSlugs,
-    conceptsHidden: parseTruthyFlag(params.get(GRAPH_URL_HIDE_CONCEPTS_PARAM)),
-    courseLinkMode: courseLinksParam === "correlativas" ? "correlativas" : "mentions",
+    conceptsHidden: parseBooleanFlag(
+      params.has(GRAPH_URL_HIDE_CONCEPTS_PARAM)
+        ? params.get(GRAPH_URL_HIDE_CONCEPTS_PARAM)
+        : null,
+      DEFAULT_GRAPH_CONCEPTS_HIDDEN,
+    ),
+    yearsHidden: parseBooleanFlag(
+      params.has(GRAPH_URL_HIDE_YEARS_PARAM) ? params.get(GRAPH_URL_HIDE_YEARS_PARAM) : null,
+      DEFAULT_GRAPH_YEARS_HIDDEN,
+    ),
+    courseLinkMode:
+      courseLinksParam === null
+        ? DEFAULT_GRAPH_COURSE_LINK_MODE
+        : courseLinksParam === "mentions"
+          ? "mentions"
+          : "correlativas",
   };
 }
 
@@ -97,6 +127,12 @@ export function writeGraphUrlState(state: GraphUrlState): void {
     params.set(GRAPH_URL_HIDE_CONCEPTS_PARAM, "1");
   } else {
     params.delete(GRAPH_URL_HIDE_CONCEPTS_PARAM);
+  }
+
+  if (state.yearsHidden) {
+    params.set(GRAPH_URL_HIDE_YEARS_PARAM, "1");
+  } else {
+    params.delete(GRAPH_URL_HIDE_YEARS_PARAM);
   }
 
   if (state.courseLinkMode === "correlativas") {
