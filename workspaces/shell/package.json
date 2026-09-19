@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./AnalyticsRebuildIndicator": "./src/AnalyticsRebuildIndicator.tsx",
+    "./mount-analytics-rebuild-indicator": "./src/mount-analytics-rebuild-indicator.ts",
     "./SiteShell": "./src/SiteShell.tsx",
+    "./use-analytics-rebuild-status": "./src/use-analytics-rebuild-status.ts",
     "./ShellLayout.astro": "./src/ShellLayout.astro",
     "./site-root": "./src/site-root.ts",
     "./logo-meta": "./src/logo-meta.ts",
@@ -31,6 +34,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@pps/content": "workspace:*",
     "@pps/core": "workspace:*",
     "@pps/login": "workspace:*",
     "react": "catalog:"

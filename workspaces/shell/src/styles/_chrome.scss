@@ -321,17 +321,31 @@ body.dashboard--body {
   }
 
   &__nav-label {
+    flex-shrink: 0;
     padding: 0 1.25rem 0.35rem;
     font-family: var(--font-heading);
     font-size: var(--dash-sidebar-nav-label-font-size);
     font-weight: 700;
+    line-height: 1.25;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--dash-sidebar-muted);
     max-width: 100%;
     opacity: 1;
-    overflow: hidden;
     white-space: nowrap;
+  }
+
+  /* Subsection labels in CMS/Cites/network sidebars (e.g. filter groups). */
+  &__nav-field-label {
+    flex-shrink: 0;
+    display: block;
+    padding: 0 1.25rem 0.25rem;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dash-sidebar-muted);
   }
 
   &__footer {

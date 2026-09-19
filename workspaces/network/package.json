@@ -9,6 +9,7 @@
     "typecheck": "astro check"
   },
   "dependencies": {
+    "@pps/content": "workspace:*",
     "@pps/core": "workspace:*",
     "@pps/shell": "workspace:*",
     "astro": "catalog:",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "catalog:",
+    "@pps/analytics-cli": "workspace:*",
     "@pps/config": "workspace:*",
     "typescript": "catalog:",
     "sass": "catalog:"

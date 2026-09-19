@@ -292,26 +292,6 @@ function renderConceptNotes(
   notesRoot.appendChild(list);
 }
 
-export async function loadConceptPages(dataUrl: string): Promise<Map<string, ConceptPage>> {
-  const response = await fetch(dataUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to load concept pages (${response.status})`);
-  }
-
-  const payload = parseGeneratedPayload<{ pages: ConceptPage[] }>(await response.text());
-  const pagesBySlug = new Map<string, ConceptPage>();
-
-  for (const page of payload.pages) {
-    if (page.kind !== "concept") {
-      continue;
-    }
-
-    pagesBySlug.set(page.slug, page);
-  }
-
-  return pagesBySlug;
-}
-
 export interface ConceptPanelCloseOptions {
   updateUrl?: boolean;
 }

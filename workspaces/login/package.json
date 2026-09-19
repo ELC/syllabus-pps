@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     "./client": "./src/client.ts",
+    "./authDisabled": "./src/authDisabled.ts",
     "./config": "./src/config.ts",
     "./LoginForm": "./src/LoginForm.tsx",
     "./ShellAuthGate": "./src/ShellAuthGate.tsx",

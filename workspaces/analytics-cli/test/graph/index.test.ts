@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { collectDiagnostics } from "../../src/diagnostics";
-import { buildGraph } from "../../src/graph";
+import { buildGraphFromLocalFiles } from "../../src/graph";
 import {
   buildFixtureGraph,
   expectedDiagnosticSummaries,
@@ -43,7 +43,7 @@ describe("buildGraph", () => {
   });
 
   it("matches fixture diagnostic summaries", () => {
-    const graph = buildGraph({
+    const graph = buildGraphFromLocalFiles({
       contentDir: FIXTURE_CONTENT_DIR,
       config: fixtureConfig(),
     });

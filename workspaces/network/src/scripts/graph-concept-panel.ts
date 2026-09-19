@@ -1,3 +1,4 @@
+import { loadAnalyticsArtifact } from "@pps/content/browser";
 import {
   panelResourceKind,
   panelResourceLabels,
@@ -138,13 +139,12 @@ function renderConceptNotes(notesRoot: HTMLElement, blocks: ConceptBlock[]): voi
   notesRoot.appendChild(list);
 }
 
-export async function loadConceptPages(dataUrl: string): Promise<Map<string, ConceptPage>> {
-  const response = await fetch(dataUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to load concept pages (${response.status})`);
-  }
-
-  const payload = parseGeneratedPayload<{ pages: ConceptPage[] }>(await response.text());
+export async function loadConceptPages(): Promise<Map<string, ConceptPage>> {
+  const loaded = await loadAnalyticsArtifact("curriculum-graph.json");
+  const payload =
+    typeof loaded === "string"
+      ? parseGeneratedPayload<{ pages: ConceptPage[] }>(loaded)
+      : (loaded as { pages: ConceptPage[] });
   const pagesBySlug = new Map<string, ConceptPage>();
 
   for (const page of payload.pages) {

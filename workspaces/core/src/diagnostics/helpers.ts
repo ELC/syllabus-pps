@@ -1,11 +1,6 @@
-import { match } from "ts-pattern";
-
 import { Diagnostic, DiagnosticSeverity } from "../types";
 
-export const blockingDiagnosticSeverities = [
-  "error",
-  "warning",
-] as const satisfies readonly DiagnosticSeverity[];
+export const blockingDiagnosticSeverities = ["error"] as const satisfies readonly DiagnosticSeverity[];
 
 export function countDiagnosticsBySeverity(
   diagnostics: readonly Diagnostic[],
@@ -22,11 +17,7 @@ export function hasDiagnosticsWithSeverity(
 }
 
 export function hasBlockingDiagnostics(diagnostics: readonly Diagnostic[]): boolean {
-  return diagnostics.some((diagnostic) =>
-    match(diagnostic.severity)
-      .with("error", "warning", () => true)
-      .otherwise(() => false),
-  );
+  return hasErrorDiagnostics(diagnostics);
 }
 
 export function hasErrorDiagnostics(diagnostics: readonly Diagnostic[]): boolean {

@@ -43,17 +43,6 @@ jobs:
 
       - run: pnpm install
 
-      - name: Sync from Supabase (optional)
-        env:
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_STORAGE_BUCKET: ${{ vars.SUPABASE_STORAGE_BUCKET }}
-        run: |
-          if [ -n "$PUBLIC_SUPABASE_PROJECT_URL" ]; then
-            pnpm build:core
-            pnpm --filter @pps/analytics-cli build
-            pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-pull --allow-conflicts
-          fi
-
       - run: pnpm build:pages
 
       - uses: actions/upload-pages-artifact@v3

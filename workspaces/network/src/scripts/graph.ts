@@ -1,3 +1,4 @@
+import { loadAnalyticsArtifact } from "@pps/content/browser";
 import { isTrayectoNoEstructurado, structuralPageKindRank } from "@pps/core";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
@@ -53,7 +54,6 @@ export interface MountGraphOptions {
   toggleYearsButtonId?: string;
   toggleCourseLinksButtonId?: string;
   conceptPanelId?: string;
-  conceptNotesUrl?: string;
 }
 
 type KindFilterKey = (typeof GRAPH_FILTER_KINDS)[number]["kind"];
@@ -1571,32 +1571,26 @@ function openConceptPanelForNode(
   conceptPanel.open(page);
 }
 
-export async function mountGraph(
-  containerClass: string,
-  dataUrl: string,
-  options: MountGraphOptions = {},
-): Promise<void> {
+export async function mountGraph(containerClass: string, options: MountGraphOptions = {}): Promise<void> {
   const container = document.querySelector<HTMLElement>(`.${containerClass}`);
   if (!container) {
     throw new Error(`Missing graph container .${containerClass}`);
   }
 
-  const response = await fetch(dataUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to load graph (${response.status})`);
-  }
-
-  const [graphText, conceptPagesBySlug] = await Promise.all([
-    response.text(),
-    options.conceptNotesUrl
-      ? loadConceptPages(options.conceptNotesUrl).catch((error) => {
+  const [graphLoaded, conceptPagesBySlug] = await Promise.all([
+    loadAnalyticsArtifact("graph.cy.json"),
+    options.conceptPanelId
+      ? loadConceptPages().catch((error) => {
           console.error(error);
           return new Map<string, ConceptPage>();
         })
       : Promise.resolve(new Map<string, ConceptPage>()),
   ]);
 
-  const payload = parseGeneratedPayload<{ elements: cytoscape.ElementsDefinition }>(graphText);
+  const payload =
+    typeof graphLoaded === "string"
+      ? parseGeneratedPayload<{ elements: cytoscape.ElementsDefinition }>(graphLoaded)
+      : (graphLoaded as { elements: cytoscape.ElementsDefinition });
   const defaultNodeStyle = kindStyleForKind("");
 
   const cy = cytoscape({

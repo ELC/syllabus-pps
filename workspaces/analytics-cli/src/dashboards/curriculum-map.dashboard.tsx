@@ -12,7 +12,7 @@ export default (
   <Dashboard
     name="Curriculum Map"
     description="Expected years, expected courses, and parsed curriculum pages"
-    connection="local_duckdb"
+    connection="pps_supabase"
   >
     <Row>
       <Metric

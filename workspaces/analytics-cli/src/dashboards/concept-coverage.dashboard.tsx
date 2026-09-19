@@ -6,7 +6,7 @@ export default (
   <Dashboard
     name="Concept Coverage"
     description="Course-note coverage by explicit concept links"
-    connection="local_duckdb"
+    connection="pps_supabase"
   >
     <Row>
       <Metric

@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { createLoadedConfig, LoadedConfig } from "../../src/config";
-import { buildGraph } from "../../src/graph";
+import { buildGraphFromLocalFiles } from "../../src/graph";
 import {
   CurriculumGraph,
   Diagnostic,
@@ -87,7 +87,7 @@ export function fixtureConfig(): LoadedConfig {
 }
 
 export function buildFixtureGraph(): CurriculumGraph {
-  return buildGraph({
+  return buildGraphFromLocalFiles({
     contentDir: FIXTURE_CONTENT_DIR,
     config: fixtureConfig(),
     generatedAt: FIXTURE_GENERATED_AT_ISO,

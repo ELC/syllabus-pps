@@ -1,3 +1,19 @@
+.network__header-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+  margin: 0 0 0.35rem;
+}
+
+.network__header-title-row .dashboard__header-title {
+  margin: 0;
+}
+
+.network__rebuild-indicator {
+  flex-shrink: 0;
+}
+
 .graph {
   &__header-meta {
     display: flex;

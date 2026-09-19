@@ -1,6 +1,5 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { writeCurriculumGraphArtifact, writeDiagnosticsArtifact } from "../artifacts/write-json";
 import {
   createGeneratedFileMeta,
   renderGeneratedCommentFile,
@@ -21,29 +20,13 @@ export function writeDacProject(input: {
 }): string {
   const generatedDir = resolveGeneratedDir(input.outDir);
   const dacDir = resolveGeneratedDacDir(input.outDir);
-  const dataDir = join(dacDir, "data");
   const dashboardsDir = join(dacDir, "dashboards");
   mkdirSync(generatedDir, { recursive: true });
   rmSync(dacDir, { recursive: true, force: true });
-  mkdirSync(dataDir, { recursive: true });
   mkdirSync(dashboardsDir, { recursive: true });
 
   const generatedAt = input.graph.generatedAt;
   const generator = "dac/project.ts:writeDacProject";
-
-  writeCurriculumGraphArtifact({
-    path: join(dataDir, "curriculum-graph.json"),
-    graph: input.graph,
-    generator,
-    docs: ROOT_README_DAC,
-  });
-  writeDiagnosticsArtifact({
-    path: join(dataDir, "diagnostics.json"),
-    diagnostics: input.diagnostics,
-    generatedAt,
-    generator,
-    docs: ROOT_README_DAC,
-  });
 
   writeDashboardQueries(dashboardsDir, input.graph, input.diagnostics);
   copyDashboardSources(dashboardsDir, generatedAt);

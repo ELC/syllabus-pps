@@ -9,6 +9,7 @@ import {
   type EdgeTypes,
   type NodeTypes,
 } from "@xyflow/react";
+import { loadAnalyticsArtifact } from "@pps/content/browser";
 import {
   courseRoadmapAsDegreeRoadmap,
   projectAllCourseRoadmaps,
@@ -115,7 +116,6 @@ interface RoadmapPanelUrlSync {
 }
 
 interface RoadmapAppProps {
-  dataUrl: string;
   onConceptOpen?: (page: ConceptPage) => void;
   onClosePanels?: () => void;
   onProgressChange?: (progress: RoadmapProgress) => void;
@@ -123,7 +123,6 @@ interface RoadmapAppProps {
 }
 
 export function RoadmapApp({
-  dataUrl,
   onConceptOpen,
   onClosePanels,
   onProgressChange,
@@ -138,18 +137,18 @@ export function RoadmapApp({
   const lastAppliedUrlKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    void fetch(dataUrl)
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to load curriculum graph (${response.status})`);
-        }
-        const payload = parseGeneratedPayload<CurriculumGraph>(await response.text());
+    void loadAnalyticsArtifact("curriculum-graph.json")
+      .then((loaded) => {
+        const payload =
+          typeof loaded === "string"
+            ? parseGeneratedPayload<CurriculumGraph>(loaded)
+            : (loaded as CurriculumGraph);
         setGraph(payload);
       })
       .catch((error: unknown) => {
         setLoadError(error instanceof Error ? error.message : "Failed to load roadmap data.");
       });
-  }, [dataUrl]);
+  }, []);
 
   const courseRoadmaps = useMemo(
     () => (graph ? projectAllCourseRoadmaps(graph) : []),

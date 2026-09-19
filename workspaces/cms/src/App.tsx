@@ -1,24 +1,47 @@
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 
-import {
-  isReadOnlyCms,
-  listPages,
-  loadAllPageSources,
-  loadResources,
-  readPage,
-  writePage,
-} from "./api/content";
+import { triggerAnalyticsRebuild } from "@pps/content/browser";
+import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator";
+import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
+import { listPages, loadAllPageSources, loadResources, readPage, writePage } from "./api/content";
 import {
   createSeverityClassNameResolver,
   hasBlockingDiagnostics,
+  type PageSource,
   type ResourceCatalogEntry,
 } from "@pps/core";
+import { createDraftPageContent, nextDraftSlug } from "./draft-page";
 import { readPageParam, writePageParam } from "./page-param";
 import { filterDiagnosticsForPage, pageHasDiagnostics } from "./validation/filterDiagnostics";
 import { runDiagnosticsForEditor } from "./validation/runDiagnostics";
 
 const severityClass = createSeverityClassNameResolver("cms__diagnostics-severity");
+
+function IconPlus(): ReactElement {
+  return (
+    <svg className="cms__button-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6Z" />
+    </svg>
+  );
+}
+
+function IconSave(): ReactElement {
+  return (
+    <svg className="cms__button-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M19 21 12 16 5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16Z"
+      />
+    </svg>
+  );
+}
+
+function mergeDraftSources(local: PageSource[], remote: PageSource[]): PageSource[] {
+  const remoteSlugs = new Set(remote.map((page) => page.path.replace(/\.md$/i, "")));
+  const drafts = local.filter((page) => !remoteSlugs.has(page.path.replace(/\.md$/i, "")));
+  return [...drafts, ...remote];
+}
 
 function PageDiagnosticWarning(): ReactElement {
   return (
@@ -47,6 +70,8 @@ export function App() {
   const [loadingPages, setLoadingPages] = useState(true);
   const [allSources, setAllSources] = useState<Array<{ path: string; content: string }>>([]);
   const [resources, setResources] = useState<ResourceCatalogEntry[]>([]);
+  const [draftSlugs, setDraftSlugs] = useState<Set<string>>(() => new Set());
+  const rebuildStatus = useAnalyticsRebuildStatus();
 
   useEffect(() => {
     setLoadingPages(true);
@@ -58,7 +83,7 @@ export function App() {
         const match = requested ? items.find((item) => item.slug === requested) : undefined;
         setSelectedSlug(match?.slug ?? items[0]?.slug ?? "");
         if (items.length === 0) {
-          setLoadError("No pages found in content/pages.");
+          setLoadError("No pages found in Supabase Storage.");
         }
       })
       .catch((error: unknown) => {
@@ -79,17 +104,41 @@ export function App() {
     writePageParam(selectedSlug);
   }, [selectedSlug]);
 
+  function persistDraftContent(slug: string, draftContent: string): void {
+    setAllSources((sources) =>
+      sources.map((page) =>
+        page.path.replace(/\.md$/i, "") === slug ? { ...page, content: draftContent } : page,
+      ),
+    );
+  }
+
+  function selectPage(slug: string): void {
+    if (selectedSlug && draftSlugs.has(selectedSlug)) {
+      persistDraftContent(selectedSlug, content);
+    }
+    setSelectedSlug(slug);
+  }
+
   useEffect(() => {
     if (!selectedSlug) {
       return;
     }
+    if (draftSlugs.has(selectedSlug)) {
+      const draft = allSources.find((page) => page.path.replace(/\.md$/i, "") === selectedSlug);
+      if (draft) {
+        setContent(draft.content);
+      }
+      return;
+    }
     void readPage(selectedSlug).then(setContent);
-  }, [selectedSlug]);
+  }, [allSources, draftSlugs, selectedSlug]);
 
   useEffect(() => {
-    void loadAllPageSources().then(setAllSources);
+    void loadAllPageSources().then((sources) => {
+      setAllSources((current) => mergeDraftSources(current, sources));
+    });
     void loadResources().then(setResources);
-  }, [pages, content, selectedSlug]);
+  }, [pages]);
 
   const diagnostics = useMemo(() => {
     if (!selectedSlug || allSources.length === 0) {
@@ -119,8 +168,25 @@ export function App() {
     );
   }, [allSources, content, diagnostics, pages, selectedSlug]);
 
-  const readOnly = isReadOnlyCms();
-  const canSave = !readOnly && !hasBlockingDiagnostics(pageDiagnostics);
+  const canSave = !hasBlockingDiagnostics(pageDiagnostics);
+
+  function addNewPage(): void {
+    const slug = nextDraftSlug(pages);
+    const draftContent = createDraftPageContent(slug);
+    const path = `${slug}.md`;
+
+    if (selectedSlug && draftSlugs.has(selectedSlug)) {
+      persistDraftContent(selectedSlug, content);
+    }
+
+    setDraftSlugs((current) => new Set(current).add(slug));
+    setPages((current) => [{ slug, path }, ...current]);
+    setAllSources((current) => [{ path, content: draftContent }, ...current]);
+    setSelectedSlug(slug);
+    setContent(draftContent);
+    setStatus("");
+    setLoadError("");
+  }
 
   const pageNav = (
     <nav className="dashboard__nav dashboard__nav--sub dashboard__nav--scroll" aria-label="Pages">
@@ -132,7 +198,7 @@ export function App() {
           className={
             page.slug === selectedSlug ? "dashboard__link dashboard__link--active" : "dashboard__link"
           }
-          onClick={() => setSelectedSlug(page.slug)}
+          onClick={() => selectPage(page.slug)}
         >
           <span className="cms__page-link-label">{page.slug}</span>
           {diagnosticPageSlugs.has(page.slug) ? (
@@ -155,54 +221,56 @@ export function App() {
       <div className="cms__workspace">
       <header className="cms__header">
         <div className="cms__header-main">
-          <h1 className="cms__header-title">{selectedSlug || "CMS"}</h1>
+          <div className="cms__header-title-row">
+            <h1 className="cms__header-title">{selectedSlug || "CMS"}</h1>
+            <AnalyticsRebuildIndicator status={rebuildStatus} className="cms__rebuild-indicator" />
+          </div>
           <p className="cms__header-lead">
-            {readOnly ? (
-              <>
-                Read-only snapshot from the last <code className="cms__code">pnpm build:pages</code>.
-                Run <code className="cms__code">pnpm dev</code> to edit{" "}
-                <code className="cms__code">content/pages</code> locally.
-              </>
-            ) : (
-              <>
-                Edits write to <code className="cms__code">content/pages</code> through the local dev
-                API. Run <code className="cms__code">pnpm dev</code> and open{" "}
-                <code className="cms__code">/cms/</code> on the host port, or{" "}
-                <code className="cms__code">pnpm dev:cms</code> for CMS-only on port 5173.
-              </>
-            )}
+            Edits save markdown pages to Supabase Storage. Local dev uses{" "}
+            <code className="cms__code">pnpm dev</code> without sign-in; the hosted site requires auth.
           </p>
         </div>
         <div className="cms__header-actions">
-          {readOnly ? (
-            <p className="cms__hint">Saving is disabled on the hosted site.</p>
-          ) : (
-            <>
-              <button
-                type="button"
-                className="cms__button cms__button--save"
-                disabled={!canSave}
-                onClick={() => {
-                  void writePage(selectedSlug, content).then(() => {
-                    setStatus(`Saved ${selectedSlug}.`);
-                    setAllSources((sources) =>
-                      sources.map((page) =>
-                        page.path.replace(/\.md$/i, "") === selectedSlug
-                          ? { ...page, content }
-                          : page,
-                      ),
-                    );
+          <>
+            <button
+              type="button"
+              className="cms__button cms__button--secondary cms__button--icon"
+              onClick={addNewPage}
+              title="New page"
+              aria-label="New page"
+            >
+              <IconPlus />
+            </button>
+            <button
+              type="button"
+              className="cms__button cms__button--save cms__button--icon"
+              disabled={!canSave || !selectedSlug}
+              title="Save page"
+              aria-label="Save page"
+              onClick={() => {
+                void writePage(selectedSlug, content).then(() => {
+                  setStatus(`Saved ${selectedSlug}.`);
+                  setDraftSlugs((current) => {
+                    const next = new Set(current);
+                    next.delete(selectedSlug);
+                    return next;
                   });
-                }}
-              >
-                Save page
-              </button>
-              {status ? <span className="cms__status">{status}</span> : null}
-              {!canSave ? (
-                <p className="cms__hint">Fix errors and warnings on this page before saving.</p>
-              ) : null}
-            </>
-          )}
+                  setAllSources((sources) =>
+                    sources.map((page) =>
+                      page.path.replace(/\.md$/i, "") === selectedSlug ? { ...page, content } : page,
+                    ),
+                  );
+                  triggerAnalyticsRebuild(import.meta.env.BASE_URL ?? "/cms/");
+                });
+              }}
+            >
+              <IconSave />
+            </button>
+            {status ? <span className="cms__status">{status}</span> : null}
+            {!canSave ? (
+              <p className="cms__hint">Fix errors on this page before saving (warnings are allowed).</p>
+            ) : null}
+          </>
         </div>
       </header>
 
@@ -210,11 +278,10 @@ export function App() {
       {loadError ? (
         <p className="cms__error" role="alert">
           {loadError}
-          {loadError.includes("404") && !readOnly ? (
+          {loadError.includes("404") ? (
             <>
               {" "}
-              Start the CMS dev server with <code className="cms__code">pnpm dev</code> or{" "}
-              <code className="cms__code">pnpm dev:cms</code>.
+              Check Supabase Storage policies and sign in with an allowed account.
             </>
           ) : null}
         </p>
@@ -225,7 +292,7 @@ export function App() {
           className="cms__editor"
           value={content}
           onChange={(event) => setContent(event.target.value)}
-          readOnly={readOnly}
+          readOnly={false}
           rows={14}
           spellCheck={false}
         />
@@ -235,7 +302,7 @@ export function App() {
         <header className="cms__diagnostics-head">
           <h2 className="cms__diagnostics-title">Diagnostics</h2>
           <p className="cms__diagnostics-lead">
-            Errors and warnings on this page block save until resolved.
+            Errors on this page block save; warnings are shown but do not block save.
           </p>
         </header>
         <div className="cms__diagnostics-wrap">

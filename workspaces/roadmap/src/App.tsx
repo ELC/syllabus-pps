@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
+import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator";
+import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
+
 import { RoadmapApp } from "./components/roadmap/RoadmapApp";
 import type { RoadmapProgress } from "./components/roadmap/progress";
 import {
@@ -12,14 +15,8 @@ import {
   type ConceptPanelProgress,
 } from "./scripts/concept-panel";
 import { readRoadmapPanelUrl, writeRoadmapPanelUrl } from "./scripts/roadmap-panel-url";
-import { defaultCurriculumUrl } from "./site-base";
-
-interface AppProps {
-  dataUrl?: string;
-}
-
-export function App({ dataUrl }: AppProps) {
-  const resolvedUrl = dataUrl ?? defaultCurriculumUrl();
+export function App() {
+  const rebuildStatus = useAnalyticsRebuildStatus();
   const conceptPanelRef = useRef<HTMLElement>(null);
   const capstonePanelRef = useRef<HTMLElement>(null);
   const conceptPanelControllerRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
@@ -110,7 +107,10 @@ export function App({ dataUrl }: AppProps) {
   return (
     <div className="dashboard__content">
       <header className="dashboard__header">
-        <h1 className="dashboard__header-title">Degree roadmaps</h1>
+        <div className="roadmap__header-title-row">
+          <h1 className="dashboard__header-title">Degree roadmaps</h1>
+          <AnalyticsRebuildIndicator status={rebuildStatus} />
+        </div>
         <p className="dashboard__header-lead dashboard__header-lead--wide">
           Explore the curriculum by course, organized by correlativas. Open a course to see its
           concept sub-roadmap and track resource progress as you study.
@@ -119,7 +119,6 @@ export function App({ dataUrl }: AppProps) {
 
       <section className="roadmap__shell">
         <RoadmapApp
-          dataUrl={resolvedUrl}
           onConceptOpen={handleConceptOpen}
           onClosePanels={handleClosePanels}
           onProgressChange={handleProgressChange}

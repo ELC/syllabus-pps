@@ -7,10 +7,35 @@ import {
   type CslItemType,
   type ResourceCatalogEntry,
 } from "@pps/core";
-import { isReadOnlyCites, loadResources, writeResources } from "./api/resources";
+import { triggerAnalyticsRebuild } from "@pps/content/browser";
+import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator";
+import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
+import { loadResources, writeResources } from "./api/resources";
 import { createDraftEntry, entryForForm, TYPE_LABELS } from "./draft";
 import { NameFields } from "./NameFields";
 import { readResourceParam, writeResourceParam } from "./resource-param";
+
+function IconPlus(): ReactElement {
+  return (
+    <svg className="cites__button-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6Z"
+      />
+    </svg>
+  );
+}
+
+function IconSave(): ReactElement {
+  return (
+    <svg className="cites__button-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M19 21 12 16 5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16Z"
+      />
+    </svg>
+  );
+}
 
 function PageDiagnosticWarning(): ReactElement {
   return (
@@ -45,6 +70,7 @@ export function App() {
   const [status, setStatus] = useState("");
   const [loadError, setLoadError] = useState("");
   const [loading, setLoading] = useState(true);
+  const rebuildStatus = useAnalyticsRebuildStatus();
 
   useEffect(() => {
     setLoading(true);
@@ -54,7 +80,7 @@ export function App() {
         setEntries(items);
         setSelectedIndex(indexForId(items, readResourceParam()));
         if (items.length === 0) {
-          setLoadError("No resources found in content/resources.json.");
+          setLoadError("No resources found in Supabase.");
         }
       })
       .catch((error: unknown) => {
@@ -114,8 +140,18 @@ export function App() {
       .map(({ index }) => index);
   }, [entries, query]);
 
-  const readOnly = isReadOnlyCites();
-  const canSave = !readOnly && !loading && !loadError && catalogIssues.length === 0;
+  const canSave = !loading && !loadError && catalogIssues.length === 0;
+
+  function addNewResource(): void {
+    setEntries((current) => {
+      const draft = createDraftEntry(current);
+      return [draft, ...current];
+    });
+    setSelectedIndex(0);
+    setQuery("");
+    setStatus("");
+    setLoadError("");
+  }
 
   function patchSelected(patch: Partial<ResourceCatalogEntry>): void {
     setEntries((current) =>
@@ -127,7 +163,7 @@ export function App() {
     <nav className="dashboard__nav dashboard__nav--sub dashboard__nav--scroll" aria-label="Resources">
       <div className="dashboard__nav-label">Resources</div>
       <label className="cites__search">
-        <span className="cites__search-label">Filter</span>
+        <span className="dashboard__nav-field-label">Filter</span>
         <input
           className="cites__search-input"
           type="search"
@@ -172,79 +208,46 @@ export function App() {
         <div className="cites__workspace">
           <header className="cites__header">
             <div className="cites__header-main">
-              <h1 className="cites__header-title">{selected?.id || "Cites"}</h1>
+              <div className="cites__header-title-row">
+                <h1 className="cites__header-title">{selected?.id || "Cites"}</h1>
+                <AnalyticsRebuildIndicator status={rebuildStatus} className="cites__rebuild-indicator" />
+              </div>
               <p className="cites__header-lead">
-                {readOnly ? (
-                  <>
-                    Read-only snapshot from the last <code className="cites__code">pnpm build:pages</code>.
-                    Run <code className="cites__code">pnpm dev</code> to edit{" "}
-                    <code className="cites__code">content/resources.json</code> locally.
-                  </>
-                ) : (
-                  <>
-                    Edits write to <code className="cites__code">content/resources.json</code> through the
-                    local dev API. Open <code className="cites__code">/cites/</code> on the host port.
-                  </>
-                )}
+                Edits save the resource catalog to Supabase Postgres. Local dev uses{" "}
+                <code className="cites__code">pnpm dev</code> without sign-in; the hosted site requires auth.
               </p>
             </div>
             <div className="cites__header-actions">
-              {readOnly ? (
-                <p className="cites__hint">Saving is disabled on the hosted site.</p>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    className="cites__button cites__button--secondary"
-                    onClick={() => {
-                      setEntries((current) => {
-                        const draft = createDraftEntry(current);
-                        return [draft, ...current];
-                      });
-                      setSelectedIndex(0);
-                      setQuery("");
-                      setStatus("");
-                    }}
-                  >
-                    New resource
-                  </button>
-                  <button
-                    type="button"
-                    className="cites__button cites__button--ghost"
-                    disabled={!selected}
-                    onClick={() => {
-                      if (!selected) {
-                        return;
-                      }
-                      const confirmed = window.confirm(`Delete resource "${selected.id}"?`);
-                      if (!confirmed) {
-                        return;
-                      }
-                      setEntries((current) => current.filter((_, index) => index !== selectedIndex));
-                      setSelectedIndex((index) => Math.max(0, index - 1));
-                      setStatus(`Removed ${selected.id}.`);
-                    }}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    type="button"
-                    className="cites__button cites__button--save"
-                    disabled={!canSave}
-                    onClick={() => {
-                      void writeResources(entries).then(() => {
-                        setStatus(`Saved ${entries.length} resources.`);
-                      });
-                    }}
-                  >
-                    Save catalog
-                  </button>
-                  {status ? <span className="cites__status">{status}</span> : null}
-                  {!canSave ? (
-                    <p className="cites__hint">Fix catalog validation issues before saving.</p>
-                  ) : null}
-                </>
-              )}
+              <>
+                <button
+                  type="button"
+                  className="cites__button cites__button--secondary cites__button--icon"
+                  onClick={addNewResource}
+                  title="New resource"
+                  aria-label="New resource"
+                >
+                  <IconPlus />
+                </button>
+                <button
+                  type="button"
+                  className="cites__button cites__button--save cites__button--icon"
+                  disabled={!canSave}
+                  title="Save catalog"
+                  aria-label="Save catalog"
+                  onClick={() => {
+                    void writeResources(entries).then(() => {
+                      setStatus(`Saved ${entries.length} resources.`);
+                      triggerAnalyticsRebuild(import.meta.env.BASE_URL ?? "/cites/");
+                    });
+                  }}
+                >
+                  <IconSave />
+                </button>
+                {status ? <span className="cites__status">{status}</span> : null}
+                {!canSave ? (
+                  <p className="cites__hint">Fix catalog validation issues before saving.</p>
+                ) : null}
+              </>
             </div>
           </header>
 
@@ -252,11 +255,8 @@ export function App() {
           {loadError ? (
             <p className="cites__error" role="alert">
               {loadError}
-              {loadError.includes("404") && !readOnly ? (
-                <>
-                  {" "}
-                  Start the site with <code className="cites__code">pnpm dev</code>.
-                </>
+              {loadError.includes("404") ? (
+                <> Check Supabase RLS policies and sign in with an allowed account.</>
               ) : null}
             </p>
           ) : null}
@@ -268,7 +268,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.id}
-                  readOnly={readOnly}
+                  readOnly={false}
                   spellCheck={false}
                   onChange={(event: ChangeEvent<HTMLInputElement>) =>
                     patchSelected({ id: event.target.value })
@@ -280,7 +280,7 @@ export function App() {
                 <select
                   className="cites__input"
                   value={formEntry.type}
-                  disabled={readOnly}
+                  disabled={false}
                   onChange={(event: ChangeEvent<HTMLSelectElement>) =>
                     patchSelected({ type: event.target.value as CslItemType })
                   }
@@ -297,7 +297,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.title}
-                  readOnly={readOnly}
+                  readOnly={false}
                   onChange={(event) => patchSelected({ title: event.target.value })}
                 />
               </label>
@@ -306,7 +306,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.URL ?? ""}
-                  readOnly={readOnly}
+                  readOnly={false}
                   spellCheck={false}
                   onChange={(event) => patchSelected({ URL: event.target.value })}
                 />
@@ -316,7 +316,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.publisher ?? ""}
-                  readOnly={readOnly}
+                  readOnly={false}
                   onChange={(event) => patchSelected({ publisher: event.target.value })}
                 />
               </label>
@@ -325,7 +325,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry["container-title"] ?? ""}
-                  readOnly={readOnly}
+                  readOnly={false}
                   onChange={(event) => patchSelected({ "container-title": event.target.value })}
                 />
               </label>
@@ -334,7 +334,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.issued?.raw ?? ""}
-                  readOnly={readOnly}
+                  readOnly={false}
                   placeholder="2024 or 2024-03-15"
                   onChange={(event) => patchSelected({ issued: { raw: event.target.value } })}
                 />
@@ -344,7 +344,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.accessed?.raw ?? ""}
-                  readOnly={readOnly}
+                  readOnly={false}
                   placeholder="2026-09-15"
                   onChange={(event) => patchSelected({ accessed: { raw: event.target.value } })}
                 />
@@ -354,7 +354,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.DOI ?? ""}
-                  readOnly={readOnly}
+                  readOnly={false}
                   spellCheck={false}
                   onChange={(event) => patchSelected({ DOI: event.target.value })}
                 />
@@ -364,7 +364,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.ISBN ?? ""}
-                  readOnly={readOnly}
+                  readOnly={false}
                   spellCheck={false}
                   onChange={(event) => patchSelected({ ISBN: event.target.value })}
                 />
@@ -374,7 +374,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.edition === undefined ? "" : String(formEntry.edition)}
-                  readOnly={readOnly}
+                  readOnly={false}
                   onChange={(event) => patchSelected({ edition: event.target.value })}
                 />
               </label>
@@ -383,7 +383,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.genre ?? ""}
-                  readOnly={readOnly}
+                  readOnly={false}
                   list="cites-genre-options"
                   onChange={(event) => patchSelected({ genre: event.target.value })}
                 />
@@ -397,7 +397,7 @@ export function App() {
                 <input
                   className="cites__input"
                   value={formEntry.language ?? ""}
-                  readOnly={readOnly}
+                  readOnly={false}
                   onChange={(event) => patchSelected({ language: event.target.value })}
                 />
               </label>
@@ -406,7 +406,7 @@ export function App() {
                 <NameFields
                   label="Authors"
                   names={formEntry.author ?? []}
-                  readOnly={readOnly}
+                  readOnly={false}
                   onChange={(author) => patchSelected({ author })}
                 />
               </div>
@@ -414,7 +414,7 @@ export function App() {
                 <NameFields
                   label="Editors"
                   names={formEntry.editor ?? []}
-                  readOnly={readOnly}
+                  readOnly={false}
                   onChange={(editor) => patchSelected({ editor })}
                 />
               </div>

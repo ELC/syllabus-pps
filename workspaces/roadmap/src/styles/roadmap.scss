@@ -5,6 +5,13 @@
   --roadmap-course-year-gap: 150px;
 }
 
+.roadmap__header-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
 .roadmap {
   --roadmap-node-label-size: 0.875rem;
   --roadmap-node-label-line-height: 1.25;

@@ -10,12 +10,12 @@ import analyticsCss from "../styles/analytics.scss?url";
   <script>
     import { mountAnalyticsDashboard } from "../scripts/analytics-dashboard";
 
-    mountAnalyticsDashboard("analytics", "dashboard-tabs", "./data/dashboards.json").catch((error) => {
+    mountAnalyticsDashboard("analytics", "dashboard-tabs").catch((error) => {
       console.error(error);
       const root = document.querySelector(".analytics");
       if (root) {
         root.innerHTML =
-          '<p class="dashboard__error">Failed to load analytics dashboards. Run <code>pnpm build:content</code> first.</p>';
+          '<p class="dashboard__error">Failed to load analytics dashboards from Supabase. Save a page in CMS or run rebuild-analytics.</p>';
       }
     });
   </script>

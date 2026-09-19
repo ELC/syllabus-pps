@@ -1,6 +1,7 @@
 import ppsShell from "@pps/shell/astro";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
+import { siteRebuildDevPlugin } from "@pps/analytics-cli/vite/rebuild-dev";
 import {
   quietEmbeddedDevPlugin,
   repoRootFromWorkspace,
@@ -26,6 +27,7 @@ export default defineConfig({
     ...sharedViteEnv(rootDir),
     plugins: [
       ...withSharedVitePlugins(repoRoot),
+      siteRebuildDevPlugin({ repoRoot }),
       quietEmbeddedDevPlugin({ scope: "site", disableHmr: false }),
       ...subsitesDevPlugins(repoRoot),
     ],

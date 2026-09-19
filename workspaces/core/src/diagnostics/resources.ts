@@ -39,7 +39,7 @@ export function unresolvedCitationDiagnostics(graph: CurriculumGraph): Diagnosti
         .map((citation) => ({
           severity: "error" as const,
           code: "citation-unresolved" as const,
-          message: `Page "${page.title}" cites resource "${citation.id}" that is missing from content/resources.json.`,
+          message: `Page "${page.title}" cites resource "${citation.id}" that is missing from the resource catalog.`,
           page: page.title,
           line: block.line,
           details: { citationId: citation.id, text: block.text },

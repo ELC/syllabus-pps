@@ -60,7 +60,10 @@ import networkCss from "../styles/network.scss?url";
   </div>
 
   <header class="dashboard__header">
-    <h1 class="dashboard__header-title">Curriculum network</h1>
+    <div class="network__header-title-row">
+      <h1 class="dashboard__header-title">Curriculum network</h1>
+      <span id="network-rebuild-indicator"></span>
+    </div>
     <p class="dashboard__header-lead dashboard__header-lead--wide">
       Use the sidebar filters or search bar to narrow the graph. Click a node to focus its
       neighborhood; clicking a concept also opens its notes. Remove an expansion with the × on its
@@ -127,9 +130,15 @@ import networkCss from "../styles/network.scss?url";
   </aside>
 
   <script>
+    import { mountAnalyticsRebuildIndicator } from "@pps/shell/mount-analytics-rebuild-indicator";
     import { mountGraph } from "../scripts/graph";
 
-    mountGraph("graph__canvas", "./data/graph.cy.json", {
+    const rebuildIndicatorHost = document.getElementById("network-rebuild-indicator");
+    if (rebuildIndicatorHost) {
+      mountAnalyticsRebuildIndicator(rebuildIndicatorHost, { className: "network__rebuild-indicator" });
+    }
+
+    mountGraph("graph__canvas", {
       filtersRootId: "graph-filters",
       searchInputId: "graph-search",
       searchResultsId: "graph-search-results",
@@ -140,13 +149,12 @@ import networkCss from "../styles/network.scss?url";
       toggleYearsButtonId: "graph-toggle-years",
       toggleCourseLinksButtonId: "graph-toggle-course-links",
       conceptPanelId: "graph-concept-panel",
-      conceptNotesUrl: "./data/curriculum-graph.json",
     }).catch((error) => {
       console.error(error);
       const container = document.querySelector(".graph__canvas");
       if (container) {
         container.textContent =
-          "Failed to load graph. Run pnpm build:content first.";
+          "Failed to load graph from Supabase. Apply analytics SQL and run pnpm build:content.";
       }
     });
   </script>

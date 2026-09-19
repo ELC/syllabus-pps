@@ -39,6 +39,7 @@ export interface AnalyticsRunOptions {
   contentDir: string;
   config?: string;
   out: string;
+  useLocalContent: boolean;
 }
 
 export function toAnalyticsRunOptions(flags: AnalyticsFlags): AnalyticsRunOptions {
@@ -47,5 +48,7 @@ export function toAnalyticsRunOptions(flags: AnalyticsFlags): AnalyticsRunOption
     contentDir: resolveContentDir({ configPath, cliContentDir: flags.content }),
     config: configPath,
     out: flags.out,
+    useLocalContent:
+      flags.content !== undefined || process.env.PPS_CONTENT_SOURCE === "filesystem",
   };
 }
