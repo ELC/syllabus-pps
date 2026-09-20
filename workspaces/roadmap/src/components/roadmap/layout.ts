@@ -52,10 +52,26 @@ export interface CourseYearBand {
   height: number;
 }
 
+export interface CourseGridCell {
+  year: string;
+  row: number;
+  column: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  centerX: number;
+  centerY: number;
+  /** Course title when the cell is occupied. */
+  title?: string;
+}
+
 export interface RoadmapLayout {
   placements: Map<string, RoadmapPlacement>;
   /** Visual grouping labels for the course roadmap. */
   courseYearBands?: CourseYearBand[];
+  /** Snap targets for curated course grid editing. */
+  courseGridCells?: CourseGridCell[];
   /** Spine title -> terminal topics hanging off it. */
   attached: Map<string, string[]>;
   /** Parallel lanes from the start, each ordered top to bottom. */

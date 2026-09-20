@@ -1,4 +1,8 @@
-import ldsCourseCuration from "../../curations/lds-course.json";
+import {
+  normalizeRoadmapCourseLayoutDocument,
+  normalizeRoadmapCourseLayoutYears,
+  type RoadmapCourseLayoutDocument,
+} from "@pps/content";
 
 export interface CourseCurationEntry {
   slug: string;
@@ -29,41 +33,35 @@ export interface CourseGridSlot {
 
 const EMPTY_AREA = ".";
 
-const curatedModules = import.meta.glob("../../curations/*-course.json", {
-  eager: true,
-  import: "default",
-}) as Record<string, CourseRoadmapCuration>;
-
-function loadCourseCurations(): Map<string, CourseRoadmapCuration> {
-  const curations = new Map<string, CourseRoadmapCuration>();
-
-  for (const curation of Object.values(curatedModules)) {
-    curations.set(curation.degreeSlug, curation);
-  }
-
-  if (!curations.has(ldsCourseCuration.degreeSlug)) {
-    curations.set(ldsCourseCuration.degreeSlug, ldsCourseCuration);
-  }
-
-  return curations;
-}
-
-const curationsBySlug = loadCourseCurations();
-
-export function getCourseRoadmapCuration(
+export function buildCourseRoadmapCuration(
   degreeSlug: string,
+  layout: RoadmapCourseLayoutDocument | null | undefined,
 ): CourseRoadmapCuration | null {
-  return curationsBySlug.get(degreeSlug) ?? null;
+  if (!layout || !hasCuratedCourseGridLayout(layout)) {
+    return null;
+  }
+
+  return {
+    degreeSlug,
+    courses: layout.courses,
+    years: normalizeRoadmapCourseLayoutYears(layout.years),
+  };
 }
 
 export function hasCuratedCourseGrid(curation: CourseRoadmapCuration | null): boolean {
+  return hasCuratedCourseGridLayout(curation);
+}
+
+function hasCuratedCourseGridLayout(
+  layout: Pick<CourseRoadmapCuration, "years"> | null | undefined,
+): boolean {
   return Boolean(
-    curation?.years &&
-      Object.values(curation.years).some((year) => year.templateAreas.length > 0),
+    layout?.years &&
+      Object.values(layout.years).some((year) => year.templateAreas.length > 0),
   );
 }
 
-function resolveCourseTitle(
+export function resolveCourseTitleFromRegistry(
   areaId: string,
   courses: Readonly<Record<string, CourseCurationEntry>>,
   slugToTitle: ReadonlyMap<string, string>,
@@ -74,6 +72,14 @@ function resolveCourseTitle(
   }
 
   return slugToTitle.get(entry.slug);
+}
+
+function resolveCourseTitle(
+  areaId: string,
+  courses: Readonly<Record<string, CourseCurationEntry>>,
+  slugToTitle: ReadonlyMap<string, string>,
+): string | undefined {
+  return resolveCourseTitleFromRegistry(areaId, courses, slugToTitle);
 }
 
 /** Parse CSS-like template area rows into course grid slots. */
@@ -177,4 +183,112 @@ export function buildCuratedCourseGrid(
   }
 
   return { displayRows, columnOf };
+}
+
+function templateToGrid(templateAreas: string[]): string[][] {
+  return templateAreas.map((row) => row.trim().split(/\s+/));
+}
+
+function gridToTemplate(grid: string[][]): string[] {
+  return grid.map((row) => row.join(" "));
+}
+
+export function resolveAreaIdForTitle(
+  curation: CourseRoadmapCuration,
+  title: string,
+  slugToTitle: ReadonlyMap<string, string>,
+): string | undefined {
+  for (const [areaId, entry] of Object.entries(curation.courses)) {
+    if (slugToTitle.get(entry.slug) === title) {
+      return areaId;
+    }
+  }
+
+  return undefined;
+}
+
+export interface CourseGridPosition {
+  year: string;
+  row: number;
+  column: number;
+}
+
+function findAreaPosition(
+  years: Record<string, YearGridTemplate>,
+  areaId: string,
+): CourseGridPosition | null {
+  for (const [year, template] of Object.entries(years)) {
+    const grid = templateToGrid(template.templateAreas);
+    for (let row = 0; row < grid.length; row += 1) {
+      for (let column = 0; column < grid[row]!.length; column += 1) {
+        if (grid[row]![column] === areaId) {
+          return { year, row, column };
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+/** Move or swap a course area id onto another template cell (same predefined grid). */
+export function moveAreaInCourseGrid(
+  curation: CourseRoadmapCuration,
+  areaId: string,
+  target: CourseGridPosition,
+): CourseRoadmapCuration {
+  const years = structuredClone(normalizeRoadmapCourseLayoutYears(curation.years));
+  const from = findAreaPosition(years, areaId);
+  if (!from) {
+    return curation;
+  }
+
+  const targetTemplate = years[target.year];
+  if (!targetTemplate) {
+    return curation;
+  }
+
+  const targetGrid = templateToGrid(targetTemplate.templateAreas);
+  const targetRow = targetGrid[target.row];
+  if (!targetRow || target.column >= targetRow.length) {
+    return curation;
+  }
+
+  if (
+    from.year === target.year &&
+    from.row === target.row &&
+    from.column === target.column
+  ) {
+    return curation;
+  }
+
+  if (from.year === target.year) {
+    const grid = templateToGrid(years[from.year]!.templateAreas);
+    const displaced = grid[target.row]![target.column]!;
+    grid[from.row]![from.column] = displaced === areaId ? "." : displaced;
+    grid[target.row]![target.column] = areaId;
+    years[from.year]!.templateAreas = gridToTemplate(grid);
+  } else {
+    const sourceGrid = templateToGrid(years[from.year]!.templateAreas);
+    const displaced = targetRow[target.column]!;
+    targetRow[target.column] = areaId;
+    years[target.year]!.templateAreas = gridToTemplate(targetGrid);
+    sourceGrid[from.row]![from.column] =
+      displaced !== "." && displaced.length > 0 ? displaced : ".";
+    years[from.year]!.templateAreas = gridToTemplate(sourceGrid);
+  }
+
+  return {
+    ...curation,
+    years: normalizeRoadmapCourseLayoutYears(years),
+  };
+}
+
+export function courseLayoutDocumentFromCuration(
+  curation: CourseRoadmapCuration,
+): RoadmapCourseLayoutDocument {
+  return normalizeRoadmapCourseLayoutDocument({
+    courses: curation.courses,
+    years: curation.years,
+  });
 }

@@ -10,10 +10,11 @@ import {
 } from "./constants";
 import {
   buildCuratedCourseGrid,
-  getCourseRoadmapCuration,
   hasCuratedCourseGrid,
+  type CourseRoadmapCuration,
   type CuratedCourseDisplayRow,
 } from "./course-curation";
+import { buildCuratedGridCells } from "./course-grid-cells";
 import {
   resolveCuratedGridMetrics,
   resolveCuratedRowStride,
@@ -549,6 +550,7 @@ export function buildStagedCourseRoadmapLayout(
   adjacency: RoadmapAdjacency,
   yearsByTitle?: ReadonlyMap<string, string>,
   curatedLayoutMetrics?: CuratedCourseLayoutMetrics | null,
+  courseLayoutCuration?: CourseRoadmapCuration | null,
 ): RoadmapLayout {
   const titles = roadmap.concepts.map((concept) => concept.title);
   if (titles.length === 0) {
@@ -581,18 +583,19 @@ export function buildStagedCourseRoadmapLayout(
 
   orderCourseRowsByBarycenter(rows, adjacency);
   const groupByYear = shouldGroupCoursesByYear(titles, yearsByTitle);
-  const courseCuration = getCourseRoadmapCuration(roadmap.degreeSlug);
+  const courseCuration = courseLayoutCuration ?? null;
+  let slugToTitle: Map<string, string> | undefined;
   let useCuratedGrid =
     groupByYear &&
     yearsByTitle &&
     courseCuration &&
     hasCuratedCourseGrid(courseCuration);
 
-  let displayRows: CourseDisplayRow[];
-  let columnOf: Map<string, number>;
+  let displayRows: CourseDisplayRow[] = [];
+  let columnOf = new Map<string, number>();
 
-  if (useCuratedGrid) {
-    const slugToTitle = new Map(
+  if (useCuratedGrid && courseCuration) {
+    slugToTitle = new Map(
       roadmap.concepts.map((concept) => [concept.slug, concept.title]),
     );
 
@@ -709,9 +712,29 @@ export function buildStagedCourseRoadmapLayout(
       : Math.min(anchorX, ...positioned.map((node) => node.x));
   const labelGutter = courseYearBands ? COURSE_YEAR_LABEL_GUTTER : 0;
 
+  let courseGridCells;
+  if (
+    useCuratedGrid &&
+    courseCuration &&
+    curatedLayoutMetrics &&
+    slugToTitle
+  ) {
+    courseGridCells = buildCuratedGridCells({
+      curation: courseCuration,
+      displayRows,
+      placements,
+      graphCenter,
+      stride,
+      nodeWidth,
+      nodeHeight: SPINE_NODE_HEIGHT,
+      slugToTitle,
+    });
+  }
+
   return {
     placements,
     courseYearBands,
+    courseGridCells,
     attached: new Map(),
     parallelLanes: [],
     trunk: [],
@@ -734,11 +757,13 @@ export function buildCourseRoadmapLayout(
   adjacency: RoadmapAdjacency,
   yearsByTitle?: ReadonlyMap<string, string>,
   curatedLayoutMetrics?: CuratedCourseLayoutMetrics | null,
+  courseLayoutCuration?: CourseRoadmapCuration | null,
 ): RoadmapLayout {
   return buildStagedCourseRoadmapLayout(
     roadmap,
     adjacency,
     yearsByTitle,
     curatedLayoutMetrics,
+    courseLayoutCuration,
   );
 }

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator";
+import {
+  AnalyticsRebuildIndicator,
+  type PpsStatusIndicatorOverride,
+} from "@pps/shell/AnalyticsRebuildIndicator";
 import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
 
 import { RoadmapApp } from "./components/roadmap/RoadmapApp";
@@ -18,6 +21,9 @@ import { readRoadmapPanelUrl, writeRoadmapPanelUrl } from "./scripts/roadmap-pan
 export function App() {
   const rebuildStatus = useAnalyticsRebuildStatus();
   const [roadmapLoading, setRoadmapLoading] = useState(true);
+  const [gridLayoutSemaphore, setGridLayoutSemaphore] =
+    useState<PpsStatusIndicatorOverride | null>(null);
+  const [gridLayoutEditHint, setGridLayoutEditHint] = useState<string | null>(null);
   const conceptPanelRef = useRef<HTMLElement>(null);
   const capstonePanelRef = useRef<HTMLElement>(null);
   const conceptPanelControllerRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
@@ -110,7 +116,16 @@ export function App() {
       <header className="dashboard__header">
         <div className="roadmap__header-title-row">
           <h1 className="dashboard__header-title">Degree roadmaps</h1>
-          <AnalyticsRebuildIndicator status={rebuildStatus} loading={roadmapLoading} />
+          <div className="roadmap__header-status">
+            <AnalyticsRebuildIndicator
+              status={rebuildStatus}
+              loading={roadmapLoading}
+              override={gridLayoutSemaphore}
+            />
+            {gridLayoutEditHint ? (
+              <p className="roadmap__grid-layout-hint">{gridLayoutEditHint}</p>
+            ) : null}
+          </div>
         </div>
         <p className="dashboard__header-lead dashboard__header-lead--wide">
           Explorá las materias del plan, agrupadas por año y correlativas. Abrí una materia para
@@ -124,6 +139,8 @@ export function App() {
           onClosePanels={handleClosePanels}
           onProgressChange={handleProgressChange}
           onLoadingChange={setRoadmapLoading}
+          onGridLayoutSemaphoreChange={setGridLayoutSemaphore}
+          onGridLayoutEditHintChange={setGridLayoutEditHint}
           onRegisterPanelUrlSync={(sync) => {
             panelUrlSyncRef.current = sync;
           }}

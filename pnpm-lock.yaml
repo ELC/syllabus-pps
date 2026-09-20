@@ -442,6 +442,9 @@ importers:
       '@pps/config':
         specifier: workspace:*
         version: link:../config
+      '@pps/content':
+        specifier: workspace:*
+        version: link:../content
       react:
         specifier: 'catalog:'
         version: 19.3.0

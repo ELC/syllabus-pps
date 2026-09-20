@@ -4,7 +4,9 @@ export interface SupabaseDevPluginOptions {
     repoRoot: string;
     pages?: boolean;
     resources?: boolean;
+    roadmapLayouts?: boolean;
 }
 export declare function createSupabaseDevMiddleware(base: string, options: SupabaseDevPluginOptions): Connect.NextHandleFunction;
 export declare function supabaseDevPlugin(options: SupabaseDevPluginOptions): Plugin;
+export declare function siteRoadmapLayoutDevPlugin(options: SupabaseDevPluginOptions): Plugin;
 export { DEFAULT_STORAGE_BUCKET };

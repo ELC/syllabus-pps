@@ -20,6 +20,7 @@
     "./assets/icons/ui-plus.svg": "./assets/icons/ui-plus.svg",
     "./assets/icons/ui-save.svg": "./assets/icons/ui-save.svg",
     "./assets/icons/ui-warning.svg": "./assets/icons/ui-warning.svg",
+    "./assets/icons/resource-edit.svg": "./assets/icons/resource-edit.svg",
     "./assets/icons/resource-open.svg": "./assets/icons/resource-open.svg",
     "./styles/meta-dropdown.scss": "./src/styles/_meta-dropdown.scss",
     "./styles/shell.scss": "./src/styles/shell.scss",

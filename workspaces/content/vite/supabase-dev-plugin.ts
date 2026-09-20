@@ -9,11 +9,19 @@ import {
   readPage,
   readStorageBucketFromEnv,
   replaceResourceCatalog,
+  deleteRoadmapCourseLayout,
+  fetchRoadmapCourseLayout,
+  upsertRoadmapCourseLayout,
   writePage,
 } from "@pps/content";
 
+function requestPathname(url: string): string {
+  const raw = url.split("?")[0] ?? "";
+  return raw.replace(/\/+/g, "/");
+}
+
 function normalizeApiPath(url: string, base: string): string | null {
-  const path = url.split("?")[0] ?? "";
+  const path = requestPathname(url);
   const normalizedBase = base.endsWith("/") ? base : `${base}/`;
 
   if (path.startsWith("/api/")) {
@@ -26,6 +34,8 @@ function normalizeApiPath(url: string, base: string): string | null {
 
   return null;
 }
+
+const ROADMAP_LAYOUT_SITE_PATH = /^\/roadmap\/api\/roadmap-layout\/[^/?]+/;
 
 function loadRepoEnv(repoRoot: string): void {
   const env = loadEnv("development", repoRoot, "");
@@ -40,13 +50,14 @@ export interface SupabaseDevPluginOptions {
   repoRoot: string;
   pages?: boolean;
   resources?: boolean;
+  roadmapLayouts?: boolean;
 }
 
 export function createSupabaseDevMiddleware(
   base: string,
   options: SupabaseDevPluginOptions,
 ): Connect.NextHandleFunction {
-  const { pages = false, resources = false } = options;
+  const { pages = false, resources = false, roadmapLayouts = false } = options;
 
   return (req: IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
     const apiPath = normalizeApiPath(req.url ?? "", base);
@@ -76,6 +87,40 @@ export function createSupabaseDevMiddleware(
           res.statusCode = 204;
           res.end();
           return;
+        }
+
+        const roadmapLayoutMatch = apiPath.match(/^\/api\/roadmap-layout\/([^/?]+)/);
+        if (roadmapLayouts && roadmapLayoutMatch) {
+          const degreeSlug = decodeURIComponent(roadmapLayoutMatch[1] ?? "");
+
+          if (req.method === "GET") {
+            const layout = await fetchRoadmapCourseLayout(client, degreeSlug);
+            if (!layout) {
+              res.statusCode = 404;
+              res.end();
+              return;
+            }
+
+            res.setHeader("Content-Type", "application/json; charset=utf-8");
+            res.end(JSON.stringify(layout));
+            return;
+          }
+
+          if (req.method === "PUT") {
+            const body = await readRequestBody(req);
+            const layout = JSON.parse(body);
+            await upsertRoadmapCourseLayout(client, degreeSlug, layout);
+            res.statusCode = 204;
+            res.end();
+            return;
+          }
+
+          if (req.method === "DELETE") {
+            await deleteRoadmapCourseLayout(client, degreeSlug);
+            res.statusCode = 204;
+            res.end();
+            return;
+          }
         }
 
         if (pages && apiPath === "/api/pages" && req.method === "GET") {
@@ -141,6 +186,30 @@ export function supabaseDevPlugin(options: SupabaseDevPluginOptions): Plugin {
     },
     configurePreviewServer(server: PreviewServer) {
       server.middlewares.use(createSupabaseDevMiddleware(server.config.base, options));
+    },
+  };
+}
+
+/** Handles roadmap layout API on the main site dev server (before nested roadmap SPA). */
+export function siteRoadmapLayoutDevPlugin(options: SupabaseDevPluginOptions): Plugin {
+  const handler = createSupabaseDevMiddleware("/roadmap/", {
+    ...options,
+    roadmapLayouts: true,
+  });
+
+  return {
+    name: "pps-site-roadmap-layout-dev",
+    apply: "serve",
+    enforce: "pre",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use((req, res, next) => {
+        const path = requestPathname(req.url ?? "");
+        if (!ROADMAP_LAYOUT_SITE_PATH.test(path)) {
+          next();
+          return;
+        }
+        handler(req, res, next);
+      });
     },
   };
 }

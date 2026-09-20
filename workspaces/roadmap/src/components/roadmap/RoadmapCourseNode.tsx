@@ -51,6 +51,7 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
     <div
       className={[
         "roadmap__course",
+        "roadmap__course-drag-surface",
         `roadmap__course--${nodeData.role}`,
         isSpine ? "roadmap__course--spine" : "",
         denseLabel ? "roadmap__course--dense-label" : "",

@@ -4,12 +4,19 @@ import {
   MiniMap,
   Panel,
   ReactFlow,
+  useEdgesState,
+  useNodesState,
   useReactFlow,
   useStore,
+  type Edge,
   type EdgeTypes,
+  type Node,
   type NodeTypes,
 } from "@xyflow/react";
 import { loadAnalyticsArtifact } from "@pps/content/browser";
+import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
+import editSvg from "@pps/shell/assets/icons/resource-edit.svg?raw";
+import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
 import {
   courseRoadmapAsDegreeRoadmap,
   hydrateCurriculumGraph,
@@ -26,7 +33,24 @@ import { buildRoadmapFlow } from "./build-flow";
 import { EMPTY_ROADMAP_CURATION } from "./curation";
 import { buildCourseRoadmapLayout } from "./course-layout";
 import { readCuratedCourseLayoutMetrics } from "./course-layout-metrics";
+import { loadCourseLayout, saveCourseLayout } from "../../api/course-layout";
+import type { RoadmapCourseLayoutDocument } from "@pps/content";
+import {
+  buildCourseRoadmapCuration,
+  courseLayoutDocumentFromCuration,
+  hasCuratedCourseGrid,
+  moveAreaInCourseGrid,
+  resolveAreaIdForTitle,
+} from "./course-curation";
+import { findNearestGridCell } from "./course-grid-cells";
+import {
+  GRID_LAYOUT_EDIT_HINT,
+  GRID_LAYOUT_SAVED_LABEL,
+  GRID_LAYOUT_UNSAVED_LABEL,
+  gridLayoutStatusToSemaphore,
+} from "./grid-layout-semaphore";
 import { buildRoadmapLayout, type RoadmapBounds } from "./layout";
+import { RoadmapCanvasSkeleton } from "./RoadmapCanvasSkeleton";
 import { RoadmapAnchorNode } from "./RoadmapAnchorNode";
 import { RoadmapYearBandNode } from "./RoadmapYearBandNode";
 import { RoadmapBranchEdge } from "./RoadmapBranchEdge";
@@ -141,6 +165,10 @@ interface RoadmapAppProps {
   onProgressChange?: (progress: RoadmapProgress) => void;
   onRegisterPanelUrlSync?: (sync: RoadmapPanelUrlSync) => void;
   onLoadingChange?: (loading: boolean) => void;
+  onGridLayoutSemaphoreChange?: (
+    override: ReturnType<typeof gridLayoutStatusToSemaphore>,
+  ) => void;
+  onGridLayoutEditHintChange?: (hint: string | null) => void;
 }
 
 export function RoadmapApp({
@@ -149,6 +177,8 @@ export function RoadmapApp({
   onProgressChange,
   onRegisterPanelUrlSync,
   onLoadingChange,
+  onGridLayoutSemaphoreChange,
+  onGridLayoutEditHintChange,
 }: RoadmapAppProps) {
   const [graph, setGraph] = useState<CurriculumGraph | null>(null);
   const [selectedDegree, setSelectedDegree] = useState<string>("");
@@ -156,6 +186,12 @@ export function RoadmapApp({
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [loadError, setLoadError] = useState<string>("");
   const [urlRevision, setUrlRevision] = useState(0);
+  const [gridLayoutEditMode, setGridLayoutEditMode] = useState(false);
+  const [courseLayoutDocument, setCourseLayoutDocument] =
+    useState<RoadmapCourseLayoutDocument | null>(null);
+  const [courseLayoutLoading, setCourseLayoutLoading] = useState(false);
+  const [courseLayoutReadySlug, setCourseLayoutReadySlug] = useState<string | null>(null);
+  const [gridLayoutStatus, setGridLayoutStatus] = useState("");
   const lastAppliedUrlKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -171,6 +207,10 @@ export function RoadmapApp({
   useEffect(() => {
     onLoadingChange?.(!graph && !loadError);
   }, [graph, loadError, onLoadingChange]);
+
+  useEffect(() => {
+    onGridLayoutSemaphoreChange?.(gridLayoutStatusToSemaphore(gridLayoutStatus));
+  }, [gridLayoutStatus, onGridLayoutSemaphoreChange]);
 
   const courseRoadmaps = useMemo(
     () => (graph ? projectAllCourseRoadmaps(graph) : []),
@@ -319,6 +359,68 @@ export function RoadmapApp({
 
   const curatedLayoutMetrics = useMemo(() => readCuratedCourseLayoutMetrics(), []);
 
+  const slugToTitle = useMemo(
+    () =>
+      new Map(
+        (activeDegreeRoadmap?.concepts ?? []).map((concept) => [
+          concept.slug,
+          concept.title,
+        ]),
+      ),
+    [activeDegreeRoadmap],
+  );
+
+  useEffect(() => {
+    if (!activeCourseRoadmap) {
+      setCourseLayoutDocument(null);
+      setCourseLayoutLoading(false);
+      setCourseLayoutReadySlug(null);
+      return;
+    }
+
+    let cancelled = false;
+    const degreeSlug = activeCourseRoadmap.degreeSlug;
+    setCourseLayoutLoading(true);
+    setCourseLayoutDocument(null);
+    setCourseLayoutReadySlug(null);
+    setGridLayoutEditMode(false);
+    setGridLayoutStatus("");
+
+    void loadCourseLayout(degreeSlug)
+      .then((layout) => {
+        if (!cancelled) {
+          setCourseLayoutDocument(layout);
+          setCourseLayoutReadySlug(degreeSlug);
+        }
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setCourseLayoutDocument(null);
+          setCourseLayoutReadySlug(degreeSlug);
+          setGridLayoutStatus(
+            error instanceof Error ? error.message : "No se pudo cargar la grilla desde la nube.",
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setCourseLayoutLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCourseRoadmap?.degreeSlug]);
+
+  const effectiveCourseCuration = useMemo(
+    () =>
+      activeCourseRoadmap
+        ? buildCourseRoadmapCuration(activeCourseRoadmap.degreeSlug, courseLayoutDocument)
+        : null,
+    [activeCourseRoadmap, courseLayoutDocument],
+  );
+
   const layout = useMemo(() => {
     if (!activeDegreeRoadmap || !adjacency) {
       return null;
@@ -333,14 +435,36 @@ export function RoadmapApp({
       adjacency,
       courseYearsByTitle,
       curatedLayoutMetrics,
+      effectiveCourseCuration,
     );
   }, [
     activeDegreeRoadmap,
     adjacency,
     courseYearsByTitle,
     curatedLayoutMetrics,
+    effectiveCourseCuration,
     isConceptView,
   ]);
+
+  const showCourseLayoutSkeleton = Boolean(
+    !isConceptView &&
+      activeCourseRoadmap &&
+      (courseLayoutLoading || courseLayoutReadySlug !== activeCourseRoadmap.degreeSlug),
+  );
+
+  const canEditCourseGrid = Boolean(
+    !isConceptView &&
+      !showCourseLayoutSkeleton &&
+      effectiveCourseCuration &&
+      hasCuratedCourseGrid(effectiveCourseCuration) &&
+      (layout?.courseGridCells?.length ?? 0) > 0,
+  );
+
+  useEffect(() => {
+    onGridLayoutEditHintChange?.(
+      gridLayoutEditMode && canEditCourseGrid ? GRID_LAYOUT_EDIT_HINT : null,
+    );
+  }, [canEditCourseGrid, gridLayoutEditMode, onGridLayoutEditHintChange]);
 
   const degreeConceptSlugByTitle = useMemo(() => {
     if (!graph || !activeCourseRoadmap) {
@@ -429,6 +553,29 @@ export function RoadmapApp({
       progress.statusFor,
     ],
   );
+
+  const [flowNodes, setFlowNodes, onFlowNodesChange] = useNodesState<Node>([]);
+  const [flowEdges, setFlowEdges, onFlowEdgesChange] = useEdgesState<Edge>([]);
+
+  useEffect(() => {
+    setFlowNodes(
+      flow.nodes.map((node) => {
+        if (node.type !== "roadmapCourse" || !gridLayoutEditMode) {
+          return node;
+        }
+
+        return {
+          ...node,
+          draggable: true,
+          dragHandle: ".roadmap__course-drag-surface",
+        };
+      }),
+    );
+  }, [flow.nodes, gridLayoutEditMode, setFlowNodes]);
+
+  useEffect(() => {
+    setFlowEdges(flow.edges);
+  }, [flow.edges, setFlowEdges]);
 
   useEffect(() => {
     setConfirmingReset(false);
@@ -591,6 +738,86 @@ export function RoadmapApp({
     setConfirmingReset(false);
   }, [confirmingReset, progress]);
 
+  const handleSaveCourseGrid = useCallback(() => {
+    if (!activeCourseRoadmap || !effectiveCourseCuration) {
+      return;
+    }
+
+    setGridLayoutStatus("Guardando…");
+
+    void saveCourseLayout(
+      activeCourseRoadmap.degreeSlug,
+      courseLayoutDocumentFromCuration(effectiveCourseCuration),
+    )
+      .then(() => {
+        setGridLayoutStatus(GRID_LAYOUT_SAVED_LABEL);
+        setGridLayoutEditMode(false);
+      })
+      .catch((error: unknown) => {
+        setGridLayoutStatus(
+          error instanceof Error ? error.message : "No se pudo guardar la grilla.",
+        );
+      });
+  }, [activeCourseRoadmap, effectiveCourseCuration]);
+
+  const handleGridLayoutEditToggle = useCallback(() => {
+    if (gridLayoutEditMode) {
+      handleSaveCourseGrid();
+      return;
+    }
+
+    setGridLayoutEditMode(true);
+    setGridLayoutStatus("");
+  }, [gridLayoutEditMode, handleSaveCourseGrid]);
+
+  const handleNodeDragStop = useCallback(
+    (_event: MouseEvent | TouchEvent, node: Node) => {
+      if (
+        !gridLayoutEditMode ||
+        !layout?.courseGridCells ||
+        !effectiveCourseCuration ||
+        !activeCourseRoadmap ||
+        node.type !== "roadmapCourse"
+      ) {
+        return;
+      }
+
+      const width = node.width ?? node.measured?.width ?? 0;
+      const height = node.height ?? node.measured?.height ?? 0;
+      const centerX = node.position.x + width / 2;
+      const centerY = node.position.y + height / 2;
+      const targetCell = findNearestGridCell(layout.courseGridCells, centerX, centerY);
+      if (!targetCell) {
+        return;
+      }
+
+      const areaId = resolveAreaIdForTitle(
+        effectiveCourseCuration,
+        node.id,
+        slugToTitle,
+      );
+      if (!areaId) {
+        return;
+      }
+
+      const nextCuration = moveAreaInCourseGrid(effectiveCourseCuration, areaId, {
+        year: targetCell.year,
+        row: targetCell.row,
+        column: targetCell.column,
+      });
+
+      setCourseLayoutDocument(courseLayoutDocumentFromCuration(nextCuration));
+      setGridLayoutStatus(GRID_LAYOUT_UNSAVED_LABEL);
+    },
+    [
+      activeCourseRoadmap,
+      effectiveCourseCuration,
+      gridLayoutEditMode,
+      layout?.courseGridCells,
+      slugToTitle,
+    ],
+  );
+
   if (loadError) {
     return <p className="roadmap__error">{loadError}</p>;
   }
@@ -692,25 +919,36 @@ export function RoadmapApp({
             </button>
           </div>
         </div>
+
       </div>
 
       <section
-        className={`roadmap__canvas-panel${hasConceptGraph ? "" : " roadmap__canvas-panel--empty"}`}
+        className={`roadmap__canvas-panel${hasConceptGraph ? "" : " roadmap__canvas-panel--empty"}${gridLayoutEditMode ? " roadmap__canvas-panel--grid-edit" : ""}`}
         aria-label={isConceptView ? "Mapa de conceptos de la materia" : "Mapa de materias"}
       >
-        {hasConceptGraph ? (
+        {showCourseLayoutSkeleton ? (
+          <RoadmapCanvasSkeleton />
+        ) : hasConceptGraph ? (
           <RoadmapProgressContext.Provider value={progress}>
             <ReactFlow
-              nodes={flow.nodes}
-              edges={flow.edges}
+              nodes={flowNodes}
+              edges={flowEdges}
+              onNodesChange={onFlowNodesChange}
+              onEdgesChange={onFlowEdgesChange}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
-              nodesDraggable={false}
+              nodesDraggable={gridLayoutEditMode}
               nodesConnectable={false}
-              elementsSelectable={false}
+              elementsSelectable={gridLayoutEditMode}
+              panOnDrag={gridLayoutEditMode ? [1, 2] : true}
               minZoom={0.2}
               maxZoom={1.5}
+              onNodeDragStop={handleNodeDragStop}
               onNodeClick={(_, node) => {
+                if (gridLayoutEditMode) {
+                  return;
+                }
+
                 if (node.type === "roadmapCourse") {
                   handleCourseOpen(node.id);
                   return;
@@ -730,6 +968,23 @@ export function RoadmapApp({
                 <Panel position="top-left" className="roadmap__graph-back">
                   <button type="button" className="roadmap__back-button" onClick={handleBackToCourses}>
                     ← Volver a materias
+                  </button>
+                </Panel>
+              ) : null}
+              {canEditCourseGrid ? (
+                <Panel position="top-right" className="roadmap__grid-layout-panel">
+                  <button
+                    type="button"
+                    className={`roadmap__grid-layout-toggle${gridLayoutEditMode ? " roadmap__grid-layout-toggle--active" : ""}`}
+                    onClick={handleGridLayoutEditToggle}
+                    aria-label={gridLayoutEditMode ? "Guardar grilla" : "Editar posiciones de la grilla"}
+                    title={gridLayoutEditMode ? "Guardar grilla" : "Editar posiciones"}
+                  >
+                    <SvgAssetIcon
+                      svg={gridLayoutEditMode ? saveSvg : editSvg}
+                      className="roadmap__grid-layout-toggle-icon"
+                      focusable={false}
+                    />
                   </button>
                 </Panel>
               ) : null}

@@ -8,6 +8,7 @@ import {
   sharedViteEnv,
   withSharedVitePlugins,
 } from "@pps/config";
+import { supabaseDevPlugin } from "@pps/content/vite/supabase-dev";
 import { shellHeadPlugin, shellLogoPostPlugin } from "@pps/shell/vite";
 
 const workspaceDir = resolve(import.meta.dirname);
@@ -24,6 +25,7 @@ export default defineConfig({
     shellHeadPlugin("ROADMAP_BASE", "/roadmap/", { activeNav: "roadmap", prerenderShell: true }),
     shellLogoPostPlugin(),
     rebuildDevPlugin({ repoRoot }),
+    supabaseDevPlugin({ repoRoot, roadmapLayouts: true }),
   ],
   server: {
     hmr: false,

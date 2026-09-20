@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Apply analytics SQL migrations (003–005) using SUPABASE_DB_* from .env.
+ * Apply analytics SQL migrations (003–006) using SUPABASE_DB_* from .env.
  */
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -59,6 +59,7 @@ async function main() {
     "workspaces/content/sql/003_analytics_artifacts.sql",
     "workspaces/content/sql/004_analytics_dac.sql",
     "workspaces/content/sql/005_analytics_rebuild_status.sql",
+    "workspaces/content/sql/006_roadmap_course_layouts.sql",
   ];
 
   const client = await connectForMigrations();

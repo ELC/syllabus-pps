@@ -1,4 +1,9 @@
-export { DEFAULT_STORAGE_BUCKET, pageObjectPath, RESOURCES_TABLE } from "./constants";
+export {
+  DEFAULT_STORAGE_BUCKET,
+  pageObjectPath,
+  RESOURCES_TABLE,
+  ROADMAP_COURSE_LAYOUTS_TABLE,
+} from "./constants";
 export {
   fetchAllPageSources,
   listPages,
@@ -7,6 +12,25 @@ export {
   type PageListItem,
 } from "./pages-storage";
 export { fetchResourceCatalog, replaceResourceCatalog } from "./resources-db";
+export {
+  ROADMAP_COURSE_GRID_COLUMN_COUNT,
+  normalizeRoadmapCourseLayoutDocument,
+  normalizeRoadmapCourseLayoutYears,
+  normalizeRoadmapCourseLayoutYearTemplate,
+} from "./roadmap-course-layout-normalize";
+export {
+  deleteRoadmapCourseLayout,
+  deleteRoadmapCourseLayoutYears,
+  fetchRoadmapCourseLayout,
+  fetchRoadmapCourseLayoutYears,
+  normalizeRoadmapCourseLayoutPayload,
+  upsertRoadmapCourseLayout,
+  upsertRoadmapCourseLayoutYears,
+  type RoadmapCourseLayoutCourseEntry,
+  type RoadmapCourseLayoutDocument,
+  type RoadmapCourseLayoutYears,
+  type RoadmapCourseLayoutYearTemplate,
+} from "./roadmap-course-layouts-db";
 export {
   assertSupabaseServerEnv,
   createServerClientFromEnv,

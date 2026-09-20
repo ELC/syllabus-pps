@@ -142,6 +142,7 @@ In the SQL editor or via Postgres:
 4. [`workspaces/content/sql/003_analytics_artifacts.sql`](workspaces/content/sql/003_analytics_artifacts.sql)
 5. [`workspaces/content/sql/004_analytics_dac.sql`](workspaces/content/sql/004_analytics_dac.sql) — Bruin DAC query tables
 6. [`workspaces/content/sql/005_analytics_rebuild_status.sql`](workspaces/content/sql/005_analytics_rebuild_status.sql) — rebuild progress for CMS/Cites
+7. [`workspaces/content/sql/006_roadmap_course_layouts.sql`](workspaces/content/sql/006_roadmap_course_layouts.sql) — curated degree roadmap grid overrides
 
 **Fast path** (after `.env` has `SUPABASE_DB_*`):
 
@@ -149,7 +150,7 @@ In the SQL editor or via Postgres:
 pnpm apply:analytics-sql
 ```
 
-If the pooler is unreachable from your network, paste `003`–`005` from [`workspaces/content/sql/`](workspaces/content/sql/) into **Supabase → SQL → New query** and run.
+If the pooler is unreachable from your network, paste `003`–`006` from [`workspaces/content/sql/`](workspaces/content/sql/) into **Supabase → SQL → New query** and run.
 
 Create a Storage bucket named `content` (or set `SUPABASE_STORAGE_BUCKET`) with markdown pages under `pages/{slug}.md`.
 
