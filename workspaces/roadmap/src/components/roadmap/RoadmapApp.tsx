@@ -120,6 +120,7 @@ interface RoadmapAppProps {
   onClosePanels?: () => void;
   onProgressChange?: (progress: RoadmapProgress) => void;
   onRegisterPanelUrlSync?: (sync: RoadmapPanelUrlSync) => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 export function RoadmapApp({
@@ -127,6 +128,7 @@ export function RoadmapApp({
   onClosePanels,
   onProgressChange,
   onRegisterPanelUrlSync,
+  onLoadingChange,
 }: RoadmapAppProps) {
   const [graph, setGraph] = useState<CurriculumGraph | null>(null);
   const [selectedDegree, setSelectedDegree] = useState<string>("");
@@ -149,6 +151,10 @@ export function RoadmapApp({
         setLoadError(error instanceof Error ? error.message : "Failed to load roadmap data.");
       });
   }, []);
+
+  useEffect(() => {
+    onLoadingChange?.(!graph && !loadError);
+  }, [graph, loadError, onLoadingChange]);
 
   const courseRoadmaps = useMemo(
     () => (graph ? projectAllCourseRoadmaps(graph) : []),
@@ -561,7 +567,7 @@ export function RoadmapApp({
   }
 
   if (!graph) {
-    return <p className="roadmap__loading">Cargando roadmap…</p>;
+    return null;
   }
 
   if (!activeCourseRoadmap || !layout || !activeDegreeRoadmap) {

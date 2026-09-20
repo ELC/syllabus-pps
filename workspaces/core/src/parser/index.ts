@@ -9,6 +9,7 @@ import { PageSource, ParseOptions } from "./types";
 export type { PageSource, ParseOptions, RawPage } from "./types";
 export { parseFrontmatter } from "./frontmatter";
 export { parsePageContent } from "./parse-content";
+export { stringifyPageSource } from "./serialize-page";
 export { slugifyTitle } from "../slug";
 export { extractCitationRefs, stripCitationRefs } from "./extractors";
 

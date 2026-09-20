@@ -8,10 +8,15 @@ export function writeResourceParam(id: string): void {
   if (url.searchParams.get("id") === id) {
     return;
   }
+  url.searchParams.delete("new");
   if (id) {
     url.searchParams.set("id", id);
   } else {
     url.searchParams.delete("id");
   }
   window.history.replaceState({}, "", url);
+}
+
+export function readNewResourceRequest(): boolean {
+  return new URLSearchParams(window.location.search).get("new") === "1";
 }

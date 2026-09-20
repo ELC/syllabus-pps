@@ -18,6 +18,7 @@
     "@pps/login": "workspace:*",
     "@pps/shell": "workspace:*",
     "react": "catalog:",
+    "react-day-picker": "catalog:",
     "react-dom": "catalog:"
   },
   "devDependencies": {

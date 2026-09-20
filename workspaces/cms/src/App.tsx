@@ -11,7 +11,14 @@ import {
   type PageSource,
   type ResourceCatalogEntry,
 } from "@pps/core";
+import { PageMetadataForm } from "./components/PageMetadataForm";
 import { createDraftPageContent, nextDraftSlug } from "./draft-page";
+import {
+  composePageDocument,
+  defaultPageMetadata,
+  splitPageDocument,
+  type PageMetadata,
+} from "./page-document";
 import { readPageParam, writePageParam } from "./page-param";
 import { filterDiagnosticsForPage, pageHasDiagnostics } from "./validation/filterDiagnostics";
 import { runDiagnosticsForEditor } from "./validation/runDiagnostics";
@@ -64,13 +71,15 @@ function PageDiagnosticWarning(): ReactElement {
 export function App() {
   const [pages, setPages] = useState<Array<{ slug: string; path: string }>>([]);
   const [selectedSlug, setSelectedSlug] = useState<string>("");
-  const [content, setContent] = useState("");
+  const [metadata, setMetadata] = useState<PageMetadata>(() => defaultPageMetadata(""));
+  const [body, setBody] = useState("");
   const [status, setStatus] = useState<string>("");
   const [loadError, setLoadError] = useState<string>("");
   const [loadingPages, setLoadingPages] = useState(true);
   const [allSources, setAllSources] = useState<Array<{ path: string; content: string }>>([]);
   const [resources, setResources] = useState<ResourceCatalogEntry[]>([]);
   const [draftSlugs, setDraftSlugs] = useState<Set<string>>(() => new Set());
+  const [query, setQuery] = useState("");
   const rebuildStatus = useAnalyticsRebuildStatus();
 
   useEffect(() => {
@@ -83,7 +92,7 @@ export function App() {
         const match = requested ? items.find((item) => item.slug === requested) : undefined;
         setSelectedSlug(match?.slug ?? items[0]?.slug ?? "");
         if (items.length === 0) {
-          setLoadError("No pages found in Supabase Storage.");
+          setLoadError("No se encontraron páginas en Supabase Storage.");
         }
       })
       .catch((error: unknown) => {
@@ -104,12 +113,63 @@ export function App() {
     writePageParam(selectedSlug);
   }, [selectedSlug]);
 
+  const content = useMemo(
+    () => composePageDocument({ ...metadata, slug: selectedSlug }, body),
+    [body, metadata, selectedSlug],
+  );
+
+  const pageLinks = useMemo(() => {
+    const bySlug = new Map<string, { title: string; slug: string }>();
+    for (const page of allSources) {
+      const slug = page.path.replace(/\.md$/i, "");
+      const { metadata: pageMeta } = splitPageDocument(page.content, slug);
+      const linkSlug = pageMeta.slug.trim() || slug;
+      bySlug.set(linkSlug, { title: pageMeta.title, slug: linkSlug });
+    }
+    return [...bySlug.values()].sort((left, right) =>
+      left.title.localeCompare(right.title, "es-AR"),
+    );
+  }, [allSources]);
+
+  const conceptPages = useMemo(() => {
+    const concepts: Array<{ title: string; slug: string }> = [];
+    for (const page of allSources) {
+      const slug = page.path.replace(/\.md$/i, "");
+      const { metadata: pageMeta } = splitPageDocument(page.content, slug);
+      if (pageMeta.kind === "concept") {
+        const conceptSlug = pageMeta.slug.trim() || slug;
+        concepts.push({ title: pageMeta.title, slug: conceptSlug });
+      }
+    }
+    return concepts.sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
+  }, [allSources]);
+
+  const conceptTitles = useMemo(() => conceptPages.map((page) => page.title), [conceptPages]);
+
+  const courseTitles = useMemo(() => {
+    const titles: string[] = [];
+    for (const page of allSources) {
+      const slug = page.path.replace(/\.md$/i, "");
+      const { metadata: pageMeta } = splitPageDocument(page.content, slug);
+      if (pageMeta.kind === "course") {
+        titles.push(pageMeta.title);
+      }
+    }
+    return [...new Set(titles)];
+  }, [allSources]);
+
   function persistDraftContent(slug: string, draftContent: string): void {
     setAllSources((sources) =>
       sources.map((page) =>
         page.path.replace(/\.md$/i, "") === slug ? { ...page, content: draftContent } : page,
       ),
     );
+  }
+
+  function loadDocumentFromSource(slug: string, source: string): void {
+    const split = splitPageDocument(source, slug);
+    setMetadata(split.metadata);
+    setBody(split.body);
   }
 
   function selectPage(slug: string): void {
@@ -126,11 +186,11 @@ export function App() {
     if (draftSlugs.has(selectedSlug)) {
       const draft = allSources.find((page) => page.path.replace(/\.md$/i, "") === selectedSlug);
       if (draft) {
-        setContent(draft.content);
+        loadDocumentFromSource(selectedSlug, draft.content);
       }
       return;
     }
-    void readPage(selectedSlug).then(setContent);
+    void readPage(selectedSlug).then((source) => loadDocumentFromSource(selectedSlug, source));
   }, [allSources, draftSlugs, selectedSlug]);
 
   useEffect(() => {
@@ -168,6 +228,32 @@ export function App() {
     );
   }, [allSources, content, diagnostics, pages, selectedSlug]);
 
+  const pageTitlesBySlug = useMemo(() => {
+    const titles = new Map<string, string>();
+    for (const source of allSources) {
+      const slug = source.path.replace(/\.md$/i, "");
+      const { metadata: pageMeta } = splitPageDocument(source.content, slug);
+      titles.set(slug, pageMeta.title ?? "");
+    }
+    return titles;
+  }, [allSources]);
+
+  const filteredPages = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) {
+      return pages;
+    }
+    return pages.filter((page) => {
+      const title = pageTitlesBySlug.get(page.slug) ?? "";
+      return (
+        page.slug.toLowerCase().includes(needle) || title.toLowerCase().includes(needle)
+      );
+    });
+  }, [pageTitlesBySlug, pages, query]);
+
+  const diagnosticsPending =
+    loadingPages || (pages.length > 0 && allSources.length === 0 && !loadError);
+
   const canSave = !hasBlockingDiagnostics(pageDiagnostics);
 
   function addNewPage(): void {
@@ -183,15 +269,26 @@ export function App() {
     setPages((current) => [{ slug, path }, ...current]);
     setAllSources((current) => [{ path, content: draftContent }, ...current]);
     setSelectedSlug(slug);
-    setContent(draftContent);
+    loadDocumentFromSource(slug, draftContent);
+    setQuery("");
     setStatus("");
     setLoadError("");
   }
 
   const pageNav = (
-    <nav className="dashboard__nav dashboard__nav--sub dashboard__nav--scroll" aria-label="Pages">
-      <div className="dashboard__nav-label">Pages</div>
-      {pages.map((page) => (
+    <nav className="dashboard__nav dashboard__nav--sub dashboard__nav--scroll" aria-label="Páginas">
+      <div className="dashboard__nav-label">Páginas</div>
+      <label className="cms__search">
+        <span className="dashboard__nav-field-label">Filtrar</span>
+        <input
+          className="cms__search-input"
+          type="search"
+          value={query}
+          placeholder="slug o título"
+          onChange={(event) => setQuery(event.target.value)}
+        />
+      </label>
+      {filteredPages.map((page) => (
         <button
           key={page.slug}
           type="button"
@@ -202,7 +299,7 @@ export function App() {
         >
           <span className="cms__page-link-label">{page.slug}</span>
           {diagnosticPageSlugs.has(page.slug) ? (
-            <span className="cms__page-warning" title="Has diagnostics" aria-label="Has diagnostics">
+            <span className="cms__page-warning" title="Tiene diagnósticos" aria-label="Tiene diagnósticos">
               <PageDiagnosticWarning />
             </span>
           ) : null}
@@ -222,12 +319,17 @@ export function App() {
       <header className="cms__header">
         <div className="cms__header-main">
           <div className="cms__header-title-row">
-            <h1 className="cms__header-title">{selectedSlug || "CMS"}</h1>
-            <AnalyticsRebuildIndicator status={rebuildStatus} className="cms__rebuild-indicator" />
+            <h1 className="cms__header-title">Gestión de contenido</h1>
+            <AnalyticsRebuildIndicator
+              status={rebuildStatus}
+              className="cms__rebuild-indicator"
+              loading={loadingPages}
+            />
           </div>
           <p className="cms__header-lead">
-            Edits save markdown pages to Supabase Storage. Local dev uses{" "}
-            <code className="cms__code">pnpm dev</code> without sign-in; the hosted site requires auth.
+            Los cambios guardan páginas markdown en Supabase Storage. En desarrollo local,{" "}
+            <code className="cms__code">pnpm dev</code> no requiere iniciar sesión; el sitio publicado sí
+            requiere autenticación.
           </p>
         </div>
         <div className="cms__header-actions">
@@ -236,8 +338,8 @@ export function App() {
               type="button"
               className="cms__button cms__button--secondary cms__button--icon"
               onClick={addNewPage}
-              title="New page"
-              aria-label="New page"
+              title="Nueva página"
+              aria-label="Nueva página"
             >
               <IconPlus />
             </button>
@@ -245,11 +347,16 @@ export function App() {
               type="button"
               className="cms__button cms__button--save cms__button--icon"
               disabled={!canSave || !selectedSlug}
-              title="Save page"
-              aria-label="Save page"
+              title="Guardar página"
+              aria-label="Guardar página"
               onClick={() => {
-                void writePage(selectedSlug, content).then(() => {
-                  setStatus(`Saved ${selectedSlug}.`);
+                const savedAt = new Date().toISOString();
+                const savedMetadata = { ...metadata, slug: selectedSlug, updatedAt: savedAt };
+                const savedContent = composePageDocument(savedMetadata, body);
+
+                void writePage(selectedSlug, savedContent).then(() => {
+                  setMetadata(savedMetadata);
+                  setStatus(`Guardado ${selectedSlug}.`);
                   setDraftSlugs((current) => {
                     const next = new Set(current);
                     next.delete(selectedSlug);
@@ -257,7 +364,9 @@ export function App() {
                   });
                   setAllSources((sources) =>
                     sources.map((page) =>
-                      page.path.replace(/\.md$/i, "") === selectedSlug ? { ...page, content } : page,
+                      page.path.replace(/\.md$/i, "") === selectedSlug
+                        ? { ...page, content: savedContent }
+                        : page,
                     ),
                   );
                   triggerAnalyticsRebuild(import.meta.env.BASE_URL ?? "/cms/");
@@ -268,73 +377,98 @@ export function App() {
             </button>
             {status ? <span className="cms__status">{status}</span> : null}
             {!canSave ? (
-              <p className="cms__hint">Fix errors on this page before saving (warnings are allowed).</p>
+              <p className="cms__hint">
+                Corregí los errores de esta página antes de guardar (las advertencias no bloquean).
+              </p>
             ) : null}
           </>
         </div>
       </header>
 
-      {loadingPages ? <p className="cms__loading">Loading pages…</p> : null}
       {loadError ? (
         <p className="cms__error" role="alert">
           {loadError}
           {loadError.includes("404") ? (
             <>
               {" "}
-              Check Supabase Storage policies and sign in with an allowed account.
+              Revisá las políticas de Supabase Storage e iniciá sesión con una cuenta autorizada.
             </>
           ) : null}
         </p>
       ) : null}
 
       <section className="cms__editor-panel">
-        <textarea
-          className="cms__editor"
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-          readOnly={false}
-          rows={14}
-          spellCheck={false}
+        <PageMetadataForm
+          metadata={metadata}
+          pageSlug={selectedSlug}
+          conceptTitles={conceptTitles}
+          conceptPages={conceptPages}
+          pageLinks={pageLinks}
+          courseTitles={courseTitles}
+          body={body}
+          resources={resources}
+          onChange={setMetadata}
+          onBodyChange={setBody}
         />
       </section>
 
-      <section className="cms__diagnostics">
+      <section className="cms__diagnostics" aria-busy={diagnosticsPending}>
         <header className="cms__diagnostics-head">
-          <h2 className="cms__diagnostics-title">Diagnostics</h2>
+          <h2 className="cms__diagnostics-title">Diagnósticos</h2>
           <p className="cms__diagnostics-lead">
-            Errors on this page block save; warnings are shown but do not block save.
+            Los errores en esta página impiden guardar; las advertencias se muestran pero no bloquean el
+            guardado.
           </p>
         </header>
         <div className="cms__diagnostics-wrap">
-          {pageDiagnostics.length === 0 ? (
-            <p className="cms__diagnostics-empty">No diagnostics on this page.</p>
-          ) : (
-            <table className="cms__diagnostics-table">
-              <thead>
-                <tr>
-                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Severity</th>
-                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Code</th>
-                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Line</th>
-                  <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Message</th>
+          <table className="cms__diagnostics-table">
+            <colgroup>
+              <col className="cms__diagnostics-col cms__diagnostics-col--severity" />
+              <col className="cms__diagnostics-col cms__diagnostics-col--code" />
+              <col className="cms__diagnostics-col cms__diagnostics-col--message" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Gravedad</th>
+                <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Código</th>
+                <th className="cms__diagnostics-cell cms__diagnostics-cell--head">Mensaje</th>
+              </tr>
+            </thead>
+            <tbody>
+              {diagnosticsPending ? (
+                <tr className="cms__diagnostics-row cms__diagnostics-row--placeholder" aria-hidden="true">
+                  <td className="cms__diagnostics-cell cms__diagnostics-empty cms__diagnostics-empty--reserved">
+                    &nbsp;
+                  </td>
+                  <td className="cms__diagnostics-cell cms__diagnostics-empty cms__diagnostics-empty--reserved">
+                    &nbsp;
+                  </td>
+                  <td className="cms__diagnostics-cell cms__diagnostics-empty cms__diagnostics-empty--reserved">
+                    &nbsp;
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {pageDiagnostics.map((diagnostic, index) => (
+              ) : pageDiagnostics.length === 0 ? (
+                <tr className="cms__diagnostics-row">
+                  <td className="cms__diagnostics-cell cms__diagnostics-empty" colSpan={3}>
+                    No hay diagnósticos en esta página.
+                  </td>
+                </tr>
+              ) : (
+                pageDiagnostics.map((diagnostic, index) => (
                   <tr
-                    key={`${diagnostic.code}-${diagnostic.page}-${diagnostic.line}-${index}`}
+                    key={`${diagnostic.code}-${diagnostic.page}-${index}`}
                     className="cms__diagnostics-row"
                   >
                     <td className={`cms__diagnostics-cell ${severityClass(diagnostic.severity)}`}>
                       {diagnostic.severity}
                     </td>
                     <td className="cms__diagnostics-cell">{diagnostic.code}</td>
-                    <td className="cms__diagnostics-cell">{diagnostic.line ?? ""}</td>
                     <td className="cms__diagnostics-cell">{diagnostic.message}</td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </section>
 

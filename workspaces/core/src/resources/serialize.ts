@@ -11,6 +11,7 @@ const ENTRY_KEYS: Array<keyof ResourceCatalogEntry> = [
   "issued",
   "accessed",
   "URL",
+  "event-URL",
   "DOI",
   "ISBN",
   "edition",
@@ -111,6 +112,11 @@ export function compactResourceCatalogEntry(entry: ResourceCatalogEntry): Resour
   const url = compactString(entry.URL);
   if (url) {
     compacted.URL = url;
+  }
+
+  const eventUrl = compactString(entry["event-URL"]);
+  if (eventUrl) {
+    compacted["event-URL"] = eventUrl;
   }
 
   const doi = compactString(entry.DOI);

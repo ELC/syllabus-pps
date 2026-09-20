@@ -15,6 +15,8 @@
     "./austral-tokens": "./src/austral-tokens.ts",
     "./concept-panel-icons": "./src/concept-panel-icons.ts",
     "./cites-link": "./src/cites-link.ts",
+    "./MetaDropdown": "./src/MetaDropdown.tsx",
+    "./styles/meta-dropdown.scss": "./src/styles/_meta-dropdown.scss",
     "./styles/shell.scss": "./src/styles/shell.scss",
     "./shell-chrome": "./src/shell-chrome.ts",
     "./mount-shell-sidebar": "./src/mount-shell-sidebar.ts",

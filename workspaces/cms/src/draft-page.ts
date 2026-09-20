@@ -11,17 +11,8 @@ export function nextDraftSlug(pages: ReadonlyArray<{ slug: string }>): string {
   return `new-page-${index}`;
 }
 
-export function createDraftPageContent(slug: string): string {
-  const title = slug.replace(/-/g, " ");
-  const updatedAt = new Date().toISOString();
+import { composePageDocument, defaultPageMetadata } from "./page-document";
 
-  return `---
-title: ${title}
-slug: ${slug}
-kind: concept
-version: 1
-updatedAt: ${updatedAt}
----
-- 
-`;
+export function createDraftPageContent(slug: string): string {
+  return composePageDocument(defaultPageMetadata(slug), "- \n");
 }

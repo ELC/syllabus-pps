@@ -31,6 +31,10 @@ export function namesForForm(names: CslName[] | undefined): CslName[] {
   }));
 }
 
+export function isPendingDraftResourceId(id: string): boolean {
+  return id === "new-resource" || /^new-resource-\d+$/.test(id);
+}
+
 export function nextDraftId(entries: ResourceCatalogEntry[]): string {
   const ids = new Set(entries.map((entry) => entry.id));
   if (!ids.has("new-resource")) {
@@ -44,10 +48,11 @@ export function nextDraftId(entries: ResourceCatalogEntry[]): string {
   return `new-resource-${index}`;
 }
 
-export function createDraftEntry(entries: ResourceCatalogEntry[]): ResourceCatalogEntry {
+export function createDraftEntry(entries: ResourceCatalogEntry[], id?: string): ResourceCatalogEntry {
   const today = todayRawDate();
+  const draftId = id && isPendingDraftResourceId(id) ? id : nextDraftId(entries);
   return {
-    id: nextDraftId(entries),
+    id: draftId,
     type: "webpage",
     title: "",
     author: [emptyName()],
@@ -57,6 +62,7 @@ export function createDraftEntry(entries: ResourceCatalogEntry[]): ResourceCatal
     issued: { raw: today },
     accessed: { raw: today },
     URL: "",
+    "event-URL": "",
     DOI: "",
     ISBN: "",
     edition: "",
@@ -77,6 +83,7 @@ export function entryForForm(entry: ResourceCatalogEntry): ResourceCatalogEntry 
     issued: { raw: entry.issued?.raw ?? "" },
     accessed: { raw: entry.accessed?.raw ?? "" },
     URL: entry.URL ?? "",
+    "event-URL": entry["event-URL"] ?? "",
     DOI: entry.DOI ?? "",
     ISBN: entry.ISBN ?? "",
     edition: entry.edition === undefined ? "" : String(entry.edition),

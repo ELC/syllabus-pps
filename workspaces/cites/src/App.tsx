@@ -1,19 +1,14 @@
-import { useEffect, useMemo, useState, type ChangeEvent, type ReactElement } from "react";
+import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 
-import {
-  collectResourceCatalogIssues,
-  cslItemTypes,
-  type CslItemType,
-  type ResourceCatalogEntry,
-} from "@pps/core";
+import { collectResourceCatalogIssues, type ResourceCatalogEntry } from "@pps/core";
 import { triggerAnalyticsRebuild } from "@pps/content/browser";
 import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator";
 import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
 import { loadResources, writeResources } from "./api/resources";
-import { createDraftEntry, entryForForm, TYPE_LABELS } from "./draft";
-import { NameFields } from "./NameFields";
-import { readResourceParam, writeResourceParam } from "./resource-param";
+import { createDraftEntry, entryForForm, isPendingDraftResourceId } from "./draft";
+import { ResourceForm } from "./ResourceForm";
+import { readNewResourceRequest, readResourceParam, writeResourceParam } from "./resource-param";
 
 function IconPlus(): ReactElement {
   return (
@@ -77,9 +72,41 @@ export function App() {
     setLoadError("");
     void loadResources()
       .then((items) => {
-        setEntries(items);
-        setSelectedIndex(indexForId(items, readResourceParam()));
-        if (items.length === 0) {
+        let nextItems = items;
+        let nextIndex = 0;
+        let urlId: string | null = null;
+
+        if (readNewResourceRequest()) {
+          const draft = createDraftEntry(items);
+          nextItems = [draft, ...items];
+          nextIndex = 0;
+          urlId = draft.id;
+        } else {
+          const paramId = readResourceParam();
+          if (paramId) {
+            const found = items.findIndex((entry) => entry.id === paramId);
+            if (found >= 0) {
+              nextIndex = found;
+              urlId = paramId;
+            } else if (isPendingDraftResourceId(paramId)) {
+              const draft = createDraftEntry(items, paramId);
+              nextItems = [draft, ...items];
+              nextIndex = 0;
+              urlId = paramId;
+            } else {
+              nextIndex = indexForId(items, paramId);
+              urlId = items[nextIndex]?.id ?? null;
+            }
+          }
+        }
+
+        if (urlId) {
+          writeResourceParam(urlId);
+        }
+
+        setEntries(nextItems);
+        setSelectedIndex(nextIndex);
+        if (nextItems.length === 0) {
           setLoadError("No resources found in Supabase.");
         }
       })
@@ -209,8 +236,12 @@ export function App() {
           <header className="cites__header">
             <div className="cites__header-main">
               <div className="cites__header-title-row">
-                <h1 className="cites__header-title">{selected?.id || "Cites"}</h1>
-                <AnalyticsRebuildIndicator status={rebuildStatus} className="cites__rebuild-indicator" />
+                <h1 className="cites__header-title">Catálogo de recursos</h1>
+                <AnalyticsRebuildIndicator
+                  status={rebuildStatus}
+                  className="cites__rebuild-indicator"
+                  loading={loading}
+                />
               </div>
               <p className="cites__header-lead">
                 Edits save the resource catalog to Supabase Postgres. Local dev uses{" "}
@@ -251,177 +282,42 @@ export function App() {
             </div>
           </header>
 
-          {loading ? <p className="cites__loading">Loading resources…</p> : null}
-          {loadError ? (
-            <p className="cites__error" role="alert">
-              {loadError}
-              {loadError.includes("404") ? (
-                <> Check Supabase RLS policies and sign in with an allowed account.</>
-              ) : null}
-            </p>
-          ) : null}
+          <div className="cites__body">
+            {loadError ? (
+              <p className="cites__error" role="alert">
+                {loadError}
+                {loadError.includes("404") ? (
+                  <> Check Supabase RLS policies and sign in with an allowed account.</>
+                ) : null}
+              </p>
+            ) : null}
 
-          {formEntry ? (
-            <form className="cites__form" onSubmit={(event) => event.preventDefault()}>
-              <label className="cites__field">
-                <span className="cites__label">Id</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.id}
-                  readOnly={false}
-                  spellCheck={false}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                    patchSelected({ id: event.target.value })
-                  }
-                />
-              </label>
-              <label className="cites__field">
-                <span className="cites__label">Type</span>
-                <select
-                  className="cites__input"
-                  value={formEntry.type}
-                  disabled={false}
-                  onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-                    patchSelected({ type: event.target.value as CslItemType })
-                  }
+            <div className="cites__form-panel">
+              {formEntry && !loading ? (
+                <ResourceForm entry={formEntry} onChange={patchSelected} />
+              ) : (
+                <div
+                  className={`cites__form cites__form--placeholder${loading ? " cites__form--loading" : ""}`}
+                  aria-busy={loading}
+                  aria-live="polite"
                 >
-                  {cslItemTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {TYPE_LABELS[type]}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="cites__field cites__field--full">
-                <span className="cites__label">Title</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.title}
-                  readOnly={false}
-                  onChange={(event) => patchSelected({ title: event.target.value })}
-                />
-              </label>
-              <label className="cites__field cites__field--full">
-                <span className="cites__label">URL</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.URL ?? ""}
-                  readOnly={false}
-                  spellCheck={false}
-                  onChange={(event) => patchSelected({ URL: event.target.value })}
-                />
-              </label>
-              <label className="cites__field">
-                <span className="cites__label">Publisher</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.publisher ?? ""}
-                  readOnly={false}
-                  onChange={(event) => patchSelected({ publisher: event.target.value })}
-                />
-              </label>
-              <label className="cites__field">
-                <span className="cites__label">Container title</span>
-                <input
-                  className="cites__input"
-                  value={formEntry["container-title"] ?? ""}
-                  readOnly={false}
-                  onChange={(event) => patchSelected({ "container-title": event.target.value })}
-                />
-              </label>
-              <label className="cites__field">
-                <span className="cites__label">Issued (raw date)</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.issued?.raw ?? ""}
-                  readOnly={false}
-                  placeholder="2024 or 2024-03-15"
-                  onChange={(event) => patchSelected({ issued: { raw: event.target.value } })}
-                />
-              </label>
-              <label className="cites__field">
-                <span className="cites__label">Accessed (raw date)</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.accessed?.raw ?? ""}
-                  readOnly={false}
-                  placeholder="2026-09-15"
-                  onChange={(event) => patchSelected({ accessed: { raw: event.target.value } })}
-                />
-              </label>
-              <label className="cites__field">
-                <span className="cites__label">DOI</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.DOI ?? ""}
-                  readOnly={false}
-                  spellCheck={false}
-                  onChange={(event) => patchSelected({ DOI: event.target.value })}
-                />
-              </label>
-              <label className="cites__field">
-                <span className="cites__label">ISBN</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.ISBN ?? ""}
-                  readOnly={false}
-                  spellCheck={false}
-                  onChange={(event) => patchSelected({ ISBN: event.target.value })}
-                />
-              </label>
-              <label className="cites__field">
-                <span className="cites__label">Edition</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.edition === undefined ? "" : String(formEntry.edition)}
-                  readOnly={false}
-                  onChange={(event) => patchSelected({ edition: event.target.value })}
-                />
-              </label>
-              <label className="cites__field">
-                <span className="cites__label">Genre</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.genre ?? ""}
-                  readOnly={false}
-                  list="cites-genre-options"
-                  onChange={(event) => patchSelected({ genre: event.target.value })}
-                />
-                <datalist id="cites-genre-options">
-                  <option value="interactive" />
-                  <option value="course" />
-                </datalist>
-              </label>
-              <label className="cites__field cites__field--full">
-                <span className="cites__label">Language</span>
-                <input
-                  className="cites__input"
-                  value={formEntry.language ?? ""}
-                  readOnly={false}
-                  onChange={(event) => patchSelected({ language: event.target.value })}
-                />
-              </label>
+                  {loading ? (
+                    <>
+                      <span className="cites__sr-only">Cargando recurso…</span>
+                      <div className="cites__form-skeleton" aria-hidden="true">
+                        <div className="cites__form-skeleton-line cites__form-skeleton-line--title" />
+                        <div className="cites__form-skeleton-line cites__form-skeleton-line--wide" />
+                        <div className="cites__form-skeleton-line cites__form-skeleton-line--wide" />
+                        <div className="cites__form-skeleton-line cites__form-skeleton-line--medium" />
+                        <div className="cites__form-skeleton-line cites__form-skeleton-line--authors" />
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+              )}
+            </div>
 
-              <div className="cites__field cites__field--full">
-                <NameFields
-                  label="Authors"
-                  names={formEntry.author ?? []}
-                  readOnly={false}
-                  onChange={(author) => patchSelected({ author })}
-                />
-              </div>
-              <div className="cites__field cites__field--full">
-                <NameFields
-                  label="Editors"
-                  names={formEntry.editor ?? []}
-                  readOnly={false}
-                  onChange={(editor) => patchSelected({ editor })}
-                />
-              </div>
-            </form>
-          ) : null}
-
-          <section className="cites__diagnostics">
+            <section className="cites__diagnostics" aria-busy={loading}>
             <header className="cites__diagnostics-head">
               <h2 className="cites__diagnostics-title">Validation</h2>
               <p className="cites__diagnostics-lead">
@@ -430,7 +326,9 @@ export function App() {
               </p>
             </header>
             <div className="cites__diagnostics-wrap">
-              {selectedIssues.length === 0 ? (
+              {loading ? (
+                <p className="cites__diagnostics-empty cites__diagnostics-empty--reserved">&nbsp;</p>
+              ) : selectedIssues.length === 0 ? (
                 <p className="cites__diagnostics-empty">
                   {catalogIssues.length === 0
                     ? "No catalog issues."
@@ -457,7 +355,8 @@ export function App() {
                 </table>
               )}
             </div>
-          </section>
+            </section>
+          </div>
         </div>
       </div>
     </>

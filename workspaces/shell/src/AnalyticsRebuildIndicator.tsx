@@ -13,15 +13,19 @@ const LABELS = {
 export interface AnalyticsRebuildIndicatorProps {
   status: AnalyticsRebuildStatus | null;
   className?: string;
+  /** While true, shows the yellow “Actualizando…” semaphore (e.g. initial app data load). */
+  loading?: boolean;
 }
 
-export function AnalyticsRebuildIndicator({
-  status,
+function RebuildPhaseIndicator({
+  phase,
+  label,
   className,
-}: AnalyticsRebuildIndicatorProps): ReactElement {
-  const phase = analyticsRebuildIndicatorPhase(status);
-  const label = LABELS[phase];
-
+}: {
+  phase: ReturnType<typeof analyticsRebuildIndicatorPhase>;
+  label: string;
+  className?: string;
+}): ReactElement {
   return (
     <span
       className={["pps-rebuild-indicator", `pps-rebuild-indicator--${phase}`, className]
@@ -34,4 +38,15 @@ export function AnalyticsRebuildIndicator({
       <span className="pps-rebuild-indicator__label">{label}</span>
     </span>
   );
+}
+
+export function AnalyticsRebuildIndicator({
+  status,
+  className,
+  loading = false,
+}: AnalyticsRebuildIndicatorProps): ReactElement {
+  const phase = loading ? "updating" : analyticsRebuildIndicatorPhase(status);
+  const label = LABELS[phase];
+
+  return <RebuildPhaseIndicator phase={phase} label={label} className={className} />;
 }

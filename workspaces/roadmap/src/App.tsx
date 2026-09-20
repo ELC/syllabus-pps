@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator";
 import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
@@ -17,6 +17,7 @@ import {
 import { readRoadmapPanelUrl, writeRoadmapPanelUrl } from "./scripts/roadmap-panel-url";
 export function App() {
   const rebuildStatus = useAnalyticsRebuildStatus();
+  const [roadmapLoading, setRoadmapLoading] = useState(true);
   const conceptPanelRef = useRef<HTMLElement>(null);
   const capstonePanelRef = useRef<HTMLElement>(null);
   const conceptPanelControllerRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
@@ -109,7 +110,7 @@ export function App() {
       <header className="dashboard__header">
         <div className="roadmap__header-title-row">
           <h1 className="dashboard__header-title">Degree roadmaps</h1>
-          <AnalyticsRebuildIndicator status={rebuildStatus} />
+          <AnalyticsRebuildIndicator status={rebuildStatus} loading={roadmapLoading} />
         </div>
         <p className="dashboard__header-lead dashboard__header-lead--wide">
           Explorá las materias del plan, agrupadas por año y correlativas. Abrí una materia para
@@ -122,6 +123,7 @@ export function App() {
           onConceptOpen={handleConceptOpen}
           onClosePanels={handleClosePanels}
           onProgressChange={handleProgressChange}
+          onLoadingChange={setRoadmapLoading}
           onRegisterPanelUrlSync={(sync) => {
             panelUrlSyncRef.current = sync;
           }}

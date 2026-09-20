@@ -7,6 +7,16 @@ export function citesEditHref(resourceId: string): string {
   return `${url.pathname}${url.search}`;
 }
 
+/** Open Cites with a new unsaved catalog draft (`/cites/?new=1`). */
+export function citesNewResourceHref(): string {
+  const siteRoot = readBrowserSiteRoot();
+  const normalizedRoot = siteRoot.endsWith("/") ? siteRoot : `${siteRoot}/`;
+  const url = new URL(`${normalizedRoot}cites/`, window.location.origin);
+  url.searchParams.delete("id");
+  url.searchParams.set("new", "1");
+  return `${url.pathname}${url.search}`;
+}
+
 function readBrowserSiteRoot(): string {
   const pathname = window.location.pathname;
   const normalized = pathname.endsWith("/") ? pathname : `${pathname}/`;

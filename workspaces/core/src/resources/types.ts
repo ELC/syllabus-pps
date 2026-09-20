@@ -36,6 +36,8 @@ export interface ResourceCatalogEntry {
   issued?: CslDate;
   accessed?: CslDate;
   URL?: string;
+  /** Conference or event site; extension field (CSL has `event` for the name, not a URL). */
+  "event-URL"?: string;
   DOI?: string;
   ISBN?: string;
   edition?: string | number;

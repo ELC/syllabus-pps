@@ -9,6 +9,7 @@ catalog:
   "astro": "^5.5.2"
   "react": "^19.0.0"
   "react-dom": "^19.0.0"
+  "react-day-picker": "^9.6.7"
   "typescript": "^5.9.3"
   "vite": "^6.2.0"
   "sass": "^1.85.1"
