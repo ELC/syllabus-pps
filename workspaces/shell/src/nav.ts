@@ -11,8 +11,8 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "analytics", label: "Analytics", segment: "analytics/" },
   { id: "network", label: "Network", segment: "network/" },
   { id: "roadmap", label: "Roadmaps", segment: "roadmap/" },
-  { id: "cms", label: "CMS", segment: "cms/" },
-  { id: "cites", label: "Cites", segment: "cites/" },
+  { id: "cms", label: "Contenido", segment: "cms/" },
+  { id: "cites", label: "Recursos", segment: "cites/" },
 ];
 
 export function navHref(siteRoot: string, segment: string): string {

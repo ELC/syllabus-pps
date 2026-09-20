@@ -1,7 +1,9 @@
 import { LoadedConfig } from "../config/loaded-config";
+import { deriveExpectedCurriculum } from "../curriculum";
+import { coursesLinkedToYearPage, yearPagesForDegree } from "../degree-year";
 import { indexResourceCatalog, ResourceCatalogEntry } from "../resources";
 import { parsePages, PageSource } from "../parser";
-import { CurriculumGraph, GraphEdge, PageKind, ZettelPage } from "../types";
+import { CurriculumGraph, ExpectedCurriculum, GraphEdge, PageKind, ZettelPage } from "../types";
 import { structuralPageKindRankByKind } from "./structural-kind-rank";
 
 export function canonicalStructuralEdgeDirection(
@@ -42,11 +44,17 @@ export function buildGraphFromPages(input: {
     catalog,
   );
 
+  const derivedYears = deriveExpectedCurriculum(pages).years;
+  const expected: ExpectedCurriculum = {
+    ...input.config.expected,
+    years: derivedYears,
+  };
+
   return {
     generatedAt: input.generatedAt ?? new Date().toISOString(),
     pages,
     edges: buildEdges(pages),
-    expected: input.config.expected,
+    expected,
     resources,
   };
 }
@@ -109,6 +117,52 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
       line: tag.line,
     })),
   ]);
+
+  const preliminaryGraph = { pages, edges };
+  for (const page of pages) {
+    if (page.kind !== "year") {
+      continue;
+    }
+    for (const courseTitle of coursesLinkedToYearPage(page, preliminaryGraph)) {
+      if (!titleSet.has(courseTitle)) {
+        continue;
+      }
+      const direction = canonicalStructuralEdgeDirection(
+        page.title,
+        courseTitle,
+        pageKindByTitle,
+      );
+      edges.push({
+        source: direction.source,
+        target: direction.target,
+        kind: "page-ref",
+        rawTarget: courseTitle,
+        line: 0,
+      });
+    }
+  }
+
+  for (const degreePage of pages) {
+    if (degreePage.kind !== "degree") {
+      continue;
+    }
+    for (const yearPage of yearPagesForDegree(pages, degreePage.title, {
+      degreeSlug: degreePage.slug,
+    })) {
+      const direction = canonicalStructuralEdgeDirection(
+        degreePage.title,
+        yearPage.title,
+        pageKindByTitle,
+      );
+      edges.push({
+        source: direction.source,
+        target: direction.target,
+        kind: "page-ref",
+        rawTarget: yearPage.title,
+        line: 0,
+      });
+    }
+  }
 
   return edges.sort((left, right) => {
     const bySource = left.source.localeCompare(right.source, "es-AR");

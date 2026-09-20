@@ -596,21 +596,46 @@ function courseDagBezierOptions(
   return { curvature: COURSE_DAG_CROSS_YEAR_CURVATURE };
 }
 
-function yearBandNode(band: CourseYearBand, minNodeX: number): Node<RoadmapYearBandNodeData> {
+const YEAR_BAND_MARGIN_TOP = 20;
+const YEAR_BAND_MARGIN_BOTTOM = 28;
+
+const YEAR_SEPARATOR_LINE_HEIGHT = 3;
+
+function yearBandNode(
+  band: CourseYearBand,
+  minNodeX: number,
+  maxNodeX: number,
+  options: { previousBandMaxY?: number },
+): Node<RoadmapYearBandNodeData> {
+  const x = minNodeX - COURSE_YEAR_LABEL_GUTTER;
+  let y = band.y - YEAR_BAND_MARGIN_TOP;
+  let height = band.height + YEAR_BAND_MARGIN_TOP + YEAR_BAND_MARGIN_BOTTOM;
+  let separatorTop = 0;
+  let showYearSeparator = false;
+
+  if (options.previousBandMaxY !== undefined) {
+    const gapMidY =
+      (options.previousBandMaxY + band.y) / 2 - YEAR_SEPARATOR_LINE_HEIGHT / 2;
+    separatorTop = gapMidY - y;
+    showYearSeparator = true;
+    if (separatorTop < 0) {
+      y += separatorTop;
+      height -= separatorTop;
+      separatorTop = 0;
+    }
+  }
+
   return {
     id: `__year-band__${band.year}`,
     type: "roadmapYearBand",
-    position: {
-      x: minNodeX - COURSE_YEAR_LABEL_GUTTER,
-      y: band.y - 12,
-    },
-    width: COURSE_YEAR_LABEL_GUTTER - 24,
-    height: band.height + 24,
+    position: { x, y },
+    width: Math.max(maxNodeX - x + 32, COURSE_YEAR_LABEL_GUTTER - 24),
+    height,
     selectable: false,
     draggable: false,
     focusable: false,
     zIndex: -1,
-    data: { label: band.year },
+    data: { label: band.year, separatorTop, showYearSeparator },
   };
 }
 
@@ -816,12 +841,24 @@ export function buildRoadmapFlow({
   ];
 
   if (courseDagEdges && layout.courseYearBands) {
+    const placementExtents = [...layout.placements.values()];
     const minNodeX = Math.min(
-      ...[...layout.placements.values()].map((placement) => placement.x),
+      ...placementExtents.map((placement) => placement.x),
       layout.start.x,
     );
-    for (const band of layout.courseYearBands) {
-      nodes.push(yearBandNode(band, minNodeX));
+    const maxNodeX = Math.max(
+      ...placementExtents.map((placement) => placement.x + placement.width),
+      layout.end.x + ANCHOR_NODE_WIDTH,
+    );
+    for (const [index, band] of layout.courseYearBands.entries()) {
+      const previousBand = index > 0 ? layout.courseYearBands[index - 1] : undefined;
+      nodes.push(
+        yearBandNode(band, minNodeX, maxNodeX, {
+          previousBandMaxY: previousBand
+            ? previousBand.y + previousBand.height
+            : undefined,
+        }),
+      );
     }
   }
 

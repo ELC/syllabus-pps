@@ -1,4 +1,10 @@
 import { buildCurriculumIndexes } from "../analysis";
+import { deriveExpectedCurriculum } from "../curriculum";
+import {
+  coursesLinkedToYearPage,
+  resolveCoursePageTitle,
+  yearPagesForDegree,
+} from "../degree-year";
 import { normalizeTitle, uniqueSorted } from "../normalize";
 import { CurriculumGraph, GraphEdge, PageKind, ZettelPage } from "../types";
 
@@ -23,7 +29,48 @@ export function reachableFromDegree(graph: CurriculumGraph, degreeTitle: string)
   }
 
   const reachable = new Set<string>([degreePage.title]);
-  const queue = [degreePage.title];
+  const queue: string[] = [degreePage.title];
+
+  const degreeYearPages = yearPagesForDegree(graph.pages, degreePage.title, {
+    degreeSlug: degreePage.slug,
+  });
+  const degreeYearTitles = new Set(degreeYearPages.map((page) => page.title));
+
+  for (const yearPage of degreeYearPages) {
+    if (!reachable.has(yearPage.title)) {
+      reachable.add(yearPage.title);
+      queue.push(yearPage.title);
+    }
+    for (const courseTitle of coursesLinkedToYearPage(yearPage, graph)) {
+      if (!reachable.has(courseTitle)) {
+        reachable.add(courseTitle);
+        queue.push(courseTitle);
+      }
+    }
+  }
+
+  const hasReachableCourse = graph.pages.some(
+    (page) => page.kind === "course" && reachable.has(page.title),
+  );
+  const expectedYears =
+    graph.expected?.years?.length > 0
+      ? graph.expected.years
+      : deriveExpectedCurriculum(graph.pages).years;
+  if (!hasReachableCourse && expectedYears.length > 0) {
+    for (const year of expectedYears) {
+      if (degreeYearTitles.size > 0 && !degreeYearTitles.has(year.title)) {
+        continue;
+      }
+      for (const courseRef of year.courses) {
+        const courseTitle = resolveCoursePageTitle(courseRef, graph.pages);
+        if (!courseTitle || reachable.has(courseTitle)) {
+          continue;
+        }
+        reachable.add(courseTitle);
+        queue.push(courseTitle);
+      }
+    }
+  }
 
   while (queue.length > 0) {
     const current = queue.shift();

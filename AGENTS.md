@@ -83,7 +83,9 @@ kind: concept
 Shared business logic lives in `workspaces/core` (parser, graph, diagnostics, projections). Supabase I/O lives in `workspaces/content` (`@pps/content`). The CLI in `workspaces/analytics-cli` (`@pps/analytics-cli`) reads Supabase at build time, upserts analytics tables, writes `_generated/dac/` (and local JSON for tests/inspect), and assembles Bruin DAC locally.
 
 - Do not edit generated files under `workspaces/analytics-cli/_generated/` by hand.
-- Expected years/courses stay in `workspaces/analytics-cli/pps.config.ts` via `contentDir`.
+- Degrees declare `years:` (count) in frontmatter; the CMS provisions `kind: year` pages as `{degreeSlug}-ano-{n}` with `degree`, `yearIndex`, and `courses` (course page **slugs**, not titles).
+- Network and roadmap labels for years use `año N`; stored titles stay unique (`{degree} · año N`).
+- `pps.config.ts` only supplies optional CLI paths (e.g. `contentDir`).
 - CMS blocks saves on diagnostics with severity `error` or `warning`. CI fails on `error` only.
 
 Useful commands from the repository root:

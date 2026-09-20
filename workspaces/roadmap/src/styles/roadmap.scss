@@ -286,10 +286,6 @@
       border-color: var(--austral-graph-concept-base);
       background: var(--austral-graph-concept-base);
 
-      .roadmap__course-year {
-        color: var(--austral-blanco);
-        opacity: 0.88;
-      }
     }
 
     &--skipped {
@@ -298,6 +294,11 @@
 
     &--in-progress {
       background: rgba(217, 119, 6, 0.08);
+    }
+
+    &--dense-label {
+      gap: 0.1rem;
+      padding: 0.32rem 0.5rem;
     }
   }
 
@@ -316,38 +317,51 @@
     transition: width 0.2s ease;
   }
 
-  &__course-year {
-    font-family: var(--font-heading);
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--dash-muted);
-  }
-
   &__year-band {
+    --roadmap-year-gutter: 144px;
+
+    position: relative;
     width: 100%;
     height: 100%;
     box-sizing: border-box;
     display: flex;
     align-items: flex-start;
-    justify-content: flex-end;
-    padding: 0.35rem 0.5rem 0 0;
-    border-top: 2px solid rgba(15, 76, 129, 0.12);
-    border-radius: 0.35rem 0 0 0.35rem;
-    background: linear-gradient(
-      90deg,
-      rgba(15, 76, 129, 0.05) 0%,
-      rgba(15, 76, 129, 0) 72%
-    );
+    justify-content: flex-start;
+    padding: 0.85rem 0 1.1rem;
+    border-top: none;
+    border-radius: 0;
+    background: transparent;
     pointer-events: none;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: var(--roadmap-year-separator-top, 0);
+      left: 0;
+      right: 0;
+      height: 3px;
+      display: none;
+      background: repeating-linear-gradient(
+        to right,
+        rgba(15, 76, 129, 0.34) 0 20px,
+        transparent 20px 38px
+      );
+    }
+
+    &--between-years::before {
+      display: block;
+    }
   }
 
   &__year-band-label {
+    flex-shrink: 0;
+    width: var(--roadmap-year-gutter);
+    box-sizing: border-box;
+    padding: 0.1rem 0.5rem 0;
     font-family: var(--font-heading);
-    font-size: 0.75rem;
+    font-size: 1.3125rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--austral-azul-primario);
     white-space: nowrap;
@@ -356,10 +370,11 @@
   &__course-label {
     position: relative;
     z-index: 1;
-    flex: 1;
+    flex: 0 1 auto;
+    align-self: center;
+    width: 100%;
     min-width: 0;
-    font-size: var(--roadmap-course-label-size);
-    line-height: var(--roadmap-course-label-line-height);
+    margin: auto 0;
     color: var(--dash-text);
 
     &--spine {
@@ -368,6 +383,18 @@
 
     &--done {
       color: var(--austral-blanco);
+    }
+
+    &--compact-md {
+      font-size: 0.625rem;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+
+    &--compact {
+      font-size: 0.5625rem;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
     }
   }
 
@@ -451,6 +478,17 @@
     line-height: var(--roadmap-node-label-line-height);
     overflow-wrap: anywhere;
     text-align: center;
+
+    &.roadmap__course-label--compact-md,
+    &.roadmap__course-label--compact {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      font-weight: 600;
+      overflow-wrap: normal;
+      hyphens: auto;
+    }
   }
 
   &__topic-label {

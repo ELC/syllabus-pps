@@ -582,7 +582,7 @@ export function buildStagedCourseRoadmapLayout(
   orderCourseRowsByBarycenter(rows, adjacency);
   const groupByYear = shouldGroupCoursesByYear(titles, yearsByTitle);
   const courseCuration = getCourseRoadmapCuration(roadmap.degreeSlug);
-  const useCuratedGrid =
+  let useCuratedGrid =
     groupByYear &&
     yearsByTitle &&
     courseCuration &&
@@ -599,12 +599,18 @@ export function buildStagedCourseRoadmapLayout(
     ({ displayRows, columnOf } = buildCuratedCourseGrid(
       courseCuration,
       titles,
-      yearsByTitle,
+      yearsByTitle!,
       stageOf,
       sortCourseYears,
       slugToTitle,
     ));
-  } else {
+
+    if (displayRows.length === 0) {
+      useCuratedGrid = false;
+    }
+  }
+
+  if (!useCuratedGrid) {
     columnOf = groupByYear
       ? assignCourseColumnsByYear(titles, yearsByTitle!, adjacency)
       : assignCourseColumns(rows, adjacency);

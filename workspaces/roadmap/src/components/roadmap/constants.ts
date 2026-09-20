@@ -3,6 +3,8 @@ export const ROADMAP_END_ID = "__roadmap_end__";
 
 export const SPINE_NODE_WIDTH = 236;
 export const SPINE_NODE_HEIGHT = 64;
+/** Course cards show a year label plus up to three title lines. */
+export const COURSE_NODE_HEIGHT = 96;
 export const BRANCH_NODE_WIDTH = SPINE_NODE_WIDTH;
 export const BRANCH_NODE_HEIGHT = SPINE_NODE_HEIGHT;
 export const ANCHOR_NODE_WIDTH = 184;

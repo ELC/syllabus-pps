@@ -14,6 +14,8 @@ export type EditorPageKind = (typeof EDITOR_KINDS)[number];
 
 export interface PageMetadata {
   title: string;
+  /** kind: degree — long display name; stored as `fullName` in frontmatter. */
+  fullName: string;
   slug: string;
   kind: EditorPageKind;
   version?: number;
@@ -22,6 +24,14 @@ export interface PageMetadata {
   trayecto: CourseTrayecto | "";
   correlativas: string[];
   dependsOn: string[];
+  /** kind: degree — number of year pages to provision. */
+  yearsCount?: number;
+  /** kind: year — parent degree title. */
+  degree?: string;
+  /** kind: year — 1-based index within the degree. */
+  yearIndex?: number;
+  /** kind: year — assigned course page slugs (not display titles). */
+  courses: string[];
 }
 
 export { EDITOR_KINDS, courseTrayectos };
@@ -56,6 +66,7 @@ function parseTrayecto(value: unknown): CourseTrayecto | "" {
 export function defaultPageMetadata(slug: string): PageMetadata {
   return {
     title: slug.replace(/-/g, " "),
+    fullName: "",
     slug,
     kind: "concept",
     version: 1,
@@ -63,7 +74,22 @@ export function defaultPageMetadata(slug: string): PageMetadata {
     trayecto: "",
     correlativas: [],
     dependsOn: [],
+    courses: [],
   };
+}
+
+function parseYearsCount(value: unknown): number | undefined {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+    return undefined;
+  }
+  return value;
+}
+
+function parseYearIndex(value: unknown): number | undefined {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+    return undefined;
+  }
+  return value;
 }
 
 export function splitPageDocument(source: string, fileSlug: string): { metadata: PageMetadata; body: string } {
@@ -77,16 +103,27 @@ export function splitPageDocument(source: string, fileSlug: string): { metadata:
   const version = typeof data.version === "number" ? data.version : undefined;
   const updatedAt = typeof data.updatedAt === "string" ? data.updatedAt : undefined;
 
+  const kind = parseKind(data.kind);
+  const fullName =
+    kind === "degree" && typeof data.fullName === "string" && data.fullName.trim()
+      ? data.fullName.trim()
+      : "";
+
   return {
     metadata: {
       title,
+      fullName,
       slug,
-      kind: parseKind(data.kind),
+      kind,
       version,
       updatedAt,
       trayecto: parseTrayecto(data.trayecto),
       correlativas: parseStringList(data.correlativas),
       dependsOn: parseStringList(data.dependsOn),
+      yearsCount: parseYearsCount(data.years),
+      degree: typeof data.degree === "string" && data.degree.trim() ? data.degree.trim() : undefined,
+      yearIndex: parseYearIndex(data.yearIndex),
+      courses: parseStringList(data.courses),
     },
     body: content,
   };
@@ -117,6 +154,27 @@ export function composePageDocument(metadata: PageMetadata, body: string): strin
 
   if (metadata.kind === "concept") {
     record.dependsOn = metadata.dependsOn;
+  }
+
+  if (metadata.kind === "degree") {
+    if (metadata.fullName.trim()) {
+      record.fullName = metadata.fullName.trim();
+    }
+    if (metadata.yearsCount !== undefined) {
+      record.years = metadata.yearsCount;
+    }
+  }
+
+  if (metadata.kind === "year") {
+    if (metadata.degree) {
+      record.degree = metadata.degree;
+    }
+    if (metadata.yearIndex !== undefined) {
+      record.yearIndex = metadata.yearIndex;
+    }
+    if (metadata.courses.length > 0) {
+      record.courses = metadata.courses;
+    }
   }
 
   return stringifyPageSource(record, body);

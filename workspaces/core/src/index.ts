@@ -3,6 +3,8 @@ export * from "./course-trayecto";
 export * from "./normalize";
 export { slugFromPath, slugifyTitle } from "./slug";
 export * from "./config/loaded-config";
+export * from "./curriculum";
+export * from "./degree-year";
 export * from "./parser";
 export * from "./graph";
 export * from "./analysis";

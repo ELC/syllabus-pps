@@ -14,7 +14,7 @@ export const analyticsFlags = {
   config: {
     kind: "parsed" as const,
     parse: String,
-    brief: "Path to the expected curriculum config.",
+    brief: "Path to analytics CLI config (contentDir and optional admin pages).",
     optional: true as const,
   },
   out: {

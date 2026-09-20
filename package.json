@@ -13,6 +13,7 @@
     "bundle:rebuild-analytics-edge": "node scripts/bundle-rebuild-analytics-edge.mjs",
     "deploy:rebuild-analytics": "node scripts/bundle-rebuild-analytics-edge.mjs && node scripts/deploy-rebuild-analytics.mjs",
     "build:content": "pnpm build:core && pnpm --filter @pps/analytics-cli build:analytics",
+    "sync:pages": "pnpm build:core && node --env-file=.env scripts/sync-pages-to-storage.mjs",
     "build:cms": "pnpm build:core && pnpm --filter @pps/cms build",
     "build:cites": "pnpm build:core && pnpm --filter @pps/cites build",
     "build:site": "pnpm --filter @pps/site build",

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 
-import type { ResourceCatalogEntry } from "@pps/core";
+import { COURSE_TRAYECTO_PRINCIPAL, yearDisplayLabel, type ResourceCatalogEntry } from "@pps/core";
 
+import { courseTitleBySlug, type CoursePageOption } from "../course-pages";
 import type { ConceptPageOption } from "../concept-pages";
 import type { PageLinkOption } from "../page-link-options";
 import {
@@ -12,6 +13,7 @@ import {
 } from "../page-document";
 import { BodyEditor } from "./BodyEditor";
 import { DependsOnCombobox } from "./DependsOnCombobox";
+import { ContentEditorSkeleton, MetaPrimaryStackSkeleton } from "./MetaFormSkeleton";
 import { MetaDropdown } from "./MetaDropdown";
 
 const KIND_LABELS: Record<EditorPageKind, string> = {
@@ -39,10 +41,20 @@ export interface PageMetadataFormProps {
   conceptPages: ConceptPageOption[];
   pageLinks: PageLinkOption[];
   courseTitles: string[];
+  coursePages: CoursePageOption[];
+  degreeTitles: string[];
+  /** Long display name (`fullName`) keyed by degree title or slug. */
+  degreeDisplayByTitle: ReadonlyMap<string, string>;
   body: string;
   resources: ResourceCatalogEntry[];
   onChange: (metadata: PageMetadata) => void;
   onBodyChange: (body: string) => void;
+  /** False while the selected page document is still loading into the editor. */
+  documentReady: boolean;
+  /** Kind inferred from slug or cached sources while the document is loading. */
+  expectedKind: EditorPageKind | null;
+  /** False while the full page catalog is still loading from Storage. */
+  catalogReady: boolean;
 }
 
 export function PageMetadataForm({
@@ -52,10 +64,16 @@ export function PageMetadataForm({
   conceptPages,
   pageLinks,
   courseTitles,
+  coursePages,
+  degreeTitles: _degreeTitles,
+  degreeDisplayByTitle,
   body,
   resources,
   onChange,
   onBodyChange,
+  documentReady,
+  expectedKind,
+  catalogReady,
 }: PageMetadataFormProps): ReactElement {
   const [dependsOnResetKey, setDependsOnResetKey] = useState(0);
 
@@ -75,7 +93,9 @@ export function PageMetadataForm({
   const trayectoOptions = useMemo(
     () => [
       { value: "" as const, label: "Trayecto Principal (predeterminado)" },
-      ...courseTrayectos.map((trayecto) => ({ value: trayecto, label: trayecto })),
+      ...courseTrayectos
+        .filter((trayecto) => trayecto !== COURSE_TRAYECTO_PRINCIPAL)
+        .map((trayecto) => ({ value: trayecto, label: trayecto })),
     ],
     [],
   );
@@ -87,7 +107,41 @@ export function PageMetadataForm({
     metadata.title,
   );
 
-  const isCourse = metadata.kind === "course";
+  const layoutKind = documentReady ? metadata.kind : expectedKind;
+  const isCourse = layoutKind === "course";
+  const isDegree = layoutKind === "degree";
+  const isYear = layoutKind === "year";
+  const wideTitleInput = Boolean(layoutKind) && !isCourse && !isDegree && !isYear;
+  const kindForCatalog = documentReady ? metadata.kind : expectedKind;
+  const needsCatalogForExtras =
+    kindForCatalog === "year" || kindForCatalog === "course" || kindForCatalog === "concept";
+  const metaGridReady = documentReady && (!needsCatalogForExtras || catalogReady);
+  const editorWriteReady = metaGridReady;
+
+  const stackKind = metaGridReady ? metadata.kind : expectedKind;
+  const showDegreeFullName = stackKind === "degree";
+
+  const showYearCoursesEditor = metaGridReady && metadata.kind === "year";
+  const showCorrelativasEditor = metaGridReady && metadata.kind === "course";
+  const showConceptDependsEditor = metaGridReady && metadata.kind === "concept";
+
+  const courseSlugChoices = useMemo(() => {
+    const slugs = new Set(coursePages.map((course) => course.slug));
+    for (const slug of metadata.courses) {
+      slugs.add(slug);
+    }
+    return [...slugs].sort((left, right) =>
+      courseTitleBySlug(coursePages, left).localeCompare(
+        courseTitleBySlug(coursePages, right),
+        "es-AR",
+      ),
+    );
+  }, [coursePages, metadata.courses]);
+
+  const formatCourseLabel = useMemo(
+    () => (slug: string) => courseTitleBySlug(coursePages, slug),
+    [coursePages],
+  );
 
   return (
     <fieldset className="cms__meta">
@@ -95,97 +149,204 @@ export function PageMetadataForm({
       <h2 className="cms__section-title">Metadatos</h2>
       <div className="cms__meta-grid">
         <div
-          className={
-            isCourse
-              ? "cms__meta-field cms__meta-field--full cms__meta-title-row cms__meta-title-row--course"
-              : "cms__meta-field cms__meta-field--full cms__meta-title-row"
-          }
+          className={[
+            "cms__meta-primary-stack",
+            "cms__meta-field--full",
+            !metaGridReady ? "cms__meta-primary-stack--pending" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          aria-busy={!metaGridReady}
         >
-          <div className="cms__meta-title-head">
-            <span className="cms__meta-label">Título</span>
-            <span className="cms__meta-slug" title="Slug en Storage (nombre del archivo)">
-              Slug: {pageSlug}
-            </span>
-          </div>
-          {isCourse ? <span className="cms__meta-label cms__meta-trayecto-label">Trayecto</span> : null}
-          <span className="cms__meta-label cms__meta-kind-label">Tipo</span>
-          <input
-            className="cms__meta-input cms__meta-title-input"
-            type="text"
-            value={metadata.title}
-            onChange={(event) => patch({ title: event.target.value })}
-            spellCheck={false}
-            autoComplete="off"
-            aria-label="Título"
-          />
-          {isCourse ? (
-            <MetaDropdown
-              className="cms__meta-trayecto-select"
-              value={metadata.trayecto}
-              options={trayectoOptions}
-              onChange={(trayecto) => patch({ trayecto })}
-              ariaLabel="Trayecto"
-            />
-          ) : null}
-          <MetaDropdown
-            className="cms__meta-kind-select"
-            value={metadata.kind}
-            options={kindOptions}
-            onChange={(kind) => patch({ kind })}
-            ariaLabel="Tipo"
-          />
+          {!metaGridReady ? (
+            <MetaPrimaryStackSkeleton />
+          ) : (
+            <>
+              <div
+                className={[
+                  "cms__meta-field",
+                  "cms__meta-field--full",
+                  "cms__meta-title-row",
+                  wideTitleInput ? "cms__meta-title-row--wide-title" : "",
+                  isCourse ? "cms__meta-title-row--course" : "",
+                  isDegree ? "cms__meta-title-row--degree" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+              <div className="cms__meta-title-head">
+                <span className="cms__meta-label">{isYear ? "Nombre" : "Título"}</span>
+                <span
+                  className="cms__meta-slug"
+                  title={
+                    isYear
+                      ? "Identificador en Storage (no editable)"
+                      : "Slug en Storage (nombre del archivo)"
+                  }
+                >
+                  Slug: {pageSlug || "…"}
+                </span>
+              </div>
+              {isCourse ? (
+                <span className="cms__meta-label cms__meta-trayecto-label">Trayecto</span>
+              ) : null}
+              {isDegree ? (
+                <span className="cms__meta-label cms__meta-years-count-label">Cantidad de años</span>
+              ) : null}
+              {isYear ? (
+                <span className="cms__meta-label cms__meta-degree-label">Carrera</span>
+              ) : null}
+              {isYear ? (
+                <span className="cms__meta-label cms__meta-year-index-label">Etiqueta</span>
+              ) : null}
+              <span className="cms__meta-label cms__meta-kind-label">Tipo</span>
+              <input
+                className="cms__meta-input cms__meta-title-input"
+                type="text"
+                value={metadata.title}
+                onChange={(event) => patch({ title: event.target.value })}
+                spellCheck={false}
+                autoComplete="off"
+                aria-label={isYear ? "Nombre de la página" : "Título"}
+              />
+              {isDegree ? (
+                <input
+                  className="cms__meta-input cms__meta-years-count-input"
+                  type="number"
+                  min={1}
+                  max={20}
+                  value={metadata.yearsCount ?? ""}
+                  onChange={(event) => {
+                    const parsed = Number(event.target.value);
+                    patch({
+                      yearsCount: Number.isInteger(parsed) && parsed >= 1 ? parsed : undefined,
+                    });
+                  }}
+                  aria-label="Cantidad de años"
+                />
+              ) : null}
+              {isCourse ? (
+                <MetaDropdown
+                  className="cms__meta-trayecto-select"
+                  value={metadata.trayecto}
+                  options={trayectoOptions}
+                  onChange={(trayecto) => patch({ trayecto })}
+                  ariaLabel="Trayecto"
+                />
+              ) : null}
+              {isYear ? (
+                <p className="cms__meta-static-value cms__meta-degree-display" aria-label="Carrera">
+                  {metadata.degree
+                    ? (degreeDisplayByTitle.get(metadata.degree) ?? metadata.degree)
+                    : "—"}
+                </p>
+              ) : null}
+              {isYear ? (
+                <p className="cms__meta-static-value cms__meta-year-display" aria-label="Etiqueta del año">
+                  {metadata.yearIndex ? yearDisplayLabel(metadata.yearIndex) : "—"}
+                </p>
+              ) : null}
+              {isYear ? (
+                <p className="cms__meta-static-value cms__meta-kind-display" aria-label="Tipo">
+                  {KIND_LABELS.year}
+                </p>
+              ) : (
+                <MetaDropdown
+                  className="cms__meta-kind-select"
+                  value={metadata.kind}
+                  options={kindOptions}
+                  onChange={(kind) => patch({ kind })}
+                  ariaLabel="Tipo"
+                />
+              )}
+              </div>
+
+              {showDegreeFullName ? (
+                <div className="cms__meta-field cms__meta-field--full cms__meta-fullname-field">
+                  <span className="cms__meta-label">Nombre completo</span>
+                  <input
+                    className="cms__meta-input"
+                    type="text"
+                    value={metadata.fullName}
+                    onChange={(event) => patch({ fullName: event.target.value })}
+                    spellCheck={false}
+                    autoComplete="off"
+                    aria-label="Nombre completo"
+                  />
+                </div>
+              ) : null}
+
+              <div className="cms__meta-extra-slot">
+                {showYearCoursesEditor ? (
+                  <div className="cms__meta-field cms__meta-field--full cms__meta-field--overlay">
+                    <span className="cms__meta-label">Materias del año</span>
+                    <DependsOnCombobox
+                      key={`courses-${dependsOnResetKey}`}
+                      listboxId="cms-year-courses-dropdown"
+                      choices={courseSlugChoices}
+                      selected={metadata.courses}
+                      formatChoiceLabel={formatCourseLabel}
+                      onChange={(courses) => patch({ courses })}
+                      placeholderEmpty="Buscar materias para agregar…"
+                      placeholderMore="Agregar otra materia…"
+                      emptyWhenFiltered="Ninguna materia coincide."
+                      emptyWhenAllSelected="Ya están seleccionadas todas las materias."
+                      inputAriaLabel="Agregar materias al año"
+                    />
+                  </div>
+                ) : null}
+
+                {showCorrelativasEditor ? (
+                  <div className="cms__meta-field cms__meta-field--full cms__meta-field--overlay">
+                    <span className="cms__meta-label">Correlativas:</span>
+                    <DependsOnCombobox
+                      key={`correlativas-${dependsOnResetKey}`}
+                      listboxId="cms-correlativas-dropdown"
+                      choices={correlativasChoices}
+                      selected={metadata.correlativas}
+                      onChange={(correlativas) => patch({ correlativas })}
+                      placeholderEmpty="Buscar materias para agregar…"
+                      placeholderMore="Agregar otra…"
+                      emptyWhenFiltered="Ninguna materia coincide."
+                      emptyWhenAllSelected="Ya están seleccionadas todas las materias."
+                      inputAriaLabel="Agregar correlativas"
+                    />
+                  </div>
+                ) : null}
+
+                {showConceptDependsEditor ? (
+                  <div className="cms__meta-field cms__meta-field--full cms__meta-field--overlay">
+                    <span className="cms__meta-label">Depende de otros conceptos:</span>
+                    <DependsOnCombobox
+                      key={dependsOnResetKey}
+                      choices={dependsOnChoices}
+                      selected={metadata.dependsOn}
+                      onChange={(dependsOn) => patch({ dependsOn })}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </>
+          )}
         </div>
-
-        {metadata.kind === "course" ? (
-          <div className="cms__meta-field cms__meta-field--full">
-            <span className="cms__meta-label">Correlativas:</span>
-            {correlativasChoices.length === 0 ? (
-              <p className="cms__meta-multiselect-empty">Todavía no hay otras páginas de materia cargadas.</p>
-            ) : (
-              <DependsOnCombobox
-                key={`correlativas-${dependsOnResetKey}`}
-                listboxId="cms-correlativas-dropdown"
-                choices={correlativasChoices}
-                selected={metadata.correlativas}
-                onChange={(correlativas) => patch({ correlativas })}
-                placeholderEmpty="Buscar materias para agregar…"
-                placeholderMore="Agregar otra…"
-                emptyWhenFiltered="Ninguna materia coincide."
-                emptyWhenAllSelected="Ya están seleccionadas todas las materias."
-                inputAriaLabel="Agregar correlativas"
-              />
-            )}
-          </div>
-        ) : null}
-
-        {metadata.kind === "concept" ? (
-          <div className="cms__meta-field cms__meta-field--full">
-            <span className="cms__meta-label">Depende de otros conceptos:</span>
-            {dependsOnChoices.length === 0 ? (
-              <p className="cms__meta-multiselect-empty">Todavía no hay otras páginas de concepto cargadas.</p>
-            ) : (
-              <DependsOnCombobox
-                key={dependsOnResetKey}
-                choices={dependsOnChoices}
-                selected={metadata.dependsOn}
-                onChange={(dependsOn) => patch({ dependsOn })}
-              />
-            )}
-          </div>
-        ) : null}
       </div>
-      <div className="cms__content-section">
+      <div className="cms__content-section" aria-busy={!editorWriteReady}>
         <h2 className="cms__section-title">Contenido</h2>
-        <BodyEditor
-          value={body}
-          resources={resources}
-          concepts={conceptPages}
-          pageLinks={pageLinks}
-          currentPageTitle={metadata.title}
-          enableConceptHashtags={metadata.kind === "course"}
-          historyKey={pageSlug}
-          onChange={onBodyChange}
-        />
+        {!editorWriteReady ? (
+          <ContentEditorSkeleton />
+        ) : (
+          <BodyEditor
+            value={body}
+            resources={resources}
+            concepts={conceptPages}
+            pageLinks={pageLinks}
+            currentPageTitle={metadata.title}
+            enableConceptHashtags={metadata.kind === "course"}
+            enablePageWikilinks={!isDegree && !isYear}
+            historyKey={pageSlug}
+            onChange={onBodyChange}
+          />
+        )}
       </div>
     </fieldset>
   );

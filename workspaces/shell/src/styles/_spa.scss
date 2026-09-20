@@ -3,6 +3,13 @@ body {
   height: 100%;
 }
 
+.svg-asset-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
 /* CMS mounts SiteShell inside a bare app root; Roadmap uses app root as dashboard__main. */
 .app-root:not(.dashboard__main) {
   display: contents;

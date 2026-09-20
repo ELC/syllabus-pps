@@ -1,4 +1,4 @@
-import { signOutIconSvg } from "./sidebar-icons";
+import { signOutIconSvg } from "@pps/login/sidebar-icons";
 
 function renderSignOutButton(): string {
   return `<button type="button" class="dashboard__link login__sign-out" data-pps-sign-out title="Sign out">

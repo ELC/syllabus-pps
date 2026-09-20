@@ -76,6 +76,17 @@ export function parsePages(
       const correlativas = correlativasInvalid
         ? []
         : page.correlativasTargets?.map((target) => resolveCorrelativa(target, index));
+      const degreeInvalid = page.degreeInvalid === true;
+      const degree = degreeInvalid
+        ? undefined
+        : page.degreeTarget
+          ? resolveCorrelativa(page.degreeTarget, index)
+          : undefined;
+      const coursesInvalid =
+        page.coursesRaw !== undefined && page.coursesTargets === undefined;
+      const courses = coursesInvalid
+        ? []
+        : page.coursesTargets?.map((target) => resolveCorrelativa(target, index));
 
       return {
         id: page.id,
@@ -97,6 +108,14 @@ export function parsePages(
         correlativasInvalid,
         trayecto: page.trayectoInvalid ? undefined : page.trayecto,
         trayectoInvalid: page.trayectoInvalid,
+        yearsCount: page.yearsCountInvalid ? undefined : page.yearsCount,
+        yearsCountInvalid: page.yearsCountInvalid,
+        degree,
+        degreeInvalid,
+        yearIndex: page.yearIndexInvalid ? undefined : page.yearIndex,
+        yearIndexInvalid: page.yearIndexInvalid,
+        courses,
+        coursesInvalid,
       };
     })
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));

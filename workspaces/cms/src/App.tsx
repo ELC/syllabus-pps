@@ -3,7 +3,11 @@ import { createPortal } from "react-dom";
 
 import { triggerAnalyticsRebuild } from "@pps/content/browser";
 import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator";
+import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
 import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
+import plusSvg from "@pps/shell/assets/icons/ui-plus.svg?raw";
+import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
+import warningSvg from "@pps/shell/assets/icons/ui-warning.svg?raw";
 import { listPages, loadAllPageSources, loadResources, readPage, writePage } from "./api/content";
 import {
   createSeverityClassNameResolver,
@@ -11,7 +15,9 @@ import {
   type PageSource,
   type ResourceCatalogEntry,
 } from "@pps/core";
+import { normalizeYearCourseSlugs, type CoursePageOption } from "./course-pages";
 import { PageMetadataForm } from "./components/PageMetadataForm";
+import { SidebarNavSkeleton } from "./components/SidebarNavSkeleton";
 import { createDraftPageContent, nextDraftSlug } from "./draft-page";
 import {
   composePageDocument,
@@ -21,51 +27,16 @@ import {
 } from "./page-document";
 import { readPageParam, writePageParam } from "./page-param";
 import { filterDiagnosticsForPage, pageHasDiagnostics } from "./validation/filterDiagnostics";
+import { planDegreeYearSync } from "./degree-year-sync";
+import { expectedEditorKind } from "./expected-page-kind";
 import { runDiagnosticsForEditor } from "./validation/runDiagnostics";
 
 const severityClass = createSeverityClassNameResolver("cms__diagnostics-severity");
-
-function IconPlus(): ReactElement {
-  return (
-    <svg className="cms__button-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
-      <path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6Z" />
-    </svg>
-  );
-}
-
-function IconSave(): ReactElement {
-  return (
-    <svg className="cms__button-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
-      <path
-        fill="currentColor"
-        d="M19 21 12 16 5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16Z"
-      />
-    </svg>
-  );
-}
 
 function mergeDraftSources(local: PageSource[], remote: PageSource[]): PageSource[] {
   const remoteSlugs = new Set(remote.map((page) => page.path.replace(/\.md$/i, "")));
   const drafts = local.filter((page) => !remoteSlugs.has(page.path.replace(/\.md$/i, "")));
   return [...drafts, ...remote];
-}
-
-function PageDiagnosticWarning(): ReactElement {
-  return (
-    <svg
-      className="cms__page-warning-icon"
-      viewBox="0 0 24 24"
-      width="14"
-      height="14"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        fill="currentColor"
-        d="M12 2.25 2.25 19.5h19.5L12 2.25Zm0 4.2 6.45 11.05H5.55L12 6.45ZM11.1 10v3.6h1.8V10h-1.8Zm0 4.8v1.8h1.8v-1.8h-1.8Z"
-      />
-    </svg>
-  );
 }
 
 export function App() {
@@ -79,6 +50,7 @@ export function App() {
   const [allSources, setAllSources] = useState<Array<{ path: string; content: string }>>([]);
   const [resources, setResources] = useState<ResourceCatalogEntry[]>([]);
   const [draftSlugs, setDraftSlugs] = useState<Set<string>>(() => new Set());
+  const [loadedSlug, setLoadedSlug] = useState("");
   const [query, setQuery] = useState("");
   const rebuildStatus = useAnalyticsRebuildStatus();
 
@@ -146,17 +118,50 @@ export function App() {
 
   const conceptTitles = useMemo(() => conceptPages.map((page) => page.title), [conceptPages]);
 
-  const courseTitles = useMemo(() => {
+  const degreeTitles = useMemo(() => {
     const titles: string[] = [];
     for (const page of allSources) {
       const slug = page.path.replace(/\.md$/i, "");
       const { metadata: pageMeta } = splitPageDocument(page.content, slug);
-      if (pageMeta.kind === "course") {
+      if (pageMeta.kind === "degree") {
         titles.push(pageMeta.title);
       }
     }
-    return [...new Set(titles)];
+    return [...new Set(titles)].sort((left, right) => left.localeCompare(right, "es-AR"));
   }, [allSources]);
+
+  const degreeDisplayByTitle = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const page of allSources) {
+      const fileSlug = page.path.replace(/\.md$/i, "");
+      const { metadata: pageMeta } = splitPageDocument(page.content, fileSlug);
+      if (pageMeta.kind !== "degree") {
+        continue;
+      }
+      const display = pageMeta.fullName.trim() || pageMeta.title;
+      map.set(pageMeta.title, display);
+      const degreeSlug = pageMeta.slug.trim() || fileSlug;
+      map.set(degreeSlug, display);
+    }
+    return map;
+  }, [allSources]);
+
+  const coursePages = useMemo((): CoursePageOption[] => {
+    const courses: CoursePageOption[] = [];
+    for (const page of allSources) {
+      const fileSlug = page.path.replace(/\.md$/i, "");
+      const { metadata: pageMeta } = splitPageDocument(page.content, fileSlug);
+      if (pageMeta.kind === "course") {
+        courses.push({
+          slug: pageMeta.slug.trim() || fileSlug,
+          title: pageMeta.title,
+        });
+      }
+    }
+    return courses.sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
+  }, [allSources]);
+
+  const courseTitles = useMemo(() => coursePages.map((course) => course.title), [coursePages]);
 
   function persistDraftContent(slug: string, draftContent: string): void {
     setAllSources((sources) =>
@@ -168,21 +173,41 @@ export function App() {
 
   function loadDocumentFromSource(slug: string, source: string): void {
     const split = splitPageDocument(source, slug);
-    setMetadata(split.metadata);
+    const metadata =
+      split.metadata.kind === "year"
+        ? {
+            ...split.metadata,
+            courses: normalizeYearCourseSlugs(split.metadata.courses, coursePages),
+          }
+        : split.metadata;
+    setMetadata(metadata);
     setBody(split.body);
+    setLoadedSlug(slug);
   }
 
   function selectPage(slug: string): void {
     if (selectedSlug && draftSlugs.has(selectedSlug)) {
       persistDraftContent(selectedSlug, content);
     }
+    if (!draftSlugs.has(slug)) {
+      const cached = allSources.find((page) => page.path.replace(/\.md$/i, "") === slug);
+      if (cached) {
+        loadDocumentFromSource(slug, cached.content);
+      } else {
+        setLoadedSlug("");
+      }
+    }
     setSelectedSlug(slug);
   }
 
   useEffect(() => {
     if (!selectedSlug) {
+      setLoadedSlug("");
       return;
     }
+
+    let cancelled = false;
+
     if (draftSlugs.has(selectedSlug)) {
       const draft = allSources.find((page) => page.path.replace(/\.md$/i, "") === selectedSlug);
       if (draft) {
@@ -190,8 +215,46 @@ export function App() {
       }
       return;
     }
-    void readPage(selectedSlug).then((source) => loadDocumentFromSource(selectedSlug, source));
-  }, [allSources, draftSlugs, selectedSlug]);
+
+    const cached = allSources.find((page) => page.path.replace(/\.md$/i, "") === selectedSlug);
+    if (cached) {
+      if (loadedSlug === selectedSlug) {
+        const split = splitPageDocument(cached.content, selectedSlug);
+        if (split.metadata.kind === "year") {
+          setMetadata((current) => {
+            if (current.kind !== "year") {
+              return current;
+            }
+            const courses = normalizeYearCourseSlugs(split.metadata.courses, coursePages);
+            if (
+              courses.length === current.courses.length &&
+              courses.every((slug, index) => slug === current.courses[index])
+            ) {
+              return current;
+            }
+            return { ...current, courses };
+          });
+        }
+        return;
+      }
+      loadDocumentFromSource(selectedSlug, cached.content);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    setLoadedSlug("");
+    void readPage(selectedSlug).then((source) => {
+      if (cancelled) {
+        return;
+      }
+      loadDocumentFromSource(selectedSlug, source);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [allSources, coursePages, draftSlugs, loadedSlug, selectedSlug]);
 
   useEffect(() => {
     void loadAllPageSources().then((sources) => {
@@ -254,7 +317,15 @@ export function App() {
   const diagnosticsPending =
     loadingPages || (pages.length > 0 && allSources.length === 0 && !loadError);
 
+  const catalogReady = pages.length === 0 || allSources.length > 0;
+  const pageNavReady = !loadingPages && catalogReady;
+
   const canSave = !hasBlockingDiagnostics(pageDiagnostics);
+
+  const expectedKind = useMemo(
+    () => expectedEditorKind(selectedSlug, allSources),
+    [allSources, selectedSlug],
+  );
 
   function addNewPage(): void {
     const slug = nextDraftSlug(pages);
@@ -276,35 +347,48 @@ export function App() {
   }
 
   const pageNav = (
-    <nav className="dashboard__nav dashboard__nav--sub dashboard__nav--scroll" aria-label="Páginas">
-      <div className="dashboard__nav-label">Páginas</div>
-      <label className="cms__search">
-        <span className="dashboard__nav-field-label">Filtrar</span>
-        <input
-          className="cms__search-input"
-          type="search"
-          value={query}
-          placeholder="slug o título"
-          onChange={(event) => setQuery(event.target.value)}
-        />
-      </label>
-      {filteredPages.map((page) => (
-        <button
-          key={page.slug}
-          type="button"
-          className={
-            page.slug === selectedSlug ? "dashboard__link dashboard__link--active" : "dashboard__link"
-          }
-          onClick={() => selectPage(page.slug)}
-        >
-          <span className="cms__page-link-label">{page.slug}</span>
-          {diagnosticPageSlugs.has(page.slug) ? (
-            <span className="cms__page-warning" title="Tiene diagnósticos" aria-label="Tiene diagnósticos">
-              <PageDiagnosticWarning />
-            </span>
-          ) : null}
-        </button>
-      ))}
+    <nav className="dashboard__nav dashboard__nav--sub" aria-label="Páginas" aria-busy={!pageNavReady}>
+      <div className="dashboard__nav-subhead">
+        <div className="dashboard__nav-label">Páginas</div>
+        <label className="cms__search">
+          <span className="dashboard__nav-field-label">Filtrar</span>
+          <input
+            className="cms__search-input"
+            type="search"
+            value={query}
+            placeholder="slug o título"
+            onChange={(event) => setQuery(event.target.value)}
+            disabled={!pageNavReady}
+          />
+        </label>
+      </div>
+      <div className="dashboard__nav-scroll-body">
+        {!pageNavReady ? (
+          <SidebarNavSkeleton rows={pages.length} />
+        ) : (
+          filteredPages.map((page) => {
+          const displayTitle = pageTitlesBySlug.get(page.slug)?.trim() || page.slug;
+          return (
+            <button
+              key={page.slug}
+              type="button"
+              className={
+                page.slug === selectedSlug ? "dashboard__link dashboard__link--active" : "dashboard__link"
+              }
+              onClick={() => selectPage(page.slug)}
+              title={displayTitle !== page.slug ? page.slug : undefined}
+            >
+              <span className="cms__page-link-label">{displayTitle}</span>
+              {diagnosticPageSlugs.has(page.slug) ? (
+                <span className="cms__page-warning" title="Tiene diagnósticos" aria-label="Tiene diagnósticos">
+                  <SvgAssetIcon svg={warningSvg} className="cms__page-warning-icon" focusable={false} />
+                </span>
+              ) : null}
+            </button>
+          );
+          })
+        )}
+      </div>
     </nav>
   );
 
@@ -320,11 +404,18 @@ export function App() {
         <div className="cms__header-main">
           <div className="cms__header-title-row">
             <h1 className="cms__header-title">Gestión de contenido</h1>
-            <AnalyticsRebuildIndicator
-              status={rebuildStatus}
-              className="cms__rebuild-indicator"
-              loading={loadingPages}
-            />
+            <div className="cms__header-status-cluster">
+              <AnalyticsRebuildIndicator
+                status={rebuildStatus}
+                className="cms__rebuild-indicator"
+                loading={loadingPages}
+              />
+              {!canSave && selectedSlug && !diagnosticsPending ? (
+                <span className="cms__save-blocked-hint" role="status">
+                  Corregí los errores de esta página antes de guardar (las advertencias no bloquean).
+                </span>
+              ) : null}
+            </div>
           </div>
           <p className="cms__header-lead">
             Los cambios guardan páginas markdown en Supabase Storage. En desarrollo local,{" "}
@@ -341,7 +432,7 @@ export function App() {
               title="Nueva página"
               aria-label="Nueva página"
             >
-              <IconPlus />
+              <SvgAssetIcon svg={plusSvg} className="cms__button-icon" focusable={false} />
             </button>
             <button
               type="button"
@@ -351,36 +442,53 @@ export function App() {
               aria-label="Guardar página"
               onClick={() => {
                 const savedAt = new Date().toISOString();
-                const savedMetadata = { ...metadata, slug: selectedSlug, updatedAt: savedAt };
+                const savedMetadata = {
+                  ...metadata,
+                  slug: selectedSlug,
+                  updatedAt: savedAt,
+                  ...(metadata.kind === "year"
+                    ? { courses: normalizeYearCourseSlugs(metadata.courses, coursePages) }
+                    : {}),
+                };
                 const savedContent = composePageDocument(savedMetadata, body);
 
-                void writePage(selectedSlug, savedContent).then(() => {
+                const sourcesForSync = allSources.map((page) =>
+                  page.path.replace(/\.md$/i, "") === selectedSlug
+                    ? { ...page, content: savedContent }
+                    : page,
+                );
+                const syncPlan =
+                  savedMetadata.kind === "degree"
+                    ? planDegreeYearSync(savedMetadata, selectedSlug, sourcesForSync)
+                    : null;
+
+                const persistMain = writePage(selectedSlug, savedContent);
+                const persistYears =
+                  syncPlan?.writes.map((entry) => writePage(entry.slug, entry.content)) ?? [];
+
+                void Promise.all([persistMain, ...persistYears]).then(() => {
                   setMetadata(savedMetadata);
-                  setStatus(`Guardado ${selectedSlug}.`);
+                  const yearNote =
+                    syncPlan && syncPlan.writes.length > 0
+                      ? ` (${syncPlan.writes.length} página(s) de año sincronizadas)`
+                      : "";
+                  setStatus(`Guardado ${selectedSlug}.${yearNote}`);
                   setDraftSlugs((current) => {
                     const next = new Set(current);
                     next.delete(selectedSlug);
                     return next;
                   });
-                  setAllSources((sources) =>
-                    sources.map((page) =>
-                      page.path.replace(/\.md$/i, "") === selectedSlug
-                        ? { ...page, content: savedContent }
-                        : page,
-                    ),
-                  );
+                  setAllSources(syncPlan?.sources ?? sourcesForSync);
+                  if (syncPlan && syncPlan.writes.length > 0) {
+                    void listPages().then(setPages);
+                  }
                   triggerAnalyticsRebuild(import.meta.env.BASE_URL ?? "/cms/");
                 });
               }}
             >
-              <IconSave />
+              <SvgAssetIcon svg={saveSvg} className="cms__button-icon" focusable={false} />
             </button>
             {status ? <span className="cms__status">{status}</span> : null}
-            {!canSave ? (
-              <p className="cms__hint">
-                Corregí los errores de esta página antes de guardar (las advertencias no bloquean).
-              </p>
-            ) : null}
           </>
         </div>
       </header>
@@ -401,10 +509,16 @@ export function App() {
         <PageMetadataForm
           metadata={metadata}
           pageSlug={selectedSlug}
+          documentReady={Boolean(selectedSlug) && loadedSlug === selectedSlug}
+          expectedKind={expectedKind}
+          catalogReady={catalogReady}
           conceptTitles={conceptTitles}
           conceptPages={conceptPages}
           pageLinks={pageLinks}
           courseTitles={courseTitles}
+          coursePages={coursePages}
+          degreeTitles={degreeTitles}
+          degreeDisplayByTitle={degreeDisplayByTitle}
           body={body}
           resources={resources}
           onChange={setMetadata}

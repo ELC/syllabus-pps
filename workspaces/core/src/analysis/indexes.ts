@@ -1,12 +1,12 @@
 import { normalizeTitle } from "../normalize";
-import { CurriculumGraph, YearTitle, ZettelPage } from "../types";
+import { CurriculumGraph, ZettelPage } from "../types";
 
 export interface CurriculumIndexes {
   pagesByTitle: ReadonlyMap<string, ZettelPage>;
   curriculumTitles: ReadonlySet<string>;
   conceptTitles: ReadonlySet<string>;
   conceptPagesByTitle: ReadonlyMap<string, ZettelPage>;
-  yearByCourse: ReadonlyMap<string, YearTitle>;
+  yearByCourse: ReadonlyMap<string, string>;
 }
 
 export function buildCurriculumIndexes(graph: CurriculumGraph): CurriculumIndexes {

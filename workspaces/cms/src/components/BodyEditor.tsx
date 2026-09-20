@@ -231,6 +231,7 @@ export interface BodyEditorProps {
   pageLinks?: PageLinkOption[];
   currentPageTitle?: string;
   enableConceptHashtags?: boolean;
+  enablePageWikilinks?: boolean;
   historyKey: string;
   onChange: (value: string) => void;
 }
@@ -242,6 +243,7 @@ export function BodyEditor({
   pageLinks = [],
   currentPageTitle = "",
   enableConceptHashtags = false,
+  enablePageWikilinks = true,
   historyKey,
   onChange,
 }: BodyEditorProps): ReactElement {
@@ -337,7 +339,7 @@ export function BodyEditor({
   const suggestOpen =
     trigger !== null &&
     (trigger.kind === "citation" ||
-      trigger.kind === "wikilink" ||
+      (trigger.kind === "wikilink" && enablePageWikilinks) ||
       (trigger.kind === "hashtag" && enableConceptHashtags));
   const suggestListId =
     trigger?.kind === "hashtag"
@@ -393,6 +395,10 @@ export function BodyEditor({
       setTrigger(null);
       return;
     }
+    if (next?.kind === "wikilink" && !enablePageWikilinks) {
+      setTrigger(null);
+      return;
+    }
     if (next?.kind === "hashtag" && hashtagIsComplete(textarea.value, next, concepts)) {
       setTrigger(null);
       return;
@@ -402,7 +408,7 @@ export function BodyEditor({
       return;
     }
     setTrigger(next);
-  }, [concepts, enableConceptHashtags, pageLinks]);
+  }, [concepts, enableConceptHashtags, enablePageWikilinks, pageLinks]);
 
   useEffect(() => {
     setActiveIndex(0);

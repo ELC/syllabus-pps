@@ -18,8 +18,8 @@ describe("buildGraph", () => {
     expect(graph.pages.map((page) => page.title)).toEqual([
       "algoritmos",
       "algoritmos y estructuras de datos",
-      "año 1",
       "LDS",
+      "LDS · año 1",
       "programación i",
     ]);
   });
@@ -40,6 +40,17 @@ describe("buildGraph", () => {
     for (const expected of expectedEdges) {
       expect(edges).toContainEqual(expected);
     }
+  });
+
+  it("derives curriculum from year pages", () => {
+    const graph = buildFixtureGraph();
+
+    expect(graph.expected.years).toEqual([
+      {
+        title: "LDS · año 1",
+        courses: ["algoritmos y estructuras de datos"],
+      },
+    ]);
   });
 
   it("matches fixture diagnostic summaries", () => {

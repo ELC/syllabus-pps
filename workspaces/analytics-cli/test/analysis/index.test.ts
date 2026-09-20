@@ -5,6 +5,7 @@ import {
   hasSourceCue,
   buildCurriculumIndexes,
 } from "../../src/analysis";
+import { normalizeTitle } from "../../src/normalize";
 import { buildFixtureGraph } from "../support/fixtures";
 import type { ZettelPage } from "../../src/types";
 
@@ -19,8 +20,9 @@ describe("buildCurriculumIndexes", () => {
     // Assert
     expect(indexes.pagesByTitle.get("programación i")?.kind).toBe("course");
     expect(indexes.conceptTitles.has("algoritmos")).toBe(true);
-    expect(indexes.curriculumTitles.has("año 1")).toBe(true);
-    expect(indexes.yearByCourse.get("programación i")).toBe("año 1");
+    expect(indexes.curriculumTitles.has(normalizeTitle("LDS · año 1"))).toBe(true);
+    expect(indexes.yearByCourse.get("algoritmos y estructuras de datos")).toBe("LDS · año 1");
+    expect(indexes.yearByCourse.get("programación i")).toBeUndefined();
   });
 });
 

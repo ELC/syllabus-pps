@@ -54,6 +54,15 @@ export const diagnosticCodes = [
   "empty-page",
   "expected-course-missing",
   "expected-year-missing",
+  "year-link-unresolved",
+  "year-links-non-course",
+  "degree-years-count-invalid",
+  "degree-years-mismatch",
+  "year-missing-degree",
+  "year-degree-unresolved",
+  "year-index-invalid",
+  "year-courses-unresolved",
+  "year-courses-non-course",
   "orphan-concept",
   "orphan-page",
   "self-link",
@@ -144,6 +153,14 @@ export interface PageFrontmatter {
   correlativas?: string[];
   /** Course track; defaults to trayecto principal when omitted on course pages. */
   trayecto?: CourseTrayecto;
+  /** Number of academic years for kind: degree. */
+  years?: number;
+  /** Parent degree title for kind: year. */
+  degree?: string;
+  /** 1-based year index within the degree for kind: year. */
+  yearIndex?: number;
+  /** Course page slugs assigned to this year (kind: year). */
+  courses?: string[];
 }
 
 export interface ZettelPage {
@@ -172,6 +189,21 @@ export interface ZettelPage {
   trayecto?: CourseTrayecto;
   /** True when frontmatter trayecto is present but malformed. */
   trayectoInvalid?: boolean;
+  /** Parsed from frontmatter on degree pages. */
+  yearsCount?: number;
+  /** True when frontmatter years is present but malformed. */
+  yearsCountInvalid?: boolean;
+  /** Parsed from frontmatter on year pages. */
+  degree?: CourseCorrelativa;
+  /** True when frontmatter degree is present but malformed. */
+  degreeInvalid?: boolean;
+  yearIndex?: number;
+  /** True when frontmatter yearIndex is present but malformed. */
+  yearIndexInvalid?: boolean;
+  /** Parsed from frontmatter on year pages. */
+  courses?: CourseCorrelativa[];
+  /** True when frontmatter courses is present but malformed. */
+  coursesInvalid?: boolean;
 }
 
 export interface GraphEdge {
@@ -182,10 +214,8 @@ export interface GraphEdge {
   line: number;
 }
 
-export type YearTitle = `año ${number}`;
-
 export interface CurriculumYear {
-  title: YearTitle;
+  title: string;
   courses: string[];
 }
 

@@ -9,6 +9,7 @@ import {
   HANDLE_RIGHT_OUT,
   HANDLE_TOP_IN,
 } from "./constants";
+import { courseLabelDensityClass, courseUsesDenseLabel } from "./course-label-style";
 import { ROADMAP_STATUS_LABELS, useRoadmapProgressContext } from "./progress";
 import type { RoadmapRole } from "./layout";
 
@@ -43,6 +44,8 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
   const { status, percent, total } = courseProgress;
   const showProgressBar = total > 0 && status === "pending";
   const isTne = isTrayectoNoEstructurado(nodeData.trayecto);
+  const labelDensity = courseLabelDensityClass(nodeData.label);
+  const denseLabel = courseUsesDenseLabel(nodeData.label);
 
   return (
     <div
@@ -50,6 +53,7 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
         "roadmap__course",
         `roadmap__course--${nodeData.role}`,
         isSpine ? "roadmap__course--spine" : "",
+        denseLabel ? "roadmap__course--dense-label" : "",
         isTne ? "roadmap__course--tne" : "",
         status !== "pending" ? `roadmap__course--${status}` : "",
         showProgressBar ? "roadmap__course--in-progress" : "",
@@ -78,16 +82,13 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
         />
       ))}
 
-      {nodeData.year ? (
-        <span className="roadmap__course-year">{nodeData.year}</span>
-      ) : null}
-
       <span
         className={[
           "roadmap__node-label",
           "roadmap__course-label",
           isSpine ? "roadmap__course-label--spine" : "",
           status === "done" ? "roadmap__course-label--done" : "",
+          labelDensity,
         ].join(" ")}
       >
         {nodeData.label}

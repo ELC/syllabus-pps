@@ -32,6 +32,17 @@ export interface RawPage {
   trayecto?: import("../types").CourseTrayecto;
   /** True when frontmatter trayecto is present but malformed. */
   trayectoInvalid?: boolean;
+  yearsCountRaw?: unknown;
+  yearsCount?: number;
+  yearsCountInvalid?: boolean;
+  degreeRaw?: unknown;
+  degreeTarget?: string;
+  degreeInvalid?: boolean;
+  yearIndexRaw?: unknown;
+  yearIndex?: number;
+  yearIndexInvalid?: boolean;
+  coursesRaw?: unknown;
+  coursesTargets?: string[];
   blocks: ZettelBlock[];
   nonBulletLines: number[];
 }

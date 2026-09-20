@@ -1,5 +1,6 @@
 import { buildCurriculumIndexes } from "../analysis";
 import { resolveCourseTrayecto } from "../course-trayecto";
+import { yearLabelForCourseInDegree } from "../degree-year";
 import { normalizeTitle, uniqueSorted } from "../normalize";
 import { CourseTrayecto, CurriculumGraph, GraphEdge, ZettelPage } from "../types";
 import {
@@ -49,7 +50,7 @@ export function projectCourseRoadmap(
   graph: CurriculumGraph,
   degreeTitle: string,
 ): CourseRoadmap | null {
-  const { pagesByTitle, conceptTitles, yearByCourse } = buildCurriculumIndexes(graph);
+  const { pagesByTitle, conceptTitles } = buildCurriculumIndexes(graph);
   const degreePage = pagesByTitle.get(normalizeTitle(degreeTitle));
   if (!degreePage || degreePage.kind !== "degree") {
     return null;
@@ -72,7 +73,7 @@ export function projectCourseRoadmap(
     courses: courses.map((page) => ({
       title: page.title,
       slug: page.slug,
-      year: yearByCourse.get(page.normalizedTitle) ?? "",
+      year: yearLabelForCourseInDegree(graph, degreePage.title, page.title, degreePage.slug),
       correlativas: uniqueSorted(
         (page.correlativas ?? [])
           .map((correlativa) => correlativa.resolvedTarget ?? correlativa.target)

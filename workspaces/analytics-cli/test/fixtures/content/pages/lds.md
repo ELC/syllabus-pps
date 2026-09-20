@@ -1,7 +1,5 @@
 ---
 title: LDS
 kind: degree
+years: 1
 ---
-- [[LDS]]
-- [[algoritmos y estructuras de datos]]
-- [[año 1]]

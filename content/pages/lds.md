@@ -1,8 +1,5 @@
 ---
 title: LDS
 kind: degree
+years: 4
 ---
-- [[año 1]]
-- [[año 2]]
-- [[año 3]]
-- [[año 4]]

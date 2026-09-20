@@ -7,13 +7,22 @@ import {
   type ReactElement,
 } from "react";
 
-function listConcepts(choices: string[], selected: Set<string>, query: string): string[] {
-  const available = choices.filter((title) => !selected.has(title));
+function listChoices(
+  choices: string[],
+  selected: Set<string>,
+  query: string,
+  formatLabel: (value: string) => string,
+): string[] {
+  const available = choices.filter((value) => !selected.has(value));
   const normalized = query.trim().toLowerCase();
   if (!normalized) {
     return available;
   }
-  return available.filter((title) => title.toLowerCase().includes(normalized));
+  return available.filter(
+    (value) =>
+      value.toLowerCase().includes(normalized) ||
+      formatLabel(value).toLowerCase().includes(normalized),
+  );
 }
 
 export interface DependsOnComboboxProps {
@@ -27,6 +36,10 @@ export interface DependsOnComboboxProps {
   emptyWhenFiltered?: string;
   emptyWhenAllSelected?: string;
   inputAriaLabel?: string;
+  /** inline: chips in a row (default). stacked: one column. */
+  layout?: "inline" | "stacked";
+  /** Display label for each choice value (default: value as-is). */
+  formatChoiceLabel?: (value: string) => string;
 }
 
 export function DependsOnCombobox({
@@ -40,6 +53,8 @@ export function DependsOnCombobox({
   emptyWhenFiltered = "Ningún concepto coincide.",
   emptyWhenAllSelected = "Ya están seleccionados todos los conceptos.",
   inputAriaLabel = "Agregar dependencias de concepto",
+  layout = "inline",
+  formatChoiceLabel = (value) => value,
 }: DependsOnComboboxProps): ReactElement {
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -49,8 +64,8 @@ export function DependsOnCombobox({
 
   const selectedSet = useMemo(() => new Set(selected), [selected]);
   const suggestions = useMemo(
-    () => listConcepts(choices, selectedSet, query),
-    [choices, query, selectedSet],
+    () => listChoices(choices, selectedSet, query, formatChoiceLabel),
+    [choices, formatChoiceLabel, query, selectedSet],
   );
   const dropdownOpen = !disabled && listOpen;
 
@@ -74,7 +89,9 @@ export function DependsOnCombobox({
     if (selectedSet.has(title)) {
       return;
     }
-    const next = [...selected, title].sort((left, right) => left.localeCompare(right, "es-AR"));
+    const next = [...selected, title].sort((left, right) =>
+      formatChoiceLabel(left).localeCompare(formatChoiceLabel(right), "es-AR"),
+    );
     onChange(next);
     setQuery("");
     setActiveIndex(0);
@@ -135,25 +152,32 @@ export function DependsOnCombobox({
   }
 
   return (
-    <div className="cms__depends-on" ref={rootRef}>
+    <div
+      className={layout === "stacked" ? "cms__depends-on cms__depends-on--stacked" : "cms__depends-on"}
+      ref={rootRef}
+    >
       <div
-        className="cms__depends-on-field"
+        className={
+          layout === "stacked"
+            ? "cms__depends-on-field cms__depends-on-field--stacked"
+            : "cms__depends-on-field"
+        }
         onClick={() => {
           inputRef.current?.focus();
           openList();
         }}
       >
-        {selected.map((title) => (
-          <span key={title} className="cms__depends-on-chip">
-            <span className="cms__depends-on-chip-label">{title}</span>
+        {selected.map((value) => (
+          <span key={value} className="cms__depends-on-chip">
+            <span className="cms__depends-on-chip-label">{formatChoiceLabel(value)}</span>
             <button
               type="button"
               className="cms__depends-on-chip-remove"
-              aria-label={`Quitar ${title}`}
+              aria-label={`Quitar ${formatChoiceLabel(value)}`}
               disabled={disabled}
               onClick={(event) => {
                 event.stopPropagation();
-                removeTitle(title);
+                removeTitle(value);
               }}
             >
               ×
@@ -191,8 +215,8 @@ export function DependsOnCombobox({
               {query.trim() ? emptyWhenFiltered : emptyWhenAllSelected}
             </li>
           ) : (
-            suggestions.map((title, index) => (
-              <li key={title} role="presentation">
+            suggestions.map((value, index) => (
+              <li key={value} role="presentation">
                 <button
                   type="button"
                   role="option"
@@ -204,10 +228,10 @@ export function DependsOnCombobox({
                   }
                   onMouseDown={(event) => {
                     event.preventDefault();
-                    addTitle(title);
+                    addTitle(value);
                   }}
                 >
-                  {title}
+                  {formatChoiceLabel(value)}
                 </button>
               </li>
             ))

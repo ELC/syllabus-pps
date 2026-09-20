@@ -4,51 +4,16 @@ import { createPortal } from "react-dom";
 import { collectResourceCatalogIssues, type ResourceCatalogEntry } from "@pps/core";
 import { triggerAnalyticsRebuild } from "@pps/content/browser";
 import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator";
+import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
 import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
+import plusSvg from "@pps/shell/assets/icons/ui-plus.svg?raw";
+import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
+import warningSvg from "@pps/shell/assets/icons/ui-warning.svg?raw";
 import { loadResources, writeResources } from "./api/resources";
 import { createDraftEntry, entryForForm, isPendingDraftResourceId } from "./draft";
 import { ResourceForm } from "./ResourceForm";
+import { SidebarNavSkeleton } from "./SidebarNavSkeleton";
 import { readNewResourceRequest, readResourceParam, writeResourceParam } from "./resource-param";
-
-function IconPlus(): ReactElement {
-  return (
-    <svg className="cites__button-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
-      <path
-        fill="currentColor"
-        d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6Z"
-      />
-    </svg>
-  );
-}
-
-function IconSave(): ReactElement {
-  return (
-    <svg className="cites__button-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
-      <path
-        fill="currentColor"
-        d="M19 21 12 16 5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16Z"
-      />
-    </svg>
-  );
-}
-
-function PageDiagnosticWarning(): ReactElement {
-  return (
-    <svg
-      className="cites__page-warning-icon"
-      viewBox="0 0 24 24"
-      width="14"
-      height="14"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        fill="currentColor"
-        d="M12 2.25 2.25 19.5h19.5L12 2.25Zm0 4.2 6.45 11.05H5.55L12 6.45ZM11.1 10v3.6h1.8V10h-1.8Zm0 4.8v1.8h1.8v-1.8h-1.8Z"
-      />
-    </svg>
-  );
-}
 
 function indexForId(entries: ResourceCatalogEntry[], id: string | null): number {
   if (!id) {
@@ -187,41 +152,52 @@ export function App() {
   }
 
   const resourceNav = (
-    <nav className="dashboard__nav dashboard__nav--sub dashboard__nav--scroll" aria-label="Resources">
-      <div className="dashboard__nav-label">Resources</div>
-      <label className="cites__search">
-        <span className="dashboard__nav-field-label">Filter</span>
-        <input
-          className="cites__search-input"
-          type="search"
-          value={query}
-          placeholder="id, title, or URL"
-          onChange={(event) => setQuery(event.target.value)}
-        />
-      </label>
-      {filteredIndexes.map((index) => {
-        const entry = entries[index];
-        if (!entry) {
-          return null;
-        }
-        return (
-          <button
-            key={`${entry.id}-${index}`}
-            type="button"
-            className={
-              index === selectedIndex ? "dashboard__link dashboard__link--active" : "dashboard__link"
-            }
-            onClick={() => setSelectedIndex(index)}
-          >
-            <span className="cites__page-link-label">{entry.id || "(no id)"}</span>
-            {entryIssueIds.has(entry.id) ? (
-              <span className="cites__page-warning" title="Has catalog issues" aria-label="Has catalog issues">
-                <PageDiagnosticWarning />
-              </span>
-            ) : null}
-          </button>
-        );
-      })}
+    <nav className="dashboard__nav dashboard__nav--sub" aria-label="Recursos" aria-busy={loading}>
+      <div className="dashboard__nav-subhead">
+        <div className="dashboard__nav-label">Recursos</div>
+        <label className="cites__search">
+          <span className="dashboard__nav-field-label">Filtrar</span>
+          <input
+            className="cites__search-input"
+            type="search"
+            value={query}
+            placeholder="id, título o URL"
+            onChange={(event) => setQuery(event.target.value)}
+            disabled={loading}
+          />
+        </label>
+      </div>
+      <div className="dashboard__nav-scroll-body">
+        {loading ? (
+          <SidebarNavSkeleton rows={entries.length} />
+        ) : (
+          filteredIndexes.map((index) => {
+          const entry = entries[index];
+          if (!entry) {
+            return null;
+          }
+          const displayTitle = entry.title.trim() || entry.id || "(sin título)";
+          return (
+            <button
+              key={`${entry.id}-${index}`}
+              type="button"
+              className={
+                index === selectedIndex ? "dashboard__link dashboard__link--active" : "dashboard__link"
+              }
+              onClick={() => setSelectedIndex(index)}
+              title={entry.id && displayTitle !== entry.id ? entry.id : undefined}
+            >
+              <span className="cites__page-link-label">{displayTitle}</span>
+              {entryIssueIds.has(entry.id) ? (
+                <span className="cites__page-warning" title="Tiene problemas en el catálogo" aria-label="Tiene problemas en el catálogo">
+                  <SvgAssetIcon svg={warningSvg} className="cites__page-warning-icon" focusable={false} />
+                </span>
+              ) : null}
+            </button>
+          );
+          })
+        )}
+      </div>
     </nav>
   );
 
@@ -257,7 +233,7 @@ export function App() {
                   title="New resource"
                   aria-label="New resource"
                 >
-                  <IconPlus />
+                  <SvgAssetIcon svg={plusSvg} className="cites__button-icon" focusable={false} />
                 </button>
                 <button
                   type="button"
@@ -272,7 +248,7 @@ export function App() {
                     });
                   }}
                 >
-                  <IconSave />
+                  <SvgAssetIcon svg={saveSvg} className="cites__button-icon" focusable={false} />
                 </button>
                 {status ? <span className="cites__status">{status}</span> : null}
                 {!canSave ? (

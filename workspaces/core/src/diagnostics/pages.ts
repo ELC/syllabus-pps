@@ -3,7 +3,18 @@ import { CurriculumGraph, Diagnostic } from "../types";
 
 export function emptyPages(graph: CurriculumGraph): Diagnostic[] {
   return graph.pages
-    .filter((page) => page.blocks.length === 0)
+    .filter((page) => {
+      if (page.blocks.length > 0) {
+        return false;
+      }
+      if (page.kind === "year" && (page.courses?.length ?? 0) > 0) {
+        return false;
+      }
+      if (page.kind === "degree" && page.yearsCount !== undefined) {
+        return false;
+      }
+      return true;
+    })
     .map((page) => ({
       severity: page.kind === "course" || page.kind === "year" ? "error" : "warning",
       code: "empty-page",

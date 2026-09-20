@@ -41,6 +41,7 @@ Requirements:
 pnpm typecheck
 pnpm test
 pnpm build:content
+pnpm sync:pages       # upload content/pages to Supabase Storage (requires .env)
 pnpm dev              # single dev server at http://localhost:4321/ (all subsites embedded)
 pnpm build:pages      # combined GitHub Pages dist/
 pnpm inspect

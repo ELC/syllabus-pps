@@ -7,6 +7,7 @@ import { TYPE_LABELS } from "./draft";
 import { DateInput } from "./DateInput";
 import { FieldLabel } from "./FieldLabel";
 import { NameFields } from "./NameFields";
+import { ResourceUrlOpenLink } from "./ResourceUrlOpenLink";
 import { dateInputToRaw, isValidHttpUrl, rawDateToInputValue } from "./form-utils";
 
 const URL_VALIDATION_MESSAGE = "La URL debe comenzar con http:// o https://";
@@ -93,18 +94,21 @@ export function ResourceForm({ entry, onChange }: ResourceFormProps): ReactEleme
             visible={showUrlValidation}
             validationHintId="cites-url-validation"
           />
-          <input
-            className={`pps-form-control${showUrlValidation ? " pps-form-control--invalid" : ""}`}
-            type="url"
-            inputMode="url"
-            value={urlValue}
-            spellCheck={false}
-            autoComplete="url"
-            placeholder="https://…"
-            aria-invalid={showUrlValidation}
-            aria-describedby={showUrlValidation ? "cites-url-validation" : undefined}
-            onChange={(event) => onChange({ URL: event.target.value })}
-          />
+          <div className="cites__url-input-row">
+            <ResourceUrlOpenLink url={urlValue} title={entry.title} />
+            <input
+              className={`pps-form-control${showUrlValidation ? " pps-form-control--invalid" : ""}`}
+              type="url"
+              inputMode="url"
+              value={urlValue}
+              spellCheck={false}
+              autoComplete="url"
+              placeholder="https://…"
+              aria-invalid={showUrlValidation}
+              aria-describedby={showUrlValidation ? "cites-url-validation" : undefined}
+              onChange={(event) => onChange({ URL: event.target.value })}
+            />
+          </div>
         </label>
 
         {isBook ? (
@@ -128,18 +132,21 @@ export function ResourceForm({ entry, onChange }: ResourceFormProps): ReactEleme
               visible={showEventUrlValidation}
               validationHintId="cites-event-url-validation"
             />
-            <input
-              className={`pps-form-control${showEventUrlValidation ? " pps-form-control--invalid" : ""}`}
-              type="url"
-              inputMode="url"
-              value={eventUrlValue}
-              spellCheck={false}
-              autoComplete="url"
-              placeholder="https://…"
-              aria-invalid={showEventUrlValidation}
-              aria-describedby={showEventUrlValidation ? "cites-event-url-validation" : undefined}
-              onChange={(event) => onChange({ "event-URL": event.target.value })}
-            />
+            <div className="cites__url-input-row">
+              <ResourceUrlOpenLink url={eventUrlValue} title={entry.title} />
+              <input
+                className={`pps-form-control${showEventUrlValidation ? " pps-form-control--invalid" : ""}`}
+                type="url"
+                inputMode="url"
+                value={eventUrlValue}
+                spellCheck={false}
+                autoComplete="url"
+                placeholder="https://…"
+                aria-invalid={showEventUrlValidation}
+                aria-describedby={showEventUrlValidation ? "cites-event-url-validation" : undefined}
+                onChange={(event) => onChange({ "event-URL": event.target.value })}
+              />
+            </div>
           </label>
         ) : null}
       </div>

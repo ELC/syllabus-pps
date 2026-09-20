@@ -41,6 +41,16 @@ function parseTrayecto(value: unknown): {
   return { raw: value, trayecto };
 }
 
+function parsePositiveIntField(value: unknown): { raw: unknown; value?: number; invalid?: boolean } {
+  if (value === undefined) {
+    return { raw: undefined };
+  }
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+    return { raw: value, invalid: true };
+  }
+  return { raw: value, value };
+}
+
 function parseStringListField(value: unknown): { raw: unknown; targets?: string[] } {
   if (value === undefined) {
     return { raw: undefined };
@@ -75,6 +85,13 @@ export function parsePageContent(source: { path: string; content: string }): Raw
   const frontmatterKind = parseKind(parsed.data.kind);
   const dependsOn = parseStringListField(parsed.data.dependsOn);
   const correlativas = parseStringListField(parsed.data.correlativas);
+  const courses = parseStringListField(parsed.data.courses);
+  const yearsCount = parsePositiveIntField(parsed.data.years);
+  const yearIndex = parsePositiveIntField(parsed.data.yearIndex);
+  const degreeRaw = parsed.data.degree;
+  const degreeTarget =
+    typeof degreeRaw === "string" && degreeRaw.trim().length > 0 ? degreeRaw.trim() : undefined;
+  const degreeInvalid = degreeRaw !== undefined && degreeTarget === undefined;
   const trayecto = parseTrayecto(parsed.data.trayecto);
   const blocks: ZettelBlock[] = [];
   const nonBulletLines: number[] = [];
@@ -117,6 +134,17 @@ export function parsePageContent(source: { path: string; content: string }): Raw
     trayectoRaw: trayecto.raw,
     trayecto: trayecto.trayecto,
     trayectoInvalid: trayecto.invalid,
+    yearsCountRaw: yearsCount.raw,
+    yearsCount: yearsCount.value,
+    yearsCountInvalid: yearsCount.invalid,
+    degreeRaw,
+    degreeTarget,
+    degreeInvalid,
+    yearIndexRaw: yearIndex.raw,
+    yearIndex: yearIndex.value,
+    yearIndexInvalid: yearIndex.invalid,
+    coursesRaw: courses.raw,
+    coursesTargets: courses.targets,
     blocks,
     nonBulletLines,
   };

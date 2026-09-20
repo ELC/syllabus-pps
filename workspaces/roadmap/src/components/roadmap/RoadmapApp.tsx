@@ -12,6 +12,7 @@ import {
 import { loadAnalyticsArtifact } from "@pps/content/browser";
 import {
   courseRoadmapAsDegreeRoadmap,
+  hydrateCurriculumGraph,
   projectAllCourseRoadmaps,
   projectCourseConceptRoadmap,
   projectDegreeRoadmap,
@@ -73,6 +74,25 @@ function parseGeneratedPayload<T>(content: string): T {
   const newlineIndex = content.indexOf("\n");
   const json = newlineIndex === -1 ? content : content.slice(newlineIndex + 1);
   return JSON.parse(json) as T;
+}
+
+function normalizeCurriculumGraph(loaded: unknown): CurriculumGraph {
+  let raw: unknown = loaded;
+
+  if (typeof loaded === "string") {
+    raw = parseGeneratedPayload<unknown>(loaded);
+  }
+
+  if (raw && typeof raw === "object") {
+    const record = raw as Record<string, unknown>;
+    if (record.payload && typeof record.payload === "object") {
+      raw = record.payload;
+    } else if (record.body && typeof record.body === "object") {
+      raw = record.body;
+    }
+  }
+
+  return hydrateCurriculumGraph(raw as CurriculumGraph);
 }
 
 function CanvasViewport({
@@ -141,11 +161,7 @@ export function RoadmapApp({
   useEffect(() => {
     void loadAnalyticsArtifact("curriculum-graph.json")
       .then((loaded) => {
-        const payload =
-          typeof loaded === "string"
-            ? parseGeneratedPayload<CurriculumGraph>(loaded)
-            : (loaded as CurriculumGraph);
-        setGraph(payload);
+        setGraph(normalizeCurriculumGraph(loaded));
       })
       .catch((error: unknown) => {
         setLoadError(error instanceof Error ? error.message : "Failed to load roadmap data.");
@@ -180,7 +196,7 @@ export function RoadmapApp({
         (entry) => entry.slug === focusedCourseSlug,
       );
       if (!course) {
-        return null;
+        return courseRoadmapAsDegreeRoadmap(activeCourseRoadmap);
       }
 
       return projectCourseConceptRoadmap(graph, activeCourseRoadmap.degree, course.title);
@@ -194,6 +210,19 @@ export function RoadmapApp({
       activeCourseRoadmap?.courses.find((course) => course.slug === focusedCourseSlug) ?? null,
     [activeCourseRoadmap, focusedCourseSlug],
   );
+
+  useEffect(() => {
+    if (!activeCourseRoadmap || !focusedCourseSlug) {
+      return;
+    }
+
+    const courseExists = activeCourseRoadmap.courses.some(
+      (course) => course.slug === focusedCourseSlug,
+    );
+    if (!courseExists) {
+      setFocusedCourseSlug(null);
+    }
+  }, [activeCourseRoadmap, focusedCourseSlug]);
 
   useEffect(() => {
     if (courseRoadmaps.length === 0) {
