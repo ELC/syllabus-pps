@@ -23,7 +23,7 @@ export const JUNCTION_NODE_SIZE = 18;
 /** Minimum vertical drop before a spine fork turns horizontally. */
 export const STEP_EDGE_OFFSET = 24;
 /** Where fork runways sit within the source→target gap (higher = lower / more horizontal spread). */
-export const JUNCTION_RUNWAY_RATIO = 0.45;
+export const JUNCTION_RUNWAY_RATIO = 0.5;
 
 export const HANDLE_TOP_IN = "t-in";
 export const HANDLE_BOTTOM_OUT = "b-out";

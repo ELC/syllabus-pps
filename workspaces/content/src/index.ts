@@ -19,6 +19,12 @@ export {
   normalizeRoadmapCourseLayoutYearTemplate,
 } from "./roadmap-course-layout-normalize";
 export {
+  deleteRoadmapConceptLayout,
+  fetchRoadmapConceptLayout,
+  upsertRoadmapConceptLayout,
+  type RoadmapConceptLayoutDocument,
+} from "./roadmap-concept-layouts-db";
+export {
   deleteRoadmapCourseLayout,
   deleteRoadmapCourseLayoutYears,
   fetchRoadmapCourseLayout,

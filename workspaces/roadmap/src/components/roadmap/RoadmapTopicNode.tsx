@@ -45,6 +45,7 @@ export function RoadmapTopicNode({ id, data }: NodeProps) {
     <div
       className={[
         "roadmap__topic",
+        "roadmap__topic-drag-surface",
         `roadmap__topic--${nodeData.role}`,
         status !== "pending" ? `roadmap__topic--${status}` : "",
         showProgressBar ? "roadmap__topic--in-progress" : "",

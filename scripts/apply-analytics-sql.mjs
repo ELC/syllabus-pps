@@ -55,12 +55,24 @@ async function connectForMigrations() {
 }
 
 async function main() {
-  const files = [
+  const allFiles = [
     "workspaces/content/sql/003_analytics_artifacts.sql",
     "workspaces/content/sql/004_analytics_dac.sql",
     "workspaces/content/sql/005_analytics_rebuild_status.sql",
     "workspaces/content/sql/006_roadmap_course_layouts.sql",
+    "workspaces/content/sql/007_roadmap_concept_layouts.sql",
   ];
+
+  const onlyArg = process.argv.find((arg) => arg.startsWith("--only="));
+  const only = onlyArg?.slice("--only=".length).trim();
+  const files =
+    only !== undefined && only.length > 0
+      ? allFiles.filter((relative) => relative.includes(`/${only}`) || relative.endsWith(`${only}.sql`))
+      : allFiles;
+
+  if (only && files.length === 0) {
+    throw new Error(`No migration matched --only=${only}`);
+  }
 
   const client = await connectForMigrations();
   try {

@@ -9,8 +9,11 @@ import {
   readPage,
   readStorageBucketFromEnv,
   replaceResourceCatalog,
+  deleteRoadmapConceptLayout,
   deleteRoadmapCourseLayout,
+  fetchRoadmapConceptLayout,
   fetchRoadmapCourseLayout,
+  upsertRoadmapConceptLayout,
   upsertRoadmapCourseLayout,
   writePage,
 } from "@pps/content";
@@ -35,7 +38,8 @@ function normalizeApiPath(url: string, base: string): string | null {
   return null;
 }
 
-const ROADMAP_LAYOUT_SITE_PATH = /^\/roadmap\/api\/roadmap-layout\/[^/?]+/;
+const ROADMAP_LAYOUT_SITE_PATH =
+  /^\/roadmap\/api\/roadmap-(layout|concept-layout)\/[^/?]+/;
 
 function loadRepoEnv(repoRoot: string): void {
   const env = loadEnv("development", repoRoot, "");
@@ -123,6 +127,43 @@ export function createSupabaseDevMiddleware(
           }
         }
 
+        const conceptLayoutMatch = apiPath.match(
+          /^\/api\/roadmap-concept-layout\/([^/]+)\/([^/?]+)/,
+        );
+        if (roadmapLayouts && conceptLayoutMatch) {
+          const degreeSlug = decodeURIComponent(conceptLayoutMatch[1] ?? "");
+          const courseSlug = decodeURIComponent(conceptLayoutMatch[2] ?? "");
+
+          if (req.method === "GET") {
+            const layout = await fetchRoadmapConceptLayout(client, degreeSlug, courseSlug);
+            if (!layout) {
+              res.statusCode = 404;
+              res.end();
+              return;
+            }
+
+            res.setHeader("Content-Type", "application/json; charset=utf-8");
+            res.end(JSON.stringify(layout));
+            return;
+          }
+
+          if (req.method === "PUT") {
+            const body = await readRequestBody(req);
+            const layout = JSON.parse(body);
+            await upsertRoadmapConceptLayout(client, degreeSlug, courseSlug, layout);
+            res.statusCode = 204;
+            res.end();
+            return;
+          }
+
+          if (req.method === "DELETE") {
+            await deleteRoadmapConceptLayout(client, degreeSlug, courseSlug);
+            res.statusCode = 204;
+            res.end();
+            return;
+          }
+        }
+
         if (pages && apiPath === "/api/pages" && req.method === "GET") {
           const remotePages = await listPages(client, bucket);
           res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -160,7 +201,18 @@ export function createSupabaseDevMiddleware(
         res.end("Not found");
       } catch (error) {
         res.statusCode = 500;
-        res.end(error instanceof Error ? error.message : String(error));
+        const detail =
+          error instanceof Error
+            ? error.message
+            : (() => {
+                try {
+                  return JSON.stringify(error);
+                } catch {
+                  return String(error);
+                }
+              })();
+        console.error(`[pps-supabase-dev] ${req.method} ${req.url} → 500`, error);
+        res.end(detail);
       }
     })();
   };

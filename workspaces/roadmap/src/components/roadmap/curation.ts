@@ -33,6 +33,8 @@ export interface RoadmapCuration {
   branchOwnerOverrides: Record<string, string>;
   spineJoins: Record<string, string>;
   spinePromotions?: string[];
+  /** When true, left/right branch columns for this spine owner are swapped. */
+  branchLayoutFlips?: Record<string, boolean>;
 }
 
 export const EMPTY_ROADMAP_CURATION: RoadmapCuration = {
@@ -46,6 +48,7 @@ export const EMPTY_ROADMAP_CURATION: RoadmapCuration = {
   branchOwnerOverrides: {},
   spineJoins: {},
   spinePromotions: [],
+  branchLayoutFlips: {},
 };
 
 const curatedModules = import.meta.glob("../../curations/*.json", {

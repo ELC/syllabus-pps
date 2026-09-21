@@ -46,6 +46,124 @@ export interface RoadmapTrunkForkLayout {
   mergeInto: string;
 }
 
+function normalizeMergeJoinForks(
+  trunkForks: readonly RoadmapTrunkForkLayout[],
+): RoadmapTrunkForkLayout[] {
+  const mergeTargets = new Set(trunkForks.map((fork) => fork.mergeInto));
+  return trunkForks
+    .map((fork) => {
+      if (!mergeTargets.has(fork.after)) {
+        return fork;
+      }
+
+      const lanes = fork.lanes
+        .map((lane) => lane.filter((title) => title !== fork.after))
+        .filter((lane) => lane.length > 0);
+      if (lanes.length < 2) {
+        return fork;
+      }
+
+      return { ...fork, lanes };
+    })
+    .filter((fork) => {
+      if (fork.lanes.length === 0) {
+        return false;
+      }
+
+      return !(fork.lanes.length === 1 && fork.lanes[0]?.[0] === fork.mergeInto);
+    });
+}
+
+function normalizeTailForkAnchors(
+  trunkForks: readonly RoadmapTrunkForkLayout[],
+  trunk: readonly string[],
+): RoadmapTrunkForkLayout[] {
+  const laneTitles = new Set(trunkForks.flatMap((fork) => fork.lanes.flat()));
+  return trunkForks.map((fork) => {
+    const afterIdx = trunk.indexOf(fork.after);
+    const mergeIdx = trunk.indexOf(fork.mergeInto);
+
+    // Merge target not on trunk: anchor at trunk tail so the fork opens after
+    // whatever spine-only content survived from an older curation.
+    if (afterIdx >= 0 && mergeIdx < 0 && afterIdx < trunk.length - 1) {
+      return { ...fork, after: trunk[trunk.length - 1]! };
+    }
+
+    if (afterIdx < 0 || mergeIdx <= afterIdx + 1) {
+      return fork;
+    }
+
+    // Only move when the intervening trunk nodes are spine-only (not part of
+    // any fork lane). Otherwise the fork legitimately spans over its own lane
+    // composition (e.g. mid-course fork whose lanes include trunk anchors).
+    for (let idx = afterIdx + 1; idx < mergeIdx; idx += 1) {
+      if (laneTitles.has(trunk[idx]!)) {
+        return fork;
+      }
+    }
+
+    const betterAfter = trunk[mergeIdx - 1]!;
+    return { ...fork, after: betterAfter };
+  });
+}
+
+function normalizeTailLaneRootTrunk(
+  trunk: readonly string[],
+  trunkForks: readonly RoadmapTrunkForkLayout[],
+  savedTrunk: ReadonlySet<string>,
+): string[] {
+  let next = [...trunk];
+  for (const fork of trunkForks) {
+    if (!fork.lanes.some((lane) => lane[0] === fork.mergeInto)) {
+      continue;
+    }
+
+    if (savedTrunk.has(fork.mergeInto)) {
+      continue;
+    }
+
+    const afterIdx = next.indexOf(fork.after);
+    const mergeIdx = next.indexOf(fork.mergeInto);
+    if (afterIdx < 0 || mergeIdx <= afterIdx || mergeIdx >= next.length - 1) {
+      continue;
+    }
+
+    next = [
+      ...next.slice(0, mergeIdx),
+      ...next.slice(mergeIdx + 1),
+      fork.mergeInto,
+    ];
+  }
+
+  return next;
+}
+
+function forkLaneTitleSet(fork: RoadmapTrunkForkLayout): Set<string> {
+  return new Set(fork.lanes.flat());
+}
+
+/** Inicio opens straight into fork lanes; the anchor title only lives in a lane, not on the trunk row. */
+function inicioHeadForkAnchor(fork: RoadmapTrunkForkLayout, trunk: readonly string[]): boolean {
+  return fork.after === trunk[0] && forkLaneTitleSet(fork).has(fork.after);
+}
+
+/** Upstream fork merges here and this title opens another fork that lists the anchor in a lane. */
+function mergeJoinThenSplitFork(
+  fork: RoadmapTrunkForkLayout | undefined,
+  title: string,
+  trunkForks: readonly RoadmapTrunkForkLayout[],
+): boolean {
+  if (fork === undefined || fork.after !== title) {
+    return false;
+  }
+
+  if (!forkLaneTitleSet(fork).has(title)) {
+    return false;
+  }
+
+  return trunkForks.some((entry) => entry.mergeInto === title && entry.after !== fork.after);
+}
+
 export interface CourseYearBand {
   year: string;
   y: number;
@@ -126,6 +244,7 @@ function expandedSplitPool(terminals: string[], attached: Map<string, string[]>)
 function splitExpandedPool(
   terminals: string[],
   attached: Map<string, string[]>,
+  flip = false,
 ): { left: string[]; right: string[] } {
   const left: string[] = [];
   const right: string[] = [];
@@ -136,6 +255,10 @@ function splitExpandedPool(
     } else {
       right.push(title);
     }
+  }
+
+  if (flip) {
+    return { left: right, right: left };
   }
 
   return { left, right };
@@ -469,6 +592,44 @@ function pickParallelTracks(tracks: TrackInfo[], curation: RoadmapCuration): Tra
   });
 }
 
+/** Drop fork lane siblings from a stored parallel spine when building the merged trunk column. */
+function compressedSpineForTrunk(
+  spine: readonly string[],
+  trunkForks: readonly RoadmapTrunkForkLayout[],
+): string[] {
+  if (trunkForks.length === 0) {
+    return [...spine];
+  }
+
+  const drop = new Set<string>();
+  for (const fork of trunkForks) {
+    for (const title of fork.lanes.flat()) {
+      if (title !== fork.after && title !== fork.mergeInto) {
+        drop.add(title);
+      }
+    }
+  }
+
+  return spine.filter((title) => !drop.has(title));
+}
+
+function curatedParallelCompressedSpine(
+  curation: RoadmapCuration,
+  spineCandidates: readonly string[],
+): string[] {
+  const allowed = new Set(spineCandidates);
+  let best: string[] = [];
+
+  for (const lane of curation.parallelLanes) {
+    const spine = lane.spine.filter((title) => allowed.has(title));
+    if (spine.length > best.length) {
+      best = spine;
+    }
+  }
+
+  return best;
+}
+
 function laneSpine(
   track: TrackInfo,
   deferred: ReadonlySet<string>,
@@ -562,12 +723,15 @@ function composeTrunk(
   tail: string[],
   trunkForks: RoadmapTrunkForkLayout[],
 ): string[] {
-  const mergeIntoTitles = new Set(trunkForks.map((fork) => fork.mergeInto));
-  const trunk = [...prefix, ...tail.filter((title) => !mergeIntoTitles.has(title))];
+  const trunk = [...prefix, ...tail];
 
   for (const fork of trunkForks) {
+    if (trunk.includes(fork.mergeInto)) {
+      continue;
+    }
+
     const afterIndex = trunk.indexOf(fork.after);
-    if (afterIndex >= 0 && !trunk.includes(fork.mergeInto)) {
+    if (afterIndex >= 0) {
       trunk.splice(afterIndex + 1, 0, fork.mergeInto);
     }
   }
@@ -589,6 +753,7 @@ interface ParallelLaneRowsContext {
   placements: Map<string, RoadmapPlacement>;
   attached: Map<string, string[]>;
   stageOf: Map<string, number>;
+  branchLayoutFlips?: Record<string, boolean>;
 }
 
 function placeParallelLaneRows(context: ParallelLaneRowsContext): number {
@@ -680,6 +845,7 @@ function placeParallelLaneRows(context: ParallelLaneRowsContext): number {
         rowHeight,
         laneIndex,
         laneCenters: centers,
+        layoutFlip: context.branchLayoutFlips?.[title],
       });
     }
 
@@ -965,6 +1131,7 @@ function placeBranchStack(
     splitSides?: boolean;
     laneIndex?: number;
     laneCenters?: number[];
+    layoutFlip?: boolean;
   },
 ): number {
   const {
@@ -978,6 +1145,7 @@ function placeBranchStack(
     splitSides = false,
     laneIndex,
     laneCenters,
+    layoutFlip = false,
   } = options;
   let sideFlip = options.sideFlip ?? 0;
   const visiting = options.visiting ?? new Set<string>();
@@ -995,7 +1163,7 @@ function placeBranchStack(
   }
 
   if (splitSides && !nested && terminals.length > 1) {
-    const { left, right } = splitExpandedPool(terminals, attached);
+    const { left, right } = splitExpandedPool(terminals, attached, layoutFlip);
     const spineMidY = owner.y + owner.height / 2;
     const columnVisiting = new Set(visiting);
 
@@ -1035,7 +1203,13 @@ function placeBranchStack(
     columnStartY = belowBox.y;
   } else {
     const spineMidY = owner.y + owner.height / 2;
-    columnX = branchColumnX(owner, branch.side, laneIndex, laneCenters);
+    const side =
+      layoutFlip && branch.mode === "side"
+        ? branch.side === "left"
+          ? "right"
+          : "left"
+        : branch.side;
+    columnX = branchColumnX(owner, side, laneIndex, laneCenters);
     columnStartY = spineMidY - columnHeight / 2;
   }
 
@@ -1139,11 +1313,15 @@ export function buildRoadmapLayout(
   const lateJoins = Object.entries(curation.spineJoins).flatMap(([from, to]) =>
     to === undefined ? [] : [{ from, to }],
   );
-  const trunkForks: RoadmapTrunkForkLayout[] = (curation.trunkForks ?? []).map((fork) => ({
-    after: fork.after,
-    lanes: fork.lanes.map((lane) => lane.spine),
-    mergeInto: fork.mergeInto,
-  }));
+  const trunkForks: RoadmapTrunkForkLayout[] = normalizeMergeJoinForks(
+    (curation.trunkForks ?? [])
+      .map((fork) => ({
+        after: fork.after,
+        lanes: fork.lanes.map((lane) => lane.spine).filter((spine) => spine.length > 0),
+        mergeInto: fork.mergeInto,
+      }))
+      .filter((fork) => fork.lanes.length > 0),
+  );
   const trunkForkLaneTitles = new Set(trunkForks.flatMap((fork) => fork.lanes.flat()));
   const postMerge = curation.postMergeSpine.filter((title) => spineCandidates.includes(title));
   const trunkTailCandidates = spineCandidates.filter(
@@ -1155,15 +1333,35 @@ export function buildRoadmapLayout(
   const curatedTrunkTail = (curation.trunkSpine ?? []).filter((title) =>
     spineCandidates.includes(title),
   );
+  const orderedTrunkTail = orderTrunk(trunkTailCandidates, adjacency, stageOf);
+  const parallelCompressedSpine = curatedParallelCompressedSpine(curation, spineCandidates);
+  const parallelOnlyMainSpine =
+    (curation.trunkSpine ?? []).length === 0 &&
+    curation.parallelLanes.length === 1 &&
+    (curation.parallelLanes[0]?.spine.length ?? 0) > 0
+      ? curation.parallelLanes[0]!.spine.filter((title) => spineCandidates.includes(title))
+      : null;
+  const parallelTrunkSpine = compressedSpineForTrunk(
+    parallelOnlyMainSpine ?? parallelCompressedSpine,
+    trunkForks,
+  );
   const trunkTail =
     curatedTrunkTail.length > 0
       ? curatedTrunkTail
-      : orderTrunk(trunkTailCandidates, adjacency, stageOf);
-  const trunk =
+      : orderedTrunkTail.length > 0
+        ? orderedTrunkTail
+        : parallelTrunkSpine;
+  const composedTrunk =
     parallelLanes.length > 0
       ? composeTrunk(postMerge, trunkTail, trunkForks)
       : composeTrunk([], trunkTail, trunkForks);
-  const trunkForkByAfter = new Map(trunkForks.map((fork) => [fork.after, fork]));
+  const trunk = normalizeTailLaneRootTrunk(
+    composedTrunk,
+    trunkForks,
+    new Set(curatedTrunkTail.length > 0 ? curatedTrunkTail : parallelTrunkSpine),
+  );
+  const displayTrunkForks = normalizeTailForkAnchors(trunkForks, trunk);
+  const trunkForkByAfter = new Map(displayTrunkForks.map((fork) => [fork.after, fork]));
   const capstoneByAfter = new Map(
     (curation.capstones ?? []).map((capstone) => [capstone.after, capstone]),
   );
@@ -1172,7 +1370,20 @@ export function buildRoadmapLayout(
   let cursorY = ANCHOR_NODE_HEIGHT + ANCHOR_GAP;
   let sideFlip = 0;
 
-  if (parallelLanes.length > 0) {
+  const parallelPrefaceIsTrunkSubset =
+    parallelLanes.length === 1 &&
+    trunk.length > 0 &&
+    parallelLanes[0]!.length > 0 &&
+    parallelLanes[0]![0] === trunk[0] &&
+    parallelLanes[0]!.every((title) => trunk.includes(title));
+
+  const skipParallelPrefaceWithTrunkForks =
+    displayTrunkForks.length > 0 &&
+    parallelLanes.length === 1 &&
+    (parallelLanes[0]?.length ?? 0) > 1 &&
+    !parallelPrefaceIsTrunkSubset;
+
+  if (parallelLanes.length > 0 && !parallelPrefaceIsTrunkSubset && !skipParallelPrefaceWithTrunkForks) {
     cursorY = placeParallelLaneRows({
       parallelLanes,
       centers: laneCenters(parallelLanes.length),
@@ -1180,12 +1391,18 @@ export function buildRoadmapLayout(
       placements,
       attached,
       stageOf,
+      branchLayoutFlips: curation.branchLayoutFlips,
     });
   }
 
   const spineX = -SPINE_NODE_WIDTH / 2;
 
   for (const title of trunk) {
+    const fork = trunkForkByAfter.get(title);
+    const headForkAnchor = fork !== undefined && inicioHeadForkAnchor(fork, trunk);
+    const mergeJoinThenSplit = mergeJoinThenSplitFork(fork, title, displayTrunkForks);
+    const skipCenterSpineRow = headForkAnchor || mergeJoinThenSplit;
+    const reuseLanePlacement = skipCenterSpineRow ? undefined : placements.get(title);
     const terminals = attached.get(title) ?? [];
     const willSplit = terminals.length > 1;
     const branchSubtreeHeight = branchTreeHeight(title, attached, new Set(), willSplit);
@@ -1213,35 +1430,54 @@ export function buildRoadmapLayout(
               placements,
             );
 
-    placements.set(title, {
-      title,
-      role: "spine",
-      stage: stageOf.get(title) ?? 0,
-      x: spineX,
-      y: cursorY + (rowHeight - SPINE_NODE_HEIGHT) / 2,
-      width: SPINE_NODE_WIDTH,
-      height: SPINE_NODE_HEIGHT,
-    });
-
-    if (terminals.length > 0) {
-      const owner = placements.get(title)!;
-      sideFlip += 1;
-
-      sideFlip = placeBranchStack(placements, attached, stageOf, {
+    if (!skipCenterSpineRow && reuseLanePlacement === undefined) {
+      placements.set(title, {
         title,
-        owner,
-        laneCenter: 0,
-        branch,
-        cursorY,
-        rowHeight,
-        sideFlip,
-        splitSides: willSplit,
+        role: "spine",
+        stage: stageOf.get(title) ?? 0,
+        x: spineX,
+        y: cursorY + (rowHeight - SPINE_NODE_HEIGHT) / 2,
+        width: SPINE_NODE_WIDTH,
+        height: SPINE_NODE_HEIGHT,
       });
+
+      if (terminals.length > 0) {
+        const owner = placements.get(title)!;
+        sideFlip += 1;
+
+        sideFlip = placeBranchStack(placements, attached, stageOf, {
+          title,
+          owner,
+          laneCenter: 0,
+          branch,
+          cursorY,
+          rowHeight,
+          sideFlip,
+          splitSides: willSplit,
+          layoutFlip: curation.branchLayoutFlips?.[title],
+        });
+      }
     }
 
-    const fork = trunkForkByAfter.get(title);
-    const forkClearance = fork !== undefined && branchSubtreeHeight > SPINE_NODE_HEIGHT ? STAGE_GAP / 2 : 0;
-    cursorY += rowHeight + STAGE_GAP + forkClearance;
+    const forkClearance =
+      !skipCenterSpineRow &&
+      reuseLanePlacement === undefined &&
+      fork !== undefined &&
+      branchSubtreeHeight > SPINE_NODE_HEIGHT
+        ? STAGE_GAP / 2
+        : 0;
+    if (headForkAnchor) {
+      // fork lanes follow directly under Inicio
+    } else if (mergeJoinThenSplit) {
+      cursorY += STAGE_GAP;
+    } else if (reuseLanePlacement !== undefined) {
+      cursorY = Math.max(
+        cursorY,
+        reuseLanePlacement.y + reuseLanePlacement.height + STAGE_GAP,
+      );
+    } else {
+      cursorY += rowHeight + STAGE_GAP + forkClearance;
+    }
 
     const capstone = capstoneByAfter.get(title);
     if (capstone !== undefined) {
@@ -1268,6 +1504,7 @@ export function buildRoadmapLayout(
         placements,
         attached,
         stageOf,
+        branchLayoutFlips: curation.branchLayoutFlips,
       });
     }
   }
@@ -1286,7 +1523,7 @@ export function buildRoadmapLayout(
     parallelLanes,
     trunk,
     lateJoins,
-    trunkForks,
+    trunkForks: displayTrunkForks,
     capstoneByAfter: new Map(
       [...capstoneByAfter.entries()].map(([after, capstone]) => [after, capstone.id]),
     ),

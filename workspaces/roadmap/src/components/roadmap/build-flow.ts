@@ -127,6 +127,10 @@ interface StepElbow {
 
 const JUNCTION_AXIS_EPSILON = 24;
 
+function isJunctionId(id: string): boolean {
+  return id.startsWith("__join__");
+}
+
 function boxCenterX(box: LayoutBox): number {
   return box.x + box.width / 2;
 }
@@ -135,14 +139,18 @@ function boxCenterY(box: LayoutBox): number {
   return box.y + box.height / 2;
 }
 
-function junctionRunwayCenterY(sourceBottom: number, targetTop?: number): number {
+function junctionRunwayCenterY(
+  sourceBottom: number,
+  targetTop?: number,
+  ratio: number = JUNCTION_RUNWAY_RATIO,
+): number {
   const minimum = sourceBottom + STEP_EDGE_OFFSET;
   if (targetTop === undefined || targetTop <= sourceBottom + STEP_EDGE_OFFSET) {
     return minimum;
   }
 
   const gap = targetTop - sourceBottom;
-  return sourceBottom + Math.max(STEP_EDGE_OFFSET, gap * JUNCTION_RUNWAY_RATIO);
+  return sourceBottom + Math.max(STEP_EDGE_OFFSET, gap * ratio);
 }
 
 function pickJunctionInHandle(junctionCenterX: number, sourceCenterX: number): string {
@@ -495,6 +503,33 @@ function spineLinkKey(link: SpineLink): string {
   return `${link.source}->${link.target}`;
 }
 
+/** Single parallel lane mirroring the trunk column (course concept map after fork edits). */
+function primaryTrunkParallelLane(layout: RoadmapLayout): string[] | null {
+  if (layout.parallelLanes.length !== 1 || layout.trunk.length === 0) {
+    return null;
+  }
+
+  const lane = layout.parallelLanes[0]!;
+  if (lane.length === 0 || lane[0] !== layout.trunk[0]) {
+    return null;
+  }
+
+  const trunkTitles = new Set(layout.trunk);
+  if (!lane.every((title) => trunkTitles.has(title))) {
+    return null;
+  }
+
+  return lane;
+}
+
+/** Inicio head fork: anchor is only in fork lanes, not on the trunk column. */
+function inicioHeadFork(
+  fork: { after: string; lanes: string[][] },
+  trunk: readonly string[],
+): boolean {
+  return fork.after === trunk[0] && fork.lanes.flat().includes(fork.after);
+}
+
 function fanOutJunctionId(sourceId: string): string {
   return `__join__out__${sourceId}`;
 }
@@ -680,6 +715,56 @@ function emitSpineLinks(
     byTarget.set(link.target, [...(byTarget.get(link.target) ?? []), link]);
   }
 
+  const virtualJunctionBoxes = new Map<string, LayoutBox>();
+  const resolveBox = (id: string): LayoutBox | undefined =>
+    virtualJunctionBoxes.get(id) ?? resolveNodeBox(id, layout);
+
+  // A fan-in target that will also spawn a fan-out at the same trunk position
+  // (mergeJoinThenSplit) gets its fan-in biased toward the source so the
+  // subsequent fan-out has room below it. Without this bias the fan-in sits
+  // at the midpoint of an enlarged gap, making the previous fork visually
+  // taller than the follow-up one.
+  const stackedFanOutSources = new Set<string>();
+  for (const source of bySource.keys()) {
+    if (source.startsWith("__join__in__")) {
+      stackedFanOutSources.add(source);
+    }
+  }
+
+  for (const [target, batch] of byTarget) {
+    if (batch.length <= 1) {
+      continue;
+    }
+
+    const targetBox = resolveNodeBox(target, layout);
+    if (!targetBox) {
+      continue;
+    }
+
+    const sourceBoxes = batch
+      .map((link) => resolveNodeBox(link.source, layout))
+      .filter((box): box is LayoutBox => box !== undefined);
+    if (sourceBoxes.length === 0) {
+      continue;
+    }
+
+    const sourceBottom = Math.max(...sourceBoxes.map((box) => box.y + box.height));
+    const spanCenters = [
+      ...sourceBoxes.map((box) => boxCenterX(box)),
+      boxCenterX(targetBox),
+    ];
+    const centerX = (Math.min(...spanCenters) + Math.max(...spanCenters)) / 2;
+    const stacked = stackedFanOutSources.has(fanInJunctionId(target));
+    const ratio = stacked ? JUNCTION_RUNWAY_RATIO / 2 : JUNCTION_RUNWAY_RATIO;
+    const centerY = junctionRunwayCenterY(sourceBottom, targetBox.y, ratio);
+    virtualJunctionBoxes.set(fanInJunctionId(target), {
+      x: centerX,
+      y: centerY,
+      width: 1,
+      height: 1,
+    });
+  }
+
   const used = new Set<string>();
 
   const pushEdge = (
@@ -707,20 +792,24 @@ function emitSpineLinks(
       continue;
     }
 
-    const sourceBox = resolveNodeBox(source, layout);
+    const sourceBox = resolveBox(source);
     if (!sourceBox) {
       continue;
     }
 
     const targetBoxes = active
-      .map((link) => resolveNodeBox(link.target, layout))
+      .map((link) => resolveBox(link.target))
       .filter((box): box is LayoutBox => box !== undefined);
     if (targetBoxes.length === 0) {
       continue;
     }
 
     const junctionId = fanOutJunctionId(source);
-    const centerX = boxCenterX(sourceBox);
+    const spanCenters = [
+      boxCenterX(sourceBox),
+      ...targetBoxes.map((box) => boxCenterX(box)),
+    ];
+    const centerX = (Math.min(...spanCenters) + Math.max(...spanCenters)) / 2;
     const centerY = junctionRunwayCenterY(
       sourceBox.y + sourceBox.height,
       Math.min(...targetBoxes.map((box) => box.y)),
@@ -730,14 +819,14 @@ function emitSpineLinks(
     pushEdge(
       source,
       junctionId,
-      HANDLE_BOTTOM_OUT,
+      isJunctionId(source) ? HANDLE_JUNCTION_OUT_BOTTOM : HANDLE_BOTTOM_OUT,
       HANDLE_JUNCTION_IN,
       elbow,
       isSameSpineColumn(centerX, centerX),
     );
 
     for (const link of active) {
-      const targetBox = resolveNodeBox(link.target, layout);
+      const targetBox = resolveBox(link.target);
       if (!targetBox) {
         continue;
       }
@@ -762,28 +851,38 @@ function emitSpineLinks(
       continue;
     }
 
-    const targetBox = resolveNodeBox(target, layout);
+    const mergeSpineTitle = target.startsWith("__join__in__")
+      ? target.slice("__join__in__".length)
+      : target;
+    const targetBox = resolveBox(mergeSpineTitle);
     if (!targetBox) {
       continue;
     }
 
     const sourceBoxes = active
-      .map((link) => resolveNodeBox(link.source, layout))
+      .map((link) => resolveBox(link.source))
       .filter((box): box is LayoutBox => box !== undefined);
     if (sourceBoxes.length === 0) {
       continue;
     }
 
-    const junctionId = fanInJunctionId(target);
+    const junctionId = target.startsWith("__join__in__") ? target : fanInJunctionId(target);
     const sourceBottom = Math.max(...sourceBoxes.map((box) => box.y + box.height));
-    const centerX =
-      sourceBoxes.reduce((sum, box) => sum + boxCenterX(box), 0) / sourceBoxes.length;
-    const centerY = junctionRunwayCenterY(sourceBottom, targetBox.y);
+    const spanCenters = [
+      ...sourceBoxes.map((box) => boxCenterX(box)),
+      boxCenterX(targetBox),
+    ];
+    const centerX = (Math.min(...spanCenters) + Math.max(...spanCenters)) / 2;
+    // Keep the actual junction position in sync with the virtual one used
+    // for stacked fan-out source resolution above.
+    const stacked = stackedFanOutSources.has(junctionId);
+    const ratio = stacked ? JUNCTION_RUNWAY_RATIO / 2 : JUNCTION_RUNWAY_RATIO;
+    const centerY = junctionRunwayCenterY(sourceBottom, targetBox.y, ratio);
     const elbow: StepElbow = { centerX, centerY };
     nodes.push(junctionNode(junctionId, centerX, centerY));
 
     for (const link of active) {
-      const sourceBox = resolveNodeBox(link.source, layout);
+      const sourceBox = resolveBox(link.source);
       if (!sourceBox) {
         continue;
       }
@@ -793,7 +892,7 @@ function emitSpineLinks(
       pushEdge(
         link.source,
         junctionId,
-        HANDLE_BOTTOM_OUT,
+        isJunctionId(link.source) ? HANDLE_JUNCTION_OUT_BOTTOM : HANDLE_BOTTOM_OUT,
         inHandle,
         elbow,
         inHandle === HANDLE_JUNCTION_IN,
@@ -801,14 +900,16 @@ function emitSpineLinks(
       used.add(spineLinkKey(link));
     }
 
-    pushEdge(
-      junctionId,
-      target,
-      HANDLE_JUNCTION_OUT_BOTTOM,
-      HANDLE_TOP_IN,
-      elbow,
-      isSameSpineColumn(centerX, targetBox.x + targetBox.width / 2),
-    );
+    if (!bySource.has(junctionId)) {
+      pushEdge(
+        junctionId,
+        mergeSpineTitle,
+        HANDLE_JUNCTION_OUT_BOTTOM,
+        HANDLE_TOP_IN,
+        elbow,
+        isSameSpineColumn(centerX, targetBox.x + targetBox.width / 2),
+      );
+    }
   }
 
   for (const link of remaining) {
@@ -816,7 +917,12 @@ function emitSpineLinks(
       continue;
     }
 
-    pushEdge(link.source, link.target, HANDLE_BOTTOM_OUT, HANDLE_TOP_IN);
+    pushEdge(
+      link.source,
+      link.target,
+      isJunctionId(link.source) ? HANDLE_JUNCTION_OUT_BOTTOM : HANDLE_BOTTOM_OUT,
+      isJunctionId(link.target) ? HANDLE_JUNCTION_IN : HANDLE_TOP_IN,
+    );
     used.add(spineLinkKey(link));
   }
 }
@@ -883,8 +989,11 @@ export function buildRoadmapFlow({
 
   const edges: Edge[] = [];
   const spineLinks: SpineLink[] = [];
+  const queuedSpineLinkKeys = new Set<string>();
 
   const queueSpineLink = (source: string, target: string) => {
+    const sourceIsJunction = isJunctionId(source);
+    const targetIsJunction = isJunctionId(target);
     const sourcePlacement =
       source === ROADMAP_START_ID || source === ROADMAP_END_ID
         ? ({ role: "spine" } as RoadmapPlacement)
@@ -894,10 +1003,19 @@ export function buildRoadmapFlow({
         ? ({ role: "spine" } as RoadmapPlacement)
         : resolvePlacement(layout, target);
 
-    if (!isSpineNode(source, sourcePlacement) || !isSpineNode(target, targetPlacement)) {
+    if (
+      (!sourceIsJunction && !isSpineNode(source, sourcePlacement)) ||
+      (!targetIsJunction && !isSpineNode(target, targetPlacement))
+    ) {
       return;
     }
 
+    const key = spineLinkKey({ source, target });
+    if (queuedSpineLinkKeys.has(key)) {
+      return;
+    }
+
+    queuedSpineLinkKeys.add(key);
     spineLinks.push({ source, target });
   };
 
@@ -916,28 +1034,49 @@ export function buildRoadmapFlow({
     return { nodes, edges };
   }
 
-  for (const lane of layout.parallelLanes) {
-    const first = lane[0];
-    if (first !== undefined) {
-      queueSpineLink(ROADMAP_START_ID, first);
-    }
-
-    for (let index = 0; index < lane.length - 1; index += 1) {
-      const source = lane[index];
-      const target = lane[index + 1];
-      if (source === undefined || target === undefined) {
-        continue;
+  const headTrunkFork = layout.trunkForks.find((fork) => inicioHeadFork(fork, layout.trunk));
+  if (headTrunkFork !== undefined) {
+    for (const lane of headTrunkFork.lanes) {
+      const first = lane[0];
+      if (first !== undefined) {
+        queueSpineLink(ROADMAP_START_ID, first);
       }
-      queueSpineLink(source, target);
+    }
+  } else {
+    const startTarget = layout.trunk[0] ?? layout.parallelLanes[0]?.[0];
+    if (startTarget !== undefined) {
+      queueSpineLink(ROADMAP_START_ID, startTarget);
+    }
+  }
+
+  const trunkParallelLane = primaryTrunkParallelLane(layout);
+  const parallelLaneSpineStaleForTrunkForks =
+    layout.trunkForks.length > 0 &&
+    layout.parallelLanes.some((lane) => lane.some((title) => !layout.trunk.includes(title)));
+
+  if (trunkParallelLane === null && !parallelLaneSpineStaleForTrunkForks) {
+    for (const lane of layout.parallelLanes) {
+      for (let index = 0; index < lane.length - 1; index += 1) {
+        const source = lane[index];
+        const target = lane[index + 1];
+        if (source === undefined || target === undefined) {
+          continue;
+        }
+        queueSpineLink(source, target);
+      }
     }
   }
 
   const mergeTarget = layout.trunk[0];
   const lateJoinFrom = new Set(layout.lateJoins.map((join) => join.from));
-  if (mergeTarget !== undefined) {
+  if (
+    mergeTarget !== undefined &&
+    trunkParallelLane === null &&
+    !parallelLaneSpineStaleForTrunkForks
+  ) {
     for (const lane of layout.parallelLanes) {
       const last = lane[lane.length - 1];
-      if (last !== undefined && !lateJoinFrom.has(last)) {
+      if (last !== undefined && last !== mergeTarget && !lateJoinFrom.has(last)) {
         queueSpineLink(last, mergeTarget);
       }
     }
@@ -953,24 +1092,83 @@ export function buildRoadmapFlow({
 
   for (const fork of layout.trunkForks) {
     const forkSource = layout.capstoneByAfter.get(fork.after) ?? fork.after;
-    for (const lane of fork.lanes) {
+    const forkSourceOnCanvas = layout.placements.has(forkSource);
+    const headFork = inicioHeadFork(fork, layout.trunk);
+    const anchorInLane = fork.lanes.flat().includes(fork.after);
+    const mergeJoinAnchor = layout.trunkForks.some(
+      (entry) => entry.mergeInto === fork.after && entry.after !== fork.after,
+    );
+    const virtualMergeSplit =
+      mergeJoinAnchor && !anchorInLane && fork.lanes.length === 1 && !headFork;
+    const forkStemSource =
+      mergeJoinAnchor && (anchorInLane || virtualMergeSplit)
+        ? fanInJunctionId(fork.after)
+        : forkSource;
+    const forkStemSourceOnCanvas = forkSourceOnCanvas || isJunctionId(forkStemSource);
+    const mergeIntoIsLaneRoot = fork.lanes.some((lane) => lane[0] === fork.mergeInto);
+    const tailLaneRootMerge =
+      mergeIntoIsLaneRoot && fork.mergeInto === layout.trunk[layout.trunk.length - 1];
+    if (virtualMergeSplit) {
+      queueSpineLink(forkStemSource, fork.after);
+      if (tailLaneRootMerge) {
+        queueSpineLink(fork.after, ROADMAP_END_ID);
+      }
+    }
+
+    const mergeAtParallelLaneRoot =
+      mergeIntoIsLaneRoot &&
+      fork.lanes.length > 1 &&
+      fork.lanes.every((lane) => lane.length === 1) &&
+      fork.lanes.some((lane) => lane[0] === fork.mergeInto);
+
+    for (let laneIndex = 0; laneIndex < fork.lanes.length; laneIndex += 1) {
+      const lane = fork.lanes[laneIndex]!;
       const first = lane[0];
-      if (first !== undefined) {
-        queueSpineLink(forkSource, first);
+      const blockStemOntoMergeLaneRoot =
+        first === fork.mergeInto &&
+        mergeAtParallelLaneRoot &&
+        mergeJoinAnchor &&
+        fork.after !== fork.mergeInto;
+      if (
+        first !== undefined &&
+        first !== forkStemSource &&
+        forkStemSourceOnCanvas &&
+        !headFork &&
+        !blockStemOntoMergeLaneRoot
+      ) {
+        queueSpineLink(forkStemSource, first);
       }
 
       for (let index = 0; index < lane.length - 1; index += 1) {
         const source = lane[index];
         const target = lane[index + 1];
-        if (source === undefined || target === undefined) {
+        if (source === undefined || target === undefined || source === target) {
           continue;
         }
         queueSpineLink(source, target);
       }
 
       const last = lane[lane.length - 1];
-      if (last !== undefined) {
-        queueSpineLink(last, fork.mergeInto);
+      const allowMergeJoinStemOntoLaneRoot =
+        forkSource === fork.after && mergeJoinAnchor && !anchorInLane;
+      const skipSiblingMergeOntoLaneRoot =
+        last !== undefined &&
+        last !== fork.mergeInto &&
+        last !== fork.after &&
+        mergeIntoIsLaneRoot &&
+        last === lane[0] &&
+        fork.lanes.some((other, index) => index !== laneIndex && other[0] === fork.mergeInto) &&
+        (headFork || !allowMergeJoinStemOntoLaneRoot);
+      const mergeTarget = mergeAtParallelLaneRoot
+        ? fanInJunctionId(fork.mergeInto)
+        : fork.mergeInto;
+
+      if (tailLaneRootMerge && last !== undefined) {
+        queueSpineLink(last, ROADMAP_END_ID);
+      } else if (last !== undefined && last !== fork.mergeInto && !skipSiblingMergeOntoLaneRoot) {
+        queueSpineLink(last, mergeTarget);
+      } else if (last !== undefined && last === fork.mergeInto && mergeAtParallelLaneRoot) {
+        queueSpineLink(last, mergeTarget);
       }
     }
   }
