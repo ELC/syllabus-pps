@@ -318,9 +318,14 @@ html:not(.auth-session-cached) body.auth-pending {
     display: block;
   }
 
-  .dashboard__sidebar {
+  .dashboard__sidebar,
+  .dashboard__sidebar-collapse {
     display: none;
   }
+}
+
+.dashboard:has(.login__mount, .login__panel, .login__auth-loading) .dashboard__sidebar-collapse {
+  display: none;
 }
 
 body.auth-pending,

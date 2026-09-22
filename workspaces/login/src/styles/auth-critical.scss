@@ -4,7 +4,8 @@ html:not(.auth-session-cached) body.auth-pending {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .dashboard__sidebar {
+  .dashboard__sidebar,
+  .dashboard__sidebar-collapse {
     display: none;
   }
 }
