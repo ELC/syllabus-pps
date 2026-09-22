@@ -21,6 +21,8 @@
     "@pps/config": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "js-yaml": "^4.1.0",
+    "ts-pattern": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "sass": "catalog:"

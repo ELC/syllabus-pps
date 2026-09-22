@@ -445,6 +445,9 @@ importers:
       '@pps/content':
         specifier: workspace:*
         version: link:../content
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.3.2
       react:
         specifier: 'catalog:'
         version: 19.3.0
@@ -454,6 +457,9 @@ importers:
       sass:
         specifier: 'catalog:'
         version: 1.104.1
+      ts-pattern:
+        specifier: 'catalog:'
+        version: 5.9.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
