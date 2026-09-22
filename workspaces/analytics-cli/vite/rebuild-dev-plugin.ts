@@ -3,7 +3,7 @@ import { loadEnv, type Connect, type Plugin, type PreviewServer, type ViteDevSer
 
 import { createServerClientFromEnv } from "@pps/content";
 
-import { rebuildAnalyticsInSupabase } from "../src/pipeline/rebuild-remote";
+import { rebuildAnalyticsInSupabase } from "@pps/analytics-cli/rebuild-remote";
 
 const REBUILD_ANALYTICS_PATHS = new Set([
   "/api/rebuild-analytics",
