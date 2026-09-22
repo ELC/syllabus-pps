@@ -1,15 +1,32 @@
-import { useEffect, useMemo, useState, type ReactElement } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 
-import { collectResourceCatalogIssues, type ResourceCatalogEntry } from "@pps/core";
-import { triggerAnalyticsRebuild } from "@pps/content/browser";
+import {
+  collectResourceCatalogIssues,
+  serializeResourceCatalogJson,
+  type ResourceCatalogEntry,
+} from "@pps/core";
+import {
+  isEditorWorkspaceActionsLocked,
+  isEntityContentStale,
+  isOwnAnalyticsRebuildComplete,
+  shouldRecheckEntityAfterAnalyticsAdvance,
+  triggerAnalyticsRebuild,
+} from "@pps/content/browser";
 import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator";
 import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
 import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
 import plusSvg from "@pps/shell/assets/icons/ui-plus.svg?raw";
+import refreshSvg from "@pps/shell/assets/icons/ui-refresh.svg?raw";
 import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
 import warningSvg from "@pps/shell/assets/icons/ui-warning.svg?raw";
 import { loadResources, writeResources } from "./api/resources";
+import {
+  CITES_REBUILD_STATUS_POLL,
+  citesSaveBlockMessage,
+  resolveCitesHeaderIndicatorOverride,
+  resolveCitesSaveBlockReason,
+} from "./catalog-sync";
 import { createDraftEntry, entryForForm, isPendingDraftResourceId } from "./draft";
 import { ResourceForm } from "./ResourceForm";
 import { SidebarNavSkeleton } from "@pps/shell/SidebarNavSkeleton";
@@ -23,14 +40,37 @@ function indexForId(entries: ResourceCatalogEntry[], id: string | null): number 
   return match >= 0 ? match : 0;
 }
 
+function resourceSnapshot(entry: ResourceCatalogEntry): string {
+  return serializeResourceCatalogJson([entryForForm(entry)]);
+}
+
 export function App() {
   const [entries, setEntries] = useState<ResourceCatalogEntry[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState("");
   const [loadError, setLoadError] = useState("");
   const [loading, setLoading] = useState(true);
-  const rebuildStatus = useAnalyticsRebuildStatus();
+  const [entityStale, setEntityStale] = useState(false);
+  const [awaitingOwnRebuild, setAwaitingOwnRebuild] = useState(false);
+  const [savingCatalog, setSavingCatalog] = useState(false);
+  const [cloudSaveIndicatorAt, setCloudSaveIndicatorAt] = useState<string | null>(null);
+
+  const rebuildStatus = useAnalyticsRebuildStatus(CITES_REBUILD_STATUS_POLL);
+  const rebuildStatusRef = useRef(rebuildStatus);
+  const acknowledgedLastOkAtRef = useRef<string | null>(null);
+  const entityServerBaselineRef = useRef<string>("");
+  const awaitingOwnRebuildRef = useRef(false);
+  const ownRebuildBaselineLastOkAtRef = useRef<string | null>(null);
+  const sawOwnRebuildRunningRef = useRef(false);
+  const pendingCloudSaveAtRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    rebuildStatusRef.current = rebuildStatus;
+  }, [rebuildStatus]);
+
+  useEffect(() => {
+    awaitingOwnRebuildRef.current = awaitingOwnRebuild;
+  }, [awaitingOwnRebuild]);
 
   useEffect(() => {
     setLoading(true);
@@ -87,6 +127,132 @@ export function App() {
   }, []);
 
   const selected = entries[selectedIndex];
+
+  useEffect(() => {
+    if (!selected?.id || loading || savingCatalog) {
+      return;
+    }
+
+    const resourceId = selected.id;
+    const localSnapshot = resourceSnapshot(selected);
+    let cancelled = false;
+
+    void loadResources().then((items) => {
+      if (cancelled) {
+        return;
+      }
+      const remote = items.find((entry) => entry.id === resourceId);
+      if (!remote) {
+        return;
+      }
+      const remoteSnapshot = resourceSnapshot(remote);
+      entityServerBaselineRef.current = remoteSnapshot;
+      if (isEntityContentStale(remoteSnapshot, localSnapshot)) {
+        setEntityStale(true);
+        setCloudSaveIndicatorAt(null);
+      } else {
+        setEntityStale(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loading, savingCatalog, selected?.id, selectedIndex]);
+
+  useEffect(() => {
+    const lastOkAt = rebuildStatus?.lastOkAt ?? null;
+    if (lastOkAt && !acknowledgedLastOkAtRef.current) {
+      acknowledgedLastOkAtRef.current = lastOkAt;
+    }
+  }, [rebuildStatus?.lastOkAt]);
+
+  useEffect(() => {
+    const lastOkAt = rebuildStatus?.lastOkAt ?? null;
+
+    if (awaitingOwnRebuild) {
+      if (rebuildStatus?.state === "running") {
+        sawOwnRebuildRunningRef.current = true;
+      }
+      if (
+        isOwnAnalyticsRebuildComplete(
+          rebuildStatus,
+          ownRebuildBaselineLastOkAtRef.current,
+          sawOwnRebuildRunningRef.current,
+        )
+      ) {
+        if (lastOkAt) {
+          acknowledgedLastOkAtRef.current = lastOkAt;
+        }
+        sawOwnRebuildRunningRef.current = false;
+        setAwaitingOwnRebuild(false);
+        setCloudSaveIndicatorAt(
+          pendingCloudSaveAtRef.current ?? new Date().toISOString(),
+        );
+        pendingCloudSaveAtRef.current = null;
+        setEntityStale(false);
+      }
+      return;
+    }
+
+    if (!selected?.id || loading || savingCatalog) {
+      return;
+    }
+
+    if (
+      !shouldRecheckEntityAfterAnalyticsAdvance({
+        lastOkAt,
+        acknowledgedLastOkAt: acknowledgedLastOkAtRef.current,
+        awaitingOwnRebuild: false,
+      })
+    ) {
+      return;
+    }
+
+    const resourceId = selected.id;
+    let cancelled = false;
+    void loadResources().then((items) => {
+      if (cancelled) {
+        return;
+      }
+      const remote = items.find((entry) => entry.id === resourceId);
+      const checkpoint = rebuildStatusRef.current?.lastOkAt ?? lastOkAt;
+      if (!remote || !checkpoint) {
+        if (checkpoint) {
+          acknowledgedLastOkAtRef.current = checkpoint;
+        }
+        return;
+      }
+      const remoteSnapshot = resourceSnapshot(remote);
+      if (isEntityContentStale(remoteSnapshot, entityServerBaselineRef.current)) {
+        setEntityStale(true);
+        setCloudSaveIndicatorAt(null);
+      } else {
+        acknowledgedLastOkAtRef.current = checkpoint;
+        setEntityStale(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [awaitingOwnRebuild, loading, rebuildStatus, savingCatalog, selected?.id]);
+
+  useEffect(() => {
+    if (!awaitingOwnRebuild) {
+      return;
+    }
+    const timeout = setTimeout(() => {
+      const status = rebuildStatusRef.current;
+      if (status?.lastOkAt) {
+        acknowledgedLastOkAtRef.current = status.lastOkAt;
+      }
+      sawOwnRebuildRunningRef.current = false;
+      setAwaitingOwnRebuild(false);
+      setEntityStale(false);
+    }, 120_000);
+    return () => clearTimeout(timeout);
+  }, [awaitingOwnRebuild]);
   const formEntry = selected ? entryForForm(selected) : undefined;
 
   useEffect(() => {
@@ -132,16 +298,46 @@ export function App() {
       .map(({ index }) => index);
   }, [entries, query]);
 
-  const canSave = !loading && !loadError && catalogIssues.length === 0;
+  const saveBlockReason = resolveCitesSaveBlockReason({
+    entityStale,
+    catalogLoading: loading,
+    rebuildStatus,
+    awaitingOwnRebuild,
+    hasCatalogIssues: catalogIssues.length > 0,
+  });
+
+  const canSave = saveBlockReason === null && !savingCatalog && !loadError;
+  const saveBlockMessage = citesSaveBlockMessage(saveBlockReason);
+  const showSaveBlockHint =
+    saveBlockReason === "diagnostics" && Boolean(saveBlockMessage) && !loading;
+
+  const headerIndicatorOverride = resolveCitesHeaderIndicatorOverride({
+    entityStale,
+    savingPage: savingCatalog,
+    cloudSaveIndicatorAt,
+    saveBlockReason,
+    awaitingOwnRebuild,
+    rebuildStatus,
+  });
+  const workspaceLocked =
+    entityStale ||
+    loading ||
+    isEditorWorkspaceActionsLocked({
+      rebuildStatus,
+      awaitingOwnRebuild,
+      savingEntity: savingCatalog,
+    });
 
   function addNewResource(): void {
+    if (workspaceLocked) {
+      return;
+    }
     setEntries((current) => {
       const draft = createDraftEntry(current);
       return [draft, ...current];
     });
     setSelectedIndex(0);
     setQuery("");
-    setStatus("");
     setLoadError("");
   }
 
@@ -219,11 +415,24 @@ export function App() {
             <div className="cites__header-main">
               <div className="cites__header-title-row">
                 <h1 className="cites__header-title">Catálogo de recursos</h1>
-                <AnalyticsRebuildIndicator
-                  status={rebuildStatus}
-                  className="cites__rebuild-indicator"
-                  loading={loading}
-                />
+                <div className="cites__header-status-cluster">
+                  <AnalyticsRebuildIndicator
+                    status={rebuildStatus}
+                    className={
+                      entityStale
+                        ? "cites__rebuild-indicator cites__rebuild-indicator--stale"
+                        : "cites__rebuild-indicator"
+                    }
+                    loading={loading && !headerIndicatorOverride}
+                    override={headerIndicatorOverride}
+                    role={entityStale ? "alert" : "status"}
+                  />
+                  {showSaveBlockHint ? (
+                    <span className="cites__save-blocked-hint" role="status">
+                      {saveBlockMessage}
+                    </span>
+                  ) : null}
+                </div>
               </div>
               <p className="cites__header-lead">
                 Edits save the resource catalog to Supabase Postgres. Local dev uses{" "}
@@ -231,36 +440,63 @@ export function App() {
               </p>
             </div>
             <div className="cites__header-actions">
-              <>
+              {entityStale ? (
                 <button
                   type="button"
-                  className="cites__button cites__button--secondary cites__button--icon"
-                  onClick={addNewResource}
-                  title="New resource"
-                  aria-label="New resource"
+                  className="cites__button cites__button--save cites__button--refresh"
+                  onClick={() => window.location.reload()}
+                  title="Recargar la página"
+                  aria-label="Recargar la página para obtener el catálogo actualizado"
                 >
-                  <SvgAssetIcon svg={plusSvg} className="cites__button-icon" focusable={false} />
+                  <SvgAssetIcon svg={refreshSvg} className="cites__button-icon" focusable={false} />
+                  Recargar
                 </button>
-                <button
-                  type="button"
-                  className="cites__button cites__button--save cites__button--icon"
-                  disabled={!canSave}
-                  title="Save catalog"
-                  aria-label="Save catalog"
-                  onClick={() => {
-                    void writeResources(entries).then(() => {
-                      setStatus(`Saved ${entries.length} resources.`);
-                      triggerAnalyticsRebuild(import.meta.env.BASE_URL ?? "/cites/");
-                    });
-                  }}
-                >
-                  <SvgAssetIcon svg={saveSvg} className="cites__button-icon" focusable={false} />
-                </button>
-                {status ? <span className="cites__status">{status}</span> : null}
-                {!canSave ? (
-                  <p className="cites__hint">Fix catalog validation issues before saving.</p>
-                ) : null}
-              </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    className="cites__button cites__button--secondary cites__button--icon"
+                    onClick={addNewResource}
+                    disabled={workspaceLocked}
+                    title="New resource"
+                    aria-label="New resource"
+                  >
+                    <SvgAssetIcon svg={plusSvg} className="cites__button-icon" focusable={false} />
+                  </button>
+                  <button
+                    type="button"
+                    className="cites__button cites__button--save cites__button--icon"
+                    disabled={!canSave}
+                    title="Save catalog"
+                    aria-label="Save catalog"
+                    onClick={() => {
+                      setSavingCatalog(true);
+                      setCloudSaveIndicatorAt(null);
+                      const savedAt = new Date().toISOString();
+                      void writeResources(entries)
+                        .then(() => {
+                          setEntityStale(false);
+                          if (selected?.id) {
+                            entityServerBaselineRef.current = resourceSnapshot(selected);
+                          }
+                          pendingCloudSaveAtRef.current = savedAt;
+                          ownRebuildBaselineLastOkAtRef.current = rebuildStatus?.lastOkAt ?? null;
+                          sawOwnRebuildRunningRef.current = false;
+                          setAwaitingOwnRebuild(true);
+                          triggerAnalyticsRebuild(import.meta.env.BASE_URL ?? "/cites/");
+                          setSavingCatalog(false);
+                        })
+                        .catch((error: unknown) => {
+                          setSavingCatalog(false);
+                          const message = error instanceof Error ? error.message : String(error);
+                          setLoadError(message);
+                        });
+                    }}
+                  >
+                    <SvgAssetIcon svg={saveSvg} className="cites__button-icon" focusable={false} />
+                  </button>
+                </>
+              )}
             </div>
           </header>
 

@@ -17,3 +17,23 @@ export {
   type SubscribeAnalyticsRebuildStatusOptions,
 } from "./analytics-rebuild-status-browser";
 export { triggerAnalyticsRebuild } from "./trigger-analytics-rebuild";
+export {
+  EDITOR_CATALOG_STALE_MESSAGE,
+  EDITOR_HEADER_LOADING_CATALOG_LABEL,
+  EDITOR_HEADER_SAVING_LABEL,
+  EDITOR_HEADER_UPDATING_ANALYTICS_LABEL,
+  EDITOR_REBUILD_STATUS_POLL,
+  EDITOR_SAVE_SUCCESS_INDICATOR_LABEL,
+  formatEditorCloudSaveIndicatorLabel,
+  isAnalyticsRebuildRunning,
+  isEditorRebuildSaveBlocked,
+  isEditorWorkspaceActionsLocked,
+  isEntityContentStale,
+  isOwnAnalyticsRebuildComplete,
+  resolveEditorHeaderIndicatorOverride,
+  resolveEditorSaveBlockReason,
+  shouldRecheckEntityAfterAnalyticsAdvance,
+  type EditorHeaderIndicatorOverride,
+  type EditorHeaderIndicatorPhase,
+  type EditorSaveBlockReason,
+} from "./editor-catalog-sync";

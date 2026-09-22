@@ -4,77 +4,57 @@ import {
   CMS_CATALOG_STALE_MESSAGE,
   CMS_HEADER_LOADING_CATALOG_LABEL,
   CMS_HEADER_SAVING_PAGE_LABEL,
-  CMS_HEADER_SYNC_CHECK_LABEL,
   CMS_HEADER_UPDATING_ANALYTICS_LABEL,
   CMS_SAVE_SUCCESS_INDICATOR_LABEL,
   formatCmsCloudSaveIndicatorLabel,
   isCmsRebuildSaveBlocked,
   isCmsSidebarNavReady,
+  isEditorWorkspaceActionsLocked,
+  isEntityContentStale,
   isOwnAnalyticsRebuildComplete,
-  reconcileCatalogSyncWithRebuildStatus,
-  resolveCatalogAckAfterSourcesFetch,
   resolveCmsHeaderIndicatorOverride,
   resolveCmsSaveBlockReason,
-  shouldMarkCatalogStale,
-  shouldMarkCatalogStaleAfterSourcesFetch,
-  shouldMarkCatalogStaleFromExternalRebuild,
+  shouldRecheckEntityAfterAnalyticsAdvance,
 } from "../../../cms/src/catalog-sync";
 
-describe("shouldMarkCatalogStaleFromExternalRebuild", () => {
-  it("marks stale when another session rebuild is running", () => {
-    expect(
-      shouldMarkCatalogStaleFromExternalRebuild({
-        rebuildStatus: { state: "running" } as never,
-        awaitingOwnRebuild: false,
-        savingPage: false,
-        catalogReady: true,
-        catalogSyncAcknowledged: true,
-      }),
-    ).toBe(true);
+describe("isEntityContentStale", () => {
+  it("is false when remote matches baseline", () => {
+    expect(isEntityContentStale("a", "a")).toBe(false);
   });
 
-  it("does not mark stale while this tab saves or awaits its rebuild", () => {
-    expect(
-      shouldMarkCatalogStaleFromExternalRebuild({
-        rebuildStatus: { state: "running" } as never,
-        awaitingOwnRebuild: true,
-        savingPage: false,
-        catalogReady: true,
-        catalogSyncAcknowledged: true,
-      }),
-    ).toBe(false);
-    expect(
-      shouldMarkCatalogStaleFromExternalRebuild({
-        rebuildStatus: { state: "running" } as never,
-        awaitingOwnRebuild: false,
-        savingPage: true,
-        catalogReady: true,
-        catalogSyncAcknowledged: true,
-      }),
-    ).toBe(false);
+  it("is true when remote differs from baseline", () => {
+    expect(isEntityContentStale("b", "a")).toBe(true);
   });
 });
 
-describe("shouldMarkCatalogStale", () => {
-  it("marks stale when lastOkAt advances after acknowledgement", () => {
+describe("shouldRecheckEntityAfterAnalyticsAdvance", () => {
+  it("does not recheck while awaiting own rebuild", () => {
     expect(
-      shouldMarkCatalogStale(
-        "2026-01-02T00:00:00.000Z",
-        "2026-01-01T00:00:00.000Z",
-        false,
-        true,
-      ),
+      shouldRecheckEntityAfterAnalyticsAdvance({
+        lastOkAt: "2026-01-02T00:00:00.000Z",
+        acknowledgedLastOkAt: "2026-01-01T00:00:00.000Z",
+        awaitingOwnRebuild: true,
+      }),
+    ).toBe(false);
+  });
+
+  it("rechecks when lastOkAt advances after acknowledgement", () => {
+    expect(
+      shouldRecheckEntityAfterAnalyticsAdvance({
+        lastOkAt: "2026-01-02T00:00:00.000Z",
+        acknowledgedLastOkAt: "2026-01-01T00:00:00.000Z",
+        awaitingOwnRebuild: false,
+      }),
     ).toBe(true);
   });
 
-  it("does not mark stale while awaiting own rebuild", () => {
+  it("does not recheck when lastOkAt unchanged", () => {
     expect(
-      shouldMarkCatalogStale(
-        "2026-01-02T00:00:00.000Z",
-        "2026-01-01T00:00:00.000Z",
-        true,
-        true,
-      ),
+      shouldRecheckEntityAfterAnalyticsAdvance({
+        lastOkAt: "2026-01-01T00:00:00.000Z",
+        acknowledgedLastOkAt: "2026-01-01T00:00:00.000Z",
+        awaitingOwnRebuild: false,
+      }),
     ).toBe(false);
   });
 });
@@ -118,6 +98,58 @@ describe("isOwnAnalyticsRebuildComplete", () => {
       ),
     ).toBe(true);
   });
+
+  it("does not complete on idle with lastOkAt when save had no baseline until rebuild ran", () => {
+    expect(
+      isOwnAnalyticsRebuildComplete(
+        {
+          state: "idle",
+          lastOkAt: "2026-01-01T00:00:00.000Z",
+        } as never,
+        null,
+        false,
+      ),
+    ).toBe(false);
+  });
+});
+
+describe("isEditorWorkspaceActionsLocked", () => {
+  it("locks while Postgres reports a running rebuild", () => {
+    expect(
+      isEditorWorkspaceActionsLocked({
+        rebuildStatus: { state: "running" } as never,
+        awaitingOwnRebuild: false,
+        savingEntity: false,
+      }),
+    ).toBe(true);
+  });
+
+  it("locks while this tab saves or awaits its rebuild", () => {
+    expect(
+      isEditorWorkspaceActionsLocked({
+        rebuildStatus: { state: "idle" } as never,
+        awaitingOwnRebuild: true,
+        savingEntity: false,
+      }),
+    ).toBe(true);
+    expect(
+      isEditorWorkspaceActionsLocked({
+        rebuildStatus: { state: "idle" } as never,
+        awaitingOwnRebuild: false,
+        savingEntity: true,
+      }),
+    ).toBe(true);
+  });
+
+  it("is open when idle and not saving", () => {
+    expect(
+      isEditorWorkspaceActionsLocked({
+        rebuildStatus: { state: "idle" } as never,
+        awaitingOwnRebuild: false,
+        savingEntity: false,
+      }),
+    ).toBe(false);
+  });
 });
 
 describe("isCmsSidebarNavReady", () => {
@@ -159,13 +191,12 @@ describe("resolveCmsHeaderIndicatorOverride", () => {
   it("prioritizes stale over success and rebuild", () => {
     expect(
       resolveCmsHeaderIndicatorOverride({
-        catalogStale: true,
+        entityStale: true,
         savingPage: false,
         cloudSaveIndicatorAt: "2026-01-01T17:30:00.000Z",
         saveBlockReason: "rebuild",
         awaitingOwnRebuild: false,
-        catalogReady: true,
-        catalogSyncAcknowledged: true,
+        rebuildStatus: { state: "idle" } as never,
       }),
     ).toEqual({ phase: "unknown", label: CMS_CATALOG_STALE_MESSAGE });
   });
@@ -173,13 +204,12 @@ describe("resolveCmsHeaderIndicatorOverride", () => {
   it("shows Guardando while Storage writes are in flight", () => {
     expect(
       resolveCmsHeaderIndicatorOverride({
-        catalogStale: false,
+        entityStale: false,
         savingPage: true,
         cloudSaveIndicatorAt: "2026-01-01T17:30:00.000Z",
         saveBlockReason: null,
         awaitingOwnRebuild: false,
-        catalogReady: true,
-        catalogSyncAcknowledged: true,
+        rebuildStatus: { state: "idle" } as never,
       }),
     ).toEqual({ phase: "updating", label: CMS_HEADER_SAVING_PAGE_LABEL });
   });
@@ -187,13 +217,12 @@ describe("resolveCmsHeaderIndicatorOverride", () => {
   it("shows Actualizando while awaiting own rebuild before Postgres reports running", () => {
     expect(
       resolveCmsHeaderIndicatorOverride({
-        catalogStale: false,
+        entityStale: false,
         savingPage: false,
         cloudSaveIndicatorAt: null,
         saveBlockReason: null,
         awaitingOwnRebuild: true,
-        catalogReady: true,
-        catalogSyncAcknowledged: true,
+        rebuildStatus: { state: "idle" } as never,
       }),
     ).toEqual({ phase: "updating", label: CMS_HEADER_UPDATING_ANALYTICS_LABEL });
   });
@@ -201,53 +230,49 @@ describe("resolveCmsHeaderIndicatorOverride", () => {
   it("shows yellow while loading or rebuilding", () => {
     expect(
       resolveCmsHeaderIndicatorOverride({
-        catalogStale: false,
+        entityStale: false,
         savingPage: false,
         cloudSaveIndicatorAt: null,
         saveBlockReason: "loading",
         awaitingOwnRebuild: false,
-        catalogReady: false,
-        catalogSyncAcknowledged: false,
+        rebuildStatus: { state: "idle" } as never,
       }),
     ).toEqual({ phase: "updating", label: CMS_HEADER_LOADING_CATALOG_LABEL });
     expect(
       resolveCmsHeaderIndicatorOverride({
-        catalogStale: false,
+        entityStale: false,
         savingPage: false,
         cloudSaveIndicatorAt: null,
         saveBlockReason: "rebuild",
         awaitingOwnRebuild: false,
-        catalogReady: true,
-        catalogSyncAcknowledged: true,
+        rebuildStatus: { state: "running" } as never,
       }),
-    ).toEqual({ phase: "updating", label: CMS_HEADER_UPDATING_ANALYTICS_LABEL });
+    ).toBeNull();
   });
 
-  it("shows yellow until catalog sync is acknowledged", () => {
+  it("defers cloud-save green while another session rebuilds", () => {
     expect(
       resolveCmsHeaderIndicatorOverride({
-        catalogStale: false,
+        entityStale: false,
         savingPage: false,
-        cloudSaveIndicatorAt: null,
-        saveBlockReason: null,
+        cloudSaveIndicatorAt: "2026-06-15T14:35:00.000Z",
+        saveBlockReason: "rebuild",
         awaitingOwnRebuild: false,
-        catalogReady: true,
-        catalogSyncAcknowledged: false,
+        rebuildStatus: { state: "running" } as never,
       }),
-    ).toEqual({ phase: "updating", label: CMS_HEADER_SYNC_CHECK_LABEL });
+    ).toBeNull();
   });
 
   it("shows green cloud save with local HH:MM after rebuild completes", () => {
     const savedAt = "2026-06-15T14:35:00.000Z";
     expect(
       resolveCmsHeaderIndicatorOverride({
-        catalogStale: false,
+        entityStale: false,
         savingPage: false,
         cloudSaveIndicatorAt: savedAt,
         saveBlockReason: null,
         awaitingOwnRebuild: false,
-        catalogReady: true,
-        catalogSyncAcknowledged: true,
+        rebuildStatus: { state: "idle" } as never,
       }),
     ).toEqual({
       phase: "updated",
@@ -264,118 +289,11 @@ describe("formatCmsCloudSaveIndicatorLabel", () => {
   });
 });
 
-describe("reconcileCatalogSyncWithRebuildStatus", () => {
-  it("marks stale when lastOkAt advances after load baseline", () => {
-    expect(
-      reconcileCatalogSyncWithRebuildStatus({
-        lastOkAt: "2026-01-02T00:00:00.000Z",
-        catalogLoadedBaselineLastOkAt: "2026-01-01T00:00:00.000Z",
-        acknowledgedLastOkAt: "2026-01-01T00:00:00.000Z",
-        catalogAcknowledged: true,
-        awaitingOwnRebuild: false,
-        catalogReady: true,
-      }),
-    ).toEqual({
-      markStale: true,
-      acknowledgedLastOkAt: null,
-      setCatalogAcknowledged: false,
-    });
-  });
-
-  it("acknowledges baseline when rebuild status arrives after sources load", () => {
-    expect(
-      reconcileCatalogSyncWithRebuildStatus({
-        lastOkAt: "2026-01-01T00:00:00.000Z",
-        catalogLoadedBaselineLastOkAt: "2026-01-01T00:00:00.000Z",
-        acknowledgedLastOkAt: null,
-        catalogAcknowledged: false,
-        awaitingOwnRebuild: false,
-        catalogReady: true,
-      }),
-    ).toEqual({
-      markStale: false,
-      acknowledgedLastOkAt: "2026-01-01T00:00:00.000Z",
-      setCatalogAcknowledged: true,
-    });
-  });
-
-  it("marks stale on first sync when lastOkAt already advanced", () => {
-    expect(
-      reconcileCatalogSyncWithRebuildStatus({
-        lastOkAt: "2026-01-02T00:00:00.000Z",
-        catalogLoadedBaselineLastOkAt: "2026-01-01T00:00:00.000Z",
-        acknowledgedLastOkAt: null,
-        catalogAcknowledged: false,
-        awaitingOwnRebuild: false,
-        catalogReady: true,
-      }),
-    ).toEqual({
-      markStale: true,
-      acknowledgedLastOkAt: "2026-01-01T00:00:00.000Z",
-      setCatalogAcknowledged: true,
-    });
-  });
-});
-
-describe("shouldMarkCatalogStaleAfterSourcesFetch", () => {
-  it("marks stale when lastOkAt advances during fetch", () => {
-    expect(
-      shouldMarkCatalogStaleAfterSourcesFetch(
-        "2026-01-01T00:00:00.000Z",
-        "2026-01-02T00:00:00.000Z",
-        false,
-      ),
-    ).toBe(true);
-  });
-
-  it("ignores advance while awaiting own rebuild", () => {
-    expect(
-      shouldMarkCatalogStaleAfterSourcesFetch(
-        "2026-01-01T00:00:00.000Z",
-        "2026-01-02T00:00:00.000Z",
-        true,
-      ),
-    ).toBe(false);
-  });
-});
-
-describe("resolveCatalogAckAfterSourcesFetch", () => {
-  it("acks fetch-start lastOkAt when stale during first load", () => {
-    expect(
-      resolveCatalogAckAfterSourcesFetch({
-        fetchStartLastOkAt: "2026-01-01T00:00:00.000Z",
-        endLastOkAt: "2026-01-02T00:00:00.000Z",
-        awaitingOwnRebuild: false,
-        catalogAlreadyAcknowledged: false,
-      }),
-    ).toEqual({
-      acknowledgedLastOkAt: "2026-01-01T00:00:00.000Z",
-      markStale: true,
-      setAcknowledged: true,
-    });
-  });
-
-  it("marks stale on refetch without resetting ack", () => {
-    expect(
-      resolveCatalogAckAfterSourcesFetch({
-        fetchStartLastOkAt: "2026-01-01T00:00:00.000Z",
-        endLastOkAt: "2026-01-02T00:00:00.000Z",
-        awaitingOwnRebuild: false,
-        catalogAlreadyAcknowledged: true,
-      }),
-    ).toEqual({
-      acknowledgedLastOkAt: null,
-      markStale: true,
-      setAcknowledged: false,
-    });
-  });
-});
-
 describe("resolveCmsSaveBlockReason", () => {
   it("prioritizes stale over rebuild", () => {
     expect(
       resolveCmsSaveBlockReason({
-        catalogStale: true,
+        entityStale: true,
         sourcesLoading: false,
         rebuildStatus: { state: "running" } as never,
         awaitingOwnRebuild: false,
@@ -387,7 +305,7 @@ describe("resolveCmsSaveBlockReason", () => {
   it("blocks on awaiting own rebuild before idle is observed", () => {
     expect(
       resolveCmsSaveBlockReason({
-        catalogStale: false,
+        entityStale: false,
         sourcesLoading: false,
         rebuildStatus: null,
         awaitingOwnRebuild: true,
@@ -396,9 +314,20 @@ describe("resolveCmsSaveBlockReason", () => {
     ).toBe("rebuild");
   });
 
-  it("blocks while awaiting own rebuild even if Postgres is still idle", () => {
+  it("blocks save on every tab while Postgres reports a running rebuild", () => {
     expect(
-      isCmsRebuildSaveBlocked({ state: "idle" } as never, true),
-    ).toBe(true);
+      resolveCmsSaveBlockReason({
+        entityStale: false,
+        sourcesLoading: false,
+        rebuildStatus: { state: "running" } as never,
+        awaitingOwnRebuild: false,
+        hasBlockingDiagnostics: false,
+      }),
+    ).toBe("rebuild");
+    expect(isCmsRebuildSaveBlocked({ state: "running" } as never, false)).toBe(true);
+  });
+
+  it("blocks while awaiting own rebuild even if Postgres is still idle", () => {
+    expect(isCmsRebuildSaveBlocked({ state: "idle" } as never, true)).toBe(true);
   });
 });
