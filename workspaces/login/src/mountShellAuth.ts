@@ -21,6 +21,12 @@ import {
   setAuthPending,
 } from "./shell-dom";
 import { hasPersistedSupabaseSession } from "./sessionStorage";
+import {
+  applyAppAdminShellAccess,
+  applyDevAdminShellAccess,
+  markAppAdminAccessPending,
+  resetAppAdminCache,
+} from "./resolveAppAdmin";
 import { readUserDisplayName } from "./userProfile";
 
 export async function mountShellAuth(): Promise<void> {
@@ -39,6 +45,7 @@ export async function mountShellAuth(): Promise<void> {
 async function runShellAuthGate(dashboardMain: HTMLElement): Promise<void> {
   if (isAuthDisabled()) {
     revealAuthenticatedShell();
+    applyDevAdminShellAccess();
     activateSidebarFooter(readDevAuthProfile(), async () => undefined);
     return;
   }
@@ -47,6 +54,7 @@ async function runShellAuthGate(dashboardMain: HTMLElement): Promise<void> {
   const optimisticAuth = hasPersistedSupabaseSession();
   if (optimisticAuth) {
     document.documentElement.classList.add("auth-session-cached");
+    markAppAdminAccessPending();
     revealAuthenticatedShell();
   } else {
     setAuthPending(true);
@@ -65,6 +73,7 @@ async function runShellAuthGate(dashboardMain: HTMLElement): Promise<void> {
   const client = createBrowserClient(config);
   let cleanupSignOut: () => void = () => undefined;
   let loginRoot: Root | null = null;
+  let activeUserId: string | null = null;
 
   function clearLogin(): void {
     loginRoot?.unmount();
@@ -78,6 +87,8 @@ async function runShellAuthGate(dashboardMain: HTMLElement): Promise<void> {
       return;
     }
 
+    resetAppAdminCache();
+    activeUserId = null;
     hideShellForGuest();
     cleanupSignOut();
     cleanupSignOut = () => undefined;
@@ -86,9 +97,15 @@ async function runShellAuthGate(dashboardMain: HTMLElement): Promise<void> {
   }
 
   async function showAuthenticated(user: User): Promise<void> {
-    maybeReturnAfterLogin();
+    if (activeUserId === user.id) {
+      return;
+    }
+
+    const isAdmin = await applyAppAdminShellAccess(client);
+    maybeReturnAfterLogin({ isAdmin });
     revealAuthenticatedShell();
     clearLogin();
+    activeUserId = user.id;
     cleanupSignOut = activateSidebarFooter(
       {
         email: user.email ?? "",

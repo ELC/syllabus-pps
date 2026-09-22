@@ -28,7 +28,7 @@ const SHELL_CHROME_CSS = sass.compile(join(shellStylesDir, "shell.scss"), {
 
 const LOGIN_CHROME_CSS = sass.compile(join(workspacesRoot, "login/src/styles/login.scss")).css;
 
-const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/", "cites/"];
+const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/", "cites/", "users/"];
 
 export interface ShellHeadPluginOptions {
   activeNav?: string;

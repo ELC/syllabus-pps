@@ -1,5 +1,9 @@
 import { loadAnalyticsArtifact } from "@pps/content/browser";
 import { isTrayectoNoEstructurado, structuralPageKindRank } from "@pps/core";
+import { fetchIsAppAdmin } from "@pps/login/appAdminApi";
+import { isAuthDisabled } from "@pps/login/authDisabled";
+import { createBrowserClient } from "@pps/login/client";
+import { isMissingConfig, readSupabaseConfig } from "@pps/login/config";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 
@@ -1571,11 +1575,26 @@ function openConceptPanelForNode(
   conceptPanel.open(page);
 }
 
+async function resolveAllowCmsNavigation(): Promise<boolean> {
+  if (isAuthDisabled()) {
+    return true;
+  }
+
+  const config = readSupabaseConfig();
+  if (isMissingConfig(config)) {
+    return false;
+  }
+
+  return fetchIsAppAdmin(createBrowserClient(config));
+}
+
 export async function mountGraph(containerClass: string, options: MountGraphOptions = {}): Promise<void> {
   const container = document.querySelector<HTMLElement>(`.${containerClass}`);
   if (!container) {
     throw new Error(`Missing graph container .${containerClass}`);
   }
+
+  const allowCmsNavigation = await resolveAllowCmsNavigation();
 
   const [graphLoaded, conceptPagesBySlug] = await Promise.all([
     loadAnalyticsArtifact("graph.cy.json"),
@@ -1897,6 +1916,9 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
 
     const slug = event.target.data("slug");
     if (typeof slug !== "string" || !slug) {
+      return;
+    }
+    if (!allowCmsNavigation) {
       return;
     }
     openInCms(cmsBase, slug);

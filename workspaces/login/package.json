@@ -5,7 +5,11 @@
   "type": "module",
   "exports": {
     "./client": "./src/client.ts",
+    "./AppAdminContext": "./src/AppAdminContext.tsx",
+    "./appAdminApi": "./src/appAdminApi.ts",
     "./authDisabled": "./src/authDisabled.ts",
+    "./navAccess": "./src/navAccess.ts",
+    "./resolveAppAdmin": "./src/resolveAppAdmin.ts",
     "./config": "./src/config.ts",
     "./LoginForm": "./src/LoginForm.tsx",
     "./ShellAuthGate": "./src/ShellAuthGate.tsx",
@@ -15,6 +19,7 @@
     "./bootstrap": "./src/bootstrap.ts",
     "./mountShellAuth": "./src/mountShellAuth.ts",
     "./sessionStorage": "./src/sessionStorage.ts",
+    "./siteRoot": "./src/siteRoot.ts",
     "./styles/auth-critical.scss": "./src/styles/auth-critical.scss",
     "./styles/login.scss": "./src/styles/login.scss"
   },

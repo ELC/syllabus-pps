@@ -22,10 +22,14 @@ function AuthenticatedShell({
   sidebarExtra,
   userEmail,
   userName,
+  isAdmin,
+  navAccessPending,
   onSignOut,
 }: SiteShellProps & {
   userEmail: string | null;
   userName: string | null;
+  isAdmin: boolean;
+  navAccessPending: boolean;
   onSignOut: () => Promise<void>;
 }) {
   return (
@@ -35,6 +39,8 @@ function AuthenticatedShell({
         sidebarExtra={sidebarExtra}
         userEmail={userEmail}
         userName={userName}
+        isAdmin={isAdmin}
+        navAccessPending={navAccessPending}
         onSignOut={onSignOut}
       />
       <main className="dashboard__main">
@@ -53,12 +59,21 @@ export function SiteShell({ children, activeNav, sidebarExtra }: SiteShellProps)
     <ShellAuthGate
       logoUrl={logoUrl}
       siteRoot={siteRoot}
-      renderShell={({ children: authedChildren, userEmail, userName, onSignOut }) => (
+      renderShell={({
+        children: authedChildren,
+        userEmail,
+        userName,
+        isAdmin,
+        navAccessPending,
+        onSignOut,
+      }) => (
         <AuthenticatedShell
           activeNav={activeNav}
           sidebarExtra={sidebarExtra}
           userEmail={userEmail}
           userName={userName}
+          isAdmin={isAdmin}
+          navAccessPending={navAccessPending}
           onSignOut={onSignOut}
         >
           {authedChildren}

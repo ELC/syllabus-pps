@@ -48,7 +48,7 @@ function renderSiteNavLinks(activeNav: string, siteRoot: string): string {
     const active = item.id === activeNav;
     const className = active ? "dashboard__link dashboard__link--active" : "dashboard__link";
     const aria = active ? ' aria-current="page"' : "";
-    return `<a class="${className}" href="${navHref(siteRoot, item.segment)}"${aria} title="${item.label}"><span class="dashboard__link-icon">${navIconSvg(item.id)}</span><span class="dashboard__link-label">${item.label}</span></a>`;
+    return `<a class="${className}" href="${navHref(siteRoot, item.segment)}" data-pps-nav-id="${item.id}"${aria} title="${item.label}"><span class="dashboard__link-icon">${navIconSvg(item.id)}</span><span class="dashboard__link-label">${item.label}</span></a>`;
   }).join("");
 }
 

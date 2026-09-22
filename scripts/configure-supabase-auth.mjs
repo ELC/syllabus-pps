@@ -28,8 +28,7 @@ const body = {
   site_url: "https://elc.github.io/syllabus-pps/",
   uri_allow_list: redirectUrls,
   external_email_enabled: true,
-  hook_before_user_created_enabled: true,
-  hook_before_user_created_uri: "pg-functions://postgres/public/hook_restrict_signup_by_allowed_email",
+  hook_before_user_created_enabled: false,
 };
 
 if (googleClientId && googleClientSecret) {
@@ -74,7 +73,6 @@ if (!response.ok) {
         uri_allow_list: body.uri_allow_list,
         external_email_enabled: body.external_email_enabled,
         hook_before_user_created_enabled: body.hook_before_user_created_enabled,
-        hook_before_user_created_uri: body.hook_before_user_created_uri,
       }),
     });
     const retryText = await retry.text();

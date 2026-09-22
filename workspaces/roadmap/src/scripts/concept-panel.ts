@@ -165,6 +165,7 @@ function renderConceptNote(
   block: ConceptBlock,
   slug: string,
   progress?: ConceptPanelProgress,
+  showCitesEditLinks = true,
 ): HTMLElement {
   const item = document.createElement("li");
   item.className = "graph__concept-note";
@@ -241,7 +242,7 @@ function renderConceptNote(
   rail.className = "graph__concept-note-rail";
   const resourceId = primaryResourceId(block);
 
-  if (resourceId) {
+  if (resourceId && showCitesEditLinks) {
     rail.classList.add("graph__concept-note-rail--with-edit");
     rail.appendChild(createCitesEditLink(resourceId, resolvedTitle));
   }
@@ -271,6 +272,7 @@ function renderConceptNotes(
   blocks: ConceptBlock[],
   slug: string,
   progress?: ConceptPanelProgress,
+  showCitesEditLinks = true,
 ): void {
   notesRoot.replaceChildren();
 
@@ -286,7 +288,7 @@ function renderConceptNotes(
   list.className = "graph__concept-note-list";
 
   for (const block of blocks) {
-    list.appendChild(renderConceptNote(block, slug, progress));
+    list.appendChild(renderConceptNote(block, slug, progress, showCitesEditLinks));
   }
 
   notesRoot.appendChild(list);
@@ -306,11 +308,24 @@ export interface ConceptPanelHandlers {
   onClose?: () => void;
 }
 
+export interface ConceptPanelOptions {
+  handlers?: ConceptPanelHandlers;
+  showCitesEditLinks?: boolean;
+}
+
 export function mountConceptPanel(
   root: HTMLElement,
   progress?: ConceptPanelProgress,
-  handlers?: ConceptPanelHandlers,
+  options?: ConceptPanelOptions | ConceptPanelHandlers,
 ): ConceptPanel {
+  const resolvedOptions: ConceptPanelOptions =
+    options && "handlers" in options
+      ? options
+      : options && "onClose" in options
+        ? { handlers: options }
+        : (options ?? {});
+  const handlers = resolvedOptions.handlers;
+  const showCitesEditLinks = resolvedOptions.showCitesEditLinks ?? true;
   const title = root.querySelector<HTMLElement>(".graph__concept-title");
   const notesRoot = root.querySelector<HTMLElement>(".graph__concept-body");
   const closeButton = root.querySelector<HTMLButtonElement>(".graph__concept-close");
@@ -335,7 +350,7 @@ export function mountConceptPanel(
       return;
     }
 
-    renderConceptNotes(notesRoot, currentPage.blocks, currentPage.slug, progress);
+    renderConceptNotes(notesRoot, currentPage.blocks, currentPage.slug, progress, showCitesEditLinks);
   };
 
   const close = (options?: ConceptPanelCloseOptions) => {

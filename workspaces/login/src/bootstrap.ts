@@ -14,6 +14,12 @@ import { isMissingConfig, readSupabaseConfig } from "./config";
 import { LoginForm } from "./LoginForm";
 import { LoginScreen } from "./LoginScreen";
 import {
+  applyAppAdminShellAccess,
+  applyDevAdminShellAccess,
+  markAppAdminAccessPending,
+  resetAppAdminCache,
+} from "./resolveAppAdmin";
+import {
   activateSidebarFooter,
   clearLoginMount,
   hideShellForGuest,
@@ -34,6 +40,7 @@ export async function bootstrapAuthenticatedApp(
 
   if (isAuthDisabled()) {
     revealAuthenticatedShell();
+    applyDevAdminShellAccess();
     const appRoot = createRoot(host);
     renderApp(appRoot);
     activateSidebarFooter(readDevAuthProfile(), async () => undefined);
@@ -44,6 +51,7 @@ export async function bootstrapAuthenticatedApp(
   const optimisticAuth = hasPersistedSupabaseSession();
   if (optimisticAuth) {
     document.documentElement.classList.add("auth-session-cached");
+    markAppAdminAccessPending();
     revealAuthenticatedShell();
   } else {
     setAuthPending(true);
@@ -63,12 +71,15 @@ export async function bootstrapAuthenticatedApp(
   let cleanupSignOut: () => void = () => undefined;
   let appRoot: Root | null = null;
   let loginRoot: Root | null = null;
+  let mountedUserId: string | null = null;
 
   async function showGuest(): Promise<void> {
     if (handleUnauthenticatedAccess() === "redirecting") {
       return;
     }
 
+    resetAppAdminCache();
+    mountedUserId = null;
     hideShellForGuest();
     cleanupSignOut();
     cleanupSignOut = () => undefined;
@@ -86,7 +97,12 @@ export async function bootstrapAuthenticatedApp(
   }
 
   async function showAuthenticated(user: User): Promise<void> {
-    maybeReturnAfterLogin();
+    if (mountedUserId === user.id && appRoot) {
+      return;
+    }
+
+    const isAdmin = await applyAppAdminShellAccess(client);
+    maybeReturnAfterLogin({ isAdmin });
     revealAuthenticatedShell();
     if (loginRoot) {
       loginRoot.unmount();
@@ -97,6 +113,7 @@ export async function bootstrapAuthenticatedApp(
       appRoot = createRoot(host);
       renderApp(appRoot);
     }
+    mountedUserId = user.id;
     cleanupSignOut = activateSidebarFooter(
       {
         email: user.email ?? "",

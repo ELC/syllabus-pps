@@ -1,6 +1,6 @@
 /** Keep in sync with ../src/nav-icons.ts (compiled into integration dist for static shell HTML). */
 
-export type StaticNavId = "home" | "analytics" | "network" | "roadmap" | "cms" | "cites";
+export type StaticNavId = "home" | "analytics" | "network" | "roadmap" | "cms" | "cites" | "users";
 
 const NAV_ICON_PATHS: Record<StaticNavId, string> = {
   home: '<path d="M4 10.5 12 4l8 6.5V19a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8.5Z" />',
@@ -13,6 +13,8 @@ const NAV_ICON_PATHS: Record<StaticNavId, string> = {
   cms: '<path d="M14 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8l-6-6Z" /><path d="M14 4v6h6" /><path d="M8 13h8" /><path d="M8 17h5" />',
   cites:
     '<path d="M7 4h8a2 2 0 0 1 2 2v13l-6-3-6 3V6a2 2 0 0 1 2-2Z" /><path d="M11 9h4" />',
+  users:
+    '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />',
 };
 
 const SVG_ATTRS =

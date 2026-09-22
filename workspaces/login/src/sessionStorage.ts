@@ -32,7 +32,7 @@ function readStoredAuthPayload(key: string): StoredAuthPayload | null {
 }
 
 /** Inline script: mark cached Supabase sessions before module JS runs (avoids auth-pending flicker). */
-export const OPTIMISTIC_AUTH_BOOTSTRAP_SCRIPT = `(function(){try{function plausible(parsed){var access=parsed.access_token;var refresh=parsed.refresh_token;if(access&&access.split(".").length===3)return true;if(refresh&&refresh.length>=24)return true;return false}for(var i=0;i<localStorage.length;i+=1){var key=localStorage.key(i);if(!key||key.indexOf("sb-")!==0||key.slice(-11)!=="-auth-token")continue;var raw=localStorage.getItem(key);if(!raw)continue;var parsed=JSON.parse(raw);if(parsed&&plausible(parsed)){document.documentElement.classList.add("auth-session-cached");return}}}catch(error){}})();`;
+export const OPTIMISTIC_AUTH_BOOTSTRAP_SCRIPT = `(function(){try{function plausible(parsed){var access=parsed.access_token;var refresh=parsed.refresh_token;if(access&&access.split(".").length===3)return true;if(refresh&&refresh.length>=24)return true;return false}for(var i=0;i<localStorage.length;i+=1){var key=localStorage.key(i);if(!key||key.indexOf("sb-")!==0||key.slice(-11)!=="-auth-token")continue;var raw=localStorage.getItem(key);if(!raw)continue;var parsed=JSON.parse(raw);if(parsed&&plausible(parsed)){document.documentElement.classList.add("auth-session-cached");document.documentElement.classList.add("pps-shell-access-pending");return}}}catch(error){}})();`;
 
 export function clearPersistedSupabaseSession(): void {
   for (let index = localStorage.length - 1; index >= 0; index -= 1) {

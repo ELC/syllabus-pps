@@ -5,6 +5,7 @@ import { isAuthDisabled, readDevAuthProfile } from "./authDisabled";
 import { readBrowserSession } from "./authSession";
 import { createBrowserClient } from "./client";
 import { isMissingConfig, readSupabaseConfig, type SupabaseConfigResult } from "./config";
+import { resetAppAdminCache } from "./resolveAppAdmin";
 import { readUserDisplayName } from "./userProfile";
 
 export type AuthStatus = "loading" | "unauthenticated" | "authenticated" | "misconfigured";
@@ -91,6 +92,7 @@ export function useAuthSession(): AuthSessionState {
     }
     const client = createBrowserClient({ url, anonKey });
     await client.auth.signOut();
+    resetAppAdminCache();
     setSession(null);
     setStatus("unauthenticated");
   }

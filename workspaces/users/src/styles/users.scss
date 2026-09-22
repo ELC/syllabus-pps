@@ -1,0 +1,216 @@
+.users {
+  &__workspace {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  &__header-main {
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__header-title {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-heading);
+    font-size: var(--dash-header-title-size);
+    font-weight: var(--dash-header-title-weight);
+    line-height: 1.2;
+  }
+
+  &__header-lead {
+    margin: 0;
+    color: var(--dash-muted);
+    max-width: 48rem;
+    font-size: var(--dash-header-lead-size);
+    line-height: var(--dash-header-lead-line-height);
+  }
+
+  &__error {
+    flex-shrink: 0;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--dash-severity-error);
+    background: color-mix(in srgb, var(--dash-severity-error) 8%, var(--dash-surface));
+    color: var(--dash-text);
+  }
+
+  &__panel {
+    flex-shrink: 0;
+    margin-top: 1.5rem;
+    padding: 1.15rem 1.35rem;
+    background: var(--dash-surface);
+    border: 1px solid var(--dash-border);
+    border-radius: 0.75rem;
+  }
+
+  &__section-title {
+    margin: 0 0 0.85rem;
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--dash-muted);
+  }
+
+  &__form {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 28rem;
+  }
+
+  &__field {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  &__label {
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--dash-muted);
+  }
+
+  &__input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--dash-border);
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.55rem;
+    font: inherit;
+    font-size: 0.875rem;
+    color: inherit;
+    background: var(--dash-bg, var(--dash-surface));
+
+    &:focus {
+      outline: 2px solid color-mix(in srgb, var(--dash-accent) 35%, transparent);
+      outline-offset: 1px;
+    }
+  }
+
+  &__button {
+    appearance: none;
+    justify-self: start;
+    border: 0;
+    border-radius: 0.5rem;
+    background: var(--dash-accent);
+    color: var(--austral-blanco);
+    font-family: var(--font-heading);
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.6rem 1.1rem;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      filter: brightness(1.05);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+  }
+
+  &__row-remove {
+    appearance: none;
+    border: 0;
+    box-shadow: none;
+    background: var(--dash-surface);
+    color: var(--austral-severity-error);
+    width: 2rem;
+    height: 2.1875rem;
+    min-width: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    font-size: 1.35rem;
+    font-weight: 400;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      color: color-mix(in srgb, var(--austral-severity-error) 88%, var(--austral-text));
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  &__row-remove-icon {
+    display: block;
+    line-height: 1;
+  }
+
+  &__muted {
+    margin: 0;
+    color: var(--dash-muted);
+    font-size: 0.875rem;
+  }
+
+  &__table-wrap {
+    overflow: auto;
+    border: 1px solid var(--dash-border);
+    border-radius: 0.5rem;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  &__cell {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--dash-border);
+    text-align: left;
+    vertical-align: middle;
+
+    &--head {
+      background: var(--dash-table-head);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--dash-muted);
+      font-weight: 700;
+    }
+
+    &--actions {
+      text-align: right;
+      white-space: nowrap;
+    }
+  }
+
+  &__row:last-child &__cell {
+    border-bottom: 0;
+  }
+
+  &__row-name {
+    display: block;
+    font-weight: 600;
+  }
+
+  &__row-email {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.8125rem;
+    color: var(--dash-muted);
+  }
+}

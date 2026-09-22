@@ -165,6 +165,37 @@ body.dashboard--body {
     flex-shrink: 0;
   }
 
+  &__nav-skeleton {
+    display: grid;
+    grid-template-columns: var(--dash-sidebar-icon-size) minmax(0, 1fr);
+    column-gap: var(--dash-sidebar-link-gap);
+    align-items: center;
+    box-sizing: border-box;
+    height: var(--dash-sidebar-link-height);
+    min-height: var(--dash-sidebar-link-height);
+    padding: 0 var(--dash-sidebar-link-pad-right) 0 var(--dash-sidebar-icon-track-pad);
+    pointer-events: none;
+
+    &::before {
+      content: "";
+      width: var(--dash-sidebar-icon-size);
+      height: var(--dash-sidebar-icon-size);
+      border-radius: 4px;
+      background: var(--dash-sidebar-skeleton-fill, rgb(255 255 255 / 12%));
+      animation: dashboard-nav-skeleton-pulse 1.1s ease-in-out infinite;
+    }
+
+    &::after {
+      content: "";
+      height: 0.65rem;
+      width: min(72%, 7rem);
+      border-radius: 3px;
+      background: var(--dash-sidebar-skeleton-fill, rgb(255 255 255 / 12%));
+      animation: dashboard-nav-skeleton-pulse 1.1s ease-in-out infinite;
+      animation-delay: 0.12s;
+    }
+  }
+
   &__link {
     appearance: none;
     position: relative;
@@ -971,5 +1002,52 @@ body.dashboard--body {
     padding: 1rem;
     color: var(--dash-muted);
     font-size: 0.875rem;
+  }
+}
+
+@keyframes dashboard-nav-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.92;
+  }
+}
+
+html.pps-shell-access-pending #dashboard-site-nav .dashboard__link[data-pps-nav-id]:not([data-pps-nav-id="network"]):not([data-pps-nav-id="roadmap"]) {
+  display: none !important;
+}
+
+html.pps-shell-access-pending #dashboard-site-nav .dashboard__link[data-pps-nav-id] {
+  pointer-events: none;
+
+  .dashboard__link-icon svg,
+  .dashboard__link-label {
+    visibility: hidden;
+  }
+
+  .dashboard__link-icon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: var(--dash-sidebar-icon-size);
+    height: var(--dash-sidebar-icon-size);
+    border-radius: 4px;
+    background: rgb(255 255 255 / 12%);
+    animation: dashboard-nav-skeleton-pulse 1.1s ease-in-out infinite;
+  }
+
+  .dashboard__link-label::before {
+    content: "";
+    display: block;
+    height: 0.65rem;
+    width: min(72%, 7rem);
+    border-radius: 3px;
+    background: rgb(255 255 255 / 12%);
+    animation: dashboard-nav-skeleton-pulse 1.1s ease-in-out infinite;
+    animation-delay: 0.12s;
   }
 }

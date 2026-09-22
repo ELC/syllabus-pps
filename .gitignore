@@ -19,6 +19,10 @@ workspaces/analytics-cli/_generated
 .env
 cacert.pem
 supabase/functions/rebuild-analytics/rebuild-lib.js
+supabase/functions/rebuild-analytics/rebuild-lib-deployed.js
+supabase/functions/rebuild-analytics/_deploy*.json
+supabase/functions/rebuild-analytics/_mcp-deploy.json
+supabase/functions/rebuild-analytics/_mcp-chunks/
 .env.local
 .env.*.local
 token

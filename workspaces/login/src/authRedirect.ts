@@ -1,4 +1,5 @@
 import { isAuthDisabled } from "./authDisabled";
+import { pathnameRequiresAdmin, viewerLandingHref } from "./navAccess";
 import { hasPersistedSupabaseSession } from "./sessionStorage";
 import { isLoginEntryLocation, readBrowserSiteRoot } from "./siteRoot";
 
@@ -90,7 +91,7 @@ export function handleUnauthenticatedAccess(): UnauthenticatedAccessAction {
   return "redirecting";
 }
 
-export function maybeReturnAfterLogin(): void {
+export function maybeReturnAfterLogin(options?: { isAdmin?: boolean; siteRoot?: string }): void {
   const next = readAndClearReturnUrl();
   if (!next) {
     return;
@@ -105,6 +106,13 @@ export function maybeReturnAfterLogin(): void {
 
   const current = new URL(window.location.href);
   if (target.origin !== current.origin || target.href === current.href) {
+    return;
+  }
+
+  const siteRoot = options?.siteRoot ?? readBrowserSiteRoot();
+  const isAdmin = options?.isAdmin ?? true;
+  if (!isAdmin && pathnameRequiresAdmin(target.pathname, siteRoot)) {
+    window.location.replace(viewerLandingHref(siteRoot));
     return;
   }
 

@@ -1,6 +1,6 @@
-export type NavId = "home" | "analytics" | "network" | "roadmap" | "cms" | "cites";
+export type NavId = "home" | "analytics" | "network" | "roadmap" | "cms" | "cites" | "users";
 
-const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/", "cites/"] as const;
+const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/", "cites/", "users/"] as const;
 
 function normalizeBase(base: string): string {
   return base.endsWith("/") ? base : `${base}/`;

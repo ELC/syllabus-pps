@@ -87,8 +87,22 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    if (!supabaseUrl || !serviceKey) {
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    if (!supabaseUrl || !serviceKey || !anonKey) {
       throw new Error("Missing Supabase env for rebuild-analytics");
+    }
+
+    const authorization = incoming.headers.authorization;
+    if (!authorization?.startsWith("Bearer ")) {
+      return jsonResponse({ ok: false, error: "Unauthorized" }, 401);
+    }
+
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authorization } },
+    });
+    const { data: isAdmin, error: adminError } = await userClient.rpc("is_app_admin");
+    if (adminError || !isAdmin) {
+      return jsonResponse({ ok: false, error: "Forbidden" }, 403);
     }
 
     const client = createClient(supabaseUrl, serviceKey);

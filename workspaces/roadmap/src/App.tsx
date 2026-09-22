@@ -1,3 +1,4 @@
+import { useAppAdmin } from "@pps/login/AppAdminContext";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -19,6 +20,7 @@ import {
 } from "./scripts/concept-panel";
 import { readRoadmapPanelUrl, writeRoadmapPanelUrl } from "./scripts/roadmap-panel-url";
 export function App() {
+  const { isAdmin } = useAppAdmin();
   const rebuildStatus = useAnalyticsRebuildStatus();
   const [roadmapLoading, setRoadmapLoading] = useState(true);
   const [gridLayoutSemaphore, setGridLayoutSemaphore] =
@@ -82,7 +84,8 @@ export function App() {
     }
 
     const conceptPanel = mountConceptPanel(conceptRoot, panelProgress, {
-      onClose: handleConceptPanelUrlClose,
+      handlers: { onClose: handleConceptPanelUrlClose },
+      showCitesEditLinks: isAdmin,
     });
     const capstonePanel = mountCapstonePanel(capstoneRoot, {
       onClose: handleCapstonePanelUrlClose,
@@ -94,7 +97,7 @@ export function App() {
       conceptPanelControllerRef.current = null;
       capstonePanelControllerRef.current = null;
     };
-  }, [handleCapstonePanelUrlClose, handleConceptPanelUrlClose, panelProgress]);
+  }, [handleCapstonePanelUrlClose, handleConceptPanelUrlClose, isAdmin, panelProgress]);
 
   const handleConceptOpen = useCallback((page: ConceptPage) => {
     capstonePanelControllerRef.current?.close({ updateUrl: false });

@@ -16,6 +16,7 @@ import {
 import { loadAnalyticsArtifact } from "@pps/content/browser";
 import { MetaDropdown } from "@pps/shell/MetaDropdown";
 import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
+import { useAppAdmin } from "@pps/login/AppAdminContext";
 import editSvg from "@pps/shell/assets/icons/resource-edit.svg?raw";
 import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
 import {
@@ -229,6 +230,7 @@ export function RoadmapApp({
   onGridLayoutSemaphoreChange,
   onGridLayoutEditHintChange,
 }: RoadmapAppProps) {
+  const { isAdmin } = useAppAdmin();
   const [graph, setGraph] = useState<CurriculumGraph | null>(null);
   const [selectedDegree, setSelectedDegree] = useState<string>("");
   const [focusedCourseSlug, setFocusedCourseSlug] = useState<string | null>(null);
@@ -646,7 +648,7 @@ export function RoadmapApp({
   );
 
   const layoutEditMode = gridLayoutEditMode || conceptSubgraphEditMode;
-  const canEditLayout = canEditCourseGrid || canEditConceptSubgraph;
+  const canEditLayout = isAdmin && (canEditCourseGrid || canEditConceptSubgraph);
 
   const conceptEditBranchPhase = useMemo(() => {
     if (sidePendingOwner) {

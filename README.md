@@ -12,6 +12,7 @@ Pages live in Supabase Storage (`pages/{slug}.md`). The resource catalog lives i
 | `@pps/roadmap` | `http://localhost:4321/roadmap/` |
 | `@pps/cms` | `http://localhost:4321/cms/` |
 | `@pps/cites` | `http://localhost:4321/cites/` |
+| `@pps/users` | `http://localhost:4321/users/` |
 
 Shared chrome lives in [`workspaces/shell/`](workspaces/shell/) (`@pps/shell`). Email OTP sign-in lives in [`workspaces/login/`](workspaces/login/) (`@pps/login`).
 
@@ -61,36 +62,45 @@ Under `workspaces/analytics-cli/_generated/`:
 
 ## GitHub Pages
 
-`pnpm build:pages` builds all public sites and merges them into `dist/` for GitHub Pages (`/`, `/analytics/`, `/network/`, `/roadmap/`, `/cms/`, `/cites/`).
+`pnpm build:pages` builds all public sites and merges them into `dist/` for GitHub Pages (`/`, `/analytics/`, `/network/`, `/roadmap/`, `/cms/`, `/cites/`, `/users/`).
 
 Daily cron workflow: `.github/workflows/pages.yml` (build from Supabase → deploy).
 
 Set GitHub Actions secrets `PUBLIC_SUPABASE_PROJECT_URL` and `PUBLIC_SUPABASE_PUBLISHABLE_KEY` (same values as local `.env`). `pnpm build:pages` fails if either is missing. Optionally add `PUBLIC_GA_MEASUREMENT_ID` to enable Google Analytics on the deployed site.
 
-## Site sign-in (AuthN)
+## Site sign-in (AuthN) and admin access (AuthZ)
 
-The shell gates every surface behind Supabase Auth. Users can sign in with **Google OAuth** or an **email magic link**. Allowed addresses live in Supabase Postgres (`public.allowed_emails`), enforced by the `before-user-created` Auth Hook — not in the frontend bundle.
+The shell gates every surface behind Supabase Auth. Users can sign in with **Google OAuth** or an **email magic link**. **Any valid account can sign in.** Admin rights come from Supabase Postgres (`public.app_admins`): only listed emails can edit content, resources, roadmap layouts, trigger analytics rebuilds, or open the **Users** admin app.
 
-Unauthenticated visits to `/analytics/`, `/cms/`, and other app routes redirect to the **site home** (`/`), where the login form is shown. After sign-in, the browser returns to the original URL.
+Non-admin (viewer) accounts see **Network** and **Roadmaps** only; editing UI and admin routes redirect to Network.
+
+Unauthenticated visits to `/analytics/`, `/cms/`, and other app routes redirect to the **site home** (`/`), where the login form is shown. After sign-in, the browser returns to the original URL when permitted for that role.
 
 ### Supabase setup
 
-1. Apply [`workspaces/login/sql/001_allowed_emails.sql`](workspaces/login/sql/001_allowed_emails.sql) and [`workspaces/login/sql/002_display_name.sql`](workspaces/login/sql/002_display_name.sql) in the Supabase SQL editor.
-2. **Authentication → Providers → Email**: enable email; disable password sign-in.
-3. **Authentication → Providers → Google**: enable Google and paste the OAuth client ID and secret from [Google Cloud Console](https://console.cloud.google.com/auth/clients):
+1. Apply AuthZ SQL once (creates `public.app_admins`, `is_app_admin()`, and admin-only write policies):
+
+   ```sh
+   pnpm apply:auth-sql
+   ```
+
+   Sources: [`workspaces/login/sql/003_app_admins.sql`](workspaces/login/sql/003_app_admins.sql) and [`workspaces/content/sql/008_admin_write_rls.sql`](workspaces/content/sql/008_admin_write_rls.sql).
+
+2. Seed at least one admin row (or use **Users** after the first manual seed), then disable the legacy sign-up hook if it is still enabled (**Authentication → Hooks → before-user-created** → off). The old `allowed_emails` hook is no longer required for open sign-in.
+
+3. **Authentication → Providers → Email**: enable email; disable password sign-in.
+4. **Authentication → Providers → Google**: enable Google and paste the OAuth client ID and secret from [Google Cloud Console](https://console.cloud.google.com/auth/clients):
    - Create a **Web application** OAuth client.
    - **Authorized JavaScript origins**: `http://localhost:4321`, `http://127.0.0.1:4321`, and your production origin (e.g. `https://elc.github.io`).
    - **Authorized redirect URI**: copy the callback URL from the Supabase Google provider page (`https://<project-ref>.supabase.co/auth/v1/callback`).
    - Disable GitHub and other OAuth providers you do not use.
-4. **Authentication → URL Configuration**:
+5. **Authentication → URL Configuration**:
    - **Site URL**: hosted production origin (e.g. `https://elc.github.io/syllabus-pps/`).
    - **Redirect URLs** (allow list): must include local dev or magic links fall back to Site URL:
      - `http://localhost:**/**` (any local port — Astro may pick 4322+ if 4321 is busy)
      - `http://127.0.0.1:**/**`
      - `https://elc.github.io/syllabus-pps/**`
-5. **Authentication → Hooks → before-user-created**: enable and set URI to `pg-functions://postgres/public/hook_restrict_signup_by_allowed_email`.
-
-   Or run once with a [personal access token](https://supabase.com/dashboard/account/tokens):
+6. Optional: run once with a [personal access token](https://supabase.com/dashboard/account/tokens) to set Site URL, redirect allow list, and disable the legacy hook:
 
    ```sh
    SUPABASE_ACCESS_TOKEN=sbp_... node scripts/configure-supabase-auth.mjs
@@ -98,11 +108,11 @@ Unauthenticated visits to `/analytics/`, `/cms/`, and other app routes redirect 
 
    To enable Google programmatically, also set `SUPABASE_GOOGLE_CLIENT_ID` and `SUPABASE_GOOGLE_CLIENT_SECRET` before running the script.
 
-### Allow list
+### Administrators
 
-Add rows in **Table Editor → allowed_emails** (do not commit real addresses to git). Set optional **display_name** for the sidebar label. New sign-ups get `full_name` in auth metadata automatically via the `on_auth_user_apply_display_name` trigger in `002_display_name.sql`.
+Manage admins at **`/users/`** (admin-only): add or remove rows by **display name** and **email**. Optional `display_name` on `app_admins` is copied into `auth.users` metadata on first sign-in for the sidebar label.
 
-The navbar reads `user.user_metadata.full_name` from the Supabase session in localStorage — not a separate field. If it is missing, check that **display_name** is set on your allow-list row.
+The navbar reads `user.user_metadata.full_name` from the Supabase session in localStorage — not a separate field. If it is missing, set **display name** on the admin row in **Users**.
 
 ### Email delivery
 
@@ -110,7 +120,7 @@ This project uses **Supabase’s built-in mailer** (no custom SMTP). Auth emails
 
 If you hit the limit while testing, wait about an hour, use an earlier magic link from your inbox, or sign in with Google instead. The login UI shows a rate-limit message when Supabase returns `over_email_send_rate_limit`.
 
-Google sign-in uses the same allow list: the Google account email must already exist in `allowed_emails`.
+Google sign-in does not require a pre-approved email; admin rights still follow `app_admins` only.
 
 ### Client env
 

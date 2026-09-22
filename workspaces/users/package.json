@@ -1,0 +1,30 @@
+{
+  "name": "@pps/users",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./App": "./src/App.tsx",
+    "./styles/users.scss": "./src/styles/users.scss"
+  },
+  "scripts": {
+    "preview": "vite preview",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pps/login": "workspace:*",
+    "@pps/shell": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@pps/config": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "sass": "catalog:"
+  }
+}

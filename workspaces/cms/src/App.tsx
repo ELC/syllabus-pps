@@ -121,6 +121,13 @@ export function App() {
     [pages],
   );
 
+  const selectedPageCachedContent = useMemo(() => {
+    if (!selectedSlug) {
+      return undefined;
+    }
+    return allSources.find((page) => page.path.replace(/\.md$/i, "") === selectedSlug)?.content;
+  }, [allSources, selectedSlug]);
+
   const content = useMemo(
     () => composePageDocument({ ...metadata, slug: selectedSlug }, body),
     [body, metadata, selectedSlug],
@@ -244,9 +251,9 @@ export function App() {
     }
 
     let cancelled = false;
-    const cached = allSources.find((page) => page.path.replace(/\.md$/i, "") === selectedSlug);
-    if (cached) {
-      loadDocumentFromSource(selectedSlug, cached.content);
+    const cachedContent = selectedPageCachedContent;
+    if (cachedContent !== undefined) {
+      loadDocumentFromSource(selectedSlug, cachedContent);
     } else {
       setLoadedSlug("");
     }
@@ -255,7 +262,6 @@ export function App() {
       if (cancelled) {
         return;
       }
-      const cachedContent = cached?.content;
       if (cachedContent !== undefined && cachedContent !== remote) {
         entityServerBaselineRef.current.set(selectedSlug, remote);
         setEntityStale(true);
@@ -276,7 +282,7 @@ export function App() {
     return () => {
       cancelled = true;
     };
-  }, [coursePages, draftSlugs, selectedSlug]);
+  }, [draftSlugs, selectedPageCachedContent, selectedSlug]);
 
   useEffect(() => {
     if (!selectedSlug || draftSlugs.has(selectedSlug)) {
@@ -523,8 +529,16 @@ export function App() {
     sourcesLoading ||
     (pages.length > 0 && allSources.length === 0 && !loadError);
 
-  const catalogReady = pages.length === 0 || allSources.length > 0;
-  const pageNavReady = useMemo(() => {
+  const catalogReady = useMemo(() => {
+    if (pages.length === 0) {
+      return true;
+    }
+    if (allSources.length > 0) {
+      return true;
+    }
+    return loadedSlug === selectedSlug && Boolean(selectedSlug);
+  }, [allSources.length, loadedSlug, pages.length, selectedSlug]);
+  const pageNavReadyLive = useMemo(() => {
     if (
       !isCmsSidebarNavReady({
         loadingPages,
@@ -537,6 +551,15 @@ export function App() {
     }
     return pages.every((page) => Boolean(pageTitlesBySlug.get(page.slug)?.trim()));
   }, [allSources.length, loadingPages, pageTitlesBySlug, pages, sourcesLoading]);
+
+  const pageNavReadyLatchRef = useRef({ catalogKey: "", ready: false });
+  if (pageNavReadyLatchRef.current.catalogKey !== pageListKey) {
+    pageNavReadyLatchRef.current = { catalogKey: pageListKey, ready: false };
+  }
+  if (pageNavReadyLive) {
+    pageNavReadyLatchRef.current.ready = true;
+  }
+  const pageNavReady = pageNavReadyLatchRef.current.ready;
 
   const saveBlockReason = resolveCmsSaveBlockReason({
     entityStale,

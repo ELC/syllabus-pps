@@ -14,7 +14,8 @@ import {
   shellLogoHref,
 } from "./logo-meta";
 import { mountShellSidebar, readSidebarCollapsedPreference } from "./mount-shell-sidebar";
-import { NAV_ITEMS, navHref } from "./nav";
+import { navItemsForUser, navSkeletonItems } from "./navAccess";
+import { navHref } from "./nav";
 import type { NavId } from "./site-root";
 import { siteRootFromEnv } from "./site-root";
 
@@ -23,6 +24,8 @@ interface DashboardSidebarProps {
   sidebarExtra?: ReactNode;
   userEmail: string | null;
   userName: string | null;
+  isAdmin?: boolean;
+  navAccessPending?: boolean;
   onSignOut: () => Promise<void>;
 }
 
@@ -31,8 +34,12 @@ export function DashboardSidebar({
   sidebarExtra,
   userEmail,
   userName,
+  isAdmin = false,
+  navAccessPending = false,
   onSignOut,
 }: DashboardSidebarProps) {
+  const navItems = navItemsForUser(isAdmin);
+  const skeletonItems = navSkeletonItems();
   const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/");
   const logoHref = shellLogoHref(siteRoot);
   const isologoHref = shellIsologoHref(siteRoot);
@@ -99,19 +106,37 @@ export function DashboardSidebar({
       </button>
       <div id="dashboard-mobile-nav" className="dashboard__sidebar-drawer">
         <div className="dashboard__sidebar-drawer-panel">
-          <nav id="dashboard-site-nav" className="dashboard__nav" aria-label="Site">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.id}
-                className={item.id === activeNav ? "dashboard__link dashboard__link--active" : "dashboard__link"}
-                href={navHref(siteRoot, item.segment)}
-                aria-current={item.id === activeNav ? "page" : undefined}
-                title={item.label}
-              >
-                <NavIcon id={item.id} />
-                <span className="dashboard__link-label">{item.label}</span>
-              </a>
-            ))}
+          <nav
+            id="dashboard-site-nav"
+            className="dashboard__nav"
+            aria-label="Site"
+            aria-busy={navAccessPending || undefined}
+          >
+            {navAccessPending
+              ? skeletonItems.map((item) => (
+                  <span
+                    key={item.id}
+                    className="dashboard__nav-skeleton"
+                    aria-hidden="true"
+                    data-pps-nav-skeleton=""
+                    data-pps-nav-id={item.id}
+                  />
+                ))
+              : navItems.map((item) => (
+                  <a
+                    key={item.id}
+                    data-pps-nav-id={item.id}
+                    className={
+                      item.id === activeNav ? "dashboard__link dashboard__link--active" : "dashboard__link"
+                    }
+                    href={navHref(siteRoot, item.segment)}
+                    aria-current={item.id === activeNav ? "page" : undefined}
+                    title={item.label}
+                  >
+                    <NavIcon id={item.id} />
+                    <span className="dashboard__link-label">{item.label}</span>
+                  </a>
+                ))}
           </nav>
           {sidebarExtra}
           <ShellSidebarFooter email={userEmail} userName={userName} onSignOut={onSignOut} />

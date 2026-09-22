@@ -16,6 +16,7 @@
     "@astrojs/check": "catalog:",
     "@pps/cms": "workspace:*",
     "@pps/cites": "workspace:*",
+    "@pps/users": "workspace:*",
     "@pps/analytics-cli": "workspace:*",
     "@pps/content": "workspace:*",
     "@pps/config": "workspace:*",

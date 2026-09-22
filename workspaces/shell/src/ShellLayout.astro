@@ -91,6 +91,7 @@ const isologoHref = shellIsologoHref(siteRoot);
                 NAV_ITEMS.map((item) => (
                   <a
                     class:list={["dashboard__link", { "dashboard__link--active": item.id === activeNav }]}
+                    data-pps-nav-id={item.id}
                     href={navHref(siteRoot, item.segment)}
                     aria-current={item.id === activeNav ? "page" : undefined}
                     title={item.label}
