@@ -115,15 +115,21 @@ export function PageMetadataForm({
   const kindForCatalog = documentReady ? metadata.kind : expectedKind;
   const needsCatalogForExtras =
     kindForCatalog === "year" || kindForCatalog === "course" || kindForCatalog === "concept";
-  const metaGridReady = documentReady && (!needsCatalogForExtras || catalogReady);
-  const editorWriteReady = metaGridReady;
+  const metaPrimaryReady = documentReady;
+  const catalogExtrasReady = catalogReady;
+  const editorWriteReady = documentReady;
 
-  const stackKind = metaGridReady ? metadata.kind : expectedKind;
+  const stackKind = metaPrimaryReady ? metadata.kind : expectedKind;
   const showDegreeFullName = stackKind === "degree";
 
-  const showYearCoursesEditor = metaGridReady && metadata.kind === "year";
-  const showCorrelativasEditor = metaGridReady && metadata.kind === "course";
-  const showConceptDependsEditor = metaGridReady && metadata.kind === "concept";
+  const showYearCoursesEditor =
+    metaPrimaryReady && catalogExtrasReady && metadata.kind === "year";
+  const showCorrelativasEditor =
+    metaPrimaryReady && catalogExtrasReady && metadata.kind === "course";
+  const showConceptDependsEditor =
+    metaPrimaryReady && catalogExtrasReady && metadata.kind === "concept";
+  const showCatalogExtrasPending =
+    metaPrimaryReady && needsCatalogForExtras && !catalogExtrasReady;
 
   const courseSlugChoices = useMemo(() => {
     const slugs = new Set(coursePages.map((course) => course.slug));
@@ -152,13 +158,13 @@ export function PageMetadataForm({
           className={[
             "cms__meta-primary-stack",
             "cms__meta-field--full",
-            !metaGridReady ? "cms__meta-primary-stack--pending" : "",
+            !metaPrimaryReady ? "cms__meta-primary-stack--pending" : "",
           ]
             .filter(Boolean)
             .join(" ")}
-          aria-busy={!metaGridReady}
+          aria-busy={!metaPrimaryReady}
         >
-          {!metaGridReady ? (
+          {!metaPrimaryReady ? (
             <MetaPrimaryStackSkeleton />
           ) : (
             <>
@@ -277,6 +283,11 @@ export function PageMetadataForm({
               ) : null}
 
               <div className="cms__meta-extra-slot">
+                {showCatalogExtrasPending ? (
+                  <p className="cms__catalog-pending" role="status">
+                    Cargando el catálogo para correlativas y dependencias…
+                  </p>
+                ) : null}
                 {showYearCoursesEditor ? (
                   <div className="cms__meta-field cms__meta-field--full cms__meta-field--overlay">
                     <span className="cms__meta-label">Materias del año</span>

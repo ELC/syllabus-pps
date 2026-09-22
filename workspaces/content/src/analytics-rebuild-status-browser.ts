@@ -14,6 +14,34 @@ export interface AnalyticsRebuildStatus {
 
 export type AnalyticsRebuildIndicatorPhase = "updated" | "updating" | "unknown";
 
+export const ANALYTICS_REBUILD_INDICATOR_LABELS = {
+  updated: "Actualizado",
+  updating: "Actualizando...",
+  unknown: "Estado desconocido",
+} as const;
+
+/** `YYYY.MM.DD a las HH:MM` in local time, zero-padded. */
+export function formatPpsLocalDateTime(iso: string): string | null {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+  const year = String(date.getFullYear()).padStart(4, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hour = String(date.getHours()).padStart(2, "0");
+  const minute = String(date.getMinutes()).padStart(2, "0");
+  return `${year}.${month}.${day} a las ${hour}:${minute}`;
+}
+
+export function formatAnalyticsUpdatedIndicatorLabel(lastOkAtIso: string): string {
+  const stamp = formatPpsLocalDateTime(lastOkAtIso);
+  if (!stamp) {
+    return ANALYTICS_REBUILD_INDICATOR_LABELS.updated;
+  }
+  return `Actualizado al ${stamp}`;
+}
+
 export function analyticsRebuildIndicatorPhase(
   status: AnalyticsRebuildStatus | null,
 ): AnalyticsRebuildIndicatorPhase {
@@ -24,14 +52,47 @@ export function analyticsRebuildIndicatorPhase(
     return "updating";
   }
   if (status.state === "idle") {
-    if (status.lastError) {
-      return "unknown";
-    }
     if (status.lastOkAt) {
       return "updated";
     }
+    return "unknown";
   }
   return "unknown";
+}
+
+function trimIndicatorError(message: string, maxLength = 120): string {
+  if (message.length <= maxLength) {
+    return message;
+  }
+  return `${message.slice(0, maxLength - 1)}…`;
+}
+
+export function analyticsRebuildIndicatorLabel(
+  status: AnalyticsRebuildStatus | null,
+  phase: AnalyticsRebuildIndicatorPhase,
+): string {
+  if (phase === "updated") {
+    const lastOkAt = status?.lastOkAt;
+    if (lastOkAt) {
+      return formatAnalyticsUpdatedIndicatorLabel(lastOkAt);
+    }
+    return ANALYTICS_REBUILD_INDICATOR_LABELS.updated;
+  }
+  if (phase === "updating") {
+    return ANALYTICS_REBUILD_INDICATOR_LABELS.updating;
+  }
+
+  const error = status?.lastError?.trim();
+  if (error) {
+    return trimIndicatorError(error);
+  }
+  if (status?.state === "idle" && !status.lastOkAt) {
+    return "Analítica pendiente";
+  }
+  if (!status) {
+    return "Comprobando estado…";
+  }
+  return ANALYTICS_REBUILD_INDICATOR_LABELS.unknown;
 }
 
 function mapRow(row: NonNullable<Awaited<ReturnType<typeof fetchAnalyticsRebuildStatusRow>>>): AnalyticsRebuildStatus {
@@ -66,6 +127,8 @@ export interface SubscribeAnalyticsRebuildStatusOptions {
   runningIntervalMs?: number;
   /** After `notifyAnalyticsRebuildTriggered`, show “running” until Postgres catches up or this elapses. */
   optimisticWindowMs?: number;
+  /** When true, refetch immediately when the tab becomes visible again. */
+  pollOnVisibility?: boolean;
 }
 
 const REBUILD_TRIGGER_LISTENERS = new Set<() => void>();
@@ -96,6 +159,10 @@ function withOptimisticRunning(
   optimisticUntilMs: number,
 ): AnalyticsRebuildStatus | null {
   if (status?.state === "running") {
+    return status;
+  }
+  /** Do not mask a finished rebuild; optimism is only for the gap before Postgres shows `running`. */
+  if (status?.state === "idle") {
     return status;
   }
   if (Date.now() >= optimisticUntilMs) {
@@ -147,7 +214,7 @@ export function subscribeAnalyticsRebuildStatus(
     if (cancelled) {
       return;
     }
-    if (status?.state === "running") {
+    if (status?.state === "running" || status?.state === "idle") {
       optimisticUntilMs = 0;
     }
     publish(status);
@@ -168,11 +235,26 @@ export function subscribeAnalyticsRebuildStatus(
 
   REBUILD_TRIGGER_LISTENERS.add(onTriggered);
 
+  const onVisibilityChange = () => {
+    if (document.visibilityState !== "visible") {
+      return;
+    }
+    if (timer !== undefined) {
+      clearTimeout(timer);
+    }
+    void poll();
+  };
+
+  if (options.pollOnVisibility) {
+    document.addEventListener("visibilitychange", onVisibilityChange);
+  }
+
   void poll();
 
   return () => {
     cancelled = true;
     REBUILD_TRIGGER_LISTENERS.delete(onTriggered);
+    document.removeEventListener("visibilitychange", onVisibilityChange);
     if (timer !== undefined) {
       clearTimeout(timer);
     }

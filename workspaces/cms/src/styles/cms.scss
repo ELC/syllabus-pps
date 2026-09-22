@@ -44,10 +44,12 @@
     align-items: center;
     gap: 0.65rem 0.85rem;
     margin: 0 0 0.35rem;
+    min-width: 0;
   }
 
   &__header-title {
     margin: 0;
+    flex: 0 0 auto;
     font-family: var(--font-heading);
     font-size: var(--dash-header-title-size);
     font-weight: var(--dash-header-title-weight);
@@ -56,24 +58,59 @@
 
   &__header-status-cluster {
     display: inline-flex;
+    flex: 1 1 12rem;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.65rem 0.85rem;
-    flex-shrink: 0;
     min-width: 0;
+    max-width: 100%;
   }
 
   &__rebuild-indicator {
-    flex-shrink: 0;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    align-self: center;
+
+    &--stale {
+      flex: 1 1 100%;
+      align-self: center;
+      align-items: flex-start;
+
+      .pps-rebuild-indicator__dot {
+        /* Center the dot on the first line of wrapped copy (not the flex box top). */
+        margin-top: calc((1.35em - 0.55rem) / 2);
+      }
+
+      .pps-rebuild-indicator__label {
+        font-weight: 600;
+        line-height: 1.35;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+    }
+  }
+
+  &__catalog-pending {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--dash-muted);
   }
 
   &__save-blocked-hint {
     margin: 0;
-    max-width: 22rem;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: min(100%, 28rem);
     font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1.25;
+    white-space: nowrap;
     color: var(--dash-severity-warning, #ca8a04);
+
+    &--stale {
+      color: var(--dash-severity-error, #dc2626);
+    }
   }
 
   &__header-lead {
@@ -1019,6 +1056,17 @@
       font-size: 1.05rem;
       font-weight: 700;
       box-shadow: 0 2px 10px rgba(46, 48, 146, 0.24);
+    }
+
+    &--refresh {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: auto;
+      min-width: 9.5rem;
+      height: 2.75rem;
+      padding: 0 1.25rem;
     }
 
     &--secondary {

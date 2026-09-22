@@ -12,7 +12,7 @@ import warningSvg from "@pps/shell/assets/icons/ui-warning.svg?raw";
 import { loadResources, writeResources } from "./api/resources";
 import { createDraftEntry, entryForForm, isPendingDraftResourceId } from "./draft";
 import { ResourceForm } from "./ResourceForm";
-import { SidebarNavSkeleton } from "./SidebarNavSkeleton";
+import { SidebarNavSkeleton } from "@pps/shell/SidebarNavSkeleton";
 import { readNewResourceRequest, readResourceParam, writeResourceParam } from "./resource-param";
 
 function indexForId(entries: ResourceCatalogEntry[], id: string | null): number {
@@ -167,9 +167,15 @@ export function App() {
           />
         </label>
       </div>
-      <div className="dashboard__nav-scroll-body">
+      <div
+        className={
+          loading
+            ? "dashboard__nav-scroll-body dashboard__nav-scroll-body--loading"
+            : "dashboard__nav-scroll-body"
+        }
+      >
         {loading ? (
-          <SidebarNavSkeleton rows={entries.length} />
+          <SidebarNavSkeleton />
         ) : (
           filteredIndexes.map((index) => {
           const entry = entries[index];

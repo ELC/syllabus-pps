@@ -5,7 +5,7 @@ import {
   DEFAULT_STORAGE_BUCKET,
   fetchAllPageSources,
   fetchResourceCatalog,
-  listPages,
+  listPagesWithTitles,
   readPage,
   readStorageBucketFromEnv,
   replaceResourceCatalog,
@@ -165,7 +165,7 @@ export function createSupabaseDevMiddleware(
         }
 
         if (pages && apiPath === "/api/pages" && req.method === "GET") {
-          const remotePages = await listPages(client, bucket);
+          const remotePages = await listPagesWithTitles(client, bucket);
           res.setHeader("Content-Type", "application/json; charset=utf-8");
           res.end(JSON.stringify(remotePages));
           return;

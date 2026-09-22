@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactElement } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 
 import { triggerAnalyticsRebuild } from "@pps/content/browser";
@@ -6,9 +6,17 @@ import { AnalyticsRebuildIndicator } from "@pps/shell/AnalyticsRebuildIndicator"
 import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
 import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
 import plusSvg from "@pps/shell/assets/icons/ui-plus.svg?raw";
+import refreshSvg from "@pps/shell/assets/icons/ui-refresh.svg?raw";
 import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
 import warningSvg from "@pps/shell/assets/icons/ui-warning.svg?raw";
-import { listPages, loadAllPageSources, loadResources, readPage, writePage } from "./api/content";
+import {
+  listPages,
+  loadAllPageSources,
+  loadResources,
+  readPage,
+  writePage,
+  type PageListItem,
+} from "./api/content";
 import {
   createSeverityClassNameResolver,
   hasBlockingDiagnostics,
@@ -17,7 +25,7 @@ import {
 } from "@pps/core";
 import { normalizeYearCourseSlugs, type CoursePageOption } from "./course-pages";
 import { PageMetadataForm } from "./components/PageMetadataForm";
-import { SidebarNavSkeleton } from "./components/SidebarNavSkeleton";
+import { SidebarNavSkeleton } from "@pps/shell/SidebarNavSkeleton";
 import { createDraftPageContent, nextDraftSlug } from "./draft-page";
 import {
   composePageDocument,
@@ -30,6 +38,19 @@ import { filterDiagnosticsForPage, pageHasDiagnostics } from "./validation/filte
 import { planDegreeYearSync } from "./degree-year-sync";
 import { expectedEditorKind } from "./expected-page-kind";
 import { runDiagnosticsForEditor } from "./validation/runDiagnostics";
+import {
+  CMS_REBUILD_STATUS_POLL,
+  cmsSaveBlockMessage,
+  isCmsRebuildSaveBlocked,
+  isCmsSidebarNavReady,
+  isOwnAnalyticsRebuildComplete,
+  catalogLoadedBaselineFromFetch,
+  reconcileCatalogSyncWithRebuildStatus,
+  resolveCatalogAckAfterSourcesFetch,
+  resolveCmsHeaderIndicatorOverride,
+  resolveCmsSaveBlockReason,
+  shouldMarkCatalogStaleFromExternalRebuild,
+} from "./catalog-sync";
 
 const severityClass = createSeverityClassNameResolver("cms__diagnostics-severity");
 
@@ -40,11 +61,11 @@ function mergeDraftSources(local: PageSource[], remote: PageSource[]): PageSourc
 }
 
 export function App() {
-  const [pages, setPages] = useState<Array<{ slug: string; path: string }>>([]);
+  const [pages, setPages] = useState<PageListItem[]>([]);
   const [selectedSlug, setSelectedSlug] = useState<string>("");
   const [metadata, setMetadata] = useState<PageMetadata>(() => defaultPageMetadata(""));
   const [body, setBody] = useState("");
-  const [status, setStatus] = useState<string>("");
+  const [savingPage, setSavingPage] = useState(false);
   const [loadError, setLoadError] = useState<string>("");
   const [loadingPages, setLoadingPages] = useState(true);
   const [allSources, setAllSources] = useState<Array<{ path: string; content: string }>>([]);
@@ -52,7 +73,21 @@ export function App() {
   const [draftSlugs, setDraftSlugs] = useState<Set<string>>(() => new Set());
   const [loadedSlug, setLoadedSlug] = useState("");
   const [query, setQuery] = useState("");
-  const rebuildStatus = useAnalyticsRebuildStatus();
+  const [sourcesLoading, setSourcesLoading] = useState(false);
+  const [catalogStale, setCatalogStale] = useState(false);
+  const rebuildStatus = useAnalyticsRebuildStatus(CMS_REBUILD_STATUS_POLL);
+  const sourcesFetchGenerationRef = useRef(0);
+  const acknowledgedLastOkAtRef = useRef<string | null>(null);
+  const catalogLoadedBaselineLastOkAtRef = useRef<string | null>(null);
+  const [catalogSyncAcknowledged, setCatalogSyncAcknowledged] = useState(false);
+  const catalogSyncAcknowledgedRef = useRef(false);
+  const [awaitingOwnRebuild, setAwaitingOwnRebuild] = useState(false);
+  const [cloudSaveIndicatorAt, setCloudSaveIndicatorAt] = useState<string | null>(null);
+  const pendingCloudSaveAtRef = useRef<string | null>(null);
+  const awaitingOwnRebuildRef = useRef(false);
+  const ownRebuildBaselineLastOkAtRef = useRef<string | null>(null);
+  const sawOwnRebuildRunningRef = useRef(false);
+  const rebuildStatusRef = useRef(rebuildStatus);
 
   useEffect(() => {
     setLoadingPages(true);
@@ -84,6 +119,11 @@ export function App() {
     }
     writePageParam(selectedSlug);
   }, [selectedSlug]);
+
+  const pageListKey = useMemo(
+    () => pages.map((page) => page.slug).sort((left, right) => left.localeCompare(right, "es-AR")).join("\0"),
+    [pages],
+  );
 
   const content = useMemo(
     () => composePageDocument({ ...metadata, slug: selectedSlug }, body),
@@ -257,11 +297,165 @@ export function App() {
   }, [allSources, coursePages, draftSlugs, loadedSlug, selectedSlug]);
 
   useEffect(() => {
-    void loadAllPageSources().then((sources) => {
-      setAllSources((current) => mergeDraftSources(current, sources));
-    });
+    if (loadingPages) {
+      return;
+    }
+    if (pages.length === 0) {
+      setSourcesLoading(false);
+      return;
+    }
+
+    const generation = ++sourcesFetchGenerationRef.current;
+    const fetchStartLastOkAt = rebuildStatusRef.current?.lastOkAt ?? null;
+    setSourcesLoading(true);
+
+    void loadAllPageSources()
+      .then((sources) => {
+        if (generation !== sourcesFetchGenerationRef.current) {
+          return;
+        }
+        setAllSources((current) => mergeDraftSources(current, sources));
+      })
+      .catch((error: unknown) => {
+        if (generation !== sourcesFetchGenerationRef.current) {
+          return;
+        }
+        const message = error instanceof Error ? error.message : String(error);
+        setLoadError((current) => current || message);
+      })
+      .finally(() => {
+        if (generation !== sourcesFetchGenerationRef.current) {
+          return;
+        }
+        setSourcesLoading(false);
+        const endLastOkAt = rebuildStatusRef.current?.lastOkAt ?? null;
+        const snapshotBaseline = catalogLoadedBaselineFromFetch(fetchStartLastOkAt, endLastOkAt);
+        if (snapshotBaseline) {
+          catalogLoadedBaselineLastOkAtRef.current = snapshotBaseline;
+        }
+        const ack = resolveCatalogAckAfterSourcesFetch({
+          fetchStartLastOkAt,
+          endLastOkAt,
+          awaitingOwnRebuild: awaitingOwnRebuildRef.current,
+          catalogAlreadyAcknowledged: catalogSyncAcknowledgedRef.current,
+        });
+        if (ack.markStale) {
+          setCatalogStale(true);
+          setCloudSaveIndicatorAt(null);
+        }
+        if (ack.acknowledgedLastOkAt) {
+          acknowledgedLastOkAtRef.current = ack.acknowledgedLastOkAt;
+        }
+        if (ack.setAcknowledged) {
+          catalogSyncAcknowledgedRef.current = true;
+          setCatalogSyncAcknowledged(true);
+        }
+      });
+
     void loadResources().then(setResources);
-  }, [pages]);
+  }, [loadingPages, pageListKey, pages.length]);
+
+  useEffect(() => {
+    rebuildStatusRef.current = rebuildStatus;
+  }, [rebuildStatus]);
+
+  useEffect(() => {
+    awaitingOwnRebuildRef.current = awaitingOwnRebuild;
+  }, [awaitingOwnRebuild]);
+
+  useEffect(() => {
+    catalogSyncAcknowledgedRef.current = catalogSyncAcknowledged;
+  }, [catalogSyncAcknowledged]);
+
+  const catalogReadyForSync =
+    pages.length === 0 || (allSources.length > 0 && !sourcesLoading && !loadingPages);
+
+  useEffect(() => {
+    const lastOkAt = rebuildStatus?.lastOkAt ?? null;
+
+    if (awaitingOwnRebuild) {
+      if (rebuildStatus?.state === "running") {
+        sawOwnRebuildRunningRef.current = true;
+      }
+      if (
+        isOwnAnalyticsRebuildComplete(
+          rebuildStatus,
+          ownRebuildBaselineLastOkAtRef.current,
+          sawOwnRebuildRunningRef.current,
+        )
+      ) {
+        if (lastOkAt) {
+          acknowledgedLastOkAtRef.current = lastOkAt;
+        }
+        sawOwnRebuildRunningRef.current = false;
+        setAwaitingOwnRebuild(false);
+        setCloudSaveIndicatorAt(
+          pendingCloudSaveAtRef.current ?? new Date().toISOString(),
+        );
+        pendingCloudSaveAtRef.current = null;
+        setCatalogStale(false);
+        catalogSyncAcknowledgedRef.current = true;
+        setCatalogSyncAcknowledged(true);
+      }
+      return;
+    }
+
+    const sync = reconcileCatalogSyncWithRebuildStatus({
+      lastOkAt,
+      catalogLoadedBaselineLastOkAt: catalogLoadedBaselineLastOkAtRef.current,
+      acknowledgedLastOkAt: acknowledgedLastOkAtRef.current,
+      catalogAcknowledged: catalogSyncAcknowledgedRef.current,
+      awaitingOwnRebuild: false,
+      catalogReady: catalogReadyForSync,
+    });
+    if (
+      sync.markStale ||
+      shouldMarkCatalogStaleFromExternalRebuild({
+        rebuildStatus,
+        awaitingOwnRebuild: false,
+        savingPage,
+        catalogReady: catalogReadyForSync,
+        catalogSyncAcknowledged: catalogSyncAcknowledgedRef.current,
+      })
+    ) {
+      setCatalogStale(true);
+      setCloudSaveIndicatorAt(null);
+    }
+    if (sync.acknowledgedLastOkAt) {
+      acknowledgedLastOkAtRef.current = sync.acknowledgedLastOkAt;
+    }
+    if (sync.setCatalogAcknowledged) {
+      catalogSyncAcknowledgedRef.current = true;
+      setCatalogSyncAcknowledged(true);
+    }
+  }, [
+    allSources.length,
+    awaitingOwnRebuild,
+    catalogReadyForSync,
+    pages.length,
+    rebuildStatus,
+    savingPage,
+    sourcesLoading,
+    loadingPages,
+  ]);
+
+  useEffect(() => {
+    if (!awaitingOwnRebuild) {
+      return;
+    }
+    const timeout = setTimeout(() => {
+      const status = rebuildStatusRef.current;
+      if (status?.lastOkAt) {
+        acknowledgedLastOkAtRef.current = status.lastOkAt;
+      }
+      sawOwnRebuildRunningRef.current = false;
+      setAwaitingOwnRebuild(false);
+      setCatalogStale(false);
+      catalogSyncAcknowledgedRef.current = true;
+      setCatalogSyncAcknowledged(true);
+    }, 120_000);
+    return () => clearTimeout(timeout);
+  }, [awaitingOwnRebuild]);
 
   const diagnostics = useMemo(() => {
     if (!selectedSlug || allSources.length === 0) {
@@ -293,13 +487,25 @@ export function App() {
 
   const pageTitlesBySlug = useMemo(() => {
     const titles = new Map<string, string>();
+    for (const page of pages) {
+      const title = page.title?.trim();
+      if (title) {
+        titles.set(page.slug, title);
+      }
+    }
     for (const source of allSources) {
       const slug = source.path.replace(/\.md$/i, "");
       const { metadata: pageMeta } = splitPageDocument(source.content, slug);
-      titles.set(slug, pageMeta.title ?? "");
+      const title = pageMeta.title.trim();
+      if (!title) {
+        continue;
+      }
+      const linkSlug = pageMeta.slug.trim() || slug;
+      titles.set(slug, title);
+      titles.set(linkSlug, title);
     }
     return titles;
-  }, [allSources]);
+  }, [allSources, pages]);
 
   const filteredPages = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -314,13 +520,50 @@ export function App() {
     });
   }, [pageTitlesBySlug, pages, query]);
 
+  const rebuildSaveBlocked = isCmsRebuildSaveBlocked(rebuildStatus, awaitingOwnRebuild);
+
   const diagnosticsPending =
-    loadingPages || (pages.length > 0 && allSources.length === 0 && !loadError);
+    loadingPages ||
+    sourcesLoading ||
+    (pages.length > 0 && allSources.length === 0 && !loadError);
 
   const catalogReady = pages.length === 0 || allSources.length > 0;
-  const pageNavReady = !loadingPages && catalogReady;
+  const pageNavReady = useMemo(() => {
+    if (
+      !isCmsSidebarNavReady({
+        loadingPages,
+        pages,
+        sourcesLoading,
+        allSourcesLoaded: allSources.length > 0,
+      })
+    ) {
+      return false;
+    }
+    return pages.every((page) => Boolean(pageTitlesBySlug.get(page.slug)?.trim()));
+  }, [allSources.length, loadingPages, pageTitlesBySlug, pages, sourcesLoading]);
 
-  const canSave = !hasBlockingDiagnostics(pageDiagnostics);
+  const saveBlockReason = resolveCmsSaveBlockReason({
+    catalogStale,
+    sourcesLoading: sourcesLoading || (pages.length > 0 && allSources.length === 0),
+    rebuildStatus,
+    awaitingOwnRebuild,
+    hasBlockingDiagnostics: hasBlockingDiagnostics(pageDiagnostics),
+  });
+
+  const canSave = saveBlockReason === null && !savingPage;
+  const saveBlockMessage = cmsSaveBlockMessage(saveBlockReason);
+  const showSaveBlockHint =
+    saveBlockReason === "diagnostics" && Boolean(saveBlockMessage) && Boolean(selectedSlug) && !diagnosticsPending;
+  const headerIndicatorOverride = resolveCmsHeaderIndicatorOverride({
+    catalogStale,
+    savingPage,
+    cloudSaveIndicatorAt,
+    saveBlockReason,
+    awaitingOwnRebuild,
+    catalogReady: catalogReadyForSync,
+    catalogSyncAcknowledged,
+  });
+  const workspaceLocked = catalogStale || sourcesLoading || rebuildSaveBlocked;
 
   const expectedKind = useMemo(
     () => expectedEditorKind(selectedSlug, allSources),
@@ -328,8 +571,13 @@ export function App() {
   );
 
   function addNewPage(): void {
+    if (workspaceLocked) {
+      return;
+    }
+
     const slug = nextDraftSlug(pages);
     const draftContent = createDraftPageContent(slug);
+    const draftTitle = splitPageDocument(draftContent, slug).metadata.title.trim() || slug;
     const path = `${slug}.md`;
 
     if (selectedSlug && draftSlugs.has(selectedSlug)) {
@@ -337,12 +585,11 @@ export function App() {
     }
 
     setDraftSlugs((current) => new Set(current).add(slug));
-    setPages((current) => [{ slug, path }, ...current]);
+    setPages((current) => [{ slug, path, title: draftTitle }, ...current]);
     setAllSources((current) => [{ path, content: draftContent }, ...current]);
     setSelectedSlug(slug);
     loadDocumentFromSource(slug, draftContent);
     setQuery("");
-    setStatus("");
     setLoadError("");
   }
 
@@ -362,12 +609,21 @@ export function App() {
           />
         </label>
       </div>
-      <div className="dashboard__nav-scroll-body">
+      <div
+        className={
+          pageNavReady
+            ? "dashboard__nav-scroll-body"
+            : "dashboard__nav-scroll-body dashboard__nav-scroll-body--loading"
+        }
+      >
         {!pageNavReady ? (
-          <SidebarNavSkeleton rows={pages.length} />
+          <SidebarNavSkeleton />
         ) : (
           filteredPages.map((page) => {
-          const displayTitle = pageTitlesBySlug.get(page.slug)?.trim() || page.slug;
+          const displayTitle = pageTitlesBySlug.get(page.slug)?.trim();
+          if (!displayTitle) {
+            return null;
+          }
           return (
             <button
               key={page.slug}
@@ -407,12 +663,18 @@ export function App() {
             <div className="cms__header-status-cluster">
               <AnalyticsRebuildIndicator
                 status={rebuildStatus}
-                className="cms__rebuild-indicator"
-                loading={loadingPages}
+                className={
+                  catalogStale
+                    ? "cms__rebuild-indicator cms__rebuild-indicator--stale"
+                    : "cms__rebuild-indicator"
+                }
+                loading={loadingPages && !headerIndicatorOverride}
+                override={headerIndicatorOverride}
+                role={catalogStale ? "alert" : "status"}
               />
-              {!canSave && selectedSlug && !diagnosticsPending ? (
+              {showSaveBlockHint ? (
                 <span className="cms__save-blocked-hint" role="status">
-                  Corregí los errores de esta página antes de guardar (las advertencias no bloquean).
+                  {saveBlockMessage}
                 </span>
               ) : null}
             </div>
@@ -424,11 +686,24 @@ export function App() {
           </p>
         </div>
         <div className="cms__header-actions">
-          <>
+          {catalogStale ? (
+            <button
+              type="button"
+              className="cms__button cms__button--save cms__button--refresh"
+              onClick={() => window.location.reload()}
+              title="Recargar la página"
+              aria-label="Recargar la página para obtener el catálogo actualizado"
+            >
+              <SvgAssetIcon svg={refreshSvg} className="cms__button-icon" focusable={false} />
+              Recargar
+            </button>
+          ) : (
+            <>
             <button
               type="button"
               className="cms__button cms__button--secondary cms__button--icon"
               onClick={addNewPage}
+              disabled={workspaceLocked}
               title="Nueva página"
               aria-label="Nueva página"
             >
@@ -441,6 +716,8 @@ export function App() {
               title="Guardar página"
               aria-label="Guardar página"
               onClick={() => {
+                setSavingPage(true);
+                setCloudSaveIndicatorAt(null);
                 const savedAt = new Date().toISOString();
                 const savedMetadata = {
                   ...metadata,
@@ -466,30 +743,45 @@ export function App() {
                 const persistYears =
                   syncPlan?.writes.map((entry) => writePage(entry.slug, entry.content)) ?? [];
 
-                void Promise.all([persistMain, ...persistYears]).then(() => {
-                  setMetadata(savedMetadata);
-                  const yearNote =
-                    syncPlan && syncPlan.writes.length > 0
-                      ? ` (${syncPlan.writes.length} página(s) de año sincronizadas)`
-                      : "";
-                  setStatus(`Guardado ${selectedSlug}.${yearNote}`);
-                  setDraftSlugs((current) => {
-                    const next = new Set(current);
-                    next.delete(selectedSlug);
-                    return next;
+                void Promise.all([persistMain, ...persistYears])
+                  .then(() => {
+                    setMetadata(savedMetadata);
+                    const savedTitle = savedMetadata.title.trim();
+                    if (savedTitle) {
+                      setPages((current) =>
+                        current.map((page) =>
+                          page.slug === selectedSlug ? { ...page, title: savedTitle } : page,
+                        ),
+                      );
+                    }
+                    setCatalogStale(false);
+                    pendingCloudSaveAtRef.current = savedAt;
+                    ownRebuildBaselineLastOkAtRef.current = rebuildStatus?.lastOkAt ?? null;
+                    sawOwnRebuildRunningRef.current = false;
+                    setDraftSlugs((current) => {
+                      const next = new Set(current);
+                      next.delete(selectedSlug);
+                      return next;
+                    });
+                    setAllSources(syncPlan?.sources ?? sourcesForSync);
+                    if (syncPlan && syncPlan.writes.length > 0) {
+                      void listPages().then(setPages);
+                    }
+                    setAwaitingOwnRebuild(true);
+                    triggerAnalyticsRebuild(import.meta.env.BASE_URL ?? "/cms/");
+                    setSavingPage(false);
+                  })
+                  .catch((error: unknown) => {
+                    setSavingPage(false);
+                    const message = error instanceof Error ? error.message : String(error);
+                    setLoadError(message);
                   });
-                  setAllSources(syncPlan?.sources ?? sourcesForSync);
-                  if (syncPlan && syncPlan.writes.length > 0) {
-                    void listPages().then(setPages);
-                  }
-                  triggerAnalyticsRebuild(import.meta.env.BASE_URL ?? "/cms/");
-                });
               }}
             >
               <SvgAssetIcon svg={saveSvg} className="cms__button-icon" focusable={false} />
             </button>
-            {status ? <span className="cms__status">{status}</span> : null}
-          </>
+            </>
+          )}
         </div>
       </header>
 

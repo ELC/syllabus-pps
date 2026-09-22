@@ -7,6 +7,7 @@ export {
 export {
   fetchAllPageSources,
   listPages,
+  listPagesWithTitles,
   readPage,
   writePage,
   type PageListItem,

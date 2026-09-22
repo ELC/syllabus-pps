@@ -1,4 +1,4 @@
-import { slugFromPath, type PageSource } from "@pps/core";
+import { parseFrontmatter, slugFromPath, type PageSource } from "@pps/core";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { pageObjectPath } from "./constants";
@@ -6,6 +6,14 @@ import { pageObjectPath } from "./constants";
 export interface PageListItem {
   slug: string;
   path: string;
+  /** Display title from page frontmatter (when loaded via `listPagesWithTitles`). */
+  title?: string;
+}
+
+function titleFromPageMarkdown(content: string): string | undefined {
+  const { data } = parseFrontmatter(content);
+  const title = typeof data.title === "string" ? data.title.trim() : "";
+  return title || undefined;
 }
 
 export async function listPages(client: SupabaseClient, bucket: string): Promise<PageListItem[]> {
@@ -21,6 +29,22 @@ export async function listPages(client: SupabaseClient, bucket: string): Promise
       path: entry.name,
     }))
     .sort((left, right) => left.slug.localeCompare(right.slug, "es-AR"));
+}
+
+export async function listPagesWithTitles(
+  client: SupabaseClient,
+  bucket: string,
+): Promise<PageListItem[]> {
+  const pages = await listPages(client, bucket);
+  return Promise.all(
+    pages.map(async (page) => {
+      const content = await readPage(client, bucket, page.slug);
+      return {
+        ...page,
+        title: titleFromPageMarkdown(content),
+      };
+    }),
+  );
 }
 
 export async function readPage(

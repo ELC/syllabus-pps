@@ -3,6 +3,8 @@ import { loadEnv, type Connect, type Plugin, type PreviewServer, type ViteDevSer
 
 import { createServerClientFromEnv } from "@pps/content";
 
+import { rebuildAnalyticsInSupabase } from "../src/pipeline/rebuild-remote";
+
 const REBUILD_ANALYTICS_PATHS = new Set([
   "/api/rebuild-analytics",
   "/cms/api/rebuild-analytics",
@@ -64,7 +66,6 @@ export function createRebuildDevMiddleware(
     void (async () => {
       try {
         if (apiPath === "/api/rebuild-analytics" && req.method === "POST") {
-          const { rebuildAnalyticsInSupabase } = await import("@pps/analytics-cli/rebuild-remote");
           const client = createServerClientFromEnv();
           const result = await rebuildAnalyticsInSupabase(client);
           res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -75,8 +76,11 @@ export function createRebuildDevMiddleware(
         res.statusCode = 405;
         res.end("Method not allowed");
       } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error("[pps] POST /api/rebuild-analytics failed:", message);
         res.statusCode = 500;
-        res.end(error instanceof Error ? error.message : String(error));
+        res.setHeader("Content-Type", "text/plain; charset=utf-8");
+        res.end(message);
       }
     })();
   };

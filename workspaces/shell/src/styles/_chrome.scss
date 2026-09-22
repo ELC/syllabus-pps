@@ -342,6 +342,10 @@ body.dashboard--body {
     gap: 0.15rem;
     min-height: 0;
     overflow-y: auto;
+
+    &--loading {
+      overflow: hidden;
+    }
   }
 
   &__nav--sub {
@@ -365,17 +369,24 @@ body.dashboard--body {
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      gap: 0.35rem;
+      gap: 0.15rem;
       box-sizing: border-box;
       width: 100%;
-      padding: 0.2rem var(--dash-sidebar-link-pad-right) 0.2rem
-        var(--dash-sidebar-icon-track-pad);
+      padding: 0 var(--dash-sidebar-link-pad-right) 0 var(--dash-sidebar-icon-track-pad);
+
+      &--fill {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+      }
     }
 
     .dashboard__sidebar-nav-skeleton-row {
       display: block;
+      flex: 0 0 auto;
       width: 100%;
-      height: 1.75rem;
+      height: var(--dash-sidebar-link-height);
+      min-height: var(--dash-sidebar-link-height);
       border-radius: 0.35rem;
       background: rgba(255, 255, 255, 0.12);
       animation: dashboard-sidebar-skeleton-pulse 1.35s ease-in-out infinite;

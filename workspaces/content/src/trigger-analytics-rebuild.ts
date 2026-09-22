@@ -10,9 +10,21 @@ export function triggerAnalyticsRebuild(_appBaseUrl: string): void {
 
   if (import.meta.env.DEV) {
     const rebuildUrl = new URL("/api/rebuild-analytics", window.location.origin);
-    void fetch(rebuildUrl, { method: "POST" }).catch((error: unknown) => {
-      console.warn("[pps] analytics rebuild request failed", error);
-    });
+    void fetch(rebuildUrl, { method: "POST" })
+      .then(async (response) => {
+        if (response.ok) {
+          return;
+        }
+        const detail = (await response.text()).trim();
+        console.warn(
+          "[pps] analytics rebuild request failed",
+          response.status,
+          detail || response.statusText,
+        );
+      })
+      .catch((error: unknown) => {
+        console.warn("[pps] analytics rebuild request failed", error);
+      });
     return;
   }
 

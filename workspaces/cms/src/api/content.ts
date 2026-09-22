@@ -3,7 +3,7 @@ import {
   DEFAULT_STORAGE_BUCKET,
   fetchAllPageSources,
   fetchResourceCatalog,
-  listPages as listRemotePages,
+  listPagesWithTitles as listRemotePagesWithTitles,
   readPage as readRemotePage,
   writePage as writeRemotePage,
   type PageListItem,
@@ -33,7 +33,7 @@ export async function listPages(): Promise<PageListItem[]> {
     return (await response.json()) as PageListItem[];
   }
 
-  return listRemotePages(serverClient(), DEFAULT_STORAGE_BUCKET);
+  return listRemotePagesWithTitles(serverClient(), DEFAULT_STORAGE_BUCKET);
 }
 
 export async function readPage(slug: string): Promise<string> {

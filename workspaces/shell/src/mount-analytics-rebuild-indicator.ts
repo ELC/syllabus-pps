@@ -1,16 +1,17 @@
 import {
+  analyticsRebuildIndicatorLabel,
   analyticsRebuildIndicatorPhase,
   subscribeAnalyticsRebuildStatus,
   type AnalyticsRebuildIndicatorPhase,
+  type AnalyticsRebuildStatus,
 } from "@pps/content/browser";
 
-const LABELS: Record<AnalyticsRebuildIndicatorPhase, string> = {
-  updated: "Actualizado",
-  updating: "Actualizando...",
-  unknown: "Estado desconocido",
-};
-
-function render(host: HTMLElement, phase: AnalyticsRebuildIndicatorPhase, extraClass?: string): void {
+function render(
+  host: HTMLElement,
+  status: AnalyticsRebuildStatus | null,
+  phase: AnalyticsRebuildIndicatorPhase,
+  extraClass?: string,
+): void {
   host.className = ["pps-rebuild-indicator", `pps-rebuild-indicator--${phase}`, extraClass]
     .filter(Boolean)
     .join(" ");
@@ -24,7 +25,7 @@ function render(host: HTMLElement, phase: AnalyticsRebuildIndicatorPhase, extraC
 
   const label = document.createElement("span");
   label.className = "pps-rebuild-indicator__label";
-  label.textContent = LABELS[phase];
+  label.textContent = analyticsRebuildIndicatorLabel(status, phase);
 
   host.append(dot, label);
 }
@@ -37,6 +38,7 @@ export function mountAnalyticsRebuildIndicator(
   const extraClass = options.className;
 
   return subscribeAnalyticsRebuildStatus((status) => {
-    render(host, analyticsRebuildIndicatorPhase(status), extraClass);
+    const phase = analyticsRebuildIndicatorPhase(status);
+    render(host, status, phase, extraClass);
   });
 }
