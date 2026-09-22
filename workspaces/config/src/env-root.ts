@@ -85,10 +85,14 @@ export function sharedViteEnv(workspaceDir: string) {
     envPrefix: ["PUBLIC_", "VITE_"],
     resolve: {
       conditions: ["development", "import", "module", "browser", "default"],
+      alias: {
+        // Production Vite/Rollup cannot read CJS re-exports from @pps/core/dist; bundle from source.
+        "@pps/core": resolve(repoRoot, "workspaces/core/src/index.ts"),
+        ...reactAliases,
+      },
       ...(useLocalReact
         ? {
             dedupe: ["react", "react-dom"],
-            alias: reactAliases,
           }
         : {}),
     },
