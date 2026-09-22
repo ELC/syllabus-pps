@@ -75,7 +75,6 @@ export function decodeCuration(curation: RoadmapCuration): DecodeOutcome {
       parallelLaneRoot: curation.parallelLanes[0]?.root ?? spineSource[0] ?? "",
       spinePromotions: [...(curation.spinePromotions ?? [])],
       branchLayoutFlips: { ...(curation.branchLayoutFlips ?? {}) },
-      capstones: [...(curation.capstones ?? [])],
       spineJoins: { ...curation.spineJoins },
       branchOwnerOverrides: { ...curation.branchOwnerOverrides },
       trunkForks: forks.length > 0 ? forks.map((fork) => structuredClone(fork)) : undefined,

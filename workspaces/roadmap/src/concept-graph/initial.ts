@@ -18,7 +18,6 @@ export function initialSubgraphFromTitles(
       parallelLaneRoot: titles[0] ?? "",
       spinePromotions: [],
       branchLayoutFlips: {},
-      capstones: [],
       spineJoins: {},
       branchOwnerOverrides: {},
     },

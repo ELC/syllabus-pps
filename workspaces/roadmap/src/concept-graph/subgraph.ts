@@ -1,8 +1,4 @@
-import type {
-  RoadmapCapstone,
-  RoadmapCuration,
-  RoadmapTrunkFork,
-} from "../components/roadmap/curation";
+import type { RoadmapCuration, RoadmapTrunkFork } from "../components/roadmap/curation";
 import type { StorageMode } from "./kinds";
 import type { SpinePath } from "./segment";
 
@@ -18,7 +14,6 @@ export type ConceptSubgraphMeta = {
   readonly parallelLaneRoot: string;
   readonly spinePromotions: readonly string[];
   readonly branchLayoutFlips: Readonly<Record<string, boolean>>;
-  readonly capstones: readonly RoadmapCapstone[];
   readonly spineJoins: Readonly<Record<string, string>>;
   readonly branchOwnerOverrides: Readonly<Record<string, string>>;
   /** Trunk fork layout from the curation blob (shift expanded order until decode nests all forks). */

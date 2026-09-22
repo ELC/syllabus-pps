@@ -10,15 +10,12 @@ import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-stat
 import { RoadmapApp } from "./components/roadmap/RoadmapApp";
 import type { RoadmapProgress } from "./components/roadmap/progress";
 import {
-  mountCapstonePanel,
-  type CapstoneProject,
-} from "./scripts/capstone-panel";
-import {
   mountConceptPanel,
   type ConceptPage,
   type ConceptPanelProgress,
 } from "./scripts/concept-panel";
 import { readRoadmapPanelUrl, writeRoadmapPanelUrl } from "./scripts/roadmap-panel-url";
+
 export function App() {
   const { isAdmin } = useAppAdmin();
   const rebuildStatus = useAnalyticsRebuildStatus();
@@ -27,9 +24,7 @@ export function App() {
     useState<PpsStatusIndicatorOverride | null>(null);
   const [gridLayoutEditHint, setGridLayoutEditHint] = useState<string | null>(null);
   const conceptPanelRef = useRef<HTMLElement>(null);
-  const capstonePanelRef = useRef<HTMLElement>(null);
   const conceptPanelControllerRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
-  const capstonePanelControllerRef = useRef<ReturnType<typeof mountCapstonePanel> | null>(null);
   const panelUrlSyncRef = useRef<{ markApplied: (state: ReturnType<typeof readRoadmapPanelUrl>) => void } | null>(
     null,
   );
@@ -41,25 +36,13 @@ export function App() {
       return;
     }
 
-    const next = { degree: url.degree, course: url.course, capstone: url.capstone };
-    writeRoadmapPanelUrl(next);
-    panelUrlSyncRef.current?.markApplied(next);
-  }, []);
-
-  const handleCapstonePanelUrlClose = useCallback(() => {
-    const url = readRoadmapPanelUrl();
-    if (!url.capstone) {
-      return;
-    }
-
-    const next = { degree: url.degree, course: url.course, concept: url.concept };
+    const next = { degree: url.degree, course: url.course };
     writeRoadmapPanelUrl(next);
     panelUrlSyncRef.current?.markApplied(next);
   }, []);
 
   const handleClosePanels = useCallback(() => {
     conceptPanelControllerRef.current?.close({ updateUrl: false });
-    capstonePanelControllerRef.current?.close({ updateUrl: false });
   }, []);
 
   const panelProgress = useMemo<ConceptPanelProgress>(
@@ -78,8 +61,7 @@ export function App() {
 
   useEffect(() => {
     const conceptRoot = conceptPanelRef.current;
-    const capstoneRoot = capstonePanelRef.current;
-    if (!conceptRoot || !capstoneRoot) {
+    if (!conceptRoot) {
       return;
     }
 
@@ -87,26 +69,15 @@ export function App() {
       handlers: { onClose: handleConceptPanelUrlClose },
       showCitesEditLinks: isAdmin,
     });
-    const capstonePanel = mountCapstonePanel(capstoneRoot, {
-      onClose: handleCapstonePanelUrlClose,
-    });
     conceptPanelControllerRef.current = conceptPanel;
-    capstonePanelControllerRef.current = capstonePanel;
 
     return () => {
       conceptPanelControllerRef.current = null;
-      capstonePanelControllerRef.current = null;
     };
-  }, [handleCapstonePanelUrlClose, handleConceptPanelUrlClose, isAdmin, panelProgress]);
+  }, [handleConceptPanelUrlClose, isAdmin, panelProgress]);
 
   const handleConceptOpen = useCallback((page: ConceptPage) => {
-    capstonePanelControllerRef.current?.close({ updateUrl: false });
     conceptPanelControllerRef.current?.open(page);
-  }, []);
-
-  const handleCapstoneOpen = useCallback((capstone: CapstoneProject) => {
-    conceptPanelControllerRef.current?.close({ updateUrl: false });
-    capstonePanelControllerRef.current?.open(capstone);
   }, []);
 
   const handleProgressChange = useCallback((progress: RoadmapProgress) => {
@@ -170,29 +141,6 @@ export function App() {
             </button>
           </header>
           <div id="graph-concept-panel-notes" className="graph__concept-body" />
-        </div>
-      </aside>
-
-      <aside
-        ref={capstonePanelRef}
-        id="roadmap-capstone-panel"
-        className="graph__capstone-panel"
-        aria-hidden="true"
-      >
-        <div className="graph__capstone-backdrop" />
-        <div
-          className="graph__capstone-sheet"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="graph-capstone-panel-title"
-        >
-          <header className="graph__capstone-header">
-            <h2 id="graph-capstone-panel-title" className="graph__capstone-title" />
-            <button type="button" className="graph__capstone-close" aria-label="Cerrar">
-              ×
-            </button>
-          </header>
-          <div id="graph-capstone-panel-body" className="graph__capstone-body" />
         </div>
       </aside>
     </div>

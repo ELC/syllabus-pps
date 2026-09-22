@@ -561,7 +561,6 @@ export function buildStagedCourseRoadmapLayout(
       trunk: [],
       lateJoins: [],
       trunkForks: [],
-      capstoneByAfter: new Map(),
       start: { x: -ANCHOR_NODE_WIDTH / 2, y: 0 },
       end: { x: -ANCHOR_NODE_WIDTH / 2, y: ANCHOR_NODE_HEIGHT + ANCHOR_GAP },
       bounds: {
@@ -740,7 +739,6 @@ export function buildStagedCourseRoadmapLayout(
     trunk: [],
     lateJoins: [],
     trunkForks: [],
-    capstoneByAfter: new Map(),
     start: { x: anchorX, y: 0 },
     end,
     bounds: {

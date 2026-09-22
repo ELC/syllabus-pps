@@ -2,7 +2,6 @@ export interface RoadmapPanelUrlState {
   degree?: string;
   course?: string;
   concept?: string;
-  capstone?: string;
 }
 
 export function readRoadmapPanelUrl(search = window.location.search): RoadmapPanelUrlState {
@@ -10,13 +9,11 @@ export function readRoadmapPanelUrl(search = window.location.search): RoadmapPan
   const degree = params.get("degree")?.trim();
   const course = params.get("course")?.trim();
   const concept = params.get("concept")?.trim();
-  const capstone = params.get("capstone")?.trim();
 
   return {
     degree: degree || undefined,
     course: course || undefined,
     concept: concept || undefined,
-    capstone: capstone || undefined,
   };
 }
 
@@ -43,10 +40,6 @@ export function writeRoadmapPanelUrl(
     params.set("concept", state.concept);
   }
 
-  if (state.capstone) {
-    params.set("capstone", state.capstone);
-  }
-
   const query = params.toString();
   const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
 
@@ -59,5 +52,5 @@ export function writeRoadmapPanelUrl(
 }
 
 export function roadmapPanelUrlKey(state: RoadmapPanelUrlState): string {
-  return `${state.degree ?? ""}|${state.course ?? ""}|${state.concept ?? ""}|${state.capstone ?? ""}`;
+  return `${state.degree ?? ""}|${state.course ?? ""}|${state.concept ?? ""}`;
 }

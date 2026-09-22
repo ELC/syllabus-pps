@@ -10,9 +10,6 @@ export const BRANCH_NODE_HEIGHT = SPINE_NODE_HEIGHT;
 export const ANCHOR_NODE_WIDTH = 184;
 export const ANCHOR_NODE_HEIGHT = 48;
 /** Pointy-top regular hexagon: height = width * sqrt(3) / 2. */
-export const CAPSTONE_NODE_WIDTH = 176;
-export const CAPSTONE_NODE_HEIGHT = 152;
-
 export const BRANCH_COLUMN_GAP = 48;
 export const BRANCH_ROW_GAP = 22;
 /** Horizontal space between parallel lane spines. */

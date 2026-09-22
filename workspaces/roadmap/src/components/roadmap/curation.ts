@@ -13,14 +13,6 @@ export interface RoadmapTrunkFork {
   mergeInto: string;
 }
 
-/** Roadmap-only milestone project shown on the spine between a trunk node and the next fork/end. */
-export interface RoadmapCapstone {
-  id: string;
-  after: string;
-  title: string;
-  description: string;
-}
-
 export interface RoadmapCuration {
   degreeSlug: string;
   parallelLanes: RoadmapParallelLane[];
@@ -28,7 +20,6 @@ export interface RoadmapCuration {
   /** Ordered main trunk after the post-merge prefix; when set, replaces automatic ordering. */
   trunkSpine?: string[];
   trunkForks?: RoadmapTrunkFork[];
-  capstones?: RoadmapCapstone[];
   branches: Record<string, string[]>;
   branchOwnerOverrides: Record<string, string>;
   spineJoins: Record<string, string>;
@@ -43,7 +34,6 @@ export const EMPTY_ROADMAP_CURATION: RoadmapCuration = {
   postMergeSpine: [],
   trunkSpine: [],
   trunkForks: [],
-  capstones: [],
   branches: {},
   branchOwnerOverrides: {},
   spineJoins: {},
@@ -146,14 +136,4 @@ export function validateRoadmapCuration(
     }
   }
 
-  const capstoneIds = new Set<string>();
-  for (const capstone of curation.capstones ?? []) {
-    if (capstoneIds.has(capstone.id)) {
-      throw new Error(
-        `Roadmap curation references duplicate capstone id "${capstone.id}" for ${roadmap.degreeSlug}.`,
-      );
-    }
-    capstoneIds.add(capstone.id);
-    assertKnownTitle(titles, capstone.after, `capstone anchor for ${roadmap.degreeSlug}`);
-  }
 }

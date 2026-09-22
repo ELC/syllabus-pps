@@ -6,8 +6,6 @@ import {
   ANCHOR_GAP,
   ANCHOR_NODE_HEIGHT,
   ANCHOR_NODE_WIDTH,
-  CAPSTONE_NODE_HEIGHT,
-  CAPSTONE_NODE_WIDTH,
   BRANCH_COLUMN_GAP,
   BRANCH_NODE_HEIGHT,
   BRANCH_NODE_WIDTH,
@@ -18,7 +16,7 @@ import {
   STAGE_GAP,
 } from "./constants";
 
-export type RoadmapRole = "spine" | "branch" | "capstone";
+export type RoadmapRole = "spine" | "branch";
 
 export interface RoadmapPlacement {
   title: string;
@@ -28,9 +26,6 @@ export interface RoadmapPlacement {
   y: number;
   width: number;
   height: number;
-  /** Capstone nodes only. Stable id for panel lookup and spine edges. */
-  capstoneId?: string;
-  description?: string;
 }
 
 export interface RoadmapBounds {
@@ -275,8 +270,6 @@ export interface RoadmapLayout {
   lateJoins: Array<{ from: string; to: string }>;
   /** Mid-trunk forks that split and merge back into one spine node. */
   trunkForks: RoadmapTrunkForkLayout[];
-  /** Capstone id keyed by the trunk node they follow. */
-  capstoneByAfter: Map<string, string>;
   start: { x: number; y: number };
   end: { x: number; y: number };
   bounds: RoadmapBounds;
@@ -289,7 +282,6 @@ const EMPTY_LAYOUT: RoadmapLayout = {
   trunk: [],
   lateJoins: [],
   trunkForks: [],
-  capstoneByAfter: new Map(),
   start: { x: -ANCHOR_NODE_WIDTH / 2, y: 0 },
   end: { x: -ANCHOR_NODE_WIDTH / 2, y: ANCHOR_NODE_HEIGHT + ANCHOR_GAP },
   bounds: {
@@ -1457,10 +1449,6 @@ export function buildRoadmapLayout(
   );
   const displayTrunkForks = normalizeTailForkAnchors(trunkForks, trunk);
   const trunkForkByAfter = new Map(displayTrunkForks.map((fork) => [fork.after, fork]));
-  const capstoneByAfter = new Map(
-    (curation.capstones ?? []).map((capstone) => [capstone.after, capstone]),
-  );
-
   const placements = new Map<string, RoadmapPlacement>();
   let cursorY = ANCHOR_NODE_HEIGHT + ANCHOR_GAP;
   let sideFlip = 0;
@@ -1605,23 +1593,6 @@ export function buildRoadmapLayout(
       cursorY += rowHeight + STAGE_GAP + forkClearance;
     }
 
-    const capstone = capstoneByAfter.get(title);
-    if (capstone !== undefined) {
-      const capstoneX = spineX + (SPINE_NODE_WIDTH - CAPSTONE_NODE_WIDTH) / 2;
-      placements.set(capstone.id, {
-        title: capstone.title,
-        role: "capstone",
-        stage: stageOf.get(title) ?? 0,
-        x: capstoneX,
-        y: cursorY,
-        width: CAPSTONE_NODE_WIDTH,
-        height: CAPSTONE_NODE_HEIGHT,
-        capstoneId: capstone.id,
-        description: capstone.description,
-      });
-      cursorY += CAPSTONE_NODE_HEIGHT + STAGE_GAP;
-    }
-
     if (!coLocateForkWithSpine) {
       for (const laneFork of bandForks) {
         cursorY = placeParallelLaneRows({
@@ -1652,9 +1623,6 @@ export function buildRoadmapLayout(
     trunk,
     lateJoins,
     trunkForks: displayTrunkForks,
-    capstoneByAfter: new Map(
-      [...capstoneByAfter.entries()].map(([after, capstone]) => [after, capstone.id]),
-    ),
     start: { x: anchorX, y: 0 },
     end,
     bounds: {

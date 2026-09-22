@@ -33,7 +33,6 @@ import {
   type BranchEdgeKind,
   type BranchSide,
 } from "./branch-path";
-import type { RoadmapCapstoneNodeData } from "./RoadmapCapstoneNode";
 import type { RoadmapCourseNodeData } from "./RoadmapCourseNode";
 import type { RoadmapTopicNodeData } from "./RoadmapTopicNode";
 
@@ -199,25 +198,6 @@ function isSameSpineColumn(leftCenterX: number, rightCenterX: number): boolean {
   return Math.abs(leftCenterX - rightCenterX) <= JUNCTION_AXIS_EPSILON;
 }
 
-function capstoneNode(
-  id: string,
-  placement: RoadmapPlacement,
-  state: RoadmapCapstoneNodeData["state"],
-): Node<RoadmapCapstoneNodeData> {
-  return {
-    id,
-    type: "roadmapCapstone",
-    position: { x: placement.x, y: placement.y },
-    width: placement.width,
-    height: placement.height,
-    style: { width: placement.width, height: placement.height },
-    data: {
-      label: capitalizeWords(placement.title),
-      state,
-    },
-  };
-}
-
 function topicNode(
   placement: RoadmapPlacement,
   state: RoadmapTopicNodeData["state"],
@@ -293,8 +273,7 @@ function isSpineNode(title: string, placement: RoadmapPlacement | undefined): bo
   return (
     title === ROADMAP_START_ID ||
     title === ROADMAP_END_ID ||
-    placement?.role === "spine" ||
-    placement?.role === "capstone"
+    placement?.role === "spine"
   );
 }
 
@@ -1163,16 +1142,6 @@ export function buildRoadmapFlow({
     nodes.push(topicNode(placement, "default", topicNodeOptions));
   }
 
-  if (topicNodeType !== "roadmapCourse") {
-    for (const [id, placement] of layout.placements) {
-      if (placement.role !== "capstone") {
-        continue;
-      }
-
-      nodes.push(capstoneNode(id, placement, "default"));
-    }
-  }
-
   const edges: Edge[] = [];
   const spineLinks: SpineLink[] = [];
   const queuedSpineLinkKeys = new Set<string>();
@@ -1204,10 +1173,6 @@ export function buildRoadmapFlow({
     queuedSpineLinkKeys.add(key);
     spineLinks.push({ source, target });
   };
-
-  for (const [after, capstoneId] of layout.capstoneByAfter) {
-    queueSpineLink(after, capstoneId);
-  }
 
   if (courseDagEdges) {
     for (const course of roadmap.concepts) {
@@ -1277,7 +1242,7 @@ export function buildRoadmapFlow({
   );
 
   for (const fork of layout.trunkForks) {
-    const forkSource = layout.capstoneByAfter.get(fork.after) ?? fork.after;
+    const forkSource = fork.after;
     const forkSourceOnCanvas = layout.placements.has(forkSource);
     const headFork = inicioHeadFork(fork, layout.trunk);
     const anchorInLane = fork.lanes.flat().includes(fork.after);
@@ -1452,12 +1417,7 @@ export function buildRoadmapFlow({
     parallelTailLaneRootMergeForkAtMergeInto(layout, trunkTail) !== undefined;
   if (trunkTail !== undefined) {
     if (!tailMergeEndsAtObjetivo) {
-      const tailCapstone = layout.capstoneByAfter.get(trunkTail);
-      if (tailCapstone !== undefined) {
-        queueSpineLink(tailCapstone, ROADMAP_END_ID);
-      } else {
-        queueSpineLink(trunkTail, ROADMAP_END_ID);
-      }
+      queueSpineLink(trunkTail, ROADMAP_END_ID);
     }
   } else if (layout.parallelLanes.length > 0) {
     for (const lane of layout.parallelLanes) {

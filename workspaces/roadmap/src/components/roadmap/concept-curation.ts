@@ -83,9 +83,6 @@ export function sliceCurationForCourse(
     postMergeSpine: filterTitles(curation.postMergeSpine, scope),
     trunkSpine: filterTitles(curation.trunkSpine ?? [], scope),
     trunkForks,
-    capstones: (curation.capstones ?? []).filter((capstone) =>
-      titleInScope(capstone.after, scope),
-    ),
     branches: filterBranches(curation.branches, scope),
     branchOwnerOverrides,
     spineJoins,
@@ -111,6 +108,7 @@ export function parseConceptLayoutDocument(
     ...(raw as unknown as RoadmapCuration),
     degreeSlug: courseRoadmap.degreeSlug,
   };
+  delete (merged as Record<string, unknown>).capstones;
 
   return sliceCurationForCourse(merged, courseRoadmap);
 }

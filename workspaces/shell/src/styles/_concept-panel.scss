@@ -1,7 +1,6 @@
 /* Panel roots inherit these even when there is no `.graph` page wrapper (e.g. roadmap SPA). */
 .graph,
-.graph__concept-panel,
-.graph__capstone-panel {
+.graph__concept-panel {
   --graph-concept-note-font-size: 0.875rem;
   --graph-concept-note-line-height: 1.6;
   --graph-concept-note-body-lines: 3;
@@ -16,8 +15,7 @@
 }
 
 .graph {
-  &__concept-panel,
-  &__capstone-panel {
+  &__concept-panel {
     --graph-panel-width: 100vw;
 
     @media (min-width: 761px) {
@@ -497,101 +495,4 @@
     opacity: 0.85;
   }
 
-  &__capstone-panel {
-    position: fixed;
-    inset: 0;
-    z-index: 1100;
-    pointer-events: none;
-
-    &--open {
-      pointer-events: auto;
-    }
-  }
-
-  &__capstone-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.16);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-
-    &--open {
-      opacity: 1;
-    }
-  }
-
-  &__capstone-sheet {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    width: var(--graph-panel-width);
-    height: 100%;
-    background: var(--austral-blanco);
-    border-left: 1px solid var(--dash-border);
-    box-shadow: -10px 0 40px rgba(15, 23, 42, 0.12);
-    transform: translateX(100%);
-    transition: transform 0.24s ease;
-    overflow: hidden;
-
-    &--open {
-      transform: translateX(0);
-    }
-  }
-
-  &__capstone-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 1rem 1.15rem;
-    border-bottom: 1px solid var(--dash-border);
-    background: var(--dash-table-head);
-    flex-shrink: 0;
-  }
-
-  &__capstone-title {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
-    font-weight: 700;
-    line-height: 1.35;
-    color: var(--dash-text);
-    letter-spacing: 0.01em;
-  }
-
-  &__capstone-close {
-    appearance: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 0;
-    border-radius: 0.35rem;
-    background: transparent;
-    font-size: 1.125rem;
-    line-height: 1;
-    color: var(--dash-muted);
-    cursor: pointer;
-    flex-shrink: 0;
-
-    &:hover {
-      background: var(--dash-table-head);
-      color: var(--dash-text);
-    }
-  }
-
-  &__capstone-body {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    padding: 0.85rem 1rem 1rem;
-    margin: 0;
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--dash-text);
-    white-space: pre-wrap;
-  }
 }

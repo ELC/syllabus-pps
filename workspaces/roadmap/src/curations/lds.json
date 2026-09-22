@@ -104,32 +104,6 @@
   },
   "branchOwnerOverrides": {},
   "spineJoins": {},
-  "capstones": [
-    {
-      "id": "capstone-python",
-      "after": "python",
-      "title": "Encontrá tu auto",
-      "description": "Construí una app en Streamlit — publicada en Streamlit Community Cloud y versionada en un repositorio de GitHub — que permita elegir marca, modelo y, opcionalmente, año de un vehículo. Usá Playwright para recorrer un sitio de clasificados automotrices (0 km o usados: elegí cuál) hasta agotar las páginas del listado, extraé los avisos relevantes y mostrá una tabla ordenada por un criterio de ranking que definas (por ejemplo precio, kilometraje o relación precio/año). La búsqueda debe ser idempotente: repetir la misma consulta debe devolver los mismos resultados; implementá caché o persistencia parcial (por ejemplo cachetools, JSON en disco u otra estrategia que documentes). Medí tiempos de ejecución — total de la búsqueda y por página — y mostrá al final un breve reporte de performance. Calculá al menos el precio promedio del conjunto; si te animás, sumá un intervalo de confianza u otra estadística descriptiva. Incluí un botón para exportar todos los resultados a CSV compatible con Excel — podés usar el módulo csv de la biblioteca estándar, pandas.DataFrame.to_csv o DuckDB, según prefieras. Gestioná dependencias con uv; configurá linting, formateo y pre-commit hooks. Documentá en el README cómo clonar el repo, instalar con uv, ejecutar la app localmente, desplegar en Streamlit Cloud y reproducir una búsqueda; explicá qué algoritmos usaste para paginar, filtrar y rankear, cómo validaste los datos extraídos y cómo garantizás la idempotencia."
-    },
-    {
-      "id": "capstone-apis",
-      "after": "apis",
-      "title": "Control de gastos personales",
-      "description": "Construí una aplicación full stack completamente desplegada en la nube: frontend headless en GitHub Pages (sin framework o con React, Angular, Svelte u otro de tu elección) y backend containerizado con Docker en Render, Vercel o un servicio similar. El frontend solo debe hablar con interfaces públicas del backend — sin acoplar lógica de negocio ni acceso directo a la base de datos. El backend puede estar en Python, Java, C#/.NET u otro lenguaje; incluí un Dockerfile reproducible. Persistí datos en una base hosted (Supabase, Postgres en Vercel u otro proveedor documentado). Implementá autenticación con JWT; opcionalmente sumá OAuth con Google — idealmente desarrollando el flujo completo vos mismo, aunque podés apoyarte en Supabase Auth si lo justificás. El dominio queda abierto; como ejemplo podés hacer un control de gastos al estilo Bluecoins: el usuario inicia sesión, ve su historial, registra gastos con monto, fecha y categoría, crea categorías propias y — opcionalmente — adjunta una foto del ticket o recibo. Incluí una sección de reportes con gráficos del total gastado y del desglose por categoría. No integres medios de pago ni proveedores financieros: es solo un registro personal de gastos. Priorizá demostrar integración entre servicios (deploy, API, auth, persistencia, almacenamiento de archivos, cliente desacoplado) por sobre la complejidad del dominio. Documentá en el README las URLs públicas, cómo levantar backend y frontend en local con Docker, variables de entorno, esquema de la API y evidencia de pruebas sobre los endpoints principales."
-    },
-    {
-      "id": "capstone-mvp",
-      "after": "mvp",
-      "title": "Colector de recursos de investigación",
-      "description": "Diseñá y publicá un MVP vendible para investigadores o creadores de contenido que necesitan explorar un tema sin ser expertos previos. La propuesta de valor: encontrar recursos abiertos — páginas web, papers y libros de acceso abierto — de forma rápida, ordenada y sin fricción. Construí una landing que comunique ese beneficio y permita registrarse e iniciar sesión. Desde la app, el usuario ingresa un tema; el sistema busca en la web usando varios proveedores (por ejemplo Google y Google Scholar) y encola trabajos en segundo plano — un proceso por página o paper — que descargan y guardan los resultados en una carpeta de Google Drive o OneDrive. Un worker asíncrono lee esas salidas, las normaliza con un pipeline ETL y las persiste en una base de datos; cuando el lote termina, la UI muestra el catálogo categorizado listo para explorar. Documentá el canvas de modelo de negocio y la propuesta de valor; incluí wireframes o prototipo navegable de la landing y del flujo post-login. Corré al menos una ronda de feedback con un par de usuarios objetivo y registrá qué aprendiste para la próxima iteración lean. Priorizá demostrar cola de trabajos, integración con almacenamiento en la nube, ETL y entrega de valor visible al usuario — no hace falta cobrar en producción, pero sí dejar claro cómo se vendería el servicio."
-    },
-    {
-      "id": "capstone-arquitectura",
-      "after": "arquitectura de software",
-      "title": "Mi-microservices architecture",
-      "description": "Construí una arquitectura mínima multi-servicio con agentes que integre tres piezas desacopladas: (1) una app frontend que se conecta al agente mediante AG-UI y muestra las respuestas al usuario; (2) una app agente que conversa en formato A2A, invoca herramientas externas y devuelve mensajes A2A al frontend; (3) un servicio MCP que expone tools para leer una base de datos y devolver resultados estructurados — el agente lo usa como tool dentro del flujo A2A. El dominio concreto queda abierto; lo importante es demostrar el encadenamiento frontend → AG-UI → agente → MCP → base de datos → respuesta visible. Organizá cada servicio en vertical slices (caso de uso de punta a punta por módulo); si desplegar microservicios separados no es viable en tu entorno, podés usar monolitos modulares con los mismos límites de interfaz. Desplegá en la nube o en contenedores, configurá CI básico y observabilidad mínima (logs o trazas entre servicios). Documentá en el README el diagrama de componentes, los contratos AG-UI/A2A/MCP, cómo levantar cada servicio en local y qué decisiones tomaste para mantener bajo acoplamiento y permitir evolucionar cada pieza por separado."
-    }
-  ],
   "spinePromotions": [
     "simulación de sistemas",
     "cálculo integral",

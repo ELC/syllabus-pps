@@ -115,10 +115,6 @@ export function encodeSubgraph(subgraph: ValidatedConceptSubgraph): RoadmapCurat
     curation.branchLayoutFlips = { ...subgraph.meta.branchLayoutFlips };
   }
 
-  if (subgraph.meta.capstones.length > 0) {
-    curation.capstones = [...subgraph.meta.capstones];
-  }
-
   const useTrunkSpineField =
     subgraph.meta.trunkSpineField === "titles" ||
     subgraph.meta.trunkSpineField === "empty" ||
