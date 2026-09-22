@@ -11,10 +11,18 @@
 
   &__header {
     display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex-shrink: 0;
+    min-width: 0;
+  }
+
+  &__header-top {
+    display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 1.5rem;
-    flex-shrink: 0;
+    min-width: 0;
   }
 
   &__header-main {
@@ -113,8 +121,18 @@
     }
   }
 
+  &__header-lead-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+    min-width: 0;
+  }
+
   &__header-lead {
     margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
     color: var(--dash-muted);
     max-width: 48rem;
     font-size: var(--dash-header-lead-size);
@@ -235,6 +253,44 @@
   &__meta-fullname-field {
     flex: 0 0 var(--cms-meta-fullname-block-height);
     min-height: var(--cms-meta-fullname-block-height);
+  }
+
+  &__roadmap-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    border: 1px solid var(--dash-border);
+    border-radius: 0.65rem;
+    background: var(--dash-surface);
+    color: var(--dash-text);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.55rem 0.75rem;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 2px 10px rgba(30, 41, 59, 0.12);
+
+    &:hover {
+      border-color: var(--austral-ing-secondary);
+      background: var(--austral-celeste-suave);
+    }
+
+    &--lead {
+      flex-shrink: 0;
+      margin-left: auto;
+      align-self: center;
+      box-sizing: border-box;
+      padding: 0.55rem 1rem;
+    }
+
+    &--disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
   }
 
   &__meta-primary-stack > .cms__meta-title-row {

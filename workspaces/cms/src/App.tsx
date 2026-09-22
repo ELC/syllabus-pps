@@ -36,6 +36,11 @@ import {
 import { readPageParam, writePageParam } from "./page-param";
 import { filterDiagnosticsForPage, pageHasDiagnostics } from "./validation/filterDiagnostics";
 import { planDegreeYearSync } from "./degree-year-sync";
+import {
+  degreeSlugForCourseInSources,
+  roadmapCourseSubgraphHref,
+} from "./roadmap-course-link";
+import { siteRootFromEnv } from "@pps/shell/site-root";
 import { expectedEditorKind } from "./expected-page-kind";
 import { runDiagnosticsForEditor } from "./validation/runDiagnostics";
 import {
@@ -595,6 +600,53 @@ export function App() {
     [allSources, selectedSlug],
   );
 
+  const documentReady = Boolean(selectedSlug) && loadedSlug === selectedSlug;
+  const layoutKind = documentReady ? metadata.kind : expectedKind;
+
+  const roadmapCourseHref = useMemo(() => {
+    if (layoutKind !== "course" || !selectedSlug) {
+      return null;
+    }
+
+    const courseSlug = metadata.slug.trim() || selectedSlug;
+    const degreeSlug = degreeSlugForCourseInSources(
+      allSources,
+      courseSlug,
+      coursePages,
+      metadata.title,
+    );
+    if (!degreeSlug) {
+      return null;
+    }
+
+    const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/cms/");
+    return roadmapCourseSubgraphHref(siteRoot, degreeSlug, courseSlug);
+  }, [
+    allSources,
+    coursePages,
+    layoutKind,
+    metadata.slug,
+    metadata.title,
+    selectedSlug,
+  ]);
+
+  const roadmapLinkControl =
+    layoutKind === "course" ? (
+      roadmapCourseHref ? (
+        <a className="cms__roadmap-link cms__roadmap-link--lead" href={roadmapCourseHref}>
+          Ver como Roadmap
+        </a>
+      ) : (
+        <span
+          className="cms__roadmap-link cms__roadmap-link--lead cms__roadmap-link--disabled"
+          aria-disabled="true"
+          title="Asigná esta materia a un año en la grilla de la carrera para abrir el mapa"
+        >
+          Ver como Roadmap
+        </span>
+      )
+    ) : null;
+
   function addNewPage(): void {
     if (workspaceLocked) {
       return;
@@ -682,46 +734,44 @@ export function App() {
       <div className="dashboard__content">
       <div className="cms__workspace">
       <header className="cms__header">
-        <div className="cms__header-main">
-          <div className="cms__header-title-row">
-            <h1 className="cms__header-title">Gestión de contenido</h1>
-            <div className="cms__header-status-cluster">
-              <AnalyticsRebuildIndicator
-                status={rebuildStatus}
-                className={
-                  entityStale
-                    ? "cms__rebuild-indicator cms__rebuild-indicator--stale"
-                    : "cms__rebuild-indicator"
-                }
-                loading={loadingPages && !headerIndicatorOverride}
-                override={headerIndicatorOverride}
-                role={entityStale ? "alert" : "status"}
-              />
-              {showSaveBlockHint ? (
-                <span className="cms__save-blocked-hint" role="status">
-                  {saveBlockMessage}
-                </span>
-              ) : null}
+        <div className="cms__header-top">
+          <div className="cms__header-main">
+            <div className="cms__header-title-row">
+              <h1 className="cms__header-title">Gestión de contenido</h1>
+              <div className="cms__header-status-cluster">
+                <AnalyticsRebuildIndicator
+                  status={rebuildStatus}
+                  className={
+                    entityStale
+                      ? "cms__rebuild-indicator cms__rebuild-indicator--stale"
+                      : "cms__rebuild-indicator"
+                  }
+                  loading={loadingPages && !headerIndicatorOverride}
+                  override={headerIndicatorOverride}
+                  role={entityStale ? "alert" : "status"}
+                />
+                {showSaveBlockHint ? (
+                  <span className="cms__save-blocked-hint" role="status">
+                    {saveBlockMessage}
+                  </span>
+                ) : null}
+              </div>
             </div>
           </div>
-          <p className="cms__header-lead">
-            Los cambios guardan páginas markdown en Supabase Storage. En desarrollo local,{" "}
-            <code className="cms__code">pnpm dev</code> no requiere iniciar sesión; el sitio publicado sí
-            requiere autenticación.
-          </p>
-        </div>
-        <div className="cms__header-actions">
+          <div className="cms__header-actions">
           {entityStale ? (
-            <button
-              type="button"
-              className="cms__button cms__button--save cms__button--refresh"
-              onClick={() => window.location.reload()}
-              title="Recargar la página"
-              aria-label="Recargar la página para obtener el catálogo actualizado"
-            >
-              <SvgAssetIcon svg={refreshSvg} className="cms__button-icon" focusable={false} />
-              Recargar
-            </button>
+            <>
+              <button
+                type="button"
+                className="cms__button cms__button--save cms__button--refresh"
+                onClick={() => window.location.reload()}
+                title="Recargar la página"
+                aria-label="Recargar la página para obtener el catálogo actualizado"
+              >
+                <SvgAssetIcon svg={refreshSvg} className="cms__button-icon" focusable={false} />
+                Recargar
+              </button>
+            </>
           ) : (
             <>
             <button
@@ -808,6 +858,15 @@ export function App() {
             </button>
             </>
           )}
+          </div>
+        </div>
+        <div className="cms__header-lead-row">
+          <p className="cms__header-lead">
+            Los cambios guardan páginas markdown en Supabase Storage. En desarrollo local,{" "}
+            <code className="cms__code">pnpm dev</code> no requiere iniciar sesión; el sitio publicado sí
+            requiere autenticación.
+          </p>
+          {roadmapLinkControl}
         </div>
       </header>
 

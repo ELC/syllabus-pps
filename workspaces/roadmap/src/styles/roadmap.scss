@@ -82,7 +82,8 @@
   }
 
   &__back-button,
-  &__network-link {
+  &__network-link,
+  &__cms-link {
     display: inline-flex;
     align-items: center;
     appearance: none;
@@ -443,7 +444,8 @@
     margin: 0.75rem;
 
     .roadmap__back-button,
-    .roadmap__network-link {
+    .roadmap__network-link,
+    .roadmap__cms-link {
       box-shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
     }
   }

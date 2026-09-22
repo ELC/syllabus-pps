@@ -102,6 +102,28 @@ function normalizeTailForkAnchors(
   });
 }
 
+/** Same titles as the only parallel lane but wrong order (post-merge prefix bugs). */
+function harmonizeTrunkWithSingleLane(
+  trunk: readonly string[],
+  parallelLanes: readonly string[][],
+): string[] {
+  if (parallelLanes.length !== 1) {
+    return [...trunk];
+  }
+
+  const lane = parallelLanes[0]!;
+  if (lane.length === 0 || trunk.length !== lane.length) {
+    return [...trunk];
+  }
+
+  const laneSet = new Set(lane);
+  if (!trunk.every((title) => laneSet.has(title)) || trunk[0] === lane[0]) {
+    return [...trunk];
+  }
+
+  return [...lane];
+}
+
 function normalizeTailLaneRootTrunk(
   trunk: readonly string[],
   trunkForks: readonly RoadmapTrunkForkLayout[],
@@ -1437,13 +1459,16 @@ export function buildRoadmapLayout(
       ? curatedTrunkTail
       : orderedTrunkTail.length > 0
         ? orderedTrunkTail
-        : parallelTrunkSpine;
+        : postMerge.length > 0 && parallelLanes.length > 0
+          ? []
+          : parallelTrunkSpine;
   const composedTrunk =
     parallelLanes.length > 0
       ? composeTrunk(postMerge, trunkTail, trunkForks)
       : composeTrunk([], trunkTail, trunkForks);
+  const harmonizedTrunk = harmonizeTrunkWithSingleLane(composedTrunk, parallelLanes);
   const trunk = normalizeTailLaneRootTrunk(
-    composedTrunk,
+    harmonizedTrunk,
     trunkForks,
     new Set(curatedTrunkTail.length > 0 ? curatedTrunkTail : parallelTrunkSpine),
   );

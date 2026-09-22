@@ -108,7 +108,17 @@ export function expandedCurationOrder(curation: RoadmapCuration): string[] {
     return expandedOrderFromTrunkForks(compressed, forks);
   }
 
-  return [...compressed];
+  const expanded: string[] = [];
+  for (const title of compressed) {
+    expanded.push(title);
+    for (const branchTitle of curation.branches[title] ?? []) {
+      if (!compressed.includes(branchTitle) && !expanded.includes(branchTitle)) {
+        expanded.push(branchTitle);
+      }
+    }
+  }
+
+  return expanded;
 }
 
 /** Expanded spine order for shift (matches legacy buildExpandedSpineOrder on encoded curation). */

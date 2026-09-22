@@ -125,6 +125,12 @@ function buildExpandedSpineOrder(curation: RoadmapCuration): string[] {
         expanded.push(laneTitle);
       }
     }
+
+    for (const branchTitle of curation.branches[title] ?? []) {
+      if (!compressed.includes(branchTitle) && !expanded.includes(branchTitle)) {
+        expanded.push(branchTitle);
+      }
+    }
   }
 
   return expanded;
@@ -217,6 +223,58 @@ function laneTitlesOwnedByOtherForks(
   }
 
   return titles;
+}
+
+function stripSpineTitlesFromBranches(
+  curation: RoadmapCuration,
+  spineTitles: readonly string[],
+): void {
+  const onSpine = new Set(spineTitles);
+  for (const title of onSpine) {
+    delete curation.branchOwnerOverrides[title];
+  }
+
+  for (const [owner, branches] of Object.entries(curation.branches)) {
+    const filtered = branches.filter((entry) => !onSpine.has(entry));
+    if (filtered.length === 0) {
+      delete curation.branches[owner];
+    } else {
+      curation.branches[owner] = filtered;
+    }
+  }
+}
+
+function applyCompressedSpineStorage(curation: RoadmapCuration, compressed: string[]): void {
+  stripSpineTitlesFromBranches(curation, compressed);
+
+  const parallelOnlyMarker =
+    curation.trunkSpine !== undefined && curation.trunkSpine.length === 0;
+  const storeOnParallelLaneOnly =
+    (curation.trunkForks ?? []).length === 0 &&
+    (curation.trunkSpine === undefined || parallelOnlyMarker) &&
+    curation.parallelLanes.length === 1;
+
+  if (storeOnParallelLaneOnly) {
+    const lane = curation.parallelLanes[0]!;
+    lane.spine = [...compressed];
+    if (lane.spine.length > 0) {
+      lane.root = lane.spine[0]!;
+    }
+
+    if (parallelOnlyMarker) {
+      curation.trunkSpine = [];
+    } else {
+      delete curation.trunkSpine;
+    }
+
+    return;
+  }
+
+  if (compressed.length > 0) {
+    curation.trunkSpine = compressed;
+  } else if (curation.trunkSpine) {
+    delete curation.trunkSpine;
+  }
 }
 
 function applyExpandedSpineOrder(
@@ -337,11 +395,7 @@ function applyExpandedSpineOrder(
       }
     }
   }
-  if (compressed.length > 0) {
-    curation.trunkSpine = compressed;
-  } else if (curation.trunkSpine) {
-    delete curation.trunkSpine;
-  }
+  applyCompressedSpineStorage(curation, compressed);
 
   sanitizeTrunkForkCuration(curation);
 }

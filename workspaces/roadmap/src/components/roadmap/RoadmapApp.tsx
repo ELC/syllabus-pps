@@ -54,6 +54,7 @@ import {
   attachSideConcept,
   branchOwnerForConcept,
   inferLayoutBranchOwner,
+  mergeImplicitLayoutBranches,
   mergeTrunkFork,
   planShiftOnCuration,
   promoteConceptToSpine,
@@ -776,8 +777,16 @@ export function RoadmapApp({
     [],
   );
 
+  const conceptCurationForOrderEdits = useMemo(() => {
+    if (!conceptCuration || !activeDegreeRoadmap || !adjacency) {
+      return conceptCuration;
+    }
+
+    return mergeImplicitLayoutBranches(conceptCuration, activeDegreeRoadmap, adjacency);
+  }, [activeDegreeRoadmap, adjacency, conceptCuration]);
+
   const conceptMoveAvailability = useMemo(() => {
-    if (!conceptCuration || !conceptSelectedTopic) {
+    if (!conceptCurationForOrderEdits || !conceptSelectedTopic) {
       return {
         up: Admissibility.Blocked as typeof Admissibility.Blocked,
         down: Admissibility.Blocked as typeof Admissibility.Blocked,
@@ -785,18 +794,24 @@ export function RoadmapApp({
     }
 
     return {
-      up: planShiftOnCuration(conceptCuration, conceptSelectedTopic, -1).admissibility,
-      down: planShiftOnCuration(conceptCuration, conceptSelectedTopic, 1).admissibility,
+      up: planShiftOnCuration(conceptCurationForOrderEdits, conceptSelectedTopic, -1)
+        .admissibility,
+      down: planShiftOnCuration(conceptCurationForOrderEdits, conceptSelectedTopic, 1)
+        .admissibility,
     };
-  }, [conceptCuration, conceptSelectedTopic]);
+  }, [conceptCurationForOrderEdits, conceptSelectedTopic]);
 
   const applyConceptOrderShift = useCallback(
     (direction: -1 | 1) => {
-      if (!conceptCuration || !conceptSelectedTopic) {
+      if (!conceptCuration || !conceptCurationForOrderEdits || !conceptSelectedTopic) {
         return;
       }
 
-      const planned = planShiftOnCuration(conceptCuration, conceptSelectedTopic, direction);
+      const planned = planShiftOnCuration(
+        conceptCurationForOrderEdits,
+        conceptSelectedTopic,
+        direction,
+      );
       if (planned.admissibility === Admissibility.Blocked) {
         setGridLayoutStatus(conceptEditErrorLabel(planned.error));
         return;
@@ -809,7 +824,7 @@ export function RoadmapApp({
       });
       setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
     },
-    [commitConceptCurationEdit, conceptCuration, conceptSelectedTopic],
+    [commitConceptCurationEdit, conceptCuration, conceptCurationForOrderEdits, conceptSelectedTopic],
   );
 
   useEffect(() => {
@@ -1499,15 +1514,20 @@ export function RoadmapApp({
     ? (focusedCourse?.title ?? activeCourseRoadmap.degree)
     : activeCourseRoadmap.degree;
   const viewportKey = `${activeCourseRoadmap.degreeSlug}:${focusedCourseSlug ?? "courses"}`;
+  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/");
   const networkHref = focusedCourseSlug
     ? (() => {
         const params = new URLSearchParams({
           expand: focusedCourseSlug,
           courseLinks: "mentions",
         });
-        return `${siteRootFromEnv(import.meta.env.BASE_URL ?? "/")}network/?${params.toString()}`;
+        return `${siteRoot}network/?${params.toString()}`;
       })()
     : null;
+  const cmsCourseHref =
+    isAdmin && focusedCourseSlug
+      ? `${siteRoot}cms/?${new URLSearchParams({ page: focusedCourseSlug }).toString()}`
+      : null;
 
   return (
     <div className="roadmap">
@@ -1637,6 +1657,11 @@ export function RoadmapApp({
                       Ver como Red
                     </a>
                   ) : null}
+                  {cmsCourseHref ? (
+                    <a className="roadmap__cms-link" href={cmsCourseHref}>
+                      Añadir Concepto
+                    </a>
+                  ) : null}
                 </Panel>
               ) : null}
               {canEditLayout ? (
@@ -1706,6 +1731,11 @@ export function RoadmapApp({
               {networkHref ? (
                 <a className="roadmap__network-link" href={networkHref}>
                   Ver como Red
+                </a>
+              ) : null}
+              {cmsCourseHref ? (
+                <a className="roadmap__cms-link" href={cmsCourseHref}>
+                  Añadir Concepto
                 </a>
               ) : null}
             </div>

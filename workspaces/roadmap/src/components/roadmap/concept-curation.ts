@@ -1,8 +1,11 @@
 import type { DegreeRoadmap } from "@pps/core";
 import type { Node } from "@xyflow/react";
 
+import type { RoadmapAdjacency } from "./adjacency";
+import { topologicalStages } from "./adjacency";
 import type { RoadmapCuration } from "./curation";
 import { EMPTY_ROADMAP_CURATION } from "./curation";
+import { inferLayoutBranchOwner } from "./concept-curation-legacy";
 
 function titleInScope(title: string, scope: ReadonlySet<string>): boolean {
   return scope.has(title);
@@ -77,11 +80,28 @@ export function sliceCurationForCourse(
     }
   }
 
+  let postMergeSpine = filterTitles(curation.postMergeSpine, scope);
+  const trunkSpine = filterTitles(curation.trunkSpine ?? [], scope);
+
+  // Degree layouts store the merge column in postMergeSpine; a single-lane course slice
+  // should read as one center spine (e.g. algoritmos → python), not lane + post-merge head.
+  if (
+    parallelLanes.length === 1 &&
+    postMergeSpine.length > 0 &&
+    trunkSpine.length === 0 &&
+    trunkForks.length === 0
+  ) {
+    const lane = parallelLanes[0]!;
+    const append = postMergeSpine.filter((title) => !lane.spine.includes(title));
+    lane.spine = [...lane.spine, ...append];
+    postMergeSpine = [];
+  }
+
   return {
     degreeSlug: courseRoadmap.degreeSlug,
     parallelLanes,
-    postMergeSpine: filterTitles(curation.postMergeSpine, scope),
-    trunkSpine: filterTitles(curation.trunkSpine ?? [], scope),
+    postMergeSpine,
+    trunkSpine,
     trunkForks,
     branches: filterBranches(curation.branches, scope),
     branchOwnerOverrides,
@@ -145,6 +165,81 @@ export function removeTitleFromCurationSpine(curation: RoadmapCuration, title: s
       delete curation.spineJoins[from];
     }
   }
+}
+
+function curatedSpineTitles(curation: RoadmapCuration): Set<string> {
+  const titles = new Set<string>();
+  for (const title of curation.postMergeSpine) {
+    titles.add(title);
+  }
+  for (const title of curation.trunkSpine ?? []) {
+    titles.add(title);
+  }
+  for (const lane of curation.parallelLanes) {
+    for (const title of lane.spine) {
+      titles.add(title);
+    }
+  }
+  for (const fork of curation.trunkForks ?? []) {
+    for (const lane of fork.lanes) {
+      for (const title of lane.spine) {
+        titles.add(title);
+      }
+    }
+  }
+
+  return titles;
+}
+
+function branchTitles(curation: RoadmapCuration): Set<string> {
+  return new Set(Object.values(curation.branches).flat());
+}
+
+/**
+ * Match layout auto-branches: course concepts that depend on a spine topic but are not
+ * on the curated spine yet appear as laterals in the rendered map.
+ */
+export function mergeImplicitLayoutBranches(
+  curation: RoadmapCuration,
+  courseRoadmap: DegreeRoadmap,
+  adjacency: RoadmapAdjacency,
+): RoadmapCuration {
+  const spineTitles = curatedSpineTitles(curation);
+  const alreadyBranch = branchTitles(curation);
+  const stageOf = new Map<string, number>();
+  topologicalStages(
+    courseRoadmap.concepts.map((concept) => concept.title),
+    adjacency,
+  ).forEach((stage, index) => {
+    for (const title of stage) {
+      stageOf.set(title, index);
+    }
+  });
+
+  const next = structuredClone(curation);
+  let changed = false;
+
+  for (const concept of courseRoadmap.concepts) {
+    const title = concept.title;
+    if (spineTitles.has(title) || alreadyBranch.has(title)) {
+      continue;
+    }
+
+    const owner = inferLayoutBranchOwner(title, adjacency, stageOf);
+    if (owner === undefined || !spineTitles.has(owner)) {
+      continue;
+    }
+
+    const siblings = next.branches[owner] ?? [];
+    if (!siblings.includes(title)) {
+      next.branches[owner] = [...siblings, title].sort((left, right) =>
+        left.localeCompare(right, "es-AR"),
+      );
+      changed = true;
+    }
+  }
+
+  return changed ? next : curation;
 }
 
 /** Hang `branchTitle` on the side of `ownerTitle` (removes it from spine lists). */

@@ -987,7 +987,7 @@ function emitSpineLinks(
     const mergeJoinThenSplitFanIn = mergeJoinThenSplitFanInAt(layout, mergeSpineTitle);
     const mergeFanInJunctionId = fanInJunctionId(mergeSpineTitle);
 
-    const active = batch.filter((link) => {
+    let active = batch.filter((link) => {
       if (used.has(spineLinkKey(link))) {
         return false;
       }
@@ -999,6 +999,17 @@ function emitSpineLinks(
       }
       return true;
     });
+    if (
+      mergeSpineTitle === ROADMAP_END_ID &&
+      active.length > 1 &&
+      primaryTrunkParallelLane(layout) !== null
+    ) {
+      const tailTitle = layout.trunk[layout.trunk.length - 1];
+      const tailLink = active.find((link) => link.source === tailTitle);
+      if (tailLink !== undefined) {
+        active = [tailLink];
+      }
+    }
     if (active.length <= 1) {
       continue;
     }
@@ -1194,7 +1205,10 @@ export function buildRoadmapFlow({
       }
     }
   } else {
-    const startTarget = layout.trunk[0] ?? layout.parallelLanes[0]?.[0];
+    const startTarget =
+      layout.parallelLanes.length === 1
+        ? (layout.parallelLanes[0]?.[0] ?? layout.trunk[0])
+        : (layout.trunk[0] ?? layout.parallelLanes[0]?.[0]);
     if (startTarget !== undefined) {
       queueSpineLink(ROADMAP_START_ID, startTarget);
     }

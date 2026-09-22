@@ -10,7 +10,10 @@ export type {
   ConceptCurationOpResult,
 } from "./concept-curation-op-types";
 
-export { attachConceptAsBranch } from "./concept-curation";
+export {
+  attachConceptAsBranch,
+  mergeImplicitLayoutBranches,
+} from "./concept-curation";
 export { sanitizeTrunkForkCuration } from "./concept-curation-sanitize";
 
 export {

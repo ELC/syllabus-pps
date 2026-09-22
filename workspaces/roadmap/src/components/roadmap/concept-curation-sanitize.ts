@@ -139,8 +139,26 @@ function repairMisplacedTailForkAnchors(curation: RoadmapCuration): void {
   }
 }
 
+function stripBranchesListedOnCompressedSpine(curation: RoadmapCuration): void {
+  const trunk = compressedTrunkSpineTitles(curation);
+  const onSpine = new Set(trunk);
+  for (const title of onSpine) {
+    delete curation.branchOwnerOverrides[title];
+  }
+
+  for (const [owner, branches] of Object.entries(curation.branches)) {
+    const filtered = branches.filter((entry) => !onSpine.has(entry));
+    if (filtered.length === 0) {
+      delete curation.branches[owner];
+    } else {
+      curation.branches[owner] = filtered;
+    }
+  }
+}
+
 /** Keep trunk forks consistent with compressed spine storage (repair edit glitches). */
 export function sanitizeTrunkForkCuration(curation: RoadmapCuration): void {
+  stripBranchesListedOnCompressedSpine(curation);
   for (const fork of curation.trunkForks ?? []) {
     const stripAfterFromLanes = forkAfterIsSpineOnlyBetweenAnchors(curation, fork);
     for (const lane of fork.lanes) {
