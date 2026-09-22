@@ -1,6 +1,8 @@
 ---
 title: ingeniería de datos
 kind: course
+correlativas:
+  - bases de datos
 ---
 - convierte persistencia en pipelines y plataformas de datos a partir de [[bases de datos]] y #sql
 - #etl ingesta, transforma y carga datos entre sistemas operacionales y analíticos

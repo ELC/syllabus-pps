@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { collectDiagnostics } from "../../src/diagnostics";
-import { buildGraph } from "../../src/graph";
+import { buildGraphFromLocalFiles } from "../../src/graph";
 import {
   buildFixtureGraph,
   expectedDiagnosticSummaries,
@@ -18,8 +18,8 @@ describe("buildGraph", () => {
     expect(graph.pages.map((page) => page.title)).toEqual([
       "algoritmos",
       "algoritmos y estructuras de datos",
-      "año 1",
       "LDS",
+      "LDS · año 1",
       "programación i",
     ]);
   });
@@ -42,8 +42,19 @@ describe("buildGraph", () => {
     }
   });
 
+  it("derives curriculum from year pages", () => {
+    const graph = buildFixtureGraph();
+
+    expect(graph.expected.years).toEqual([
+      {
+        title: "LDS · año 1",
+        courses: ["algoritmos y estructuras de datos"],
+      },
+    ]);
+  });
+
   it("matches fixture diagnostic summaries", () => {
-    const graph = buildGraph({
+    const graph = buildGraphFromLocalFiles({
       contentDir: FIXTURE_CONTENT_DIR,
       config: fixtureConfig(),
     });

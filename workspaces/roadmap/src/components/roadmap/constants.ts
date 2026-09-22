@@ -3,6 +3,8 @@ export const ROADMAP_END_ID = "__roadmap_end__";
 
 export const SPINE_NODE_WIDTH = 236;
 export const SPINE_NODE_HEIGHT = 64;
+/** Course cards show a year label plus up to three title lines. */
+export const COURSE_NODE_HEIGHT = 96;
 export const BRANCH_NODE_WIDTH = SPINE_NODE_WIDTH;
 export const BRANCH_NODE_HEIGHT = SPINE_NODE_HEIGHT;
 export const ANCHOR_NODE_WIDTH = 184;
@@ -21,7 +23,7 @@ export const JUNCTION_NODE_SIZE = 18;
 /** Minimum vertical drop before a spine fork turns horizontally. */
 export const STEP_EDGE_OFFSET = 24;
 /** Where fork runways sit within the source→target gap (higher = lower / more horizontal spread). */
-export const JUNCTION_RUNWAY_RATIO = 0.45;
+export const JUNCTION_RUNWAY_RATIO = 0.5;
 
 export const HANDLE_TOP_IN = "t-in";
 export const HANDLE_BOTTOM_OUT = "b-out";

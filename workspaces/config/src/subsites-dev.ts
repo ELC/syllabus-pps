@@ -122,7 +122,17 @@ function createViteSpaDevMiddleware(repoRoot: string, spec: ViteSpaDevSpec): Plu
               hmr: false,
             },
             ssr: {
-              noExternal: ["@pps/shell", "@pps/config", "@pps/login", "@pps/core"],
+              noExternal: [
+                "@pps/shell",
+                "@pps/config",
+                "@pps/login",
+                "@pps/core",
+                "@pps/content",
+                "@pps/content/browser",
+                "@pps/content/vite/supabase-dev",
+                "@pps/analytics-cli",
+                "@pps/analytics-cli/vite/rebuild-dev",
+              ],
             },
             appType: "spa",
           }).then((server) => {
@@ -226,6 +236,12 @@ export function subsitesDevPlugins(repoRoot: string): Plugin[] {
       workspace: "cms",
       configFile: "vite.config.ts",
       base: "/cms/",
+    }),
+    createViteSpaDevMiddleware(repoRoot, {
+      name: "cites",
+      workspace: "cites",
+      configFile: "vite.config.ts",
+      base: "/cites/",
     }),
     createViteSpaDevMiddleware(repoRoot, {
       name: "roadmap",

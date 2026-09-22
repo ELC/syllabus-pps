@@ -14,7 +14,7 @@ export const analyticsFlags = {
   config: {
     kind: "parsed" as const,
     parse: String,
-    brief: "Path to the expected curriculum config.",
+    brief: "Path to analytics CLI config (contentDir and optional admin pages).",
     optional: true as const,
   },
   out: {
@@ -39,6 +39,7 @@ export interface AnalyticsRunOptions {
   contentDir: string;
   config?: string;
   out: string;
+  useLocalContent: boolean;
 }
 
 export function toAnalyticsRunOptions(flags: AnalyticsFlags): AnalyticsRunOptions {
@@ -47,5 +48,7 @@ export function toAnalyticsRunOptions(flags: AnalyticsFlags): AnalyticsRunOption
     contentDir: resolveContentDir({ configPath, cliContentDir: flags.content }),
     config: configPath,
     out: flags.out,
+    useLocalContent:
+      flags.content !== undefined || process.env.PPS_CONTENT_SOURCE === "filesystem",
   };
 }

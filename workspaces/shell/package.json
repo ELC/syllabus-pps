@@ -4,15 +4,28 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./AnalyticsRebuildIndicator": "./src/AnalyticsRebuildIndicator.tsx",
+    "./mount-analytics-rebuild-indicator": "./src/mount-analytics-rebuild-indicator.ts",
     "./SiteShell": "./src/SiteShell.tsx",
+    "./use-analytics-rebuild-status": "./src/use-analytics-rebuild-status.ts",
     "./ShellLayout.astro": "./src/ShellLayout.astro",
     "./site-root": "./src/site-root.ts",
     "./logo-meta": "./src/logo-meta.ts",
     "./nav": "./src/nav.ts",
     "./austral-tokens": "./src/austral-tokens.ts",
     "./concept-panel-icons": "./src/concept-panel-icons.ts",
+    "./cites-link": "./src/cites-link.ts",
+    "./MetaDropdown": "./src/MetaDropdown.tsx",
+    "./SvgAssetIcon": "./src/SvgAssetIcon.tsx",
+    "./assets/icons/ui-plus.svg": "./assets/icons/ui-plus.svg",
+    "./assets/icons/ui-save.svg": "./assets/icons/ui-save.svg",
+    "./assets/icons/ui-warning.svg": "./assets/icons/ui-warning.svg",
+    "./assets/icons/resource-edit.svg": "./assets/icons/resource-edit.svg",
+    "./assets/icons/resource-open.svg": "./assets/icons/resource-open.svg",
+    "./styles/meta-dropdown.scss": "./src/styles/_meta-dropdown.scss",
     "./styles/shell.scss": "./src/styles/shell.scss",
     "./shell-chrome": "./src/shell-chrome.ts",
+    "./mount-shell-sidebar": "./src/mount-shell-sidebar.ts",
     "./astro": {
       "types": "./integration/dist/index.d.ts",
       "default": "./integration/dist/index.js"
@@ -21,13 +34,15 @@
       "types": "./integration/dist/vite.d.ts",
       "default": "./integration/dist/vite.js"
     },
-    "./assets/logo-horizontal-blanco.png": "./assets/logo-horizontal-blanco.png"
+    "./assets/logo-horizontal-blanco.png": "./assets/logo-horizontal-blanco.png",
+    "./assets/isologo-blanco.png": "./assets/isologo-blanco.png"
   },
   "scripts": {
     "build": "tsc -p integration/tsconfig.build.json",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@pps/content": "workspace:*",
     "@pps/core": "workspace:*",
     "@pps/login": "workspace:*",
     "react": "catalog:"

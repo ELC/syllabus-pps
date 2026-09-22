@@ -1,64 +1,49 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { CurriculumGraph } from "../../types";
-import {
-  collectCourseBlockCoverage,
-  collectPerCourseConceptCoverage,
-  collectPerYearConceptCoverage,
-} from "../projections";
-import { renderRowsSql } from "../sql/render";
+import { postgresDatasetSql } from "../sql/postgres-templates";
 import { writeMetricSql } from "./metric";
 
-export function writeConceptCoverageQueries(dashboardsDir: string, graph: CurriculumGraph): void {
+export function writeConceptCoverageQueries(dashboardsDir: string, _graph: CurriculumGraph): void {
   const dir = join(dashboardsDir, "queries", "concept-coverage");
   mkdirSync(dir, { recursive: true });
 
-  const courseBlockCoverage = collectCourseBlockCoverage(graph);
-  const totalBlocks = courseBlockCoverage.length;
-  const coveredBlocks = courseBlockCoverage.filter((block) => block.conceptLinks.length > 0).length;
-  const missingBlocks = totalBlocks - coveredBlocks;
-  const coveragePercent = totalBlocks === 0 ? 100 : (coveredBlocks / totalBlocks) * 100;
-
-  writeMetricSql(join(dir, "course-notes.sql"), totalBlocks);
-  writeMetricSql(join(dir, "notes-with-concepts.sql"), coveredBlocks);
-  writeMetricSql(join(dir, "missing-concept-links.sql"), missingBlocks);
-  writeMetricSql(join(dir, "coverage-percent.sql"), coveragePercent.toFixed(2));
+  writeMetricSql(join(dir, "course-notes.sql"), "concept-coverage.course-notes");
+  writeMetricSql(join(dir, "notes-with-concepts.sql"), "concept-coverage.notes-with-concepts");
+  writeMetricSql(join(dir, "missing-concept-links.sql"), "concept-coverage.missing-concept-links");
+  writeMetricSql(join(dir, "coverage-percent.sql"), "concept-coverage.coverage-percent");
 
   writeFileSync(
     join(dir, "coverage-by-year.sql"),
-    `${renderRowsSql(
-      ["year", "notes", "covered", "missing", "coverage_percent"],
-      collectPerYearConceptCoverage(graph, courseBlockCoverage),
-    )}\n`,
+    `${postgresDatasetSql("concept-coverage.by-year", [
+      "year",
+      "notes",
+      "covered",
+      "missing",
+      "coverage_percent",
+    ])}\n`,
   );
   writeFileSync(
     join(dir, "coverage-by-course.sql"),
-    `${renderRowsSql(
-      ["course", "notes", "covered", "missing", "coverage_percent"],
-      collectPerCourseConceptCoverage(courseBlockCoverage),
-    )}\n`,
+    `${postgresDatasetSql("concept-coverage.by-course", [
+      "course",
+      "notes",
+      "covered",
+      "missing",
+      "coverage_percent",
+    ])}\n`,
   );
   writeFileSync(
     join(dir, "notes-missing-concept-links.sql"),
-    `${renderRowsSql(
-      ["course", "line", "note"],
-      courseBlockCoverage
-        .filter((block) => block.conceptLinks.length === 0)
-        .map((block) => [block.course, block.line.toString(), block.text]),
-    )}\n`,
+    `${postgresDatasetSql("concept-coverage.notes-missing", ["course", "line", "note"])}\n`,
   );
   writeFileSync(
     join(dir, "covered-notes.sql"),
-    `${renderRowsSql(
-      ["course", "line", "concept_links", "note"],
-      courseBlockCoverage
-        .filter((block) => block.conceptLinks.length > 0)
-        .map((block) => [
-          block.course,
-          block.line.toString(),
-          block.conceptLinks.join(", "),
-          block.text,
-        ]),
-    )}\n`,
+    `${postgresDatasetSql("concept-coverage.covered-notes", [
+      "course",
+      "line",
+      "concept_links",
+      "note",
+    ])}\n`,
   );
 }

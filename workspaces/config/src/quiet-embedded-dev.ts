@@ -25,7 +25,7 @@ function isEmbeddedSubsiteReferer(referer: string | undefined): boolean {
     return false;
   }
 
-  return /^\/(analytics|network|cms|roadmap)(\/|$)/.test(path);
+  return /^\/(analytics|network|cms|cites|roadmap)(\/|$)/.test(path);
 }
 
 function shouldStubViteClient(url: string, referer: string | undefined, scope: "embedded" | "site"): boolean {
@@ -38,7 +38,11 @@ function shouldStubViteClient(url: string, referer: string | undefined, scope: "
     return true;
   }
 
-  if (pathname.startsWith("/cms/@vite/") || pathname.startsWith("/roadmap/@vite/")) {
+  if (
+    pathname.startsWith("/cms/@vite/") ||
+    pathname.startsWith("/cites/@vite/") ||
+    pathname.startsWith("/roadmap/@vite/")
+  ) {
     return true;
   }
 

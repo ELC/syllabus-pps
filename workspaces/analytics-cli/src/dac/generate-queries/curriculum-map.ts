@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { uniqueSorted } from "../../normalize";
 import { CurriculumGraph } from "../../types";
 import { collectCourseConceptRows } from "../projections";
-import { renderExpectedCurriculumSql } from "../sql/render";
+import { postgresExpectedCurriculumSql } from "../sql/postgres-templates";
 import { writeMetricSql } from "./metric";
 
 export function writeCurriculumMapQueries(dashboardsDir: string, graph: CurriculumGraph): void {
@@ -14,21 +14,15 @@ export function writeCurriculumMapQueries(dashboardsDir: string, graph: Curricul
   mkdirSync(generatedDir, { recursive: true });
 
   const courseConceptRows = collectCourseConceptRows(graph);
-  const expectedCourseCount = graph.expected.years.flatMap((year) => year.courses).length;
-  const linkedConceptCount = uniqueSorted(
-    courseConceptRows
-      .map(([, , concept]) => concept)
-      .filter((concept) => concept !== "(no concept links)"),
-  ).length;
 
-  writeMetricSql(join(queriesDir, "expected-years.sql"), graph.expected.years.length);
-  writeMetricSql(join(queriesDir, "expected-courses.sql"), expectedCourseCount);
-  writeMetricSql(join(queriesDir, "linked-concepts.sql"), linkedConceptCount);
-  writeMetricSql(join(queriesDir, "all-pages.sql"), graph.pages.length);
+  writeMetricSql(join(queriesDir, "expected-years.sql"), "curriculum-map.expected-years");
+  writeMetricSql(join(queriesDir, "expected-courses.sql"), "curriculum-map.expected-courses");
+  writeMetricSql(join(queriesDir, "linked-concepts.sql"), "curriculum-map.linked-concepts");
+  writeMetricSql(join(queriesDir, "all-pages.sql"), "curriculum-map.all-pages");
 
   writeFileSync(
     join(queriesDir, "expected-curriculum.sql"),
-    `${renderExpectedCurriculumSql(courseConceptRows)}\n`,
+    `${postgresExpectedCurriculumSql()}\n`,
   );
 
   writeFileSync(

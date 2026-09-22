@@ -1,4 +1,5 @@
-import { structuralPageKindRank } from "@pps/core";
+import { loadAnalyticsArtifact } from "@pps/content/browser";
+import { isTrayectoNoEstructurado, structuralPageKindRank } from "@pps/core";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 
@@ -10,6 +11,8 @@ import {
 import {
   AUSTRAL,
   expansionShadesForBase,
+  AUSTRAL_GRAPH_TNE,
+  courseNodeStyle,
   kindStyleForKind,
 } from "@pps/shell/austral-tokens";
 import { siteRootFromEnv } from "@pps/shell/site-root";
@@ -20,8 +23,12 @@ import {
   GRAPH_NODE_KINDS,
 } from "./graph-styles";
 import {
+  DEFAULT_GRAPH_CONCEPTS_HIDDEN,
+  DEFAULT_GRAPH_COURSE_LINK_MODE,
+  DEFAULT_GRAPH_YEARS_HIDDEN,
   parseGraphUrlState,
   writeGraphUrlState,
+  type CourseLinkMode,
   type GraphUrlState,
 } from "./graph-url";
 
@@ -44,8 +51,9 @@ export interface MountGraphOptions {
   refreshButtonId?: string;
   resetFiltersButtonId?: string;
   toggleConceptsButtonId?: string;
+  toggleYearsButtonId?: string;
+  toggleCourseLinksButtonId?: string;
   conceptPanelId?: string;
-  conceptNotesUrl?: string;
 }
 
 type KindFilterKey = (typeof GRAPH_FILTER_KINDS)[number]["kind"];
@@ -82,11 +90,13 @@ interface GraphViewState {
   kindFilters: KindFilters;
   searchQuery: string;
   conceptsHidden: boolean;
+  yearsHidden: boolean;
+  courseLinkMode: CourseLinkMode;
 }
 
 function createKindFilters(): KindFilters {
   return {
-    career: "",
+    degree: "",
     year: "",
     course: "",
     concept: "",
@@ -134,6 +144,8 @@ function urlStateFromViewState(cy: cytoscape.Core, viewState: GraphViewState): G
     expansionSlugs,
     filterSlugs,
     conceptsHidden: viewState.conceptsHidden,
+    yearsHidden: viewState.yearsHidden,
+    courseLinkMode: viewState.courseLinkMode,
   };
 }
 
@@ -143,7 +155,7 @@ function applyUrlStateToViewState(
   urlState: GraphUrlState,
 ): boolean {
   const kindFilters = createKindFilters();
-  let restored = urlState.conceptsHidden;
+  let restored = false;
 
   for (const { kind } of GRAPH_FILTER_KINDS) {
     const slug = urlState.filterSlugs[kind];
@@ -166,6 +178,8 @@ function applyUrlStateToViewState(
 
   viewState.kindFilters = kindFilters;
   viewState.conceptsHidden = urlState.conceptsHidden;
+  viewState.yearsHidden = urlState.yearsHidden;
+  viewState.courseLinkMode = urlState.courseLinkMode;
   viewState.expansionNodeIds = expansionNodeIds.length > 0 ? expansionNodeIds : null;
   viewState.focusedNodeId =
     expansionNodeIds.length > 0 ? expansionNodeIds[expansionNodeIds.length - 1]! : null;
@@ -307,14 +321,25 @@ function inducedNodeIdsForNode(node: cytoscape.NodeSingular): Set<string> {
   return nodeIds;
 }
 
-function buildInducedSubgraph(
+function visibleLayoutElements(
   cy: cytoscape.Core,
+  viewState: GraphViewState,
+): cytoscape.Collection {
+  applyElementVisibility(cy, viewState);
+  return cy.elements().not(".filtered-out");
+}
+
+function visibleLayoutSubgraph(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
   nodeIds: Set<string>,
 ): cytoscape.Collection {
-  const nodes = cy.nodes().filter((node) => nodeIds.has(node.id()));
-  const edges = cy.edges().filter((edge) => {
-    return nodeIds.has(edge.source().id()) && nodeIds.has(edge.target().id());
-  });
+  const visible = visibleLayoutElements(cy, viewState);
+  const nodes = visible.nodes().filter((node) => nodeIds.has(node.id()));
+  const activeNodeIds = new Set(nodes.map((node) => node.id()));
+  const edges = visible.edges().filter(
+    (edge) => activeNodeIds.has(edge.source().id()) && activeNodeIds.has(edge.target().id()),
+  );
 
   return nodes.union(edges);
 }
@@ -345,10 +370,45 @@ function isConceptNode(node: cytoscape.NodeSingular): boolean {
   return String(node.data("kind")) === "concept";
 }
 
+function isYearNode(node: cytoscape.NodeSingular): boolean {
+  return String(node.data("kind")) === "year";
+}
+
+function isDegreeNode(node: cytoscape.NodeSingular): boolean {
+  return String(node.data("kind")) === "degree";
+}
+
+function isHierarchyNode(node: cytoscape.NodeSingular): boolean {
+  return isYearNode(node) || isDegreeNode(node);
+}
+
+function shouldHideConceptNodes(
+  viewState: GraphViewState,
+  focusVisibleNodeIds: Set<string> | null,
+): boolean {
+  return (
+    viewState.conceptsHidden &&
+    !focusVisibleNodeIds &&
+    !viewState.kindFilters.concept
+  );
+}
+
+function shouldHideYearNodes(
+  viewState: GraphViewState,
+  focusVisibleNodeIds: Set<string> | null,
+): boolean {
+  return (
+    viewState.yearsHidden &&
+    !focusVisibleNodeIds &&
+    !viewState.kindFilters.year &&
+    !viewState.kindFilters.degree
+  );
+}
+
 function matchingNodes(
   cy: cytoscape.Core,
   query: string,
-  options: { excludeConcepts?: boolean } = {},
+  options: { excludeConcepts?: boolean; excludeYears?: boolean } = {},
 ): cytoscape.NodeSingular[] {
   const normalizedQuery = normalizeSearchText(query.trim());
   if (!normalizedQuery) {
@@ -358,6 +418,10 @@ function matchingNodes(
   const matches: cytoscape.NodeSingular[] = [];
   cy.nodes().forEach((node) => {
     if (options.excludeConcepts && isConceptNode(node)) {
+      return;
+    }
+
+    if (options.excludeYears && isHierarchyNode(node)) {
       return;
     }
 
@@ -371,7 +435,11 @@ function matchingNodes(
   );
 }
 
-function kindLabel(kind: string): string {
+function kindLabel(kind: string, trayecto?: string): string {
+  if (kind === "course" && isTrayectoNoEstructurado(trayecto)) {
+    return "TNE";
+  }
+
   const match = GRAPH_NODE_KINDS.find((item) => item.kind === kind);
   return match?.label ?? kind;
 }
@@ -448,11 +516,11 @@ function applyElementVisibility(cy: cytoscape.Core, viewState: GraphViewState): 
     const nodeId = node.id();
     let visible = true;
 
-    if (
-      viewState.conceptsHidden &&
-      !focusVisibleNodeIds &&
-      isConceptNode(node)
-    ) {
+    if (shouldHideConceptNodes(viewState, focusVisibleNodeIds) && isConceptNode(node)) {
+      visible = false;
+    }
+
+    if (shouldHideYearNodes(viewState, focusVisibleNodeIds) && isHierarchyNode(node)) {
       visible = false;
     }
 
@@ -468,8 +536,24 @@ function applyElementVisibility(cy: cytoscape.Core, viewState: GraphViewState): 
   });
 
   cy.edges().forEach((edge) => {
-    const visible =
+    let visible =
       !edge.source().hasClass("filtered-out") && !edge.target().hasClass("filtered-out");
+
+    if (visible) {
+      const edgeKind = String(edge.data("kind"));
+      const [sourceKind, targetKind] = edgeKinds(edge);
+
+      if (viewState.courseLinkMode === "mentions") {
+        if (edgeKind === "course-prerequisite") {
+          visible = false;
+        }
+      } else if (edgeKind === "page-ref" && sourceKind === "course" && targetKind === "course") {
+        visible = false;
+      } else if (edgeKind === "course-prerequisite") {
+        visible = true;
+      }
+    }
+
     edge.toggleClass("filtered-out", !visible);
   });
 
@@ -487,7 +571,7 @@ function assignExpansionAnchorColor(
   }
 
   const anchor = cy.getElementById(anchorId);
-  const { base } = kindStyleForKind(String(anchor.data("kind") ?? ""));
+  const { base } = nodeStyle(anchor);
   const usedColors = new Set(viewState.expansionAnchorColors.values());
   const nextColor =
     expansionShadesForBase(base).find((color) => !usedColors.has(color)) ?? base;
@@ -536,6 +620,19 @@ function kindStyle(kind: string) {
   return kindStyleForKind(kind);
 }
 
+function nodeStyle(node: cytoscape.SingularElementArgument) {
+  const kind = String(node.data("kind") ?? "");
+  if (kind === "course") {
+    return courseNodeStyle(String(node.data("trayecto") ?? ""));
+  }
+
+  return kindStyleForKind(kind);
+}
+
+function edgeLineColor(edge: cytoscape.EdgeSingular): string {
+  return nodeStyle(edge.source()).border;
+}
+
 function nodeTitle(node: cytoscape.SingularElementArgument, fallback: string): string {
   if (!node.isNode()) {
     return fallback;
@@ -581,8 +678,7 @@ function updateExpansionListUI(
     const chip = document.createElement("div");
     chip.className = "graph__expansion-chip";
     chip.style.borderColor =
-      viewState.expansionAnchorColors.get(nodeId) ??
-      kindStyle(String(node.data("kind"))).border;
+      viewState.expansionAnchorColors.get(nodeId) ?? nodeStyle(node).border;
     if (nodeId === viewState.focusedNodeId) {
       chip.classList.add("graph__expansion-chip--active");
     }
@@ -592,7 +688,7 @@ function updateExpansionListUI(
     selectButton.className = "graph__expansion-chip-main";
 
     const swatch = document.createElement("span");
-    const style = kindStyle(String(node.data("kind")));
+    const style = nodeStyle(node);
     swatch.className = "graph__expansion-swatch";
     swatch.style.background = style.swatchFill;
     swatch.style.borderColor = style.border;
@@ -633,7 +729,7 @@ function updateExpansionListUI(
 
 function buildKindFilterOptions(cy: cytoscape.Core): Record<KindFilterKey, cytoscape.NodeSingular[]> {
   const options: Record<KindFilterKey, cytoscape.NodeSingular[]> = {
-    career: [],
+    degree: [],
     year: [],
     course: [],
     concept: [],
@@ -738,6 +834,7 @@ function restoreGraphViewFromUrl(
   ui: GraphUi,
   filtersRoot: HTMLElement | null,
   toggleConceptsButton: HTMLButtonElement | null,
+  toggleYearsButton: HTMLButtonElement | null,
 ): boolean {
   const hadExpansion = isExpansionActive(viewState);
   const urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
@@ -745,6 +842,9 @@ function restoreGraphViewFromUrl(
   syncKindFilterControls(filtersRoot, viewState);
   if (toggleConceptsButton) {
     syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
+  }
+  if (toggleYearsButton) {
+    syncToggleYearsButton(toggleYearsButton, viewState.yearsHidden);
   }
 
   if (isExpansionActive(viewState)) {
@@ -825,6 +925,81 @@ function mountToggleConceptsButton(
   });
 }
 
+function setYearsHidden(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  hidden: boolean,
+): void {
+  viewState.yearsHidden = hidden;
+  ui.syncView();
+
+  if (!isExpansionActive(viewState)) {
+    refreshGraphLayout(cy, viewState);
+  }
+}
+
+function syncToggleYearsButton(button: HTMLButtonElement, hidden: boolean): void {
+  button.setAttribute("aria-pressed", hidden ? "true" : "false");
+  button.textContent = hidden ? "Mostrar carrera y años" : "Ocultar carrera y años";
+  button.title = hidden
+    ? "Volver a mostrar los nodos de carrera y año"
+    : "Ocultar nodos de carrera y año en la vista general; al hacer clic en un nodo siguen visibles";
+}
+
+function mountToggleYearsButton(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  button: HTMLButtonElement,
+): void {
+  syncToggleYearsButton(button, viewState.yearsHidden);
+
+  button.addEventListener("click", () => {
+    setYearsHidden(cy, viewState, ui, !viewState.yearsHidden);
+    syncToggleYearsButton(button, viewState.yearsHidden);
+  });
+}
+
+function syncToggleCourseLinksButton(button: HTMLButtonElement, mode: CourseLinkMode): void {
+  const correlativasActive = mode === "correlativas";
+  button.setAttribute("aria-pressed", correlativasActive ? "true" : "false");
+  button.textContent = correlativasActive ? "Mostrar Menciones" : "Mostrar Correlativas";
+  button.title = correlativasActive
+    ? "Mostrar enlaces de mención entre materias (wikilinks)"
+    : "Mostrar correlativas declaradas en el frontmatter de cada materia";
+}
+
+function setCourseLinkMode(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  mode: CourseLinkMode,
+): void {
+  viewState.courseLinkMode = mode;
+  ui.syncView(true);
+
+  if (!isExpansionActive(viewState)) {
+    refreshGraphLayout(cy, viewState);
+  }
+}
+
+function mountToggleCourseLinksButton(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  button: HTMLButtonElement,
+): void {
+  syncToggleCourseLinksButton(button, viewState.courseLinkMode);
+
+  button.addEventListener("click", () => {
+    const nextMode =
+      viewState.courseLinkMode === "correlativas" ? "mentions" : "correlativas";
+    setCourseLinkMode(cy, viewState, ui, nextMode);
+    syncToggleCourseLinksButton(button, viewState.courseLinkMode);
+  });
+}
+
 function positionSearchDropdown(
   searchInput: HTMLInputElement,
   resultsRoot: HTMLElement,
@@ -857,7 +1032,8 @@ function updateSearchResultsUI(
 ): void {
   const query = searchInput.value;
   const matches = matchingNodes(cy, query, {
-    excludeConcepts: viewState.conceptsHidden && !isExpansionActive(viewState),
+    excludeConcepts: shouldHideConceptNodes(viewState, null),
+    excludeYears: shouldHideYearNodes(viewState, null),
   });
   resultsRoot.replaceChildren();
 
@@ -882,7 +1058,7 @@ function updateSearchResultsUI(
     item.setAttribute("role", "option");
 
     const swatch = document.createElement("span");
-    const style = kindStyle(String(node.data("kind")));
+    const style = nodeStyle(node);
     swatch.className = "graph__search-result-swatch";
     swatch.style.background = style.swatchFill;
     swatch.style.borderColor = style.border;
@@ -893,7 +1069,7 @@ function updateSearchResultsUI(
 
     const meta = document.createElement("span");
     meta.className = "graph__search-result-kind";
-    meta.textContent = kindLabel(String(node.data("kind")));
+    meta.textContent = kindLabel(String(node.data("kind")), String(node.data("trayecto") ?? ""));
 
     item.append(swatch, label, meta);
     item.addEventListener("mousedown", (event) => {
@@ -988,6 +1164,10 @@ function edgeIdealLength(edge: cytoscape.EdgeSingular): number {
     return 35;
   }
 
+  if (edge.data("kind") === "course-prerequisite") {
+    return 62;
+  }
+
   const [sourceKind, targetKind] = edgeKinds(edge);
   const kinds = new Set([sourceKind, targetKind]);
 
@@ -1003,11 +1183,11 @@ function edgeIdealLength(edge: cytoscape.EdgeSingular): number {
     return 88;
   }
 
-  if (kinds.has("career") && kinds.has("year")) {
+  if (kinds.has("degree") && kinds.has("year")) {
     return 72;
   }
 
-  if (kinds.has("career") && kinds.has("course")) {
+  if (kinds.has("degree") && kinds.has("course")) {
     return 96;
   }
 
@@ -1017,6 +1197,10 @@ function edgeIdealLength(edge: cytoscape.EdgeSingular): number {
 function edgeLayoutElasticity(edge: cytoscape.EdgeSingular): number {
   if (edge.data("kind") === "concept-tag") {
     return 0.85;
+  }
+
+  if (edge.data("kind") === "course-prerequisite") {
+    return 0.68;
   }
 
   const [sourceKind, targetKind] = edgeKinds(edge);
@@ -1053,7 +1237,7 @@ function refreshGraphLayout(
   cy: cytoscape.Core,
   viewState: GraphViewState,
 ): void {
-  const visibleElements = cy.elements().not(".filtered-out");
+  const visibleElements = visibleLayoutElements(cy, viewState);
   if (visibleElements.length === 0) {
     return;
   }
@@ -1121,11 +1305,10 @@ function applyFocusView(
   }
 
   const visibleNodeIds = visibleNodeIdsForExpansions(cy, expansionNodeIds);
-  const focusEles = buildInducedSubgraph(cy, visibleNodeIds);
+  const focusEles = visibleLayoutSubgraph(cy, viewState, visibleNodeIds);
   const sessionKey = expansionSessionKey(expansionNodeIds);
 
   cy.elements().removeClass("focused");
-  applyElementVisibility(cy, viewState);
 
   if (options.focusNode) {
     options.focusNode.addClass("focused");
@@ -1314,8 +1497,22 @@ function prepareGraphElements(elements: cytoscape.ElementsDefinition): cytoscape
     nodes: elements.nodes?.map((node) => {
       const label = node.data.label;
       const rawTitle = typeof label === "string" ? label : String(label ?? node.data.id ?? "");
+      const existingClasses =
+        typeof node.classes === "string"
+          ? node.classes.split(/\s+/).filter(Boolean)
+          : Array.isArray(node.classes)
+            ? node.classes.filter((entry): entry is string => typeof entry === "string")
+            : [];
+      const classes = [
+        ...existingClasses,
+        ...(String(node.data.kind) === "course" && isTrayectoNoEstructurado(node.data.trayecto)
+          ? ["tne"]
+          : []),
+      ];
+
       return {
         ...node,
+        classes: [...new Set(classes)].join(" "),
         data: {
           ...node.data,
           title: capitalizeWords(rawTitle),
@@ -1323,7 +1520,32 @@ function prepareGraphElements(elements: cytoscape.ElementsDefinition): cytoscape
         },
       };
     }),
-    edges: elements.edges ? unifyBidirectionalEdges(elements.edges, kindById) : elements.edges,
+    edges: elements.edges
+      ? unifyBidirectionalEdges(elements.edges, kindById).map((edge) => {
+          const sourceKind = kindById.get(String(edge.data.source));
+          const targetKind = kindById.get(String(edge.data.target));
+          const kind = String(edge.data.kind);
+          const isCourseInterlink =
+            kind === "course-prerequisite" ||
+            (kind === "page-ref" && sourceKind === "course" && targetKind === "course");
+
+          if (!isCourseInterlink) {
+            return edge;
+          }
+
+          const existingClasses =
+            typeof edge.classes === "string"
+              ? edge.classes.split(/\s+/).filter(Boolean)
+              : Array.isArray(edge.classes)
+                ? edge.classes.filter((entry): entry is string => typeof entry === "string")
+                : [];
+
+          return {
+            ...edge,
+            classes: [...new Set([...existingClasses, "course-interlink"])].join(" "),
+          };
+        })
+      : elements.edges,
   };
 }
 
@@ -1349,37 +1571,32 @@ function openConceptPanelForNode(
   conceptPanel.open(page);
 }
 
-export async function mountGraph(
-  containerClass: string,
-  dataUrl: string,
-  options: MountGraphOptions = {},
-): Promise<void> {
+export async function mountGraph(containerClass: string, options: MountGraphOptions = {}): Promise<void> {
   const container = document.querySelector<HTMLElement>(`.${containerClass}`);
   if (!container) {
     throw new Error(`Missing graph container .${containerClass}`);
   }
 
-  const response = await fetch(dataUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to load graph (${response.status})`);
-  }
-
-  const [graphText, conceptPagesBySlug] = await Promise.all([
-    response.text(),
-    options.conceptNotesUrl
-      ? loadConceptPages(options.conceptNotesUrl).catch((error) => {
+  const [graphLoaded, conceptPagesBySlug] = await Promise.all([
+    loadAnalyticsArtifact("graph.cy.json"),
+    options.conceptPanelId
+      ? loadConceptPages().catch((error) => {
           console.error(error);
           return new Map<string, ConceptPage>();
         })
       : Promise.resolve(new Map<string, ConceptPage>()),
   ]);
 
-  const payload = parseGeneratedPayload<{ elements: cytoscape.ElementsDefinition }>(graphText);
+  const payload =
+    typeof graphLoaded === "string"
+      ? parseGeneratedPayload<{ elements: cytoscape.ElementsDefinition }>(graphLoaded)
+      : (graphLoaded as { elements: cytoscape.ElementsDefinition });
   const defaultNodeStyle = kindStyleForKind("");
 
   const cy = cytoscape({
     container,
     elements: prepareGraphElements(payload.elements),
+    layout: { name: "null" },
     autoungrabify: false,
     boxSelectionEnabled: false,
     style: [
@@ -1403,9 +1620,9 @@ export async function mountGraph(
         },
       },
       {
-        selector: "node[kind = 'career']",
+        selector: "node[kind = 'degree']",
         style: {
-          "border-color": kindStyle("career").border,
+          "border-color": kindStyle("degree").border,
         },
       },
       {
@@ -1422,6 +1639,12 @@ export async function mountGraph(
           height: 76,
           "font-size": 8,
           "text-max-width": 58,
+        },
+      },
+      {
+        selector: "node.tne",
+        style: {
+          "border-color": AUSTRAL_GRAPH_TNE.border,
         },
       },
       {
@@ -1452,8 +1675,8 @@ export async function mountGraph(
         selector: "edge",
         style: {
           width: 1.5,
-          "line-color": AUSTRAL.edgeStructural,
-          "target-arrow-color": AUSTRAL.edgeStructural,
+          "line-color": (edge) => edgeLineColor(edge),
+          "target-arrow-color": (edge) => edgeLineColor(edge),
           "target-arrow-shape": "triangle",
           "curve-style": "bezier",
         },
@@ -1464,6 +1687,12 @@ export async function mountGraph(
           width: 2.25,
           "line-color": "data(expansionColor)",
           "target-arrow-color": "data(expansionColor)",
+        },
+      },
+      {
+        selector: "edge.course-interlink",
+        style: {
+          width: 2,
         },
       },
     ],
@@ -1507,7 +1736,9 @@ export async function mountGraph(
     focusLayoutCache: new Map(),
     kindFilters: createKindFilters(),
     searchQuery: "",
-    conceptsHidden: false,
+    conceptsHidden: DEFAULT_GRAPH_CONCEPTS_HIDDEN,
+    yearsHidden: DEFAULT_GRAPH_YEARS_HIDDEN,
+    courseLinkMode: DEFAULT_GRAPH_COURSE_LINK_MODE,
   };
   let urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
 
@@ -1568,6 +1799,23 @@ export async function mountGraph(
     syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
   }
 
+  const toggleYearsButton = options.toggleYearsButtonId
+    ? document.getElementById(options.toggleYearsButtonId)
+    : null;
+
+  if (toggleYearsButton instanceof HTMLButtonElement) {
+    mountToggleYearsButton(cy, viewState, ui, toggleYearsButton);
+    syncToggleYearsButton(toggleYearsButton, viewState.yearsHidden);
+  }
+
+  const toggleCourseLinksButton = options.toggleCourseLinksButtonId
+    ? document.getElementById(options.toggleCourseLinksButtonId)
+    : null;
+
+  if (toggleCourseLinksButton instanceof HTMLButtonElement) {
+    mountToggleCourseLinksButton(cy, viewState, ui, toggleCourseLinksButton);
+  }
+
   if (urlRestorePending && !isExpansionActive(viewState)) {
     ui.syncView();
   }
@@ -1596,6 +1844,7 @@ export async function mountGraph(
       ui,
       filtersRoot,
       toggleConceptsButton instanceof HTMLButtonElement ? toggleConceptsButton : null,
+      toggleYearsButton instanceof HTMLButtonElement ? toggleYearsButton : null,
     );
   });
 
@@ -1653,7 +1902,7 @@ export async function mountGraph(
     openInCms(cmsBase, slug);
   });
 
-  runGraphLayout(cy.elements(), {
+  runGraphLayout(visibleLayoutElements(cy, viewState), {
     quality: "proof",
     randomize: true,
   });

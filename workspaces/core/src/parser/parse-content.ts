@@ -1,7 +1,8 @@
 import { normalizeTitle, stripMarkdownExtension } from "../normalize";
 import { parseFrontmatter } from "./frontmatter";
 import { slugFromPath } from "../slug";
-import { pageKinds, PageKind, ZettelBlock } from "../types";
+import { parseCourseTrayectoValue } from "../course-trayecto";
+import { CourseTrayecto, pageKinds, PageKind, ZettelBlock } from "../types";
 import {
   extractCitationRefs,
   extractConceptTags,
@@ -19,7 +20,38 @@ function parseKind(value: unknown): PageKind | undefined {
   return VALID_KINDS.has(value as PageKind) ? (value as PageKind) : undefined;
 }
 
-function parseDependsOn(value: unknown): { raw: unknown; targets?: string[] } {
+function parseTrayecto(value: unknown): {
+  raw: unknown;
+  trayecto?: CourseTrayecto;
+  invalid?: boolean;
+} {
+  if (value === undefined) {
+    return { raw: undefined };
+  }
+
+  if (typeof value !== "string") {
+    return { raw: value, invalid: true };
+  }
+
+  const trayecto = parseCourseTrayectoValue(value);
+  if (!trayecto) {
+    return { raw: value, invalid: true };
+  }
+
+  return { raw: value, trayecto };
+}
+
+function parsePositiveIntField(value: unknown): { raw: unknown; value?: number; invalid?: boolean } {
+  if (value === undefined) {
+    return { raw: undefined };
+  }
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+    return { raw: value, invalid: true };
+  }
+  return { raw: value, value };
+}
+
+function parseStringListField(value: unknown): { raw: unknown; targets?: string[] } {
   if (value === undefined) {
     return { raw: undefined };
   }
@@ -51,7 +83,16 @@ export function parsePageContent(source: { path: string; content: string }): Raw
   const normalizedTitle = normalizeTitle(title);
   const id = typeof parsed.data.id === "string" ? parsed.data.id.trim() : undefined;
   const frontmatterKind = parseKind(parsed.data.kind);
-  const dependsOn = parseDependsOn(parsed.data.dependsOn);
+  const dependsOn = parseStringListField(parsed.data.dependsOn);
+  const correlativas = parseStringListField(parsed.data.correlativas);
+  const courses = parseStringListField(parsed.data.courses);
+  const yearsCount = parsePositiveIntField(parsed.data.years);
+  const yearIndex = parsePositiveIntField(parsed.data.yearIndex);
+  const degreeRaw = parsed.data.degree;
+  const degreeTarget =
+    typeof degreeRaw === "string" && degreeRaw.trim().length > 0 ? degreeRaw.trim() : undefined;
+  const degreeInvalid = degreeRaw !== undefined && degreeTarget === undefined;
+  const trayecto = parseTrayecto(parsed.data.trayecto);
   const blocks: ZettelBlock[] = [];
   const nonBulletLines: number[] = [];
 
@@ -88,6 +129,22 @@ export function parsePageContent(source: { path: string; content: string }): Raw
     frontmatterKind,
     dependsOnRaw: dependsOn.raw,
     dependsOnTargets: dependsOn.targets,
+    correlativasRaw: correlativas.raw,
+    correlativasTargets: correlativas.targets,
+    trayectoRaw: trayecto.raw,
+    trayecto: trayecto.trayecto,
+    trayectoInvalid: trayecto.invalid,
+    yearsCountRaw: yearsCount.raw,
+    yearsCount: yearsCount.value,
+    yearsCountInvalid: yearsCount.invalid,
+    degreeRaw,
+    degreeTarget,
+    degreeInvalid,
+    yearIndexRaw: yearIndex.raw,
+    yearIndex: yearIndex.value,
+    yearIndexInvalid: yearIndex.invalid,
+    coursesRaw: courses.raw,
+    coursesTargets: courses.targets,
     blocks,
     nonBulletLines,
   };

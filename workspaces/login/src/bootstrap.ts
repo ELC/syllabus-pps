@@ -2,6 +2,7 @@ import type { User } from "@supabase/supabase-js";
 import { createElement, StrictMode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 
+import { isAuthDisabled, readDevAuthProfile } from "./authDisabled";
 import {
   handleUnauthenticatedAccess,
   maybeReturnAfterLogin,
@@ -28,6 +29,14 @@ export async function bootstrapAuthenticatedApp(
   renderApp: (root: Root) => void,
 ): Promise<void> {
   if (redirectSubsiteToLoginIfNeeded()) {
+    return;
+  }
+
+  if (isAuthDisabled()) {
+    revealAuthenticatedShell();
+    const appRoot = createRoot(host);
+    renderApp(appRoot);
+    activateSidebarFooter(readDevAuthProfile(), async () => undefined);
     return;
   }
 

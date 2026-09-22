@@ -1,10 +1,8 @@
 import { buildCommand } from "@stricli/core";
 import type { CliContext } from "../../context";
-import type { AnalyticsFlags } from "../../parameters/analytics";
-import { analyticsParameters } from "../../parameters/analytics";
 
-export const command = buildCommand<AnalyticsFlags, [], CliContext>({
+export const command = buildCommand<Record<string, never>, [], CliContext>({
   loader: () => import("./impl"),
-  parameters: analyticsParameters,
-  docs: { brief: "Show local content sync status." },
+  parameters: { flags: {} },
+  docs: { brief: "Show remote page and resource counts in Supabase." },
 });

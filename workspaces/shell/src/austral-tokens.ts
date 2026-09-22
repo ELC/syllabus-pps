@@ -1,5 +1,7 @@
 /** Mirror of @pps/shell/styles/_tokens.scss for Cytoscape runtime. */
 
+import { isTrayectoNoEstructurado } from "@pps/core";
+
 export const AUSTRAL = {
   azulPrimario: "#2E3092",
   azulHover: "#2429AA",
@@ -59,7 +61,7 @@ export function shade(hex: string, baseWeight: number): string {
 
 /** Okabe–Ito base hues (colorblind-safe). Borders and edges derive from these. */
 const GRAPH_KIND_BASES = [
-  { kind: "career", label: "Carrera", base: AUSTRAL.azulPrimario },
+  { kind: "degree", label: "Carrera", base: AUSTRAL.azulPrimario },
   { kind: "year", label: "Año", base: "#9D4470" },
   { kind: "course", label: "Materia", base: "#D97706" },
   { kind: "concept", label: "Concepto", base: "#009E73" },
@@ -74,6 +76,13 @@ export const AUSTRAL_GRAPH_NODE_KINDS = GRAPH_KIND_BASES.map(({ kind, label, bas
   swatchFill: tint(base, 0.22),
   border: base,
 }));
+
+export const AUSTRAL_GRAPH_TNE = {
+  base: "#7B4FB3",
+  fill: "transparent",
+  swatchFill: tint("#7B4FB3", 0.22),
+  border: "#7B4FB3",
+} as const;
 
 export function kindStyleForKind(kind: string): {
   base: string;
@@ -93,6 +102,19 @@ export function kindStyleForKind(kind: string): {
     swatchFill: tint(base, 0.22),
     border: base,
   };
+}
+
+export function courseNodeStyle(trayecto?: string): {
+  base: string;
+  fill: string;
+  swatchFill: string;
+  border: string;
+} {
+  if (isTrayectoNoEstructurado(trayecto)) {
+    return AUSTRAL_GRAPH_TNE;
+  }
+
+  return kindStyleForKind("course");
 }
 
 /** Expansion / focus accents — only shades and tints of the anchor node's base. */

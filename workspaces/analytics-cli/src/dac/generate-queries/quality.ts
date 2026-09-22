@@ -1,15 +1,14 @@
-import { countDiagnosticsBySeverity, staticFilterAllValue } from "@pps/core";
+import { staticFilterAllValue } from "@pps/core";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { uniqueSorted } from "../../normalize";
 import { CurriculumGraph, Diagnostic } from "../../types";
-import { countPagesByKind } from "../projections";
-import { renderDiagnosticsSql } from "../sql/render";
+import { postgresDiagnosticsSql } from "../sql/postgres-templates";
 import { writeMetricSql } from "./metric";
 
 export function writeQualityQueries(
   dashboardsDir: string,
-  graph: CurriculumGraph,
+  _graph: CurriculumGraph,
   diagnostics: Diagnostic[],
 ): void {
   const queriesDir = join(dashboardsDir, "queries", "quality");
@@ -17,20 +16,16 @@ export function writeQualityQueries(
   mkdirSync(queriesDir, { recursive: true });
   mkdirSync(generatedDir, { recursive: true });
 
-  const errors = countDiagnosticsBySeverity(diagnostics, "error");
-  const warnings = countDiagnosticsBySeverity(diagnostics, "warning");
-  const expectedCourses = graph.expected.years.flatMap((year) => year.courses).length;
+  writeMetricSql(join(queriesDir, "pages.sql"), "quality.pages");
+  writeMetricSql(join(queriesDir, "edges.sql"), "quality.edges");
+  writeMetricSql(join(queriesDir, "expected-courses.sql"), "quality.expected-courses");
+  writeMetricSql(join(queriesDir, "errors.sql"), "quality.errors");
+  writeMetricSql(join(queriesDir, "warnings.sql"), "quality.warnings");
+  writeMetricSql(join(queriesDir, "concept-pages.sql"), "quality.concept-pages");
+  writeMetricSql(join(queriesDir, "course-pages.sql"), "quality.course-pages");
+  writeMetricSql(join(queriesDir, "year-pages.sql"), "quality.year-pages");
 
-  writeMetricSql(join(queriesDir, "pages.sql"), graph.pages.length);
-  writeMetricSql(join(queriesDir, "edges.sql"), graph.edges.length);
-  writeMetricSql(join(queriesDir, "expected-courses.sql"), expectedCourses);
-  writeMetricSql(join(queriesDir, "errors.sql"), errors);
-  writeMetricSql(join(queriesDir, "warnings.sql"), warnings);
-  writeMetricSql(join(queriesDir, "concept-pages.sql"), countPagesByKind(graph, "concept"));
-  writeMetricSql(join(queriesDir, "course-pages.sql"), countPagesByKind(graph, "course"));
-  writeMetricSql(join(queriesDir, "year-pages.sql"), countPagesByKind(graph, "year"));
-
-  writeFileSync(join(queriesDir, "diagnostics.sql"), `${renderDiagnosticsSql(diagnostics)}\n`);
+  writeFileSync(join(queriesDir, "diagnostics.sql"), `${postgresDiagnosticsSql()}\n`);
 
   writeFileSync(
     join(generatedDir, "quality-filters.json"),
@@ -49,4 +44,5 @@ export function writeQualityQueries(
       2,
     )}\n`,
   );
+
 }

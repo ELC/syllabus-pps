@@ -1,0 +1,35 @@
+.pps-rebuild-indicator {
+  --pps-rebuild-color: #64748b;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+  line-height: 1.25;
+
+  &__dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--pps-rebuild-color);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--pps-rebuild-color) 35%, transparent);
+  }
+
+  &__label {
+    color: var(--pps-rebuild-color);
+    font-weight: 700;
+  }
+
+  &--updated {
+    --pps-rebuild-color: #16a34a;
+  }
+
+  &--updating {
+    --pps-rebuild-color: #ca8a04;
+  }
+
+  &--unknown {
+    --pps-rebuild-color: #dc2626;
+  }
+}

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildGraphFromPages, collectDiagnostics, createLoadedConfig } from "@pps/core";
 
 describe("resource citation diagnostics", () => {
-  it("reports citations that do not exist in content/resources.json", () => {
+  it("reports citations that do not exist in the resource catalog", () => {
     const config = createLoadedConfig({ years: [] });
     const graph = buildGraphFromPages({
       config,
@@ -42,7 +42,7 @@ dependsOn: []
         page: "algoritmos",
         line: 2,
         message:
-          'Page "algoritmos" cites resource "missing-resource-id" that is missing from content/resources.json.',
+          'Page "algoritmos" cites resource "missing-resource-id" that is missing from the resource catalog.',
         details: expect.objectContaining({ citationId: "missing-resource-id" }),
       }),
     ]);

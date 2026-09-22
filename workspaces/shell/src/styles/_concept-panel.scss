@@ -1,6 +1,21 @@
-.graph {
-  --graph-concept-note-height: 9rem;
+/* Panel roots inherit these even when there is no `.graph` page wrapper (e.g. roadmap SPA). */
+.graph,
+.graph__concept-panel,
+.graph__capstone-panel {
+  --graph-concept-note-font-size: 0.875rem;
+  --graph-concept-note-line-height: 1.6;
+  --graph-concept-note-body-lines: 3;
+  --graph-concept-note-copy-padding-block: 0.45rem;
+  --graph-concept-note-copy-padding-inline: 0.75rem;
+  --graph-concept-note-body-height: calc(
+    var(--graph-concept-note-font-size) * var(--graph-concept-note-line-height) *
+      var(--graph-concept-note-body-lines)
+  );
+  --graph-concept-note-height: 10vh;
+  --graph-concept-note-height: 10dvh;
+}
 
+.graph {
   &__concept-panel,
   &__capstone-panel {
     --graph-panel-width: 100vw;
@@ -102,7 +117,7 @@
     flex: 1;
     min-height: 0;
     overflow: hidden;
-    padding: 0.85rem 0 1rem 1rem;
+    padding: 0.85rem 1rem 1rem;
   }
 
   &__concept-empty {
@@ -127,7 +142,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 0.9rem;
+    gap: 0.75rem;
     min-height: 0;
     overflow-x: hidden;
     overflow-y: auto;
@@ -160,17 +175,41 @@
   }
 
   &__concept-note-card {
-    grid-template-columns: 1fr 5fr 1fr;
+    position: relative;
+    grid-template-columns: 1fr 5fr 1.35fr;
     grid-template-rows: minmax(0, 1fr);
     transition:
       border-color 0.15s ease,
       box-shadow 0.15s ease;
 
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      transition:
+        opacity 0.15s ease,
+        background-color 0.15s ease;
+    }
+
+    &:hover:not(&--done)::after {
+      opacity: 1;
+      background: rgba(15, 76, 129, 0.05);
+    }
+
     &--done {
       border-color: var(--austral-graph-concept-base);
 
-      .graph__concept-note-copy {
+      &::after {
+        opacity: 1;
         background: rgba(46, 48, 146, 0.06);
+      }
+
+      .graph__concept-note-copy {
+        background: transparent;
       }
     }
 
@@ -184,7 +223,7 @@
     display: flex;
     grid-column: 2;
     grid-row: 1;
-    align-items: stretch;
+    align-items: center;
     width: 100%;
     height: 100%;
     min-height: 0;
@@ -198,12 +237,6 @@
     cursor: pointer;
     transition: background-color 0.15s ease;
 
-    &:hover {
-      .graph__concept-note-copy {
-        background: var(--dash-table-head);
-      }
-    }
-
     &:focus-visible {
       outline: 2px solid var(--austral-ing-secondary);
       outline-offset: -2px;
@@ -214,14 +247,33 @@
     display: grid;
     grid-column: 3;
     grid-row: 1;
+    grid-template-columns: 1fr;
     grid-template-rows: 2fr 1fr;
     gap: 0;
     align-self: stretch;
     min-height: 0;
     height: 100%;
 
+    &--with-edit {
+      grid-template-columns: 1fr 1fr;
+
+      .graph__concept-note-open {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      .graph__concept-note-omit {
+        grid-column: 2;
+        grid-row: 2;
+      }
+    }
+
     &--omit-only {
       grid-template-rows: 1fr;
+
+      .graph__concept-note-omit {
+        grid-row: 1;
+      }
     }
   }
 
@@ -235,6 +287,11 @@
     font-size: 0.72rem;
     font-weight: 700;
     color: var(--austral-graph-concept-base);
+    flex-shrink: 0;
+
+    &:empty {
+      display: none;
+    }
   }
 
   &__concept-note-omit {
@@ -276,6 +333,7 @@
     height: 1.5rem;
   }
 
+  &__concept-note-edit,
   &__concept-note-open {
     display: flex;
     align-items: center;
@@ -285,14 +343,8 @@
     height: 100%;
     border: 0;
     border-radius: 0;
-    background: var(--austral-azul-primario);
-    color: var(--austral-blanco);
     text-decoration: none;
-    transition: background-color 0.15s ease;
-
-    &:hover {
-      background: var(--austral-azul-hover);
-    }
+    transition: background-color 0.15s ease, color 0.15s ease;
 
     &:focus-visible {
       outline: 2px solid var(--austral-ing-secondary);
@@ -300,6 +352,28 @@
     }
   }
 
+  &__concept-note-edit {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    background: var(--austral-badge-edit-bg);
+    color: var(--austral-badge-edit-fg);
+
+    &:hover {
+      background: var(--austral-badge-edit-bg-hover);
+      color: var(--austral-badge-edit-fg-hover);
+    }
+  }
+
+  &__concept-note-open {
+    background: var(--austral-azul-primario);
+    color: var(--austral-blanco);
+
+    &:hover {
+      background: var(--austral-azul-hover);
+    }
+  }
+
+  &__concept-note-edit-icon,
   &__concept-note-open-icon {
     width: 1.5rem;
     height: 1.5rem;
@@ -378,7 +452,8 @@
     width: 100%;
     min-width: 0;
     min-height: 0;
-    padding: 0.7rem 0.8rem;
+    padding: var(--graph-concept-note-copy-padding-block)
+      var(--graph-concept-note-copy-padding-inline);
     background: var(--dash-surface);
     transition: background-color 0.15s ease;
 
@@ -386,10 +461,13 @@
     .graph__concept-note-static & {
       grid-column: 2;
       grid-row: 1;
+      height: 100%;
     }
 
     .graph__concept-note-action & {
-      flex: 1;
+      flex: 1 1 auto;
+      width: 100%;
+      max-height: 100%;
     }
   }
 
@@ -404,11 +482,14 @@
 
   &__concept-note-body {
     display: -webkit-box;
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
+    max-height: var(--graph-concept-note-body-height);
     overflow: hidden;
+    font-size: var(--graph-concept-note-font-size);
+    line-height: var(--graph-concept-note-line-height);
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: var(--graph-concept-note-body-lines);
     word-break: break-word;
   }
 

@@ -1,5 +1,11 @@
 import { normalizeTitle } from "../normalize";
-import { ConceptDependency, ConceptTag, PageRef, ZettelBlock } from "../types";
+import {
+  ConceptDependency,
+  ConceptTag,
+  CourseCorrelativa,
+  PageRef,
+  ZettelBlock,
+} from "../types";
 import { PageIndex, resolveLinkTarget } from "./page-index";
 
 export function resolveBlock(block: ZettelBlock, index: PageIndex): ZettelBlock {
@@ -21,6 +27,14 @@ export function resolveRef(ref: PageRef, index: PageIndex): PageRef {
 }
 
 export function resolveDependsOn(target: string, index: PageIndex): ConceptDependency {
+  return resolveFrontmatterLink(target, index);
+}
+
+export function resolveCorrelativa(target: string, index: PageIndex): CourseCorrelativa {
+  return resolveFrontmatterLink(target, index);
+}
+
+function resolveFrontmatterLink(target: string, index: PageIndex): ConceptDependency {
   const resolvedTarget = resolveLinkTarget(target, index);
   return {
     raw: target,

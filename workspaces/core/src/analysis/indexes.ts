@@ -1,19 +1,19 @@
 import { normalizeTitle } from "../normalize";
-import { CurriculumGraph, YearTitle, ZettelPage } from "../types";
+import { CurriculumGraph, ZettelPage } from "../types";
 
 export interface CurriculumIndexes {
   pagesByTitle: ReadonlyMap<string, ZettelPage>;
   curriculumTitles: ReadonlySet<string>;
   conceptTitles: ReadonlySet<string>;
   conceptPagesByTitle: ReadonlyMap<string, ZettelPage>;
-  yearByCourse: ReadonlyMap<string, YearTitle>;
+  yearByCourse: ReadonlyMap<string, string>;
 }
 
 export function buildCurriculumIndexes(graph: CurriculumGraph): CurriculumIndexes {
   const pagesByTitle = new Map(graph.pages.map((page) => [page.normalizedTitle, page]));
   const curriculumTitles = new Set(
     graph.pages
-      .filter((page) => page.kind === "career" || page.kind === "course" || page.kind === "year")
+      .filter((page) => page.kind === "degree" || page.kind === "course" || page.kind === "year")
       .map((page) => page.normalizedTitle),
   );
   const conceptPages = graph.pages.filter((page) => page.kind === "concept");

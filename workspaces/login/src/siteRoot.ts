@@ -1,4 +1,4 @@
-const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/"] as const;
+const APP_SUFFIXES = ["analytics/", "network/", "roadmap/", "cms/", "cites/"] as const;
 
 function normalizeBase(base: string): string {
   return base.endsWith("/") ? base : `${base}/`;

@@ -1,3 +1,4 @@
+import { loadAnalyticsArtifact } from "@pps/content/browser";
 import type { StaticDashboard, StaticDashboardExport, StaticFilter, StaticMetric, StaticTable } from "@pps/core";
 import {
   formatMetricValue,
@@ -178,11 +179,7 @@ function renderDashboardContent(
   rerenderTables();
 }
 
-export async function mountAnalyticsDashboard(
-  contentId: string,
-  tabsId: string,
-  dataUrl: string,
-): Promise<void> {
+export async function mountAnalyticsDashboard(contentId: string, tabsId: string): Promise<void> {
   const container = document.querySelector<HTMLElement>(`.${contentId}`);
   const tabs = document.getElementById(tabsId);
   if (!container || !tabs) {
@@ -190,12 +187,11 @@ export async function mountAnalyticsDashboard(
   }
   container.classList.add("analytics");
 
-  const response = await fetch(dataUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to load dashboards (${response.status})`);
-  }
-
-  const payload = parseGeneratedPayload<StaticDashboardExport>(await response.text());
+  const loaded = await loadAnalyticsArtifact("dashboards.json");
+  const payload =
+    typeof loaded === "string"
+      ? parseGeneratedPayload<StaticDashboardExport>(loaded)
+      : (loaded as StaticDashboardExport);
   if (payload.dashboards.length === 0) {
     container.textContent = "No dashboards found in analytics export.";
     return;

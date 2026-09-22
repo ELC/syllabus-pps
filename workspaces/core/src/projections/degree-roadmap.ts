@@ -1,4 +1,10 @@
 import { buildCurriculumIndexes } from "../analysis";
+import { deriveExpectedCurriculum } from "../curriculum";
+import {
+  coursesLinkedToYearPage,
+  resolveCoursePageTitle,
+  yearPagesForDegree,
+} from "../degree-year";
 import { normalizeTitle, uniqueSorted } from "../normalize";
 import { CurriculumGraph, GraphEdge, PageKind, ZettelPage } from "../types";
 
@@ -9,21 +15,62 @@ export interface DegreeRoadmapConcept {
 }
 
 export interface DegreeRoadmap {
-  career: string;
-  careerSlug: string;
+  degree: string;
+  degreeSlug: string;
   concepts: DegreeRoadmapConcept[];
   edges: GraphEdge[];
 }
 
-function reachableFromCareer(graph: CurriculumGraph, careerTitle: string): Set<string> {
+export function reachableFromDegree(graph: CurriculumGraph, degreeTitle: string): Set<string> {
   const { pagesByTitle } = buildCurriculumIndexes(graph);
-  const career = pagesByTitle.get(normalizeTitle(careerTitle));
-  if (!career || career.kind !== "career") {
+  const degreePage = pagesByTitle.get(normalizeTitle(degreeTitle));
+  if (!degreePage || degreePage.kind !== "degree") {
     return new Set();
   }
 
-  const reachable = new Set<string>([career.title]);
-  const queue = [career.title];
+  const reachable = new Set<string>([degreePage.title]);
+  const queue: string[] = [degreePage.title];
+
+  const degreeYearPages = yearPagesForDegree(graph.pages, degreePage.title, {
+    degreeSlug: degreePage.slug,
+  });
+  const degreeYearTitles = new Set(degreeYearPages.map((page) => page.title));
+
+  for (const yearPage of degreeYearPages) {
+    if (!reachable.has(yearPage.title)) {
+      reachable.add(yearPage.title);
+      queue.push(yearPage.title);
+    }
+    for (const courseTitle of coursesLinkedToYearPage(yearPage, graph)) {
+      if (!reachable.has(courseTitle)) {
+        reachable.add(courseTitle);
+        queue.push(courseTitle);
+      }
+    }
+  }
+
+  const hasReachableCourse = graph.pages.some(
+    (page) => page.kind === "course" && reachable.has(page.title),
+  );
+  const expectedYears =
+    graph.expected?.years?.length > 0
+      ? graph.expected.years
+      : deriveExpectedCurriculum(graph.pages).years;
+  if (!hasReachableCourse && expectedYears.length > 0) {
+    for (const year of expectedYears) {
+      if (degreeYearTitles.size > 0 && !degreeYearTitles.has(year.title)) {
+        continue;
+      }
+      for (const courseRef of year.courses) {
+        const courseTitle = resolveCoursePageTitle(courseRef, graph.pages);
+        if (!courseTitle || reachable.has(courseTitle)) {
+          continue;
+        }
+        reachable.add(courseTitle);
+        queue.push(courseTitle);
+      }
+    }
+  }
 
   while (queue.length > 0) {
     const current = queue.shift();
@@ -60,20 +107,20 @@ function conceptsForDegree(reachable: Set<string>, graph: CurriculumGraph): Zett
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
 }
 
-export function listCareerPages(graph: CurriculumGraph): ZettelPage[] {
+export function listDegreePages(graph: CurriculumGraph): ZettelPage[] {
   return graph.pages
-    .filter((page) => page.kind === "career")
+    .filter((page) => page.kind === "degree")
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
 }
 
-export function projectDegreeRoadmap(graph: CurriculumGraph, careerTitle: string): DegreeRoadmap | null {
+export function projectDegreeRoadmap(graph: CurriculumGraph, degreeTitle: string): DegreeRoadmap | null {
   const { pagesByTitle } = buildCurriculumIndexes(graph);
-  const career = pagesByTitle.get(normalizeTitle(careerTitle));
-  if (!career || career.kind !== "career") {
+  const degreePage = pagesByTitle.get(normalizeTitle(degreeTitle));
+  if (!degreePage || degreePage.kind !== "degree") {
     return null;
   }
 
-  const reachable = reachableFromCareer(graph, career.title);
+  const reachable = reachableFromDegree(graph, degreePage.title);
   const concepts = conceptsForDegree(reachable, graph);
   const conceptTitles = new Set(concepts.map((page) => page.title));
 
@@ -85,8 +132,8 @@ export function projectDegreeRoadmap(graph: CurriculumGraph, careerTitle: string
   );
 
   return {
-    career: career.title,
-    careerSlug: career.slug,
+    degree: degreePage.title,
+    degreeSlug: degreePage.slug,
     concepts: concepts.map((page) => ({
       title: page.title,
       slug: page.slug,
@@ -101,14 +148,14 @@ export function projectDegreeRoadmap(graph: CurriculumGraph, careerTitle: string
 }
 
 export function projectAllDegreeRoadmaps(graph: CurriculumGraph): DegreeRoadmap[] {
-  return listCareerPages(graph)
-    .map((career) => projectDegreeRoadmap(graph, career.title))
+  return listDegreePages(graph)
+    .map((degreePage) => projectDegreeRoadmap(graph, degreePage.title))
     .filter((roadmap): roadmap is DegreeRoadmap => roadmap !== null);
 }
 
 export function kindRankForRoadmap(kind: PageKind): number {
   switch (kind) {
-    case "career":
+    case "degree":
       return 0;
     case "year":
       return 1;

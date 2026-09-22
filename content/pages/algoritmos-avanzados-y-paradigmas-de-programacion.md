@@ -1,6 +1,8 @@
 ---
 title: algoritmos avanzados y paradigmas de programación
 kind: course
+correlativas:
+  - proyecto laboratorio
 ---
 - eleva fundamentos desde estructuras a complejidad y paradigmas después de [[proyecto laboratorio]] y #complejidad-algoritmica
 - #paradigma-funcional combina inmutabilidad, pattern matching y desarrollo guiado por tipos

@@ -1,0 +1,30 @@
+{
+  "name": "@pps/content",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Supabase-backed curriculum pages (Storage) and resource catalog (Postgres).",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./vite/supabase-dev": "./vite/supabase-dev-plugin.ts",
+    "./browser": "./src/browser.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pps/core": "workspace:*",
+    "@supabase/supabase-js": "^2.49.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

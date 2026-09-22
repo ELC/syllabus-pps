@@ -10,7 +10,7 @@ export default (
   <Dashboard
     name="Concept Map"
     description="Concept pages, their source links, and the courses that use them"
-    connection="local_duckdb"
+    connection="pps_supabase"
   >
     <Row>
       <Metric

@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import {
+  AnalyticsRebuildIndicator,
+  type PpsStatusIndicatorOverride,
+} from "@pps/shell/AnalyticsRebuildIndicator";
+import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
 
 import { RoadmapApp } from "./components/roadmap/RoadmapApp";
 import type { RoadmapProgress } from "./components/roadmap/progress";
@@ -12,14 +18,12 @@ import {
   type ConceptPanelProgress,
 } from "./scripts/concept-panel";
 import { readRoadmapPanelUrl, writeRoadmapPanelUrl } from "./scripts/roadmap-panel-url";
-import { defaultCurriculumUrl } from "./site-base";
-
-interface AppProps {
-  dataUrl?: string;
-}
-
-export function App({ dataUrl }: AppProps) {
-  const resolvedUrl = dataUrl ?? defaultCurriculumUrl();
+export function App() {
+  const rebuildStatus = useAnalyticsRebuildStatus();
+  const [roadmapLoading, setRoadmapLoading] = useState(true);
+  const [gridLayoutSemaphore, setGridLayoutSemaphore] =
+    useState<PpsStatusIndicatorOverride | null>(null);
+  const [gridLayoutEditHint, setGridLayoutEditHint] = useState<string | null>(null);
   const conceptPanelRef = useRef<HTMLElement>(null);
   const capstonePanelRef = useRef<HTMLElement>(null);
   const conceptPanelControllerRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
@@ -35,7 +39,7 @@ export function App({ dataUrl }: AppProps) {
       return;
     }
 
-    const next = { career: url.career, capstone: url.capstone };
+    const next = { degree: url.degree, course: url.course, capstone: url.capstone };
     writeRoadmapPanelUrl(next);
     panelUrlSyncRef.current?.markApplied(next);
   }, []);
@@ -46,7 +50,7 @@ export function App({ dataUrl }: AppProps) {
       return;
     }
 
-    const next = { career: url.career, concept: url.concept };
+    const next = { degree: url.degree, course: url.course, concept: url.concept };
     writeRoadmapPanelUrl(next);
     panelUrlSyncRef.current?.markApplied(next);
   }, []);
@@ -110,20 +114,33 @@ export function App({ dataUrl }: AppProps) {
   return (
     <div className="dashboard__content">
       <header className="dashboard__header">
-        <h1 className="dashboard__header-title">Degree roadmaps</h1>
+        <div className="roadmap__header-title-row">
+          <h1 className="dashboard__header-title">Degree roadmaps</h1>
+          <div className="roadmap__header-status">
+            <AnalyticsRebuildIndicator
+              status={rebuildStatus}
+              loading={roadmapLoading}
+              override={gridLayoutSemaphore}
+            />
+            {gridLayoutEditHint ? (
+              <p className="roadmap__grid-layout-hint">{gridLayoutEditHint}</p>
+            ) : null}
+          </div>
+        </div>
         <p className="dashboard__header-lead dashboard__header-lead--wide">
-          Self-paced learning paths built from concept prerequisites. Follow the main track from top
-          to bottom, branch out into the related topics of each stage, and mark resources as you go.
+          Explorá las materias del plan, agrupadas por año y correlativas. Abrí una materia para
+          ver su mapa de conceptos, consultar recursos y registrar tu avance mientras estudiás.
         </p>
       </header>
 
       <section className="roadmap__shell">
         <RoadmapApp
-          dataUrl={resolvedUrl}
           onConceptOpen={handleConceptOpen}
-          onCapstoneOpen={handleCapstoneOpen}
           onClosePanels={handleClosePanels}
           onProgressChange={handleProgressChange}
+          onLoadingChange={setRoadmapLoading}
+          onGridLayoutSemaphoreChange={setGridLayoutSemaphore}
+          onGridLayoutEditHintChange={setGridLayoutEditHint}
           onRegisterPanelUrlSync={(sync) => {
             panelUrlSyncRef.current = sync;
           }}

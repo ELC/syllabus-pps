@@ -3,12 +3,13 @@ import { ZettelPage } from "../types";
 import { classifyPage } from "./classify";
 import { buildPageIndex } from "./page-index";
 import { parsePageContent } from "./parse-content";
-import { resolveBlock, resolveDependsOn } from "./resolve";
+import { resolveBlock, resolveCorrelativa, resolveDependsOn } from "./resolve";
 import { PageSource, ParseOptions } from "./types";
 
 export type { PageSource, ParseOptions, RawPage } from "./types";
 export { parseFrontmatter } from "./frontmatter";
 export { parsePageContent } from "./parse-content";
+export { stringifyPageSource } from "./serialize-page";
 export { slugifyTitle } from "../slug";
 export { extractCitationRefs, stripCitationRefs } from "./extractors";
 
@@ -70,6 +71,22 @@ export function parsePages(
       const dependsOn = dependsOnInvalid
         ? []
         : page.dependsOnTargets?.map((target) => resolveDependsOn(target, index));
+      const correlativasInvalid =
+        page.correlativasRaw !== undefined && page.correlativasTargets === undefined;
+      const correlativas = correlativasInvalid
+        ? []
+        : page.correlativasTargets?.map((target) => resolveCorrelativa(target, index));
+      const degreeInvalid = page.degreeInvalid === true;
+      const degree = degreeInvalid
+        ? undefined
+        : page.degreeTarget
+          ? resolveCorrelativa(page.degreeTarget, index)
+          : undefined;
+      const coursesInvalid =
+        page.coursesRaw !== undefined && page.coursesTargets === undefined;
+      const courses = coursesInvalid
+        ? []
+        : page.coursesTargets?.map((target) => resolveCorrelativa(target, index));
 
       return {
         id: page.id,
@@ -87,6 +104,18 @@ export function parsePages(
         nonBulletLines: page.nonBulletLines,
         dependsOn,
         dependsOnInvalid,
+        correlativas,
+        correlativasInvalid,
+        trayecto: page.trayectoInvalid ? undefined : page.trayecto,
+        trayectoInvalid: page.trayectoInvalid,
+        yearsCount: page.yearsCountInvalid ? undefined : page.yearsCount,
+        yearsCountInvalid: page.yearsCountInvalid,
+        degree,
+        degreeInvalid,
+        yearIndex: page.yearIndexInvalid ? undefined : page.yearIndex,
+        yearIndexInvalid: page.yearIndexInvalid,
+        courses,
+        coursesInvalid,
       };
     })
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));

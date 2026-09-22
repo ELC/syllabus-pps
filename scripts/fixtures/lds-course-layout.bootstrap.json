@@ -1,0 +1,156 @@
+{
+  "degreeSlug": "lds",
+  "courses": {
+    "algebra": {
+      "slug": "algebra-y-geometria"
+    },
+    "antropologia": {
+      "slug": "antropologia"
+    },
+    "filosofia": {
+      "slug": "filosofia"
+    },
+    "storytelling": {
+      "slug": "tecnicas-de-comunicacion-y-storytelling"
+    },
+    "algoritmos": {
+      "slug": "algoritmos-y-estructuras-de-datos"
+    },
+    "analisis": {
+      "slug": "analisis-de-sistemas"
+    },
+    "bases-datos": {
+      "slug": "bases-de-datos"
+    },
+    "am1": {
+      "slug": "analisis-matematico-i"
+    },
+    "pi": {
+      "slug": "programacion-i"
+    },
+    "est1": {
+      "slug": "estadistica-i"
+    },
+    "discreta": {
+      "slug": "matematica-discreta"
+    },
+    "piii": {
+      "slug": "programacion-iii-web-frontend"
+    },
+    "pii": {
+      "slug": "programacion-ii-web-backend"
+    },
+    "devops": {
+      "slug": "introduccion-a-devops"
+    },
+    "gestion": {
+      "slug": "gestion-de-proyectos"
+    },
+    "ux": {
+      "slug": "user-experience"
+    },
+    "etica": {
+      "slug": "etica-general"
+    },
+    "proyecto": {
+      "slug": "proyecto-laboratorio"
+    },
+    "am2": {
+      "slug": "analisis-matematico-ii"
+    },
+    "calculo-num": {
+      "slug": "calculo-numerico-y-simulacion"
+    },
+    "est2": {
+      "slug": "estadistica-ii"
+    },
+    "algoritmos-avanzados": {
+      "slug": "algoritmos-avanzados-y-paradigmas-de-programacion"
+    },
+    "pia": {
+      "slug": "programacion-asistida-por-ia-y-agentes"
+    },
+    "arquitectura": {
+      "slug": "arquitectura-e-ingenieria-del-software"
+    },
+    "product-dev": {
+      "slug": "product-development"
+    },
+    "datos": {
+      "slug": "ingenieria-de-datos"
+    },
+    "teo1": {
+      "slug": "teologia-i"
+    },
+    "teo2": {
+      "slug": "teologia-ii"
+    },
+    "admin1": {
+      "slug": "administracion-i"
+    },
+    "contabilidad": {
+      "slug": "introduccion-a-la-contabilidad"
+    },
+    "pl2": {
+      "slug": "proyecto-laboratorio-ii"
+    },
+    "calidad": {
+      "slug": "calidad-del-software-testing-y-performance"
+    },
+    "entrepreneurship": {
+      "slug": "entrepreneurship"
+    },
+    "doctrina": {
+      "slug": "doctrina-social"
+    },
+    "etica-pro": {
+      "slug": "etica-profesional-y-aspectos-legales"
+    },
+    "redes": {
+      "slug": "redes-y-sistemas-operativos"
+    },
+    "optimizacion": {
+      "slug": "optimizacion-e-investigacion-operativa"
+    },
+    "automatizacion": {
+      "slug": "automatizacion-y-herramientas-inteligentes"
+    },
+    "cloud": {
+      "slug": "computo-en-la-nube-y-sistemas-distribuidos"
+    },
+    "cv": {
+      "slug": "computer-vision"
+    },
+    "ciberseg": {
+      "slug": "administracion-infraestructura-y-ciberseguridad"
+    }
+  },
+  "years": {
+    "año 1": {
+      "templateAreas": [
+        "filosofia algebra storytelling . . algoritmos antropologia analisis",
+        "am1 . . bases-datos . pi . . ."
+      ]
+    },
+    "año 2": {
+      "templateAreas": [
+        ". . discreta . . pii piii gestion ux",
+        "est1 . . . devops proyecto admin1 . . etica"
+      ]
+    },
+    "año 3": {
+      "templateAreas": [
+        ". calculo-num am2 datos . . . product-dev  teo1",
+        "est2 . contabilidad . arquitectura pia algoritmos-avanzados . teo2",
+        ". . . . . . . ."
+      ]
+    },
+    "año 4": {
+      "templateAreas": [
+        ". optimizacion . ciberseg . pl2 . entrepreneurship doctrina",
+        ". . . . calidad . . .  . etica-pro",
+        ". . . automatizacion . cloud cv redes"
+      ]
+    }
+  }
+}

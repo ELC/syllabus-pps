@@ -1,7 +1,5 @@
 ---
 title: LDS
-kind: career
+kind: degree
+years: 4
 ---
-- [[año 1]]
-- [[año 2]]
-- [[año 3]]

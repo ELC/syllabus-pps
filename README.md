@@ -1,8 +1,8 @@
 # PPS
 
-Curriculum notes and analytics for the PPS zettelkasten, stored as repo-native Markdown.
+Curriculum notes and analytics for the PPS zettelkasten.
 
-Source pages live in [`content/pages/`](content/pages/). Shared parsing, diagnostics, and projections live in [`workspaces/core/`](workspaces/core/). The CLI in [`workspaces/analytics-cli/`](workspaces/analytics-cli/) builds `_generated/` artifacts and Bruin DAC locally. Public sites live under [`workspaces/`](workspaces/):
+Pages live in Supabase Storage (`pages/{slug}.md`). The resource catalog lives in Supabase Postgres (`public.resources`). Shared parsing, diagnostics, and projections live in [`workspaces/core/`](workspaces/core/). Supabase access helpers live in [`workspaces/content/`](workspaces/content/) (`@pps/content`). The CLI in [`workspaces/analytics-cli/`](workspaces/analytics-cli/) reads Supabase at build time, upserts analytics tables, and writes `_generated/` (DAC + inspect artifacts). Public sites live under [`workspaces/`](workspaces/):
 
 | Workspace | URL (local via `pnpm dev`) |
 |-----------|----------------------------|
@@ -11,6 +11,7 @@ Source pages live in [`content/pages/`](content/pages/). Shared parsing, diagnos
 | `@pps/network` | `http://localhost:4321/network/` |
 | `@pps/roadmap` | `http://localhost:4321/roadmap/` |
 | `@pps/cms` | `http://localhost:4321/cms/` |
+| `@pps/cites` | `http://localhost:4321/cites/` |
 
 Shared chrome lives in [`workspaces/shell/`](workspaces/shell/) (`@pps/shell`). Email OTP sign-in lives in [`workspaces/login/`](workspaces/login/) (`@pps/login`).
 
@@ -26,7 +27,7 @@ pnpm install
 cp .env.example .env
 ```
 
-Fill `.env` with the hosted Supabase **publishable** keys (`PUBLIC_SUPABASE_PROJECT_URL`, `PUBLIC_SUPABASE_PUBLISHABLE_KEY`). The same file is used for local dev and production builds.
+Fill `.env` with Supabase keys (`PUBLIC_SUPABASE_PROJECT_URL`, `PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, optional `SUPABASE_STORAGE_BUCKET`). Set `PUBLIC_AUTH_DISABLED=true` for local CMS/Cites without sign-in. The same file is used for local dev and production builds.
 
 Requirements:
 
@@ -40,31 +41,29 @@ Requirements:
 pnpm typecheck
 pnpm test
 pnpm build:content
+pnpm sync:pages       # upload content/pages to Supabase Storage (requires .env)
 pnpm dev              # single dev server at http://localhost:4321/ (all subsites embedded)
 pnpm build:pages      # combined GitHub Pages dist/
 pnpm inspect
 ```
 
-Content directory defaults to `content/pages/` via `workspaces/analytics-cli/pps.config.ts`. Override with `--content` or `PPS_CONTENT_DIR`.
+Analytics, Network, and Roadmap read compiled artifacts only from **`public.analytics_artifacts`** in Supabase Postgres (`loadAnalyticsArtifact` in `@pps/content/browser`). CMS and Cites trigger a rebuild after save (Edge Function in production, dev API locally). GitHub Pages deploy does not run `build:content`; seed Postgres once after applying analytics SQL (see [Supabase content and analytics](#supabase-content-and-analytics)).
 
-## Outputs
+`pnpm build:content` upserts Postgres when `SUPABASE_SERVICE_ROLE_KEY` is set and writes local `_generated/` for Bruin DAC, `pnpm inspect`, and tests—not for viz runtime. For tests only, set `PPS_CONTENT_SOURCE=filesystem` to read `content/pages/` and `content/resources.json`.
 
-`pnpm build:content` writes under `workspaces/analytics-cli/_generated/`:
+## CLI outputs (`pnpm build:content`)
 
-- `curriculum-graph.json` — full domain graph
-- `graph.cy.json` — Cytoscape.js elements for visualization
-- `dashboards.json` — static snapshot of all DAC dashboards for the analytics UI
-- `diagnostics.json`
+Under `workspaces/analytics-cli/_generated/`:
+
+- `curriculum-graph.json`, `graph.cy.json`, `dashboards.json`, `diagnostics.json` — mirrors of Postgres rows (inspect/tests)
 - `summary.md`
-- `dac/` — Bruin DAC project (local dev)
-
-Analytics, network, and roadmap apps read those artifacts from `workspaces/analytics-cli/_generated/` through `analyticsDataPlugin` in `@pps/config`.
+- `dac/` — Bruin DAC project (local dashboards)
 
 ## GitHub Pages
 
-`pnpm build:pages` builds all five sites and merges them into `dist/` for GitHub Pages (`/`, `/analytics/`, `/network/`, `/roadmap/`, `/cms/`).
+`pnpm build:pages` builds all public sites and merges them into `dist/` for GitHub Pages (`/`, `/analytics/`, `/network/`, `/roadmap/`, `/cms/`, `/cites/`).
 
-Daily cron workflow: `.github/workflows/pages.yml` (optional Supabase pull → build → deploy).
+Daily cron workflow: `.github/workflows/pages.yml` (build from Supabase → deploy).
 
 Set GitHub Actions secrets `PUBLIC_SUPABASE_PROJECT_URL` and `PUBLIC_SUPABASE_PUBLISHABLE_KEY` (same values as local `.env`). `pnpm build:pages` fails if either is missing. Optionally add `PUBLIC_GA_MEASUREMENT_ID` to enable Google Analytics on the deployed site.
 
@@ -129,22 +128,87 @@ Copy `.env.example` to `.env` at the repository root for local dev. GitHub Actio
 pnpm dev
 ```
 
-Open `http://localhost:4321/`, sign in with Google or a magic link, then visit Analytics, Network, Roadmap, and CMS. Repeat on the GitHub Pages URL after deploy.
+With `PUBLIC_AUTH_DISABLED=true`, open `http://localhost:4321/cms/` and `/cites/` without sign-in. Analytics, Network, and Roadmap need rows in `public.analytics_artifacts` (run `pnpm build:content` after SQL). On the hosted site, sign in before editing CMS or Cites.
 
-Hosted CMS remains read-only; local `pnpm dev` still writes `content/pages/` after sign-in.
+## Supabase content and analytics
 
-## Supabase sync
+### SQL (apply in order)
+
+In the SQL editor or via Postgres:
+
+1. [`workspaces/login/sql/`](workspaces/login/sql/) — auth allowlist (if not already applied)
+2. [`workspaces/content/sql/001_resources.sql`](workspaces/content/sql/001_resources.sql)
+3. [`workspaces/content/sql/002_storage_pages.sql`](workspaces/content/sql/002_storage_pages.sql)
+4. [`workspaces/content/sql/003_analytics_artifacts.sql`](workspaces/content/sql/003_analytics_artifacts.sql)
+5. [`workspaces/content/sql/004_analytics_dac.sql`](workspaces/content/sql/004_analytics_dac.sql) — Bruin DAC query tables
+6. [`workspaces/content/sql/005_analytics_rebuild_status.sql`](workspaces/content/sql/005_analytics_rebuild_status.sql) — rebuild progress for CMS/Cites
+7. [`workspaces/content/sql/006_roadmap_course_layouts.sql`](workspaces/content/sql/006_roadmap_course_layouts.sql) — curated degree roadmap grid overrides
+
+**Fast path** (after `.env` has `SUPABASE_DB_*`):
+
+```sh
+pnpm apply:analytics-sql
+```
+
+If the pooler is unreachable from your network, paste `003`–`006` from [`workspaces/content/sql/`](workspaces/content/sql/) into **Supabase → SQL → New query** and run.
+
+Create a Storage bucket named `content` (or set `SUPABASE_STORAGE_BUCKET`) with markdown pages under `pages/{slug}.md`.
+
+### Initial analytics seed
+
+After `003`/`004`, populate compiled read models:
+
+```sh
+pnpm build:content
+```
+
+You should see `Synced analytics artifacts and DAC tables to Supabase Postgres` with no warning.
+
+Or invoke the Edge Function:
+
+```sh
+curl -X POST "https://<ref>.supabase.co/functions/v1/rebuild-analytics" \
+  -H "Authorization: Bearer <anon-or-service-key>"
+```
+
+### Analytics rebuild (ongoing)
+
+Compiled read models for Analytics, Network, and Roadmap live in **`public.analytics_artifacts`** (`key`, `body` jsonb). They are rebuilt from Storage pages + `public.resources`.
+
+- **After CMS/Cites save (hosted):** browsers call Edge Function `rebuild-analytics` (fire-and-forget, last write wins).
+- **Local dev:** CMS/Cites POST to `/cms/api/rebuild-analytics` or `/cites/api/rebuild-analytics` (Vite middleware).
+- **CLI:** `pnpm build:content` syncs Postgres and refreshes local `_generated/dac/`.
+
+#### Deploy Edge Function
+
+From the repo root ([Supabase CLI](https://supabase.com/docs/guides/cli)):
+
+```sh
+# Corporate SSL-inspecting proxy: export SSL_CERT_FILE=/path/to/cacert.pem
+supabase link --project-ref <your-project-ref>
+pnpm deploy:rebuild-analytics   # esbuild bundle + deploy (needs SUPABASE_ACCESS_TOKEN in .env)
+```
+
+Set secrets (`supabase secrets set` or dashboard): `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_STORAGE_BUCKET` (if not default). `verify_jwt` is off for now; tighten when auth rules are defined.
+
+### Bruin DAC (local)
+
+Generated project: `workspaces/analytics-cli/_generated/dac`. Queries use Postgres connection **`pps_supabase`** (see `.bruin.yml`), not local DuckDB.
+
+Set `SUPABASE_DB_*` in `.env` (pooler host, `postgres.<project-ref>` user, DB password). Then:
+
+```sh
+pnpm build:content   # syncs analytics_dac_* tables
+pnpm serve:dac       # dac serve --dir workspaces/analytics-cli/_generated/dac
+dac connections --dir workspaces/analytics-cli/_generated/dac
+```
+
+### Remote status
 
 ```sh
 pnpm --filter @pps/analytics-cli build
-pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-pull
-pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-push
 pnpm --filter @pps/analytics-cli exec node dist/src/cli/bin/cli.js sync-status
 ```
-
-Pull and push sync `content/pages/` and the shared source catalog at `content/resources.json` (remote path `resources/resources.json` in the storage bucket).
-
-Optional CI sync reuses `PUBLIC_SUPABASE_PROJECT_URL` from the build job. Also set `SUPABASE_SERVICE_ROLE_KEY` and optionally `SUPABASE_STORAGE_BUCKET`.
 
 ## Logseq migration
 

@@ -1,4 +1,6 @@
-import { CurriculumGraph, EdgeKind, PageKind } from "../types";
+import { resolveCourseTrayecto } from "../course-trayecto";
+import { pageDisplayLabel, resolveDegreeTitle } from "../degree-year";
+import { CourseTrayecto, CurriculumGraph, EdgeKind, PageKind } from "../types";
 
 export interface CytoscapeElementNode {
   data: {
@@ -7,6 +9,9 @@ export interface CytoscapeElementNode {
     kind: PageKind;
     slug: string;
     path: string;
+    trayecto: CourseTrayecto;
+    degree?: string;
+    yearIndex?: number;
   };
 }
 
@@ -32,10 +37,13 @@ export function exportToCytoscape(graph: CurriculumGraph): CytoscapeGraphExport 
   const nodes: CytoscapeElementNode[] = graph.pages.map((page) => ({
     data: {
       id: page.title,
-      label: page.title,
+      label: pageDisplayLabel(page),
       kind: page.kind,
       slug: page.slug,
       path: page.path,
+      trayecto: resolveCourseTrayecto(page.kind, page.trayecto, page.trayectoInvalid),
+      degree: resolveDegreeTitle(page),
+      yearIndex: page.yearIndex,
     },
   }));
 

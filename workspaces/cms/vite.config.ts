@@ -7,9 +7,9 @@ import {
   sharedViteEnv,
   withSharedVitePlugins,
 } from "@pps/config";
+import { rebuildDevPlugin } from "@pps/analytics-cli/vite/rebuild-dev";
+import { supabaseDevPlugin } from "@pps/content/vite/supabase-dev";
 import { shellHeadPlugin, shellLogoPostPlugin } from "@pps/shell/vite";
-import { localContentPlugin } from "./vite.local-content";
-import { staticContentPlugin } from "./vite.static-content";
 
 const workspaceDir = resolve(import.meta.dirname);
 const repoRoot = repoRootFromWorkspace(workspaceDir);
@@ -29,13 +29,16 @@ export default defineConfig({
       mainClass: "dashboard__main",
     }),
     shellLogoPostPlugin(),
-    localContentPlugin(),
-    staticContentPlugin(),
+    supabaseDevPlugin({ repoRoot, pages: true, resources: true }),
+    rebuildDevPlugin({ repoRoot }),
   ],
   server: {
     hmr: false,
     fs: {
       allow: ["../.."],
     },
+  },
+  ssr: {
+    noExternal: ["@pps/content", "@pps/content/browser", "@pps/core", "@pps/analytics-cli", "@pps/shell"],
   },
 });

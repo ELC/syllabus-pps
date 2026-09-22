@@ -1,6 +1,8 @@
 ---
 title: programación asistida por ia y agentes
 kind: course
+correlativas:
+  - proyecto laboratorio
 ---
 - introduce IA generativa y agentes sobre [[arquitectura e ingeniería del software]], extendiendo decisiones de diseño con asistentes y flujos asistidos por IA
 - #modelos-de-lenguaje-grandes generan, completan y refactorizan código

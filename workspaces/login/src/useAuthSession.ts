@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 
+import { isAuthDisabled, readDevAuthProfile } from "./authDisabled";
 import { readBrowserSession } from "./authSession";
 import { createBrowserClient } from "./client";
 import { isMissingConfig, readSupabaseConfig, type SupabaseConfigResult } from "./config";
@@ -21,11 +22,24 @@ export function useAuthSession(): AuthSessionState {
   const url = isMissingConfig(config) ? "" : config.url;
   const anonKey = isMissingConfig(config) ? "" : config.anonKey;
   const misconfigured = isMissingConfig(config);
-  const [status, setStatus] = useState<AuthStatus>(() => (misconfigured ? "misconfigured" : "loading"));
+  const authDisabled = isAuthDisabled();
+  const [status, setStatus] = useState<AuthStatus>(() => {
+    if (authDisabled) {
+      return "authenticated";
+    }
+    return misconfigured ? "misconfigured" : "loading";
+  });
   const [session, setSession] = useState<Session | null>(null);
   const [displayName, setDisplayName] = useState<string | null>(null);
 
   useEffect(() => {
+    if (authDisabled) {
+      setStatus("authenticated");
+      setSession(null);
+      setDisplayName(readDevAuthProfile().userName);
+      return;
+    }
+
     if (misconfigured) {
       setStatus("misconfigured");
       setSession(null);
@@ -69,7 +83,7 @@ export function useAuthSession(): AuthSessionState {
       active = false;
       subscription.unsubscribe();
     };
-  }, [url, anonKey, misconfigured]);
+  }, [url, anonKey, misconfigured, authDisabled]);
 
   async function signOut(): Promise<void> {
     if (misconfigured) {

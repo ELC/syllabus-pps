@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { indexResourceCatalog, parsePages } from "@pps/core";
 import { readPageSources } from "../../src/content/read-pages";
 import { readResourceCatalog } from "../../src/content/read-resources";
-import { buildGraph } from "../../src/graph";
+import { buildGraphFromLocalFiles } from "../../src/graph";
 import { FIXTURE_CONTENT_DIR, FIXTURE_GENERATED_AT_ISO, fixtureConfig } from "../support/fixtures";
 
 describe("resource catalog", () => {
@@ -15,7 +15,7 @@ describe("resource catalog", () => {
   });
 
   it("resolves citation ids on concept blocks when building the graph", () => {
-    const graph = buildGraph({
+    const graph = buildGraphFromLocalFiles({
       contentDir: FIXTURE_CONTENT_DIR,
       config: fixtureConfig(),
       generatedAt: FIXTURE_GENERATED_AT_ISO,

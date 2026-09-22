@@ -1,17 +1,20 @@
 export interface RoadmapPanelUrlState {
-  career?: string;
+  degree?: string;
+  course?: string;
   concept?: string;
   capstone?: string;
 }
 
 export function readRoadmapPanelUrl(search = window.location.search): RoadmapPanelUrlState {
   const params = new URLSearchParams(search);
-  const career = params.get("career")?.trim();
+  const degree = params.get("degree")?.trim();
+  const course = params.get("course")?.trim();
   const concept = params.get("concept")?.trim();
   const capstone = params.get("capstone")?.trim();
 
   return {
-    career: career || undefined,
+    degree: degree || undefined,
+    course: course || undefined,
     concept: concept || undefined,
     capstone: capstone || undefined,
   };
@@ -22,13 +25,18 @@ export function writeRoadmapPanelUrl(
   mode: "replace" | "push" = "replace",
 ): void {
   const params = new URLSearchParams(window.location.search);
+  params.delete("course");
   params.delete("concept");
   params.delete("capstone");
 
-  if (state.career) {
-    params.set("career", state.career);
+  if (state.degree) {
+    params.set("degree", state.degree);
   } else {
-    params.delete("career");
+    params.delete("degree");
+  }
+
+  if (state.course) {
+    params.set("course", state.course);
   }
 
   if (state.concept) {
@@ -51,5 +59,5 @@ export function writeRoadmapPanelUrl(
 }
 
 export function roadmapPanelUrlKey(state: RoadmapPanelUrlState): string {
-  return `${state.career ?? ""}|${state.concept ?? ""}|${state.capstone ?? ""}`;
+  return `${state.degree ?? ""}|${state.course ?? ""}|${state.concept ?? ""}|${state.capstone ?? ""}`;
 }

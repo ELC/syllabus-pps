@@ -22,6 +22,27 @@ export interface RawPage {
   dependsOnRaw?: unknown;
   /** Parsed string targets from frontmatter dependsOn. */
   dependsOnTargets?: string[];
+  /** Raw correlativas value from frontmatter; undefined when absent. */
+  correlativasRaw?: unknown;
+  /** Parsed string targets from frontmatter correlativas. */
+  correlativasTargets?: string[];
+  /** Raw trayecto value from frontmatter; undefined when absent. */
+  trayectoRaw?: unknown;
+  /** Parsed trayecto from frontmatter. */
+  trayecto?: import("../types").CourseTrayecto;
+  /** True when frontmatter trayecto is present but malformed. */
+  trayectoInvalid?: boolean;
+  yearsCountRaw?: unknown;
+  yearsCount?: number;
+  yearsCountInvalid?: boolean;
+  degreeRaw?: unknown;
+  degreeTarget?: string;
+  degreeInvalid?: boolean;
+  yearIndexRaw?: unknown;
+  yearIndex?: number;
+  yearIndexInvalid?: boolean;
+  coursesRaw?: unknown;
+  coursesTargets?: string[];
   blocks: ZettelBlock[];
   nonBulletLines: number[];
 }

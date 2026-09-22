@@ -28,7 +28,7 @@ export function isSourceReference(
 
   return (
     !targetPage ||
-    (targetPage.kind !== "career" &&
+    (targetPage.kind !== "degree" &&
       targetPage.kind !== "course" &&
       targetPage.kind !== "year" &&
       targetPage.kind !== "administrative")

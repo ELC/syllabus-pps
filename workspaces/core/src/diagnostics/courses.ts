@@ -1,3 +1,4 @@
+import { coursesLinkedToYearPage } from "../degree-year";
 import { normalizeTitle } from "../normalize";
 import { CurriculumGraph, Diagnostic } from "../types";
 
@@ -24,28 +25,24 @@ export function courseWithoutConceptLinks(graph: CurriculumGraph): Diagnostic[] 
     }));
 }
 
-export function courseYearDiagnostics(
-  graph: CurriculumGraph,
-  expectedCourses: Set<string>,
-  expectedYears: Set<string>,
-): Diagnostic[] {
+export function courseYearDiagnostics(graph: CurriculumGraph): Diagnostic[] {
+  const pagesByTitle = new Map(graph.pages.map((page) => [page.normalizedTitle, page]));
+
   const coursesReferencedByYear = new Set(
     graph.pages
-      .filter((page) => expectedYears.has(page.normalizedTitle))
-      .flatMap((page) =>
-        page.refs
-          .map((ref) => normalizeTitle(ref.resolvedTarget ?? ref.target))
-          .filter((target) => expectedCourses.has(target)),
+      .filter((page) => page.kind === "year")
+      .flatMap((yearPage) =>
+        coursesLinkedToYearPage(yearPage, graph).map((title) => normalizeTitle(title)),
       ),
   );
 
   return graph.pages
-    .filter((page) => expectedCourses.has(page.normalizedTitle))
+    .filter((page) => page.kind === "course")
     .filter((page) => !coursesReferencedByYear.has(page.normalizedTitle))
     .map((page) => ({
-      severity: "warning",
-      code: "course-without-year-link",
-      message: `Course "${page.title}" is not referenced by an expected year page.`,
+      severity: "warning" as const,
+      code: "course-without-year-link" as const,
+      message: `Course "${page.title}" is not linked from any year page.`,
       page: page.title,
     }));
 }

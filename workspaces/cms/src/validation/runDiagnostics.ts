@@ -1,20 +1,11 @@
 import {
   buildGraphFromPages,
   collectDiagnostics,
-  createLoadedConfig,
+  emptyLoadedConfig,
   Diagnostic,
   PageSource,
   ResourceCatalogEntry,
 } from "@pps/core";
-
-const expectedCurriculum = {
-  years: [
-    {
-      title: "año 1" as const,
-      courses: ["algoritmos y estructuras de datos", "programación i"],
-    },
-  ],
-};
 
 export function runDiagnosticsForEditor(
   currentSlug: string,
@@ -25,7 +16,7 @@ export function runDiagnosticsForEditor(
   const sources = allPages.map((page) =>
     page.path.replace(/\.md$/i, "") === currentSlug ? { ...page, content: currentContent } : page,
   );
-  const config = createLoadedConfig(expectedCurriculum);
+  const config = emptyLoadedConfig();
   const graph = buildGraphFromPages({
     sources,
     config,

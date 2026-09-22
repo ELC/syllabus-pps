@@ -1,8 +1,8 @@
 import ppsShell from "@pps/shell/astro";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
+import { rebuildDevPlugin } from "@pps/analytics-cli/vite/rebuild-dev";
 import {
-  analyticsDataPlugin,
   quietEmbeddedDevPlugin,
   repoRootFromWorkspace,
   sharedViteEnv,
@@ -23,7 +23,7 @@ export default defineConfig({
     plugins: [
       ...withSharedVitePlugins(repoRoot),
       quietEmbeddedDevPlugin(),
-      analyticsDataPlugin(["dashboards.json"]),
+      rebuildDevPlugin({ repoRoot }),
     ],
     server: {
       hmr: false,

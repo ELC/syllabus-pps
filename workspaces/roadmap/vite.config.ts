@@ -1,13 +1,14 @@
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { rebuildDevPlugin } from "@pps/analytics-cli/vite/rebuild-dev";
 import {
-  analyticsDataPlugin,
   quietEmbeddedDevPlugin,
   repoRootFromWorkspace,
   sharedViteEnv,
   withSharedVitePlugins,
 } from "@pps/config";
+import { supabaseDevPlugin } from "@pps/content/vite/supabase-dev";
 import { shellHeadPlugin, shellLogoPostPlugin } from "@pps/shell/vite";
 
 const workspaceDir = resolve(import.meta.dirname);
@@ -23,12 +24,16 @@ export default defineConfig({
     react(),
     shellHeadPlugin("ROADMAP_BASE", "/roadmap/", { activeNav: "roadmap", prerenderShell: true }),
     shellLogoPostPlugin(),
-    analyticsDataPlugin(["curriculum-graph.json"]),
+    rebuildDevPlugin({ repoRoot }),
+    supabaseDevPlugin({ repoRoot, roadmapLayouts: true }),
   ],
   server: {
     hmr: false,
     fs: {
       allow: ["../.."],
     },
+  },
+  ssr: {
+    noExternal: ["@pps/content", "@pps/content/browser", "@pps/core", "@pps/shell"],
   },
 });

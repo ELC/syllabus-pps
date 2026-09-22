@@ -12,7 +12,7 @@ export function classifyPage(
   }
 
   if (page.normalizedTitle === "lds") {
-    return "career";
+    return "degree";
   }
 
   if (options.expectedYearTitles?.has(page.normalizedTitle) || /^año \d+$/.test(page.normalizedTitle)) {

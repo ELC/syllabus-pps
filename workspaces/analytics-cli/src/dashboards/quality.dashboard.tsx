@@ -12,7 +12,7 @@ export default (
   <Dashboard
     name="Quality"
     description="Structural and curricular diagnostics generated from the Logseq PPS mirror"
-    connection="local_duckdb"
+    connection="pps_supabase"
   >
     <Row>
       <Metric
