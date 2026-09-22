@@ -165,7 +165,7 @@ function renderConceptNote(
   block: ConceptBlock,
   slug: string,
   progress?: ConceptPanelProgress,
-  showCitesEditLinks = true,
+  showCitesEditLinks = false,
 ): HTMLElement {
   const item = document.createElement("li");
   item.className = "graph__concept-note";
@@ -272,7 +272,7 @@ function renderConceptNotes(
   blocks: ConceptBlock[],
   slug: string,
   progress?: ConceptPanelProgress,
-  showCitesEditLinks = true,
+  showCitesEditLinks = false,
 ): void {
   notesRoot.replaceChildren();
 
@@ -325,7 +325,7 @@ export function mountConceptPanel(
         ? { handlers: options }
         : (options ?? {});
   const handlers = resolvedOptions.handlers;
-  const showCitesEditLinks = resolvedOptions.showCitesEditLinks ?? true;
+  const showCitesEditLinks = resolvedOptions.showCitesEditLinks ?? false;
   const title = root.querySelector<HTMLElement>(".graph__concept-title");
   const notesRoot = root.querySelector<HTMLElement>(".graph__concept-body");
   const closeButton = root.querySelector<HTMLButtonElement>(".graph__concept-close");
@@ -364,7 +364,7 @@ export function mountConceptPanel(
   const open = (page: ConceptPage) => {
     currentPage = page;
     title.textContent = capitalizeWords(page.title);
-    renderConceptNotes(notesRoot, page.blocks, page.slug, progress);
+    renderConceptNotes(notesRoot, page.blocks, page.slug, progress, showCitesEditLinks);
     setPanelOpen(true);
   };
 
