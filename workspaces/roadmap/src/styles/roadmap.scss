@@ -284,6 +284,11 @@
       opacity: 0.45;
       cursor: not-allowed;
     }
+
+    &--debug {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      opacity: 0.9;
+    }
   }
 
   &__canvas-panel--grid-edit .react-flow__node.roadmap__node--concept-selected .roadmap__topic {

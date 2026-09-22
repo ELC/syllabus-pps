@@ -243,7 +243,7 @@ function topicNode(
         role: placement.role,
         stage: placement.stage + 1,
       },
-    };
+    } as Node<RoadmapCourseNodeData>;
   }
 
   return {
@@ -694,8 +694,153 @@ function emitCourseDagLinks(
       selectable: false,
       type: "roadmapCourse",
       pathOptions: courseDagBezierOptions(layout, link, handles),
-    });
+    } as Edge);
   }
+}
+
+function tailParallelPairFork(
+  fork: { after: string; mergeInto: string; lanes: string[][] },
+  trunk: readonly string[],
+): boolean {
+  if (!fork.lanes.flat().includes(fork.after)) {
+    return false;
+  }
+
+  const afterIdx = trunk.indexOf(fork.after);
+  const mergeIdx = trunk.indexOf(fork.mergeInto);
+  if (afterIdx < 0 || mergeIdx !== trunk.length - 1) {
+    return false;
+  }
+
+  return (
+    fork.lanes.length > 1 &&
+    fork.lanes.every((lane) => lane.length === 1) &&
+    fork.lanes.some((lane) => lane[0] === fork.mergeInto)
+  );
+}
+
+/** Tail opens after an upstream merge anchor duplicated in a lane (ACID|trans after ACID). */
+function tailParallelForkAnchorInLane(
+  fork: { after: string; mergeInto: string; lanes: string[][] },
+  trunk: readonly string[],
+  trunkForks: readonly { after: string; mergeInto: string; lanes: string[][] }[],
+): boolean {
+  if (!tailParallelPairFork(fork, trunk)) {
+    return false;
+  }
+
+  if (trunkForks.some((other) => other !== fork && other.mergeInto === fork.after)) {
+    return true;
+  }
+
+  return !trunkForks.some((other) => other !== fork && other.mergeInto === fork.mergeInto);
+}
+
+function sharedTrunkMergeTarget(
+  layout: RoadmapLayout,
+  mergeInto: string,
+): boolean {
+  return layout.trunkForks.filter((fork) => fork.mergeInto === mergeInto).length >= 2;
+}
+
+/** Center-spine step into the next fork anchor — not a sql fan-out arm. */
+function trunkContinuationToForkAnchor(
+  layout: RoadmapLayout,
+  source: string,
+  target: string,
+): boolean {
+  const sourceIdx = layout.trunk.indexOf(source);
+  const targetIdx = layout.trunk.indexOf(target);
+  if (sourceIdx < 0 || targetIdx !== sourceIdx + 1) {
+    return false;
+  }
+
+  if (!layout.trunkForks.some((fork) => fork.after === target)) {
+    return false;
+  }
+
+  return layout.trunkForks.some(
+    (entry) => entry.mergeInto === source && entry.after !== source,
+  );
+}
+
+/** Upstream fork merges at `after`, then a tail fork opens there with the anchor duplicated in a lane. */
+function adjacentTailMergeJoinSplitAtAnchor(
+  layout: RoadmapLayout,
+  fork: { after: string; mergeInto: string; lanes: string[][] },
+): boolean {
+  const mergeJoinAnchor = layout.trunkForks.some(
+    (entry) => entry.mergeInto === fork.after && entry.after !== fork.after,
+  );
+  if (
+    !mergeJoinAnchor ||
+    !fork.lanes.flat().includes(fork.after) ||
+    fork.lanes.flat().length === 0
+  ) {
+    return false;
+  }
+
+  const afterIdx = layout.trunk.indexOf(fork.after);
+  const mergeIdx = layout.trunk.indexOf(fork.mergeInto);
+  const tailTitle = layout.trunk[layout.trunk.length - 1];
+  const parallelTailPair = fork.lanes.every(
+    (lane) =>
+      lane.length === 1 &&
+      (lane[0] === fork.after || lane[0] === fork.mergeInto),
+  );
+  return (
+    afterIdx >= 0 &&
+    mergeIdx === afterIdx + 1 &&
+    tailTitle !== undefined &&
+    fork.mergeInto === tailTitle &&
+    parallelTailPair
+  );
+}
+
+function parallelTailLaneRootMergeForkAtMergeInto(
+  layout: RoadmapLayout,
+  mergeInto: string,
+): (typeof layout.trunkForks)[number] | undefined {
+  if (sharedTrunkMergeTarget(layout, mergeInto)) {
+    return undefined;
+  }
+
+  const tailTitle = layout.trunk[layout.trunk.length - 1];
+  return layout.trunkForks.find(
+    (fork) =>
+      fork.mergeInto === mergeInto &&
+      mergeInto === tailTitle &&
+      fork.lanes.length > 1 &&
+      fork.lanes.every((lane) => lane.length === 1) &&
+      fork.lanes.some((lane) => lane[0] === fork.mergeInto),
+  );
+}
+
+function tailParallelMergeForkAtMergeInto(
+  layout: RoadmapLayout,
+  mergeInto: string,
+): (typeof layout.trunkForks)[number] | undefined {
+  const fork = parallelTailLaneRootMergeForkAtMergeInto(layout, mergeInto);
+  if (fork === undefined) {
+    return undefined;
+  }
+  return fork;
+}
+
+/** Upstream merge at `after`, then a multi-lane fork opens with the anchor duplicated in a lane. */
+function mergeJoinThenSplitFanInAt(
+  layout: RoadmapLayout,
+  mergeSpineTitle: string,
+): boolean {
+  const fork = layout.trunkForks.find((entry) => entry.after === mergeSpineTitle);
+  if (fork === undefined || fork.lanes.length < 2) {
+    return false;
+  }
+
+  const mergeJoinAnchor = layout.trunkForks.some(
+    (entry) => entry.mergeInto === fork.after && entry.after !== fork.after,
+  );
+  return mergeJoinAnchor && fork.lanes.flat().includes(fork.after);
 }
 
 function emitSpineLinks(
@@ -788,7 +933,14 @@ function emitSpineLinks(
 
   for (const [source, batch] of bySource) {
     const active = batch.filter((link) => !used.has(spineLinkKey(link)));
-    if (active.length <= 1) {
+    // Fan-in targets are handled in the merge batch below; mixing them with
+    // spine targets (e.g. Objetivo) would spawn a bogus fan-out circle.
+    const fanOutLinks = active.filter(
+      (link) =>
+        !isJunctionId(link.target) &&
+        !trunkContinuationToForkAnchor(layout, link.source, link.target),
+    );
+    if (fanOutLinks.length <= 1) {
       continue;
     }
 
@@ -797,7 +949,7 @@ function emitSpineLinks(
       continue;
     }
 
-    const targetBoxes = active
+    const targetBoxes = fanOutLinks
       .map((link) => resolveBox(link.target))
       .filter((box): box is LayoutBox => box !== undefined);
     if (targetBoxes.length === 0) {
@@ -825,7 +977,7 @@ function emitSpineLinks(
       isSameSpineColumn(centerX, centerX),
     );
 
-    for (const link of active) {
+    for (const link of fanOutLinks) {
       const targetBox = resolveBox(link.target);
       if (!targetBox) {
         continue;
@@ -846,15 +998,36 @@ function emitSpineLinks(
   }
 
   for (const [target, batch] of byTarget) {
-    const active = batch.filter((link) => !used.has(spineLinkKey(link)));
-    if (active.length <= 1) {
-      continue;
-    }
-
     const mergeSpineTitle = target.startsWith("__join__in__")
       ? target.slice("__join__in__".length)
       : target;
-    const targetBox = resolveBox(mergeSpineTitle);
+    const tailForkAtMerge = layout.trunkForks.find((fork) => fork.after === mergeSpineTitle);
+    const tailMergeJoinSplitFanIn =
+      tailForkAtMerge !== undefined &&
+      adjacentTailMergeJoinSplitAtAnchor(layout, tailForkAtMerge);
+    const mergeJoinThenSplitFanIn = mergeJoinThenSplitFanInAt(layout, mergeSpineTitle);
+    const mergeFanInJunctionId = fanInJunctionId(mergeSpineTitle);
+
+    const active = batch.filter((link) => {
+      if (used.has(spineLinkKey(link))) {
+        return false;
+      }
+      if (
+        (tailMergeJoinSplitFanIn || mergeJoinThenSplitFanIn) &&
+        link.source === mergeFanInJunctionId
+      ) {
+        return false;
+      }
+      return true;
+    });
+    if (active.length <= 1) {
+      continue;
+    }
+    const tailParallelMergeFork = tailParallelMergeForkAtMergeInto(layout, mergeSpineTitle);
+    const targetBox =
+      tailParallelMergeFork !== undefined
+        ? resolveBox(ROADMAP_END_ID)
+        : resolveBox(mergeSpineTitle);
     if (!targetBox) {
       continue;
     }
@@ -900,7 +1073,20 @@ function emitSpineLinks(
       used.add(spineLinkKey(link));
     }
 
-    if (!bySource.has(junctionId)) {
+    if (tailParallelMergeFork !== undefined && !bySource.has(junctionId)) {
+      pushEdge(
+        junctionId,
+        ROADMAP_END_ID,
+        HANDLE_JUNCTION_OUT_BOTTOM,
+        HANDLE_TOP_IN,
+        elbow,
+        isSameSpineColumn(centerX, targetBox.x + targetBox.width / 2),
+      );
+    } else if (
+      !bySource.has(junctionId) &&
+      !tailMergeJoinSplitFanIn &&
+      !mergeJoinThenSplitFanIn
+    ) {
       pushEdge(
         junctionId,
         mergeSpineTitle,
@@ -1095,15 +1281,31 @@ export function buildRoadmapFlow({
     const forkSourceOnCanvas = layout.placements.has(forkSource);
     const headFork = inicioHeadFork(fork, layout.trunk);
     const anchorInLane = fork.lanes.flat().includes(fork.after);
+    const tailAnchorInLane = tailParallelForkAnchorInLane(
+      fork,
+      layout.trunk,
+      layout.trunkForks,
+    );
+    const afterIdxOnTrunk = layout.trunk.indexOf(fork.after);
+    const forkPredecessorOnTrunk =
+      afterIdxOnTrunk > 0 ? layout.trunk[afterIdxOnTrunk - 1] : undefined;
     const mergeJoinAnchor = layout.trunkForks.some(
       (entry) => entry.mergeInto === fork.after && entry.after !== fork.after,
     );
     const virtualMergeSplit =
       mergeJoinAnchor && !anchorInLane && fork.lanes.length === 1 && !headFork;
+    const mergeJoinThenSplitStem =
+      mergeJoinAnchor &&
+      !headFork &&
+      fork.lanes.length > 1 &&
+      (anchorInLane || !fork.lanes.flat().includes(fork.after));
     const forkStemSource =
-      mergeJoinAnchor && (anchorInLane || virtualMergeSplit)
+      mergeJoinAnchor && (anchorInLane || virtualMergeSplit || mergeJoinThenSplitStem)
         ? fanInJunctionId(fork.after)
-        : forkSource;
+        : tailAnchorInLane && forkPredecessorOnTrunk !== undefined
+          ? forkPredecessorOnTrunk
+          : forkSource;
+    const tailMergeJoinSplitAtAnchor = adjacentTailMergeJoinSplitAtAnchor(layout, fork);
     const forkStemSourceOnCanvas = forkSourceOnCanvas || isJunctionId(forkStemSource);
     const mergeIntoIsLaneRoot = fork.lanes.some((lane) => lane[0] === fork.mergeInto);
     const tailLaneRootMerge =
@@ -1125,10 +1327,12 @@ export function buildRoadmapFlow({
       const lane = fork.lanes[laneIndex]!;
       const first = lane[0];
       const blockStemOntoMergeLaneRoot =
+        !tailAnchorInLane &&
         first === fork.mergeInto &&
         mergeAtParallelLaneRoot &&
-        mergeJoinAnchor &&
-        fork.after !== fork.mergeInto;
+        fork.after !== fork.mergeInto &&
+        !tailMergeJoinSplitAtAnchor &&
+        (mergeJoinAnchor || (forkStemSource === fork.after && anchorInLane));
       if (
         first !== undefined &&
         first !== forkStemSource &&
@@ -1151,7 +1355,12 @@ export function buildRoadmapFlow({
       const last = lane[lane.length - 1];
       const allowMergeJoinStemOntoLaneRoot =
         forkSource === fork.after && mergeJoinAnchor && !anchorInLane;
+      const parallelTailOpensUpstreamOfLanes =
+        mergeAtParallelLaneRoot &&
+        fork.after !== fork.mergeInto &&
+        (!anchorInLane || tailAnchorInLane);
       const skipSiblingMergeOntoLaneRoot =
+        !parallelTailOpensUpstreamOfLanes &&
         last !== undefined &&
         last !== fork.mergeInto &&
         last !== fork.after &&
@@ -1159,11 +1368,16 @@ export function buildRoadmapFlow({
         last === lane[0] &&
         fork.lanes.some((other, index) => index !== laneIndex && other[0] === fork.mergeInto) &&
         (headFork || !allowMergeJoinStemOntoLaneRoot);
-      const mergeTarget = mergeAtParallelLaneRoot
-        ? fanInJunctionId(fork.mergeInto)
-        : fork.mergeInto;
+      const mergeTarget =
+        mergeAtParallelLaneRoot || sharedTrunkMergeTarget(layout, fork.mergeInto)
+          ? fanInJunctionId(fork.mergeInto)
+          : fork.mergeInto;
 
-      if (tailLaneRootMerge && last !== undefined) {
+      if (
+        tailLaneRootMerge &&
+        last === fork.mergeInto &&
+        !mergeAtParallelLaneRoot
+      ) {
         queueSpineLink(last, ROADMAP_END_ID);
       } else if (last !== undefined && last !== fork.mergeInto && !skipSiblingMergeOntoLaneRoot) {
         queueSpineLink(last, mergeTarget);
@@ -1171,6 +1385,42 @@ export function buildRoadmapFlow({
         queueSpineLink(last, mergeTarget);
       }
     }
+
+    const tailForkOpensAtMergeInto = layout.trunkForks.find(
+      (entry) => entry.after === fork.mergeInto,
+    );
+    const laneOnlyParallelMergeInto =
+      !layout.trunk.includes(fork.mergeInto) ||
+      (tailForkOpensAtMergeInto !== undefined &&
+        !tailForkOpensAtMergeInto.lanes.flat().includes(fork.mergeInto));
+    if (
+      mergeAtParallelLaneRoot &&
+      fork.lanes.flat().includes(fork.mergeInto) &&
+      laneOnlyParallelMergeInto &&
+      !mergeJoinThenSplitFanInAt(layout, fork.mergeInto) &&
+      !(
+        tailLaneRootMerge &&
+        parallelTailLaneRootMergeForkAtMergeInto(layout, fork.mergeInto) !== undefined
+      )
+    ) {
+      queueSpineLink(fanInJunctionId(fork.mergeInto), fork.mergeInto);
+    }
+  }
+
+  for (const fork of layout.trunkForks) {
+    const mergeInto = fork.mergeInto;
+    const tailFork = layout.trunkForks.find(
+      (entry) => entry.after === mergeInto && entry !== fork,
+    );
+    if (
+      tailFork === undefined ||
+      tailFork.lanes.flat().includes(mergeInto) ||
+      fork.lanes.flat().includes(mergeInto) ||
+      !layout.placements.has(mergeInto)
+    ) {
+      continue;
+    }
+    queueSpineLink(mergeInto, fanInJunctionId(mergeInto));
   }
 
   const mergedSpine =
@@ -1185,16 +1435,29 @@ export function buildRoadmapFlow({
     if (trunkForkPairs.has(`${source}->${target}`)) {
       continue;
     }
+    const tailForkAtTarget = layout.trunkForks.find((fork) => fork.after === target);
+    if (
+      tailForkAtTarget !== undefined &&
+      tailParallelForkAnchorInLane(tailForkAtTarget, layout.trunk, layout.trunkForks) &&
+      source === layout.trunk[layout.trunk.indexOf(target) - 1]
+    ) {
+      continue;
+    }
     queueSpineLink(source, target);
   }
 
   const trunkTail = layout.trunk[layout.trunk.length - 1];
+  const tailMergeEndsAtObjetivo =
+    trunkTail !== undefined &&
+    parallelTailLaneRootMergeForkAtMergeInto(layout, trunkTail) !== undefined;
   if (trunkTail !== undefined) {
-    const tailCapstone = layout.capstoneByAfter.get(trunkTail);
-    if (tailCapstone !== undefined) {
-      queueSpineLink(tailCapstone, ROADMAP_END_ID);
-    } else {
-      queueSpineLink(trunkTail, ROADMAP_END_ID);
+    if (!tailMergeEndsAtObjetivo) {
+      const tailCapstone = layout.capstoneByAfter.get(trunkTail);
+      if (tailCapstone !== undefined) {
+        queueSpineLink(tailCapstone, ROADMAP_END_ID);
+      } else {
+        queueSpineLink(trunkTail, ROADMAP_END_ID);
+      }
     }
   } else if (layout.parallelLanes.length > 0) {
     for (const lane of layout.parallelLanes) {

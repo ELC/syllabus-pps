@@ -164,6 +164,81 @@ function mergeJoinThenSplitFork(
   return trunkForks.some((entry) => entry.mergeInto === title && entry.after !== fork.after);
 }
 
+/** ACID|trans-style tail pair: merge target is trunk tail and each lane is a single title. */
+function tailParallelPairFork(
+  fork: RoadmapTrunkForkLayout,
+  trunk: readonly string[],
+): boolean {
+  if (!forkLaneTitleSet(fork).has(fork.after)) {
+    return false;
+  }
+
+  const afterIdx = trunk.indexOf(fork.after);
+  const mergeIdx = trunk.indexOf(fork.mergeInto);
+  if (afterIdx < 0 || mergeIdx !== trunk.length - 1) {
+    return false;
+  }
+
+  return (
+    fork.lanes.length > 1 &&
+    fork.lanes.every((lane) => lane.length === 1) &&
+    fork.lanes.some((lane) => lane[0] === fork.mergeInto)
+  );
+}
+
+/** Skip the center spine row for the opening anchor (e.g. ACID before trans), not after subir trans. */
+function tailParallelForkAnchorInLane(
+  fork: RoadmapTrunkForkLayout,
+  trunk: readonly string[],
+  trunkForks: readonly RoadmapTrunkForkLayout[],
+): boolean {
+  if (!tailParallelPairFork(fork, trunk)) {
+    return false;
+  }
+
+  if (trunkForks.some((other) => other !== fork && other.mergeInto === fork.after)) {
+    return true;
+  }
+
+  return !trunkForks.some((other) => other !== fork && other.mergeInto === fork.mergeInto);
+}
+
+function tailParallelMergeIntoAnchorInLane(
+  title: string,
+  trunk: readonly string[],
+  trunkForks: readonly RoadmapTrunkForkLayout[],
+): boolean {
+  return trunkForks.some(
+    (fork) =>
+      fork.mergeInto === title &&
+      fork.after !== title &&
+      tailParallelPairFork(fork, trunk),
+  );
+}
+
+/** Where parallel lane rows attach on the trunk (anchor vs tail merge target). */
+function forkLanePlacementAnchor(
+  fork: RoadmapTrunkForkLayout,
+  trunk: readonly string[],
+  trunkForks: readonly RoadmapTrunkForkLayout[],
+): string {
+  if (
+    !tailParallelPairFork(fork, trunk) ||
+    trunk.indexOf(fork.mergeInto) !== trunk.length - 1
+  ) {
+    return fork.after;
+  }
+
+  const afterIsUpstreamMergeTarget = trunkForks.some(
+    (other) => other !== fork && other.mergeInto === fork.after,
+  );
+  if (afterIsUpstreamMergeTarget) {
+    return fork.mergeInto;
+  }
+
+  return fork.after;
+}
+
 export interface CourseYearBand {
   year: string;
   y: number;
@@ -754,10 +829,21 @@ interface ParallelLaneRowsContext {
   attached: Map<string, string[]>;
   stageOf: Map<string, number>;
   branchLayoutFlips?: Record<string, boolean>;
+  /** Trunk titles already on the center spine column in this band. */
+  centerSpineAnchors?: ReadonlySet<string>;
+  spineX?: number;
+}
+
+function isCenterSpinePlacement(
+  placement: RoadmapPlacement,
+  spineX: number,
+): boolean {
+  return placement.role === "spine" && Math.abs(placement.x - spineX) < 1;
 }
 
 function placeParallelLaneRows(context: ParallelLaneRowsContext): number {
   const { parallelLanes, centers, placements, attached, stageOf } = context;
+  const { centerSpineAnchors, spineX } = context;
   let { cursorY } = context;
 
   if (parallelLanes.length === 0) {
@@ -822,6 +908,15 @@ function placeParallelLaneRows(context: ParallelLaneRowsContext): number {
     );
 
     for (const { title, laneCenter } of rowBranchLayouts) {
+      if (
+        centerSpineAnchors?.has(title) &&
+        spineX !== undefined &&
+        placements.has(title) &&
+        isCenterSpinePlacement(placements.get(title)!, spineX)
+      ) {
+        continue;
+      }
+
       placeSpineNode(placements, stageOf, {
         title,
         laneCenter,
@@ -1398,10 +1493,19 @@ export function buildRoadmapLayout(
   const spineX = -SPINE_NODE_WIDTH / 2;
 
   for (const title of trunk) {
+    const bandStartY = cursorY;
     const fork = trunkForkByAfter.get(title);
     const headForkAnchor = fork !== undefined && inicioHeadForkAnchor(fork, trunk);
     const mergeJoinThenSplit = mergeJoinThenSplitFork(fork, title, displayTrunkForks);
-    const skipCenterSpineRow = headForkAnchor || mergeJoinThenSplit;
+    const tailAnchorInLane =
+      fork !== undefined && tailParallelForkAnchorInLane(fork, trunk, displayTrunkForks);
+    const tailMergeIntoInLane = tailParallelMergeIntoAnchorInLane(
+      title,
+      trunk,
+      displayTrunkForks,
+    );
+    const skipCenterSpineRow =
+      headForkAnchor || mergeJoinThenSplit || tailAnchorInLane || tailMergeIntoInLane;
     const reuseLanePlacement = skipCenterSpineRow ? undefined : placements.get(title);
     const terminals = attached.get(title) ?? [];
     const willSplit = terminals.length > 1;
@@ -1459,6 +1563,12 @@ export function buildRoadmapLayout(
       }
     }
 
+    const bandForks = displayTrunkForks.filter(
+      (entry) => forkLanePlacementAnchor(entry, trunk, displayTrunkForks) === title,
+    );
+    const coLocateForkWithSpine =
+      !skipCenterSpineRow && bandForks.length > 0 && reuseLanePlacement === undefined;
+
     const forkClearance =
       !skipCenterSpineRow &&
       reuseLanePlacement === undefined &&
@@ -1466,10 +1576,26 @@ export function buildRoadmapLayout(
       branchSubtreeHeight > SPINE_NODE_HEIGHT
         ? STAGE_GAP / 2
         : 0;
-    if (headForkAnchor) {
+
+    if (coLocateForkWithSpine) {
+      for (const laneFork of bandForks) {
+        cursorY = placeParallelLaneRows({
+          parallelLanes: laneFork.lanes,
+          centers: laneCenters(laneFork.lanes.length),
+          cursorY: bandStartY,
+          placements,
+          attached,
+          stageOf,
+          branchLayoutFlips: curation.branchLayoutFlips,
+          centerSpineAnchors: new Set([title]),
+          spineX,
+        });
+      }
+      cursorY = Math.max(cursorY, bandStartY + rowHeight + STAGE_GAP + forkClearance);
+    } else if (headForkAnchor) {
       // fork lanes follow directly under Inicio
     } else if (mergeJoinThenSplit) {
-      cursorY += STAGE_GAP;
+      cursorY += rowHeight + STAGE_GAP;
     } else if (reuseLanePlacement !== undefined) {
       cursorY = Math.max(
         cursorY,
@@ -1496,16 +1622,18 @@ export function buildRoadmapLayout(
       cursorY += CAPSTONE_NODE_HEIGHT + STAGE_GAP;
     }
 
-    if (fork !== undefined) {
-      cursorY = placeParallelLaneRows({
-        parallelLanes: fork.lanes,
-        centers: laneCenters(fork.lanes.length),
-        cursorY,
-        placements,
-        attached,
-        stageOf,
-        branchLayoutFlips: curation.branchLayoutFlips,
-      });
+    if (!coLocateForkWithSpine) {
+      for (const laneFork of bandForks) {
+        cursorY = placeParallelLaneRows({
+          parallelLanes: laneFork.lanes,
+          centers: laneCenters(laneFork.lanes.length),
+          cursorY,
+          placements,
+          attached,
+          stageOf,
+          branchLayoutFlips: curation.branchLayoutFlips,
+        });
+      }
     }
   }
 

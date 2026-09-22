@@ -33,7 +33,8 @@ export async function loadConceptLayout(
     if (!response.ok) {
       throw new Error(`Failed to load concept layout (${response.status})`);
     }
-    return (await response.json()) as RoadmapConceptLayoutDocument;
+    const document = (await response.json()) as RoadmapConceptLayoutDocument | null;
+    return document;
   }
 
   return fetchRoadmapConceptLayout(serverClient(), degreeSlug, courseSlug);

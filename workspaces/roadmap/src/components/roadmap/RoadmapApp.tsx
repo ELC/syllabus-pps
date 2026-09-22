@@ -40,6 +40,10 @@ import { buildAdjacency, topologicalStages } from "./adjacency";
 import { buildRoadmapFlow } from "./build-flow";
 import { EMPTY_ROADMAP_CURATION, resolveRoadmapCuration, type RoadmapCuration } from "./curation";
 import {
+  buildConceptCurationDebugExport,
+  copyConceptCurationDebugExport,
+} from "./concept-curation-debug-export";
+import {
   conceptLayoutDocumentFromCuration,
   parseConceptLayoutDocument,
   sliceCurationForCourse,
@@ -47,18 +51,29 @@ import {
 import {
   attachSideConcept,
   branchOwnerForConcept,
-  canShiftConceptInOrder,
   inferLayoutBranchOwner,
   mergeTrunkFork,
+  planShiftOnCuration,
   promoteConceptToSpine,
   sanitizeTrunkForkCuration,
   separateSpineRangeToBranches,
-  shiftConceptInOrder,
 } from "./concept-curation-ops";
+import { Admissibility } from "../../concept-graph";
 import {
   conceptEditHintForTool,
   type ConceptEditTool,
 } from "./concept-edit-tools";
+import type { ConceptCurationEditAction } from "./concept-curation-edit-action";
+import {
+  canRedoConceptCuration,
+  canUndoConceptCuration,
+  createConceptCurationHistory,
+  currentConceptCuration,
+  pushConceptCurationHistory,
+  redoConceptCurationHistory,
+  type ConceptCurationHistory,
+  undoConceptCurationHistory,
+} from "./concept-curation-history";
 import { RoadmapConceptEditToolbar } from "./RoadmapConceptEditToolbar";
 import type { RoadmapTopicNodeData } from "./RoadmapTopicNode";
 import { loadConceptLayout, saveConceptLayout } from "../../api/concept-layout";
@@ -227,6 +242,8 @@ export function RoadmapApp({
   const [branchRangeFirst, setBranchRangeFirst] = useState<string | null>(null);
   const [sidePendingOwner, setSidePendingOwner] = useState<string | null>(null);
   const [conceptCuration, setConceptCuration] = useState<RoadmapCuration | null>(null);
+  const conceptCurationHistoryRef = useRef<ConceptCurationHistory | null>(null);
+  const [conceptCurationHistoryTick, setConceptCurationHistoryTick] = useState(0);
   const [conceptLayoutLoading, setConceptLayoutLoading] = useState(false);
   const [conceptLayoutReadyKey, setConceptLayoutReadyKey] = useState<string | null>(null);
   const [courseLayoutDocument, setCourseLayoutDocument] =
@@ -475,6 +492,7 @@ export function RoadmapApp({
   useEffect(() => {
     if (!isConceptView || !activeCourseRoadmap || !activeDegreeRoadmap || !focusedCourseSlug) {
       setConceptCuration(null);
+      conceptCurationHistoryRef.current = null;
       setConceptLayoutLoading(false);
       setConceptLayoutReadyKey(null);
       setConceptSubgraphEditMode(false);
@@ -499,6 +517,7 @@ export function RoadmapApp({
 
     setConceptLayoutLoading(true);
     setConceptCuration(null);
+    conceptCurationHistoryRef.current = null;
     setConceptLayoutReadyKey(null);
     setConceptSubgraphEditMode(false);
     setConceptSelectedTopic(null);
@@ -516,12 +535,17 @@ export function RoadmapApp({
         if (parsed) {
           sanitizeTrunkForkCuration(parsed);
         }
-        setConceptCuration(parsed ?? fallbackCuration);
+        const loaded = parsed ?? fallbackCuration;
+        conceptCurationHistoryRef.current = createConceptCurationHistory(loaded);
+        setConceptCuration(loaded);
+        setConceptCurationHistoryTick((tick) => tick + 1);
         setConceptLayoutReadyKey(layoutKey);
       })
       .catch((error: unknown) => {
         if (!cancelled) {
+          conceptCurationHistoryRef.current = createConceptCurationHistory(fallbackCuration);
           setConceptCuration(fallbackCuration);
+          setConceptCurationHistoryTick((tick) => tick + 1);
           setConceptLayoutReadyKey(layoutKey);
           setGridLayoutStatus(
             error instanceof Error ? error.message : "No se pudo cargar el mapa de temas.",
@@ -640,6 +664,103 @@ export function RoadmapApp({
     setSidePendingOwner(null);
   }, []);
 
+  const commitConceptCurationEdit = useCallback(
+    (next: RoadmapCuration, action: ConceptCurationEditAction) => {
+      setConceptCuration(next);
+      const history = conceptCurationHistoryRef.current;
+      conceptCurationHistoryRef.current = history
+        ? pushConceptCurationHistory(history, next, action)
+        : createConceptCurationHistory(next, action);
+      setConceptCurationHistoryTick((tick) => tick + 1);
+    },
+    [],
+  );
+
+  const undoConceptCurationEdit = useCallback(() => {
+    const history = conceptCurationHistoryRef.current;
+    if (!history) {
+      return;
+    }
+
+    const undone = undoConceptCurationHistory(history);
+    if (!undone) {
+      return;
+    }
+
+    conceptCurationHistoryRef.current = undone;
+    setConceptCuration(structuredClone(currentConceptCuration(undone)));
+    setConceptCurationHistoryTick((tick) => tick + 1);
+    setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
+  }, []);
+
+  const redoConceptCurationEdit = useCallback(() => {
+    const history = conceptCurationHistoryRef.current;
+    if (!history) {
+      return;
+    }
+
+    const redone = redoConceptCurationHistory(history);
+    if (!redone) {
+      return;
+    }
+
+    conceptCurationHistoryRef.current = redone;
+    setConceptCuration(structuredClone(currentConceptCuration(redone)));
+    setConceptCurationHistoryTick((tick) => tick + 1);
+    setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
+  }, []);
+
+  const conceptHistoryAvailability = useMemo(() => {
+    void conceptCurationHistoryTick;
+    const history = conceptCurationHistoryRef.current;
+    if (!history) {
+      return { undo: false, redo: false };
+    }
+
+    return {
+      undo: canUndoConceptCuration(history),
+      redo: canRedoConceptCuration(history),
+    };
+  }, [conceptCurationHistoryTick]);
+
+  const showConceptCurationDebugExport = import.meta.env.DEV;
+
+  const handleCopyConceptCurationDebugJson = useCallback(async () => {
+    if (
+      !conceptCuration ||
+      !activeCourseRoadmap ||
+      !focusedCourseSlug
+    ) {
+      return;
+    }
+
+    const payload = buildConceptCurationDebugExport({
+      degreeSlug: activeCourseRoadmap.degreeSlug,
+      courseSlug: focusedCourseSlug,
+      curation: conceptCuration,
+      history: conceptCurationHistoryRef.current,
+      selectedTopic: conceptSelectedTopic,
+      editTool: conceptEditTool,
+    });
+
+    try {
+      await copyConceptCurationDebugExport(payload);
+      setGridLayoutStatus("JSON del mapa copiado al portapapeles (debug).");
+    } catch (error: unknown) {
+      setGridLayoutStatus(
+        error instanceof Error
+          ? error.message
+          : "No se pudo copiar el JSON al portapapeles.",
+      );
+    }
+  }, [
+    activeCourseRoadmap,
+    conceptCuration,
+    conceptEditTool,
+    conceptSelectedTopic,
+    focusedCourseSlug,
+  ]);
+
   const handleConceptEditToolChange = useCallback(
     (tool: ConceptEditTool) => {
       setConceptEditTool(tool);
@@ -654,12 +775,15 @@ export function RoadmapApp({
 
   const conceptMoveAvailability = useMemo(() => {
     if (!conceptCuration || !conceptSelectedTopic) {
-      return { up: false, down: false };
+      return {
+        up: Admissibility.Blocked as typeof Admissibility.Blocked,
+        down: Admissibility.Blocked as typeof Admissibility.Blocked,
+      };
     }
 
     return {
-      up: canShiftConceptInOrder(conceptCuration, conceptSelectedTopic, -1),
-      down: canShiftConceptInOrder(conceptCuration, conceptSelectedTopic, 1),
+      up: planShiftOnCuration(conceptCuration, conceptSelectedTopic, -1).admissibility,
+      down: planShiftOnCuration(conceptCuration, conceptSelectedTopic, 1).admissibility,
     };
   }, [conceptCuration, conceptSelectedTopic]);
 
@@ -669,15 +793,20 @@ export function RoadmapApp({
         return;
       }
 
-      const next = shiftConceptInOrder(conceptCuration, conceptSelectedTopic, direction);
-      if (!next) {
+      const planned = planShiftOnCuration(conceptCuration, conceptSelectedTopic, direction);
+      if (planned.admissibility === Admissibility.Blocked) {
+        setGridLayoutStatus(conceptEditErrorLabel(planned.error));
         return;
       }
 
-      setConceptCuration(next);
+      commitConceptCurationEdit(planned.curation, {
+        kind: "shift",
+        title: conceptSelectedTopic,
+        direction,
+      });
       setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
     },
-    [conceptCuration, conceptSelectedTopic],
+    [commitConceptCurationEdit, conceptCuration, conceptSelectedTopic],
   );
 
   useEffect(() => {
@@ -709,12 +838,29 @@ export function RoadmapApp({
     function handleKeyDown(event: KeyboardEvent): void {
       if (event.key === "Escape") {
         clearConceptEditPending();
+        return;
+      }
+
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "z") {
+        return;
+      }
+
+      event.preventDefault();
+      if (event.shiftKey) {
+        redoConceptCurationEdit();
+      } else {
+        undoConceptCurationEdit();
       }
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [clearConceptEditPending, conceptSubgraphEditMode]);
+  }, [
+    clearConceptEditPending,
+    conceptSubgraphEditMode,
+    redoConceptCurationEdit,
+    undoConceptCurationEdit,
+  ]);
 
   const degreeConceptSlugByTitle = useMemo(() => {
     if (!graph || !activeCourseRoadmap) {
@@ -1179,7 +1325,11 @@ export function RoadmapApp({
             return;
           }
 
-          setConceptCuration(separated.curation);
+          commitConceptCurationEdit(separated.curation, {
+            kind: "separate",
+            firstSelectedTitle: branchRangeFirst,
+            lastSelectedTitle: node.id,
+          });
           clearConceptEditPending();
           setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
           return;
@@ -1207,7 +1357,11 @@ export function RoadmapApp({
             return;
           }
 
-          setConceptCuration(attached.curation);
+          commitConceptCurationEdit(attached.curation, {
+            kind: "attachSide",
+            ownerTitle: sidePendingOwner,
+            branchTitle: node.id,
+          });
           clearConceptEditPending();
           setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
           return;
@@ -1219,7 +1373,10 @@ export function RoadmapApp({
             return;
           }
 
-          setConceptCuration(merged.curation);
+          commitConceptCurationEdit(merged.curation, {
+            kind: "mergeFork",
+            conceptTitle: node.id,
+          });
           clearConceptEditPending();
           setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
           return;
@@ -1241,7 +1398,10 @@ export function RoadmapApp({
             return;
           }
 
-          setConceptCuration(promoted.curation);
+          commitConceptCurationEdit(promoted.curation, {
+            kind: "promoteToSpine",
+            branchTitle: node.id,
+          });
           clearConceptEditPending();
           setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
           return;
@@ -1254,6 +1414,7 @@ export function RoadmapApp({
       adjacency,
       branchRangeFirst,
       clearConceptEditPending,
+      commitConceptCurationEdit,
       sidePendingOwner,
       conceptCuration,
       conceptEditTool,
@@ -1467,10 +1628,19 @@ export function RoadmapApp({
                     <RoadmapConceptEditToolbar
                       activeTool={conceptEditTool}
                       onToolChange={handleConceptEditToolChange}
-                      canMoveUp={conceptMoveAvailability.up}
-                      canMoveDown={conceptMoveAvailability.down}
+                      moveUpAdmissibility={conceptMoveAvailability.up}
+                      moveDownAdmissibility={conceptMoveAvailability.down}
                       onMoveUp={() => applyConceptOrderShift(-1)}
                       onMoveDown={() => applyConceptOrderShift(1)}
+                      canUndo={conceptHistoryAvailability.undo}
+                      canRedo={conceptHistoryAvailability.redo}
+                      onUndo={undoConceptCurationEdit}
+                      onRedo={redoConceptCurationEdit}
+                      onCopyDebugJson={
+                        showConceptCurationDebugExport
+                          ? () => void handleCopyConceptCurationDebugJson()
+                          : undefined
+                      }
                     />
                   ) : null}
                   <button

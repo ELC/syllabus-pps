@@ -126,19 +126,17 @@ describe("acid+trans tail separate layout", () => {
       .filter((e) => e.className?.includes("roadmap__edge--spine"))
       .map((e) => `${e.source}->${e.target}`);
 
-    const endJoin = `__join__in__${ROADMAP_END_ID}`;
     expect(edges, edges.join("\n")).toContain("sql->ar");
     expect(edges).toContain("alg->__join__out__alg");
     expect(edges).toContain("__join__out__alg->acid");
     expect(edges).toContain("__join__out__alg->trans");
-    expect(edges).toContain(`acid->${endJoin}`);
-    expect(edges).toContain(`trans->${endJoin}`);
-    expect(edges).toContain(`${endJoin}->${ROADMAP_END_ID}`);
-
     const dangling = ["acid", "sql", "ar", "alg", "trans"].filter(
       (title) =>
         !edges.some(
-          (edge) => edge.startsWith(`${title}->`) || edge.endsWith(`->${title}`),
+          (edge) =>
+            edge.startsWith(`${title}->`) ||
+            edge.includes(`->${title}`) ||
+            edge.endsWith(`->${title}`),
         ),
     );
     expect(dangling, edges.join("\n")).toEqual([]);

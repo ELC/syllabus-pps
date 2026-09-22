@@ -1,13 +1,20 @@
 import type { ConceptEditTool } from "./concept-edit-tools";
 import { CONCEPT_EDIT_TOOL_LABELS } from "./concept-edit-tools";
 
+import { Admissibility } from "../../concept-graph";
+
 interface RoadmapConceptEditToolbarProps {
   activeTool: ConceptEditTool;
   onToolChange: (tool: ConceptEditTool) => void;
-  canMoveUp: boolean;
-  canMoveDown: boolean;
+  moveUpAdmissibility: typeof Admissibility.Allowed | typeof Admissibility.Blocked;
+  moveDownAdmissibility: typeof Admissibility.Allowed | typeof Admissibility.Blocked;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  onUndo: () => void;
+  onRedo: () => void;
+  onCopyDebugJson?: () => void;
 }
 
 const TOOLS: ConceptEditTool[] = [
@@ -21,10 +28,15 @@ const TOOLS: ConceptEditTool[] = [
 export function RoadmapConceptEditToolbar({
   activeTool,
   onToolChange,
-  canMoveUp,
-  canMoveDown,
+  moveUpAdmissibility,
+  moveDownAdmissibility,
   onMoveUp,
   onMoveDown,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
+  onCopyDebugJson,
 }: RoadmapConceptEditToolbarProps) {
   return (
     <div className="roadmap__concept-edit-tools" role="toolbar" aria-label="Herramientas de edición del mapa">
@@ -32,7 +44,27 @@ export function RoadmapConceptEditToolbar({
         <button
           type="button"
           className="roadmap__concept-edit-tool"
-          disabled={!canMoveUp}
+          disabled={!canUndo}
+          onClick={onUndo}
+          title="Deshacer (⌘Z)"
+        >
+          Deshacer
+        </button>
+        <button
+          type="button"
+          className="roadmap__concept-edit-tool"
+          disabled={!canRedo}
+          onClick={onRedo}
+          title="Rehacer (⇧⌘Z)"
+        >
+          Rehacer
+        </button>
+      </div>
+      <div className="roadmap__concept-edit-order">
+        <button
+          type="button"
+          className="roadmap__concept-edit-tool"
+          disabled={moveUpAdmissibility === Admissibility.Blocked}
           onClick={onMoveUp}
         >
           Subir
@@ -40,7 +72,7 @@ export function RoadmapConceptEditToolbar({
         <button
           type="button"
           className="roadmap__concept-edit-tool"
-          disabled={!canMoveDown}
+          disabled={moveDownAdmissibility === Admissibility.Blocked}
           onClick={onMoveDown}
         >
           Bajar
@@ -57,6 +89,16 @@ export function RoadmapConceptEditToolbar({
           {CONCEPT_EDIT_TOOL_LABELS[tool]}
         </button>
       ))}
+      {onCopyDebugJson ? (
+        <button
+          type="button"
+          className="roadmap__concept-edit-tool roadmap__concept-edit-tool--debug"
+          onClick={onCopyDebugJson}
+          title="Copia el estado del mapa (JSON) al portapapeles — solo desarrollo"
+        >
+          Copiar JSON
+        </button>
+      ) : null}
     </div>
   );
 }

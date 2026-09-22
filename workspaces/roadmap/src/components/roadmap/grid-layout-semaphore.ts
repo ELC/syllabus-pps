@@ -10,7 +10,7 @@ export const GRID_LAYOUT_SAVED_LABEL = "Grilla guardada en la nube.";
 export const CONCEPT_LAYOUT_UNSAVED_LABEL = "Cambios sin guardar en el mapa de temas.";
 
 export const CONCEPT_LAYOUT_EDIT_HINT =
-  "Subir/Bajar reordenan; Separar rama y Lateral dos clics; Unir ramas y A columna un clic. Esc cancela. Guardá con el ícono de guardar.";
+  "Subir/Bajar reordenan; Deshacer/Rehacer (⌘Z) recorren el historial; Separar rama y Lateral dos clics; Unir ramas y A columna un clic. Esc cancela. Guardá con el ícono de guardar.";
 
 export const CONCEPT_LAYOUT_SAVED_LABEL = "Mapa de temas guardado en la nube.";
 
@@ -32,6 +32,12 @@ const CONCEPT_EDIT_ERROR_LABELS: Record<string, string> = {
     "Lateral: no se puede mover el nodo de unión del fork sin un sucesor en la columna.",
   "side-blocked-fork-anchor":
     "Lateral: no se puede mover el ancla donde se abre el fork; usá Unir ramas primero.",
+  "shift-no-neighbor": "Subir/Bajar: no hay otro tema adyacente en este orden.",
+  "shift-cross-fork-blocked":
+    "Subir/Bajar: no se puede reordenar entre forks de esta forma; usá Separar o Unir ramas.",
+  "concept-not-in-subgraph": "El tema no forma parte de este mapa de conceptos.",
+  "codec-invalid-curation":
+    "El layout guardado no se pudo interpretar; revisá el mapa en la base de datos.",
 };
 
 export function conceptEditErrorLabel(error: string): string {

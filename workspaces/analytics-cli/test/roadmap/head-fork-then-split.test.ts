@@ -98,7 +98,7 @@ describe("inicio head fork then sql|ar row", () => {
     expect(curation.trunkForks!.find((fork) => fork.after === "sql")).toMatchObject({
       mergeInto: "ar",
     });
-    expect(curation.trunkForks!.find((fork) => fork.after === "ar")).toMatchObject({
+    expect(curation.trunkForks!.find((fork) => fork.after === "acid")).toMatchObject({
       mergeInto: "trans",
     });
 

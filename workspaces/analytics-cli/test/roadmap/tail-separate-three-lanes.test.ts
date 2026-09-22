@@ -75,10 +75,11 @@ describe("tail separate into parallel lanes before objetivo", () => {
     const edges = spineEdges(layout, titles);
 
     expect(layout.trunk[layout.trunk.length - 1]).toBe("trans");
-    const endJoin = `__join__in__${ROADMAP_END_ID}`;
-    expect(edges).toContain(`alg->${endJoin}`);
-    expect(edges).toContain(`trans->${endJoin}`);
-    expect(edges).toContain(`${endJoin}->${ROADMAP_END_ID}`);
+    const tailJoin = "__join__in__trans";
+    expect(edges).toContain(`alg->${tailJoin}`);
+    expect(edges).toContain(`trans->${tailJoin}`);
+    expect(edges).toContain(`${tailJoin}->${ROADMAP_END_ID}`);
+    expect(edges).not.toContain("trans->__roadmap_end__");
 
     const dangling = ["acid", "ar", "alg", "sql", "trans"].filter(
       (title) =>

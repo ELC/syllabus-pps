@@ -39,7 +39,7 @@ function normalizeApiPath(url: string, base: string): string | null {
 }
 
 const ROADMAP_LAYOUT_SITE_PATH =
-  /^\/roadmap\/api\/roadmap-(layout|concept-layout)\/[^/?]+/;
+  /^\/roadmap\/api\/roadmap-(?:layout\/[^/?]+|concept-layout\/[^/?]+\/[^/?]+)(?:\?|$)/;
 
 function loadRepoEnv(repoRoot: string): void {
   const env = loadEnv("development", repoRoot, "");
@@ -136,12 +136,7 @@ export function createSupabaseDevMiddleware(
 
           if (req.method === "GET") {
             const layout = await fetchRoadmapConceptLayout(client, degreeSlug, courseSlug);
-            if (!layout) {
-              res.statusCode = 404;
-              res.end();
-              return;
-            }
-
+            res.statusCode = 200;
             res.setHeader("Content-Type", "application/json; charset=utf-8");
             res.end(JSON.stringify(layout));
             return;

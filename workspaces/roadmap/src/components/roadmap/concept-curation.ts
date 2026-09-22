@@ -108,7 +108,7 @@ export function parseConceptLayoutDocument(
 
   const merged: RoadmapCuration = {
     ...EMPTY_ROADMAP_CURATION,
-    ...(raw as RoadmapCuration),
+    ...(raw as unknown as RoadmapCuration),
     degreeSlug: courseRoadmap.degreeSlug,
   };
 
@@ -118,7 +118,7 @@ export function parseConceptLayoutDocument(
 export function conceptLayoutDocumentFromCuration(
   curation: RoadmapCuration,
 ): Record<string, unknown> {
-  return structuredClone(curation) as Record<string, unknown>;
+  return structuredClone(curation) as unknown as Record<string, unknown>;
 }
 
 export function removeTitleFromCurationSpine(curation: RoadmapCuration, title: string): void {
