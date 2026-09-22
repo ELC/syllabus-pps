@@ -16,6 +16,7 @@
     "src/load-analytics-artifact.ts",
     "src/trigger-analytics-rebuild.ts",
     "src/analytics-rebuild-status-browser.ts",
-    "src/browser.ts"
+    "src/browser.ts",
+    "src/editor-catalog-sync.ts"
   ]
 }
