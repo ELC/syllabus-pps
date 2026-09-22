@@ -112,6 +112,67 @@ function nodeSlug(node: cytoscape.NodeSingular): string | undefined {
   return typeof slug === "string" && slug.length > 0 ? slug : undefined;
 }
 
+function isStructuralHierarchyEdge(edge: cytoscape.EdgeSingular): boolean {
+  if (String(edge.data("kind")) !== "page-ref") {
+    return false;
+  }
+
+  const [sourceKind, targetKind] = edgeKinds(edge);
+  if (sourceKind === "course" && targetKind === "course") {
+    return false;
+  }
+
+  return (
+    (sourceKind === "degree" && (targetKind === "year" || targetKind === "course")) ||
+    (sourceKind === "year" && targetKind === "course")
+  );
+}
+
+function findDegreeSlugForCourseNode(
+  cy: cytoscape.Core,
+  courseNode: cytoscape.NodeSingular,
+): string | undefined {
+  const queue = [courseNode.id()];
+  const seen = new Set<string>(queue);
+
+  while (queue.length > 0) {
+    const nodeId = queue.shift()!;
+    const node = cy.getElementById(nodeId);
+    if (node.empty() || !node.isNode()) {
+      continue;
+    }
+
+    if (String(node.data("kind")) === "degree") {
+      return nodeSlug(node);
+    }
+
+    node.incomers("edge").forEach((edge) => {
+      if (!isStructuralHierarchyEdge(edge)) {
+        return;
+      }
+
+      const sourceId = edge.source().id();
+      if (seen.has(sourceId)) {
+        return;
+      }
+
+      seen.add(sourceId);
+      queue.push(sourceId);
+    });
+  }
+
+  return undefined;
+}
+
+function roadmapCourseSubgraphHref(degreeSlug: string, courseSlug: string): string {
+  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
+  const params = new URLSearchParams({
+    degree: degreeSlug,
+    course: courseSlug,
+  });
+  return `${siteRoot}roadmap/?${params.toString()}`;
+}
+
 function findNodeBySlug(cy: cytoscape.Core, slug: string): cytoscape.NodeSingular | undefined {
   const found = cy.nodes().filter((node) => node.isNode() && nodeSlug(node) === slug);
   if (found.empty() || !found[0]?.isNode()) {
@@ -279,15 +340,21 @@ function restorePositions(cy: cytoscape.Core, positions: Map<string, cytoscape.P
   });
 }
 
-function expansionSessionKey(expansionNodeIds: string[]): string {
-  return [...expansionNodeIds].sort(compareNodes).join("|");
+function expansionSessionKey(
+  expansionNodeIds: string[],
+  courseLinkMode: CourseLinkMode,
+): string {
+  return `${courseLinkMode}::${[...expansionNodeIds].sort(compareNodes).join("|")}`;
 }
 
 function persistCurrentPositions(cy: cytoscape.Core, viewState: GraphViewState): void {
   const positions = snapshotPositions(cy);
 
   if (viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0) {
-    viewState.focusLayoutCache.set(expansionSessionKey(viewState.expansionNodeIds), positions);
+    viewState.focusLayoutCache.set(
+      expansionSessionKey(viewState.expansionNodeIds, viewState.courseLinkMode),
+      positions,
+    );
   }
 
   if (viewState.fullGraphPositions) {
@@ -300,6 +367,7 @@ function persistCurrentPositions(cy: cytoscape.Core, viewState: GraphViewState):
 function visibleNodeIdsForExpansions(
   cy: cytoscape.Core,
   expansionNodeIds: string[],
+  courseLinkMode: CourseLinkMode,
 ): Set<string> {
   const visibleNodeIds = new Set<string>();
 
@@ -309,7 +377,7 @@ function visibleNodeIdsForExpansions(
       continue;
     }
 
-    inducedNodeIdsForNode(node).forEach((visibleNodeId) => {
+    inducedNodeIdsForNode(node, courseLinkMode).forEach((visibleNodeId) => {
       visibleNodeIds.add(visibleNodeId);
     });
   }
@@ -317,11 +385,21 @@ function visibleNodeIdsForExpansions(
   return visibleNodeIds;
 }
 
-function inducedNodeIdsForNode(node: cytoscape.NodeSingular): Set<string> {
-  const nodeIds = new Set<string>();
-  node.closedNeighborhood().nodes().forEach((neighbor) => {
-    nodeIds.add(neighbor.id());
+function inducedNodeIdsForNode(
+  node: cytoscape.NodeSingular,
+  courseLinkMode: CourseLinkMode,
+): Set<string> {
+  const nodeIds = new Set<string>([node.id()]);
+
+  node.connectedEdges().forEach((edge) => {
+    if (!edgeVisibleForCourseLinkMode(edge, courseLinkMode)) {
+      return;
+    }
+
+    nodeIds.add(edge.source().id());
+    nodeIds.add(edge.target().id());
   });
+
   return nodeIds;
 }
 
@@ -448,7 +526,25 @@ function kindLabel(kind: string, trayecto?: string): string {
   return match?.label ?? kind;
 }
 
-function directedPathToNodeIds(cy: cytoscape.Core, targetNodeId: string): Set<string> {
+function edgeVisibleForCourseLinkMode(
+  edge: cytoscape.EdgeSingular,
+  courseLinkMode: CourseLinkMode,
+): boolean {
+  const edgeKind = String(edge.data("kind"));
+
+  if (courseLinkMode === "mentions") {
+    return edgeKind !== "course-prerequisite";
+  }
+
+  const [sourceKind, targetKind] = edgeKinds(edge);
+  return !(edgeKind === "page-ref" && sourceKind === "course" && targetKind === "course");
+}
+
+function directedPathToNodeIds(
+  cy: cytoscape.Core,
+  targetNodeId: string,
+  courseLinkMode: CourseLinkMode,
+): Set<string> {
   const reachable = new Set<string>([targetNodeId]);
   const queue = [targetNodeId];
 
@@ -460,6 +556,10 @@ function directedPathToNodeIds(cy: cytoscape.Core, targetNodeId: string): Set<st
     }
 
     node.incomers("edge").forEach((edge) => {
+      if (!edgeVisibleForCourseLinkMode(edge, courseLinkMode)) {
+        return;
+      }
+
       const sourceId = edge.source().id();
       if (reachable.has(sourceId)) {
         return;
@@ -486,7 +586,7 @@ function computeGlobalVisibleNodeIds(
   for (const { kind } of GRAPH_FILTER_KINDS) {
     const nodeId = viewState.kindFilters[kind];
     if (nodeId) {
-      constraints.push(directedPathToNodeIds(cy, nodeId));
+      constraints.push(directedPathToNodeIds(cy, nodeId, viewState.courseLinkMode));
     }
   }
 
@@ -512,7 +612,7 @@ function computeGlobalVisibleNodeIds(
 function applyElementVisibility(cy: cytoscape.Core, viewState: GraphViewState): cytoscape.Collection {
   const focusVisibleNodeIds =
     viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0
-      ? visibleNodeIdsForExpansions(cy, viewState.expansionNodeIds)
+      ? visibleNodeIdsForExpansions(cy, viewState.expansionNodeIds, viewState.courseLinkMode)
       : null;
   const globalVisibleNodeIds = computeGlobalVisibleNodeIds(cy, viewState);
 
@@ -544,18 +644,7 @@ function applyElementVisibility(cy: cytoscape.Core, viewState: GraphViewState): 
       !edge.source().hasClass("filtered-out") && !edge.target().hasClass("filtered-out");
 
     if (visible) {
-      const edgeKind = String(edge.data("kind"));
-      const [sourceKind, targetKind] = edgeKinds(edge);
-
-      if (viewState.courseLinkMode === "mentions") {
-        if (edgeKind === "course-prerequisite") {
-          visible = false;
-        }
-      } else if (edgeKind === "page-ref" && sourceKind === "course" && targetKind === "course") {
-        visible = false;
-      } else if (edgeKind === "course-prerequisite") {
-        visible = true;
-      }
+      visible = edgeVisibleForCourseLinkMode(edge, viewState.courseLinkMode);
     }
 
     edge.toggleClass("filtered-out", !visible);
@@ -650,6 +739,47 @@ function nodeTitle(node: cytoscape.SingularElementArgument, fallback: string): s
   return capitalizeWords(fallback);
 }
 
+function appendRoadmapLink(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  listRoot: HTMLElement,
+): void {
+  const expansionNodeIds = viewState.expansionNodeIds;
+  if (!expansionNodeIds || expansionNodeIds.length === 0) {
+    return;
+  }
+
+  const roadmapLink = document.createElement("a");
+  roadmapLink.className = "graph__roadmap-link";
+  roadmapLink.textContent = "Ver como Roadmap";
+
+  const singleExpansion = expansionNodeIds.length === 1;
+  if (singleExpansion) {
+    const node = cy.getElementById(expansionNodeIds[0]!);
+    const courseSlug =
+      node.nonempty() && node.isNode() && String(node.data("kind")) === "course"
+        ? nodeSlug(node)
+        : undefined;
+    const degreeSlug =
+      courseSlug && node.isNode() ? findDegreeSlugForCourseNode(cy, node) : undefined;
+
+    if (courseSlug && degreeSlug) {
+      roadmapLink.href = roadmapCourseSubgraphHref(degreeSlug, courseSlug);
+      roadmapLink.title = "Abrir esta materia en el mapa de Roadmap";
+      listRoot.appendChild(roadmapLink);
+      return;
+    }
+  }
+
+  roadmapLink.classList.add("graph__roadmap-link--disabled");
+  roadmapLink.setAttribute("aria-disabled", "true");
+  roadmapLink.tabIndex = -1;
+  roadmapLink.title = singleExpansion
+    ? "Disponible cuando la expansión es una materia del plan"
+    : "Disponible con una sola expansión activa";
+  listRoot.appendChild(roadmapLink);
+}
+
 function updateExpansionListUI(
   cy: cytoscape.Core,
   viewState: GraphViewState,
@@ -729,6 +859,7 @@ function updateExpansionListUI(
   }
 
   listRoot.append(label, list);
+  appendRoadmapLink(cy, viewState, listRoot);
 }
 
 function buildKindFilterOptions(cy: cytoscape.Core): Record<KindFilterKey, cytoscape.NodeSingular[]> {
@@ -980,12 +1111,24 @@ function setCourseLinkMode(
   ui: GraphUi,
   mode: CourseLinkMode,
 ): void {
-  viewState.courseLinkMode = mode;
-  ui.syncView(true);
-
-  if (!isExpansionActive(viewState)) {
-    refreshGraphLayout(cy, viewState);
+  if (viewState.courseLinkMode === mode) {
+    return;
   }
+
+  const wasExpanded = isExpansionActive(viewState);
+  if (wasExpanded) {
+    persistCurrentPositions(cy, viewState);
+  }
+
+  viewState.courseLinkMode = mode;
+
+  if (wasExpanded) {
+    applyFocusView(cy, viewState, ui, { randomize: false });
+    return;
+  }
+
+  ui.syncView(true);
+  refreshGraphLayout(cy, viewState);
 }
 
 function mountToggleCourseLinksButton(
@@ -1250,7 +1393,9 @@ function refreshGraphLayout(
 
   const inFocus = Boolean(viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0);
   if (inFocus && viewState.expansionNodeIds) {
-    viewState.focusLayoutCache.delete(expansionSessionKey(viewState.expansionNodeIds));
+    viewState.focusLayoutCache.delete(
+      expansionSessionKey(viewState.expansionNodeIds, viewState.courseLinkMode),
+    );
   }
 
   runGraphLayout(visibleElements, {
@@ -1308,9 +1453,13 @@ function applyFocusView(
     return;
   }
 
-  const visibleNodeIds = visibleNodeIdsForExpansions(cy, expansionNodeIds);
+  const visibleNodeIds = visibleNodeIdsForExpansions(
+    cy,
+    expansionNodeIds,
+    viewState.courseLinkMode,
+  );
   const focusEles = visibleLayoutSubgraph(cy, viewState, visibleNodeIds);
-  const sessionKey = expansionSessionKey(expansionNodeIds);
+  const sessionKey = expansionSessionKey(expansionNodeIds, viewState.courseLinkMode);
 
   cy.elements().removeClass("focused");
 
@@ -1348,7 +1497,7 @@ function focusOrExpandNeighborhood(
   }
 
   const previousVisibleNodeIds = inFocus
-    ? visibleNodeIdsForExpansions(cy, viewState.expansionNodeIds!)
+    ? visibleNodeIdsForExpansions(cy, viewState.expansionNodeIds!, viewState.courseLinkMode)
     : null;
 
   if (inFocus && viewState.expansionNodeIds!.includes(nodeId)) {
@@ -1365,7 +1514,11 @@ function focusOrExpandNeighborhood(
   }
   viewState.expansionNodeIds = expansionNodeIds;
 
-  const visibleNodeIds = visibleNodeIdsForExpansions(cy, expansionNodeIds);
+  const visibleNodeIds = visibleNodeIdsForExpansions(
+    cy,
+    expansionNodeIds,
+    viewState.courseLinkMode,
+  );
   const addedNodeCount = previousVisibleNodeIds
     ? [...visibleNodeIds].filter((id) => !previousVisibleNodeIds.has(id)).length
     : visibleNodeIds.size;
@@ -1787,7 +1940,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
 
     if (viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0) {
       viewState.focusLayoutCache.set(
-        expansionSessionKey(viewState.expansionNodeIds),
+        expansionSessionKey(viewState.expansionNodeIds, viewState.courseLinkMode),
         snapshotPositions(cy),
       );
     } else {

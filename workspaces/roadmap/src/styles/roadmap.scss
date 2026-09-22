@@ -81,7 +81,10 @@
     }
   }
 
-  &__back-button {
+  &__back-button,
+  &__network-link {
+    display: inline-flex;
+    align-items: center;
     appearance: none;
     border: 1px solid var(--dash-border);
     border-radius: 0.5rem;
@@ -92,6 +95,7 @@
     font-weight: 600;
     padding: 0.55rem 0.75rem;
     cursor: pointer;
+    text-decoration: none;
 
     &:hover {
       border-color: var(--austral-ing-secondary);
@@ -434,9 +438,12 @@
   }
 
   &__graph-back {
+    display: flex;
+    gap: 0.5rem;
     margin: 0.75rem;
 
-    .roadmap__back-button {
+    .roadmap__back-button,
+    .roadmap__network-link {
       box-shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
     }
   }

@@ -389,6 +389,37 @@
     color: var(--dash-muted);
   }
 
+  &__roadmap-link {
+    display: inline-flex;
+    align-items: center;
+    margin-left: auto;
+    appearance: none;
+    border: 1px solid var(--dash-border);
+    border-radius: 0.5rem;
+    background: var(--dash-surface);
+    color: var(--dash-text);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.55rem 0.75rem;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
+
+    &:hover {
+      border-color: var(--austral-ing-secondary);
+      background: var(--austral-celeste-suave);
+    }
+
+    &--disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+    }
+  }
+
   &__expansion-list {
     flex-shrink: 0;
     display: flex;

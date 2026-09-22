@@ -16,6 +16,7 @@ import {
 import { loadAnalyticsArtifact } from "@pps/content/browser";
 import { MetaDropdown } from "@pps/shell/MetaDropdown";
 import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
+import { siteRootFromEnv } from "@pps/shell/site-root";
 import { useAppAdmin } from "@pps/login/AppAdminContext";
 import editSvg from "@pps/shell/assets/icons/resource-edit.svg?raw";
 import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
@@ -1498,6 +1499,15 @@ export function RoadmapApp({
     ? (focusedCourse?.title ?? activeCourseRoadmap.degree)
     : activeCourseRoadmap.degree;
   const viewportKey = `${activeCourseRoadmap.degreeSlug}:${focusedCourseSlug ?? "courses"}`;
+  const networkHref = focusedCourseSlug
+    ? (() => {
+        const params = new URLSearchParams({
+          expand: focusedCourseSlug,
+          courseLinks: "mentions",
+        });
+        return `${siteRootFromEnv(import.meta.env.BASE_URL ?? "/")}network/?${params.toString()}`;
+      })()
+    : null;
 
   return (
     <div className="roadmap">
@@ -1622,6 +1632,11 @@ export function RoadmapApp({
                   <button type="button" className="roadmap__back-button" onClick={handleBackToCourses}>
                     ← Volver a materias
                   </button>
+                  {networkHref ? (
+                    <a className="roadmap__network-link" href={networkHref}>
+                      Ver como Red
+                    </a>
+                  ) : null}
                 </Panel>
               ) : null}
               {canEditLayout ? (
@@ -1688,6 +1703,11 @@ export function RoadmapApp({
               <button type="button" className="roadmap__back-button" onClick={handleBackToCourses}>
                 ← Volver a materias
               </button>
+              {networkHref ? (
+                <a className="roadmap__network-link" href={networkHref}>
+                  Ver como Red
+                </a>
+              ) : null}
             </div>
             <p className="roadmap__empty">
               {focusedCourse?.title ?? "Esta materia"} no tiene conceptos vinculados todavía.
