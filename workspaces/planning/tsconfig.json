@@ -1,0 +1,4 @@
+{
+  "extends": "../cites/tsconfig.json",
+  "include": ["src"]
+}

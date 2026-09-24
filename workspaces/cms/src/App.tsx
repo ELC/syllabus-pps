@@ -21,6 +21,7 @@ import {
   createSeverityClassNameResolver,
   hasBlockingDiagnostics,
   PageKind,
+  parseYearSlug,
   type PageSource,
   type ResourceCatalogEntry,
 } from "@pps/core";
@@ -29,9 +30,11 @@ import { PageMetadataForm } from "./components/PageMetadataForm";
 import { SidebarNavSkeleton } from "@pps/shell/SidebarNavSkeleton";
 import { createDraftPageContent, nextDraftSlug } from "./draft-page";
 import {
+  canonicalEditorPageContent,
   composePageDocument,
   defaultPageMetadata,
   splitPageDocument,
+  type EditorPageKind,
   type PageMetadata,
 } from "./page-document";
 import { readPageParam, writePageParam } from "./page-param";
@@ -41,7 +44,15 @@ import {
   degreeSlugForCourseInSources,
   roadmapCourseSubgraphHref,
 } from "./roadmap-course-link";
+import {
+  networkCourseExpansionHref,
+  networkDegreeExpansionHref,
+  planningCoursePageHref,
+  roadmapDegreeOverviewHref,
+} from "@pps/shell/workspace-links";
+import { WorkspaceNavLink } from "@pps/shell/WorkspaceNavLink";
 import { siteRootFromEnv } from "@pps/shell/site-root";
+import { preferDegreeDisplayName } from "./degree-display";
 import { expectedEditorKind } from "./expected-page-kind";
 import { runDiagnosticsForEditor } from "./validation/runDiagnostics";
 import {
@@ -66,7 +77,7 @@ function mergeDraftSources(local: PageSource[], remote: PageSource[]): PageSourc
 
 export function App() {
   const [pages, setPages] = useState<PageListItem[]>([]);
-  const [selectedSlug, setSelectedSlug] = useState<string>("");
+  const [selectedSlug, setSelectedSlug] = useState<string>(() => readPageParam() ?? "");
   const [metadata, setMetadata] = useState<PageMetadata>(() => defaultPageMetadata(""));
   const [body, setBody] = useState("");
   const [savingPage, setSavingPage] = useState(false);
@@ -76,6 +87,7 @@ export function App() {
   const [resources, setResources] = useState<ResourceCatalogEntry[]>([]);
   const [draftSlugs, setDraftSlugs] = useState<Set<string>>(() => new Set());
   const [loadedSlug, setLoadedSlug] = useState("");
+  const [knownPageKindTick, setKnownPageKindTick] = useState(0);
   const [query, setQuery] = useState("");
   const [sourcesLoading, setSourcesLoading] = useState(false);
   const [entityStale, setEntityStale] = useState(false);
@@ -83,6 +95,8 @@ export function App() {
   const sourcesFetchGenerationRef = useRef(0);
   const acknowledgedLastOkAtRef = useRef<string | null>(null);
   const entityServerBaselineRef = useRef<Map<string, string>>(new Map());
+  const entityBaselineSyncedAtRef = useRef<Map<string, string>>(new Map());
+  const pageKindCacheRef = useRef<Map<string, EditorPageKind>>(new Map());
   const [awaitingOwnRebuild, setAwaitingOwnRebuild] = useState(false);
   const [cloudSaveIndicatorAt, setCloudSaveIndicatorAt] = useState<string | null>(null);
   const pendingCloudSaveAtRef = useRef<string | null>(null);
@@ -126,13 +140,6 @@ export function App() {
     () => pages.map((page) => page.slug).sort((left, right) => left.localeCompare(right, "es-AR")).join("\0"),
     [pages],
   );
-
-  const selectedPageCachedContent = useMemo(() => {
-    if (!selectedSlug) {
-      return undefined;
-    }
-    return allSources.find((page) => page.path.replace(/\.md$/i, "") === selectedSlug)?.content;
-  }, [allSources, selectedSlug]);
 
   const content = useMemo(
     () => composePageDocument({ ...metadata, slug: selectedSlug }, body),
@@ -187,13 +194,30 @@ export function App() {
       if (pageMeta.kind !== PageKind.Degree) {
         continue;
       }
-      const display = pageMeta.fullName.trim() || pageMeta.title;
+      const display = preferDegreeDisplayName(pageMeta.title, pageMeta.fullName);
       map.set(pageMeta.title, display);
       const degreeSlug = pageMeta.slug.trim() || fileSlug;
       map.set(degreeSlug, display);
     }
     return map;
   }, [allSources]);
+
+  const degreeSlugByTitle = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const page of allSources) {
+      const fileSlug = page.path.replace(/\.md$/i, "");
+      const { metadata: pageMeta } = splitPageDocument(page.content, fileSlug);
+      if (pageMeta.kind !== PageKind.Degree) {
+        continue;
+      }
+      const degreeSlug = pageMeta.slug.trim() || fileSlug;
+      map.set(pageMeta.title, degreeSlug);
+      map.set(degreeSlug, degreeSlug);
+    }
+    return map;
+  }, [allSources]);
+
+  const coursePagesRef = useRef<CoursePageOption[]>([]);
 
   const coursePages = useMemo((): CoursePageOption[] => {
     const courses: CoursePageOption[] = [];
@@ -210,6 +234,8 @@ export function App() {
     return courses.sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
   }, [allSources]);
 
+  coursePagesRef.current = coursePages;
+
   const courseTitles = useMemo(() => coursePages.map((course) => course.title), [coursePages]);
 
   function persistDraftContent(slug: string, draftContent: string): void {
@@ -221,18 +247,44 @@ export function App() {
   }
 
   function loadDocumentFromSource(slug: string, source: string, serverBaseline?: string): void {
+    const courses = coursePagesRef.current;
     const split = splitPageDocument(source, slug);
     const metadata =
       split.metadata.kind === PageKind.Year
         ? {
             ...split.metadata,
-            courses: normalizeYearCourseSlugs(split.metadata.courses, coursePages),
+            courses: normalizeYearCourseSlugs(split.metadata.courses, courses),
           }
         : split.metadata;
     setMetadata(metadata);
     setBody(split.body);
     setLoadedSlug(slug);
-    entityServerBaselineRef.current.set(slug, serverBaseline ?? source);
+    entityServerBaselineRef.current.set(
+      slug,
+      serverBaseline ?? canonicalEditorPageContent(slug, source, courses),
+    );
+    entityBaselineSyncedAtRef.current.set(
+      slug,
+      metadata.updatedAt?.trim() || new Date().toISOString(),
+    );
+    pageKindCacheRef.current.set(slug, metadata.kind);
+    setKnownPageKindTick((tick) => tick + 1);
+  }
+
+  function discardPageChanges(): void {
+    if (!selectedSlug) {
+      return;
+    }
+    const baseline = entityServerBaselineRef.current.get(selectedSlug);
+    if (!baseline) {
+      return;
+    }
+    loadDocumentFromSource(selectedSlug, baseline, baseline);
+    setAllSources((sources) =>
+      sources.map((page) =>
+        page.path.replace(/\.md$/i, "") === selectedSlug ? { ...page, content: baseline } : page,
+      ),
+    );
   }
 
   function selectPage(slug: string): void {
@@ -242,11 +294,17 @@ export function App() {
     setSelectedSlug(slug);
   }
 
+  const pageLoadSlugRef = useRef("");
+
   useEffect(() => {
     if (!selectedSlug) {
+      pageLoadSlugRef.current = "";
       setLoadedSlug("");
       return;
     }
+
+    const slugChanged = pageLoadSlugRef.current !== selectedSlug;
+    pageLoadSlugRef.current = selectedSlug;
 
     if (draftSlugs.has(selectedSlug)) {
       const draft = allSources.find((page) => page.path.replace(/\.md$/i, "") === selectedSlug);
@@ -257,19 +315,28 @@ export function App() {
     }
 
     let cancelled = false;
-    const cachedContent = selectedPageCachedContent;
+    const cachedContent = allSources.find(
+      (page) => page.path.replace(/\.md$/i, "") === selectedSlug,
+    )?.content;
+    const courses = coursePagesRef.current;
+
     if (cachedContent !== undefined) {
       loadDocumentFromSource(selectedSlug, cachedContent);
-    } else {
+    } else if (slugChanged) {
       setLoadedSlug("");
     }
 
     void readPage(selectedSlug).then((remote) => {
-      if (cancelled) {
+      if (cancelled || pageLoadSlugRef.current !== selectedSlug) {
         return;
       }
-      if (cachedContent !== undefined && cachedContent !== remote) {
-        entityServerBaselineRef.current.set(selectedSlug, remote);
+      const remoteCanonical = canonicalEditorPageContent(selectedSlug, remote, courses);
+      const cachedCanonical =
+        cachedContent !== undefined
+          ? canonicalEditorPageContent(selectedSlug, cachedContent, courses)
+          : undefined;
+      if (cachedCanonical !== undefined && cachedCanonical !== remoteCanonical) {
+        entityServerBaselineRef.current.set(selectedSlug, remoteCanonical);
         setEntityStale(true);
         setCloudSaveIndicatorAt(null);
         return;
@@ -288,7 +355,7 @@ export function App() {
     return () => {
       cancelled = true;
     };
-  }, [draftSlugs, selectedPageCachedContent, selectedSlug]);
+  }, [draftSlugs, selectedSlug]);
 
   useEffect(() => {
     if (!selectedSlug || draftSlugs.has(selectedSlug)) {
@@ -429,7 +496,8 @@ export function App() {
         }
         return;
       }
-      if (isEntityContentStale(remote, baseline)) {
+      const remoteCanonical = canonicalEditorPageContent(selectedSlug, remote, coursePages);
+      if (isEntityContentStale(remoteCanonical, baseline)) {
         setEntityStale(true);
         setCloudSaveIndicatorAt(null);
       } else {
@@ -443,6 +511,7 @@ export function App() {
     };
   }, [
     awaitingOwnRebuild,
+    coursePages,
     loadedSlug,
     loadingPages,
     rebuildStatus,
@@ -530,6 +599,14 @@ export function App() {
     });
   }, [pageTitlesBySlug, pages, query]);
 
+  const listedPageSlugs = useMemo(() => {
+    const slugs = new Set(pages.map((page) => page.slug));
+    for (const source of allSources) {
+      slugs.add(source.path.replace(/\.md$/i, ""));
+    }
+    return slugs;
+  }, [allSources, pages]);
+
   const diagnosticsPending =
     loadingPages ||
     sourcesLoading ||
@@ -567,6 +644,19 @@ export function App() {
   }
   const pageNavReady = pageNavReadyLatchRef.current.ready;
 
+  const hasUnsavedChanges = useMemo(() => {
+    if (!selectedSlug || loadedSlug !== selectedSlug || entityStale) {
+      return false;
+    }
+    const baseline = entityServerBaselineRef.current.get(selectedSlug);
+    if (!baseline) {
+      return false;
+    }
+    const currentCanonical = canonicalEditorPageContent(selectedSlug, content, coursePages);
+    const baselineCanonical = canonicalEditorPageContent(selectedSlug, baseline, coursePages);
+    return currentCanonical !== baselineCanonical;
+  }, [content, coursePages, entityStale, loadedSlug, selectedSlug, savingPage]);
+
   const saveBlockReason = resolveCmsSaveBlockReason({
     entityStale,
     sourcesLoading: sourcesLoading || (pages.length > 0 && allSources.length === 0),
@@ -583,9 +673,11 @@ export function App() {
     entityStale,
     savingPage,
     cloudSaveIndicatorAt,
+    entityBaselineSyncedAt: entityBaselineSyncedAtRef.current.get(selectedSlug) ?? null,
     saveBlockReason,
     awaitingOwnRebuild,
     rebuildStatus,
+    hasUnsavedChanges,
   });
   const workspaceLocked =
     entityStale ||
@@ -601,52 +693,173 @@ export function App() {
     [allSources, selectedSlug],
   );
 
-  const documentReady = Boolean(selectedSlug) && loadedSlug === selectedSlug;
-  const layoutKind = documentReady ? metadata.kind : expectedKind;
-
-  const roadmapCourseHref = useMemo(() => {
-    if (layoutKind !== "course" || !selectedSlug) {
+  const layoutKind = useMemo((): EditorPageKind | null => {
+    if (!selectedSlug) {
       return null;
     }
-
-    const courseSlug = metadata.slug.trim() || selectedSlug;
-    const degreeSlug = degreeSlugForCourseInSources(
-      allSources,
-      courseSlug,
-      coursePages,
-      metadata.title,
-    );
-    if (!degreeSlug) {
-      return null;
+    if (expectedKind) {
+      return expectedKind;
     }
-
-    const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/cms/");
-    return roadmapCourseSubgraphHref(siteRoot, degreeSlug, courseSlug);
+    if (loadedSlug === selectedSlug) {
+      const metaSlug = metadata.slug.trim() || selectedSlug;
+      if (metaSlug === selectedSlug) {
+        return metadata.kind;
+      }
+    }
+    return pageKindCacheRef.current.get(selectedSlug) ?? null;
   }, [
-    allSources,
-    coursePages,
-    layoutKind,
+    expectedKind,
+    knownPageKindTick,
+    loadedSlug,
+    metadata.kind,
     metadata.slug,
-    metadata.title,
     selectedSlug,
   ]);
 
-  const roadmapLinkControl =
-    layoutKind === "course" ? (
-      roadmapCourseHref ? (
-        <a className="cms__roadmap-link cms__roadmap-link--lead" href={roadmapCourseHref}>
-          Ver como Roadmap
-        </a>
-      ) : (
-        <span
-          className="cms__roadmap-link cms__roadmap-link--lead cms__roadmap-link--disabled"
-          aria-disabled="true"
-          title="Asigná esta materia a un año en la grilla de la carrera para abrir el mapa"
+  const documentReadyLive = Boolean(selectedSlug) && loadedSlug === selectedSlug;
+  const editorPanelReadyLatchRef = useRef({ slug: "", ready: false });
+  if (editorPanelReadyLatchRef.current.slug !== selectedSlug) {
+    editorPanelReadyLatchRef.current = { slug: selectedSlug, ready: false };
+  }
+  if (documentReadyLive) {
+    editorPanelReadyLatchRef.current.ready = true;
+  }
+  const documentReady = editorPanelReadyLatchRef.current.ready;
+
+  const siteRoot = useMemo(
+    () => siteRootFromEnv(import.meta.env.BASE_URL ?? "/cms/"),
+    [],
+  );
+
+  const pageWorkspaceLinks = useMemo(() => {
+    if (!selectedSlug) {
+      return null;
+    }
+
+    const pageSlug =
+      loadedSlug === selectedSlug && metadata.slug.trim()
+        ? metadata.slug.trim()
+        : selectedSlug;
+
+    const navKind = layoutKind ?? expectedKind;
+    const isYearSlug = Boolean(parseYearSlug(selectedSlug));
+    const isCourse = navKind === PageKind.Course;
+    const isConcept = navKind === PageKind.Concept;
+    const isDegree = navKind === PageKind.Degree;
+    const kindUnknown = navKind === null && !isYearSlug;
+
+    if (isCourse || isConcept || kindUnknown) {
+      const degreeSlug = degreeSlugForCourseInSources(
+        allSources,
+        pageSlug,
+        coursePages,
+        metadata.title,
+      );
+      const planningHref = planningCoursePageHref(siteRoot, pageSlug, degreeSlug);
+      const roadmapHref = degreeSlug
+        ? roadmapCourseSubgraphHref(siteRoot, degreeSlug, pageSlug)
+        : null;
+      const courseNetworkHref = networkCourseExpansionHref(siteRoot, pageSlug);
+      const conceptNetworkHref = networkDegreeExpansionHref(siteRoot, pageSlug);
+      const networkEnabled = isCourse || isConcept;
+      const networkHref = isCourse
+        ? courseNetworkHref
+        : isConcept
+          ? conceptNetworkHref
+          : null;
+
+      const programTitle = isConcept
+        ? "El programa de cursada está en la página de la materia"
+        : kindUnknown
+          ? "Cargando metadatos de la página…"
+          : undefined;
+      const roadmapTitle = isConcept
+        ? "El mapa de conceptos de una materia se abre desde su página de materia"
+        : kindUnknown
+          ? "Cargando metadatos de la página…"
+          : roadmapHref
+            ? undefined
+            : "Asigná esta materia a un año en la grilla de la carrera para abrir el mapa";
+      const networkTitle = kindUnknown ? "Cargando metadatos de la página…" : undefined;
+
+      return (
+        <div className="cms__course-workspace-links pps-workspace-nav-links">
+          <WorkspaceNavLink
+            navId="planning"
+            href={isCourse ? planningHref : null}
+            disabled={!isCourse}
+            title={programTitle}
+          >
+            Programa
+          </WorkspaceNavLink>
+          <WorkspaceNavLink
+            navId="roadmap"
+            href={isCourse ? roadmapHref : null}
+            disabled={!isCourse || !roadmapHref}
+            title={roadmapTitle}
+          >
+            Roadmap
+          </WorkspaceNavLink>
+          <WorkspaceNavLink
+            navId="network"
+            href={networkHref}
+            disabled={!networkEnabled}
+            title={networkTitle}
+          >
+            Red
+          </WorkspaceNavLink>
+        </div>
+      );
+    }
+
+    if (isDegree) {
+      return (
+        <div className="cms__course-workspace-links pps-workspace-nav-links">
+          <WorkspaceNavLink
+            navId="planning"
+            disabled
+            title="El programa de cursada está en la página de la materia"
+          >
+            Programa
+          </WorkspaceNavLink>
+          <WorkspaceNavLink
+            navId="roadmap"
+            href={roadmapDegreeOverviewHref(siteRoot, pageSlug)}
+            title="Abrir la grilla de años de la carrera en Roadmap"
+          >
+            Roadmap
+          </WorkspaceNavLink>
+          <WorkspaceNavLink
+            navId="network"
+            href={networkDegreeExpansionHref(siteRoot, pageSlug)}
+          >
+            Red
+          </WorkspaceNavLink>
+        </div>
+      );
+    }
+
+    return (
+      <div className="cms__course-workspace-links pps-workspace-nav-links">
+        <WorkspaceNavLink
+          navId="network"
+          href={networkDegreeExpansionHref(siteRoot, pageSlug)}
         >
-          Ver como Roadmap
-        </span>
-      )
-    ) : null;
+          Red
+        </WorkspaceNavLink>
+      </div>
+    );
+  }, [
+    allSources,
+    coursePages,
+    expectedKind,
+    layoutKind,
+    loadedSlug,
+    metadata.slug,
+    metadata.title,
+    selectedSlug,
+    siteRoot,
+  ]);
 
   function addNewPage(): void {
     if (workspaceLocked) {
@@ -734,11 +947,11 @@ export function App() {
 
       <div className="dashboard__content">
       <div className="cms__workspace">
-      <header className="cms__header">
-        <div className="cms__header-top">
-          <div className="cms__header-main">
-            <div className="cms__header-title-row">
-              <h1 className="cms__header-title">Gestión de contenido</h1>
+      <header className="cms__header dashboard__header">
+        <div className="dashboard__header-top cms__header-top">
+          <div className="dashboard__header-title-band">
+            <div className="cms__header-title-row dashboard__header-title-row">
+              <h1 className="cms__header-title dashboard__header-title">Gestión de contenido</h1>
               <div className="cms__header-status-cluster">
                 <AnalyticsRebuildIndicator
                   status={rebuildStatus}
@@ -758,8 +971,7 @@ export function App() {
                 ) : null}
               </div>
             </div>
-          </div>
-          <div className="cms__header-actions">
+            <div className="cms__header-actions dashboard__header-actions">
           {entityStale ? (
             <>
               <button
@@ -784,6 +996,16 @@ export function App() {
               aria-label="Nueva página"
             >
               <SvgAssetIcon svg={plusSvg} className="cms__button-icon" focusable={false} />
+            </button>
+            <button
+              type="button"
+              className="cms__button cms__button--secondary cms__button--icon"
+              disabled={!hasUnsavedChanges || workspaceLocked || !selectedSlug}
+              title="Descartar cambios"
+              aria-label="Descartar cambios y volver al contenido del servidor"
+              onClick={discardPageChanges}
+            >
+              <SvgAssetIcon svg={refreshSvg} className="cms__button-icon" focusable={false} />
             </button>
             <button
               type="button"
@@ -832,6 +1054,7 @@ export function App() {
                     }
                     setEntityStale(false);
                   entityServerBaselineRef.current.set(selectedSlug, savedContent);
+                    entityBaselineSyncedAtRef.current.set(selectedSlug, savedAt);
                     pendingCloudSaveAtRef.current = savedAt;
                     ownRebuildBaselineLastOkAtRef.current = rebuildStatus?.lastOkAt ?? null;
                     sawOwnRebuildRunningRef.current = false;
@@ -859,15 +1082,15 @@ export function App() {
             </button>
             </>
           )}
+            </div>
           </div>
-        </div>
-        <div className="cms__header-lead-row">
-          <p className="cms__header-lead">
-            Los cambios guardan páginas markdown en Supabase Storage. En desarrollo local,{" "}
-            <code className="cms__code">pnpm dev</code> no requiere iniciar sesión; el sitio publicado sí
-            requiere autenticación.
-          </p>
-          {roadmapLinkControl}
+          <div className="dashboard__header-lead-row">
+            <p className="dashboard__header-lead">
+              Páginas markdown en Supabase Storage. En local,{" "}
+              <code className="cms__code">pnpm dev</code> no pide login; en producción, sí.
+            </p>
+            {pageWorkspaceLinks}
+          </div>
         </div>
       </header>
 
@@ -887,7 +1110,7 @@ export function App() {
         <PageMetadataForm
           metadata={metadata}
           pageSlug={selectedSlug}
-          documentReady={Boolean(selectedSlug) && loadedSlug === selectedSlug}
+          documentReady={documentReady}
           expectedKind={expectedKind}
           catalogReady={catalogReady}
           conceptTitles={conceptTitles}
@@ -897,10 +1120,14 @@ export function App() {
           coursePages={coursePages}
           degreeTitles={degreeTitles}
           degreeDisplayByTitle={degreeDisplayByTitle}
+          degreeSlugByTitle={degreeSlugByTitle}
           body={body}
           resources={resources}
           onChange={setMetadata}
           onBodyChange={setBody}
+          listedPageSlugs={listedPageSlugs}
+          pageTitlesBySlug={pageTitlesBySlug}
+          onOpenPage={selectPage}
         />
       </section>
 

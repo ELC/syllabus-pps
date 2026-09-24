@@ -13,8 +13,10 @@ import {
   deleteRoadmapCourseLayout,
   fetchRoadmapConceptLayout,
   fetchRoadmapCourseLayout,
+  fetchPlanningPlan,
   upsertRoadmapConceptLayout,
   upsertRoadmapCourseLayout,
+  upsertPlanningPlan,
   writePage,
 } from "@pps/content";
 
@@ -40,6 +42,7 @@ function normalizeApiPath(url: string, base: string): string | null {
 
 const ROADMAP_LAYOUT_SITE_PATH =
   /^\/roadmap\/api\/roadmap-(?:layout\/[^/?]+|concept-layout\/[^/?]+\/[^/?]+)(?:\?|$)/;
+const PLANNING_API_SITE_PATH = /^\/planning\/api\//;
 
 function loadRepoEnv(repoRoot: string): void {
   const env = loadEnv("development", repoRoot, "");
@@ -55,13 +58,19 @@ export interface SupabaseDevPluginOptions {
   pages?: boolean;
   resources?: boolean;
   roadmapLayouts?: boolean;
+  planningPlans?: boolean;
 }
 
 export function createSupabaseDevMiddleware(
   base: string,
   options: SupabaseDevPluginOptions,
 ): Connect.NextHandleFunction {
-  const { pages = false, resources = false, roadmapLayouts = false } = options;
+  const {
+    pages = false,
+    resources = false,
+    roadmapLayouts = false,
+    planningPlans = false,
+  } = options;
 
   return (req: IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
     const apiPath = normalizeApiPath(req.url ?? "", base);
@@ -153,6 +162,31 @@ export function createSupabaseDevMiddleware(
 
           if (req.method === "DELETE") {
             await deleteRoadmapConceptLayout(client, degreeSlug, courseSlug);
+            res.statusCode = 204;
+            res.end();
+            return;
+          }
+        }
+
+        const planningPlanMatch = apiPath.match(/^\/api\/planning-plan\/([^/?]+)/);
+        if (planningPlans && planningPlanMatch) {
+          const courseSlug = decodeURIComponent(planningPlanMatch[1] ?? "");
+
+          if (req.method === "GET") {
+            const plan = await fetchPlanningPlan(client, courseSlug);
+            if (!plan) {
+              res.statusCode = 404;
+              res.end();
+              return;
+            }
+            res.setHeader("Content-Type", "application/json; charset=utf-8");
+            res.end(JSON.stringify(plan));
+            return;
+          }
+
+          if (req.method === "PUT") {
+            const body = await readRequestBody(req);
+            await upsertPlanningPlan(client, courseSlug, JSON.parse(body));
             res.statusCode = 204;
             res.end();
             return;
@@ -260,5 +294,32 @@ export function siteRoadmapLayoutDevPlugin(options: SupabaseDevPluginOptions): P
     },
   };
 }
+
+/** Handles planning dev API on the main site server before the nested SPA. */
+export function sitePlanningDevPlugin(options: SupabaseDevPluginOptions): Plugin {
+  const handler = createSupabaseDevMiddleware("/planning/", {
+    ...options,
+    pages: true,
+    planningPlans: true,
+  });
+
+  return {
+    name: "pps-site-planning-dev",
+    apply: "serve",
+    enforce: "pre",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use((req, res, next) => {
+        if (!PLANNING_API_SITE_PATH.test(requestPathname(req.url ?? ""))) {
+          next();
+          return;
+        }
+        handler(req, res, next);
+      });
+    },
+  };
+}
+
+/** @deprecated Use {@link sitePlanningDevPlugin} */
+export const sitePlanningPlanDevPlugin = sitePlanningDevPlugin;
 
 export { DEFAULT_STORAGE_BUCKET };

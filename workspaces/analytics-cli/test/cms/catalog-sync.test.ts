@@ -201,6 +201,23 @@ describe("resolveCmsHeaderIndicatorOverride", () => {
     ).toEqual({ phase: "unknown", label: CMS_CATALOG_STALE_MESSAGE });
   });
 
+  it("shows yellow unsaved changes before cloud save success", () => {
+    expect(
+      resolveCmsHeaderIndicatorOverride({
+        entityStale: false,
+        savingPage: false,
+        cloudSaveIndicatorAt: "2026-06-15T14:35:00.000Z",
+        saveBlockReason: null,
+        awaitingOwnRebuild: false,
+        rebuildStatus: { state: "idle" } as never,
+        hasUnsavedChanges: true,
+      }),
+    ).toEqual({
+      phase: "updating",
+      label: "Cambios sin guardar. Usá el ícono de guardar.",
+    });
+  });
+
   it("shows Guardando while Storage writes are in flight", () => {
     expect(
       resolveCmsHeaderIndicatorOverride({
@@ -243,6 +260,21 @@ describe("resolveCmsHeaderIndicatorOverride", () => {
         entityStale: false,
         savingPage: false,
         cloudSaveIndicatorAt: null,
+        entityBaselineSyncedAt: "2026-06-15T14:35:00.000Z",
+        saveBlockReason: "loading",
+        awaitingOwnRebuild: false,
+        rebuildStatus: { state: "idle" } as never,
+        hasUnsavedChanges: false,
+      }),
+    ).toEqual({
+      phase: "updated",
+      label: formatCmsCloudSaveIndicatorLabel("2026-06-15T14:35:00.000Z"),
+    });
+    expect(
+      resolveCmsHeaderIndicatorOverride({
+        entityStale: false,
+        savingPage: false,
+        cloudSaveIndicatorAt: null,
         saveBlockReason: "rebuild",
         awaitingOwnRebuild: false,
         rebuildStatus: { state: "running" } as never,
@@ -261,6 +293,24 @@ describe("resolveCmsHeaderIndicatorOverride", () => {
         rebuildStatus: { state: "running" } as never,
       }),
     ).toBeNull();
+  });
+
+  it("shows green when editor matches server baseline after undo", () => {
+    expect(
+      resolveCmsHeaderIndicatorOverride({
+        entityStale: false,
+        savingPage: false,
+        cloudSaveIndicatorAt: null,
+        entityBaselineSyncedAt: "2026-06-15T14:35:00.000Z",
+        saveBlockReason: null,
+        awaitingOwnRebuild: false,
+        rebuildStatus: { state: "idle" } as never,
+        hasUnsavedChanges: false,
+      }),
+    ).toEqual({
+      phase: "updated",
+      label: formatCmsCloudSaveIndicatorLabel("2026-06-15T14:35:00.000Z"),
+    });
   });
 
   it("shows green cloud save with local HH:MM after rebuild completes", () => {

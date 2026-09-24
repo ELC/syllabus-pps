@@ -1,7 +1,7 @@
 import { NAV_ITEMS, type NavItem } from "./nav";
 import type { NavId } from "./site-root";
 
-const VIEWER_NAV_IDS = new Set<NavId>(["network", "roadmap"]);
+const VIEWER_NAV_IDS = new Set<NavId>(["network", "roadmap", "planning"]);
 
 export function navItemsForUser(isAdmin: boolean): NavItem[] {
   if (isAdmin) {

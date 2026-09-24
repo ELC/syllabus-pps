@@ -1,7 +1,16 @@
 import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
-const PAGE_APPS = ["site", "analytics", "network", "cms", "cites", "users", "roadmap"] as const;
+const PAGE_APPS = [
+  "site",
+  "analytics",
+  "network",
+  "cms",
+  "cites",
+  "users",
+  "roadmap",
+  "planning",
+] as const;
 
 /** Merge workspace app dists into a single GitHub Pages artifact at `<repoRoot>/dist`. */
 export function mergePagesDist(repoRoot: string): string {

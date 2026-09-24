@@ -20,6 +20,13 @@ import {
   kindStyleForKind,
 } from "@pps/shell/austral-tokens";
 import { siteRootFromEnv } from "@pps/shell/site-root";
+import { appendWorkspaceNavLink } from "@pps/shell/workspace-nav-link-dom";
+import {
+  cmsCoursePageHref,
+  planningCoursePageHref,
+  roadmapCourseSubgraphHref,
+  roadmapDegreeOverviewHref,
+} from "@pps/shell/workspace-links";
 import {
   capitalizeWords,
   formatGraphNodeLabel,
@@ -52,6 +59,7 @@ export interface MountGraphOptions {
   searchInputId?: string;
   searchResultsId?: string;
   expansionListId?: string;
+  courseWorkspaceLinksId?: string;
   refreshButtonId?: string;
   resetFiltersButtonId?: string;
   toggleConceptsButtonId?: string;
@@ -162,15 +170,6 @@ function findDegreeSlugForCourseNode(
   }
 
   return undefined;
-}
-
-function roadmapCourseSubgraphHref(degreeSlug: string, courseSlug: string): string {
-  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
-  const params = new URLSearchParams({
-    degree: degreeSlug,
-    course: courseSlug,
-  });
-  return `${siteRoot}roadmap/?${params.toString()}`;
 }
 
 function findNodeBySlug(cy: cytoscape.Core, slug: string): cytoscape.NodeSingular | undefined {
@@ -739,45 +738,269 @@ function nodeTitle(node: cytoscape.SingularElementArgument, fallback: string): s
   return capitalizeWords(fallback);
 }
 
-function appendRoadmapLink(
-  cy: cytoscape.Core,
-  viewState: GraphViewState,
-  listRoot: HTMLElement,
+function appendAdminEditarLink(
+  linksRoot: HTMLElement,
+  siteRoot: string,
+  isAdmin: boolean,
+  pageSlug: string | undefined,
+  enabled: boolean,
 ): void {
-  const expansionNodeIds = viewState.expansionNodeIds;
-  if (!expansionNodeIds || expansionNodeIds.length === 0) {
+  if (!isAdmin) {
     return;
   }
 
-  const roadmapLink = document.createElement("a");
-  roadmapLink.className = "graph__roadmap-link";
-  roadmapLink.textContent = "Ver como Roadmap";
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "cms",
+    label: "Editar",
+    href: enabled && pageSlug ? cmsCoursePageHref(siteRoot, pageSlug) : undefined,
+    disabled: !enabled || !pageSlug,
+    title: enabled
+      ? "Editar esta página en el CMS"
+      : "Disponible con una sola expansión activa",
+  });
+}
 
-  const singleExpansion = expansionNodeIds.length === 1;
-  if (singleExpansion) {
-    const node = cy.getElementById(expansionNodeIds[0]!);
-    const courseSlug =
-      node.nonempty() && node.isNode() && String(node.data("kind")) === "course"
-        ? nodeSlug(node)
-        : undefined;
-    const degreeSlug =
-      courseSlug && node.isNode() ? findDegreeSlugForCourseNode(cy, node) : undefined;
+function renderCourseWorkspaceLinks(
+  linksRoot: HTMLElement,
+  courseSlug: string,
+  degreeSlug: string | undefined,
+  isAdmin: boolean,
+): void {
+  linksRoot.replaceChildren();
+  linksRoot.hidden = false;
+  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
 
-    if (courseSlug && degreeSlug) {
-      roadmapLink.href = roadmapCourseSubgraphHref(degreeSlug, courseSlug);
-      roadmapLink.title = "Abrir esta materia en el mapa de Roadmap";
-      listRoot.appendChild(roadmapLink);
-      return;
-    }
+  appendAdminEditarLink(linksRoot, siteRoot, isAdmin, courseSlug, true);
+
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "planning",
+    label: "Programa",
+    href: planningCoursePageHref(siteRoot, courseSlug, degreeSlug),
+    title: "Abrir el programa semanal de esta materia",
+  });
+
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "roadmap",
+    label: "Roadmap",
+    href: degreeSlug ? roadmapCourseSubgraphHref(siteRoot, degreeSlug, courseSlug) : undefined,
+    disabled: !degreeSlug,
+    title: degreeSlug
+      ? "Abrir esta materia en el mapa de Roadmap"
+      : "Asigná esta materia a un año en la grilla de la carrera para abrir el mapa",
+  });
+}
+
+function renderYearWorkspaceLinks(
+  linksRoot: HTMLElement,
+  yearSlug: string,
+  isAdmin: boolean,
+): void {
+  linksRoot.replaceChildren();
+  linksRoot.hidden = false;
+  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
+
+  appendAdminEditarLink(linksRoot, siteRoot, isAdmin, yearSlug, true);
+
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "planning",
+    label: "Programa",
+    disabled: true,
+    title: "Disponible cuando la expansión es una materia del plan",
+  });
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "roadmap",
+    label: "Roadmap",
+    disabled: true,
+    title: "Abrí la carrera o una materia para abrir Roadmap",
+  });
+}
+
+function renderConceptWorkspaceLinks(
+  linksRoot: HTMLElement,
+  conceptSlug: string,
+  isAdmin: boolean,
+): void {
+  linksRoot.replaceChildren();
+  linksRoot.hidden = false;
+  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
+
+  appendAdminEditarLink(linksRoot, siteRoot, isAdmin, conceptSlug, true);
+
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "planning",
+    label: "Programa",
+    disabled: true,
+    title: "Disponible cuando la expansión es una materia del plan",
+  });
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "roadmap",
+    label: "Roadmap",
+    disabled: true,
+    title: "Disponible cuando la expansión es una materia del plan",
+  });
+}
+
+function renderDegreeWorkspaceLinks(
+  linksRoot: HTMLElement,
+  degreeSlug: string,
+  isAdmin: boolean,
+): void {
+  linksRoot.replaceChildren();
+  linksRoot.hidden = false;
+  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
+
+  appendAdminEditarLink(linksRoot, siteRoot, isAdmin, degreeSlug, true);
+
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "planning",
+    label: "Programa",
+    disabled: true,
+    title: "Disponible cuando la expansión es una materia del plan",
+  });
+
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "roadmap",
+    label: "Roadmap",
+    href: roadmapDegreeOverviewHref(siteRoot, degreeSlug),
+    title: "Abrir la grilla de años de la carrera en Roadmap",
+  });
+}
+
+function renderDisabledCourseWorkspaceLinks(
+  linksRoot: HTMLElement,
+  disabledTitle: string,
+  isAdmin: boolean,
+  editPageSlug?: string,
+): void {
+  linksRoot.replaceChildren();
+  linksRoot.hidden = false;
+  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
+
+  appendAdminEditarLink(linksRoot, siteRoot, isAdmin, editPageSlug, false);
+
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "planning",
+    label: "Programa",
+    disabled: true,
+    title: disabledTitle,
+  });
+  appendWorkspaceNavLink(linksRoot, {
+    navId: "roadmap",
+    label: "Roadmap",
+    disabled: true,
+    title: disabledTitle,
+  });
+}
+
+const COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE =
+  "Disponible cuando la expansión es una materia del plan";
+
+/** Show disabled Programa/Roadmap until the graph confirms a course expansion. */
+export function seedCourseWorkspaceLinksFromUrl(linksRoot: HTMLElement | null): void {
+  if (!linksRoot) {
+    return;
   }
 
-  roadmapLink.classList.add("graph__roadmap-link--disabled");
-  roadmapLink.setAttribute("aria-disabled", "true");
-  roadmapLink.tabIndex = -1;
-  roadmapLink.title = singleExpansion
-    ? "Disponible cuando la expansión es una materia del plan"
-    : "Disponible con una sola expansión activa";
-  listRoot.appendChild(roadmapLink);
+  const slugs = parseGraphUrlState().expansionSlugs;
+  if (slugs.length === 1) {
+    renderDisabledCourseWorkspaceLinks(
+      linksRoot,
+      COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE,
+      false,
+      slugs[0],
+    );
+  }
+}
+
+function renderWorkspaceLinksForSingleNode(
+  linksRoot: HTMLElement,
+  cy: cytoscape.Core,
+  node: cytoscape.NodeSingular,
+  isAdmin: boolean,
+): boolean {
+  const kind = String(node.data("kind"));
+  const slug = nodeSlug(node);
+  if (!slug) {
+    return false;
+  }
+
+  if (kind === "course") {
+    renderCourseWorkspaceLinks(linksRoot, slug, findDegreeSlugForCourseNode(cy, node), isAdmin);
+    return true;
+  }
+  if (kind === "degree") {
+    renderDegreeWorkspaceLinks(linksRoot, slug, isAdmin);
+    return true;
+  }
+  if (kind === "year") {
+    renderYearWorkspaceLinks(linksRoot, slug, isAdmin);
+    return true;
+  }
+  if (kind === "concept") {
+    renderConceptWorkspaceLinks(linksRoot, slug, isAdmin);
+    return true;
+  }
+
+  return false;
+}
+
+function updateCourseWorkspaceLinksUI(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  linksRoot: HTMLElement | null,
+  isAdmin: boolean,
+): void {
+  if (!linksRoot) {
+    return;
+  }
+
+  const expansionNodeIds = viewState.expansionNodeIds;
+  if (expansionNodeIds && expansionNodeIds.length > 0) {
+    const singleExpansion = expansionNodeIds.length === 1;
+
+    if (singleExpansion) {
+      const node = cy.getElementById(expansionNodeIds[0]!);
+      if (node.nonempty() && node.isNode()) {
+        if (renderWorkspaceLinksForSingleNode(linksRoot, cy, node, isAdmin)) {
+          return;
+        }
+      }
+    }
+
+    const disabledTitle = singleExpansion
+      ? COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE
+      : "Disponible con una sola expansión activa";
+    let editSlug: string | undefined;
+    if (singleExpansion) {
+      const node = cy.getElementById(expansionNodeIds[0]!);
+      if (node.nonempty() && node.isNode()) {
+        editSlug = nodeSlug(node);
+      }
+    }
+    renderDisabledCourseWorkspaceLinks(linksRoot, disabledTitle, isAdmin, editSlug);
+    return;
+  }
+
+  const urlSlugs = parseGraphUrlState().expansionSlugs;
+  if (urlSlugs.length === 1) {
+    const slug = urlSlugs[0]!;
+    const node = findNodeBySlug(cy, slug);
+    if (node && node.nonempty() && node.isNode()) {
+      if (renderWorkspaceLinksForSingleNode(linksRoot, cy, node, isAdmin)) {
+        return;
+      }
+    }
+    renderDisabledCourseWorkspaceLinks(
+      linksRoot,
+      COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE,
+      isAdmin,
+      slug,
+    );
+    return;
+  }
+
+  linksRoot.replaceChildren();
+  linksRoot.hidden = true;
 }
 
 function updateExpansionListUI(
@@ -859,7 +1082,6 @@ function updateExpansionListUI(
   }
 
   listRoot.append(label, list);
-  appendRoadmapLink(cy, viewState, listRoot);
 }
 
 function buildKindFilterOptions(cy: cytoscape.Core): Record<KindFilterKey, cytoscape.NodeSingular[]> {
@@ -1747,6 +1969,11 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
     throw new Error(`Missing graph container .${containerClass}`);
   }
 
+  const courseWorkspaceLinksRoot = options.courseWorkspaceLinksId
+    ? document.getElementById(options.courseWorkspaceLinksId)
+    : null;
+  seedCourseWorkspaceLinksFromUrl(courseWorkspaceLinksRoot);
+
   const allowCmsNavigation = await resolveAllowCmsNavigation();
 
   const [graphLoaded, conceptPagesBySlug] = await Promise.all([
@@ -1913,6 +2140,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
     courseLinkMode: DEFAULT_GRAPH_COURSE_LINK_MODE,
   };
   let urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
+  updateCourseWorkspaceLinksUI(cy, viewState, courseWorkspaceLinksRoot, allowCmsNavigation);
 
   const ui: GraphUi = {
     expansionListRoot,
@@ -1920,6 +2148,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
       applyElementVisibility(cy, viewState);
       applyExpansionEdgeColors(cy, viewState);
       updateExpansionListUI(cy, viewState, expansionListRoot, ui);
+      updateCourseWorkspaceLinksUI(cy, viewState, courseWorkspaceLinksRoot, allowCmsNavigation);
       writeGraphUrlState(urlStateFromViewState(cy, viewState));
       cy.resize();
       if (fit) {

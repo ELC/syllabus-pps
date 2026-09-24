@@ -102,13 +102,16 @@ export function App() {
     <div className="dashboard__content users">
       <div className="users__workspace">
         <header className="users__header">
-          <div className="users__header-main">
-            <h1 className="users__header-title">Administradores</h1>
-            <p className="users__header-lead">
-              Agregá o quitá personas con permiso para editar páginas, recursos, layouts del roadmap y
-              reconstrucciones de analytics. Cualquier cuenta puede iniciar sesión; solo los correos listados
-              reciben rol de administrador.
-            </p>
+          <div className="dashboard__header-top">
+            <div className="dashboard__header-title-row">
+              <h1 className="users__header-title dashboard__header-title">Administradores</h1>
+            </div>
+            <div className="dashboard__header-lead-row">
+              <p className="dashboard__header-lead">
+                Gestioná quién puede editar páginas, recursos, roadmap y analytics. Solo correos listados
+                tienen rol de administrador.
+              </p>
+            </div>
           </div>
         </header>
 

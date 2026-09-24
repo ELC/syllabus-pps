@@ -39,6 +39,7 @@ export type {
   RoadmapLayoutSlug,
 } from "../roadmap/titles";
 export {
+  conceptTitlesLinkedToCourse,
   courseRoadmapAsDegreeRoadmap,
   projectAllCourseRoadmaps,
   projectCourseConceptRoadmap,

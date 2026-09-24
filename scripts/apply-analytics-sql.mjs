@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Apply analytics SQL migrations (003–006) using SUPABASE_DB_* from .env.
+ * Apply analytics and app-data SQL migrations using SUPABASE_DB_* from .env.
  */
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -61,6 +61,7 @@ async function main() {
     "workspaces/content/sql/005_analytics_rebuild_status.sql",
     "workspaces/content/sql/006_roadmap_course_layouts.sql",
     "workspaces/content/sql/007_roadmap_concept_layouts.sql",
+    "workspaces/content/sql/009_planning_plans.sql",
   ];
 
   const onlyArg = process.argv.find((arg) => arg.startsWith("--only="));

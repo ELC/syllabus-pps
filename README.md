@@ -10,6 +10,7 @@ Pages live in Supabase Storage (`pages/{slug}.md`). The resource catalog lives i
 | `@pps/analytics` | `http://localhost:4321/analytics/` |
 | `@pps/network` | `http://localhost:4321/network/` |
 | `@pps/roadmap` | `http://localhost:4321/roadmap/` |
+| `@pps/planning` | `http://localhost:4321/planning/` |
 | `@pps/cms` | `http://localhost:4321/cms/` |
 | `@pps/cites` | `http://localhost:4321/cites/` |
 | `@pps/users` | `http://localhost:4321/users/` |
@@ -62,7 +63,7 @@ Under `workspaces/analytics-cli/_generated/`:
 
 ## GitHub Pages
 
-`pnpm build:pages` builds all public sites and merges them into `dist/` for GitHub Pages (`/`, `/analytics/`, `/network/`, `/roadmap/`, `/cms/`, `/cites/`, `/users/`).
+`pnpm build:pages` builds all public sites and merges them into `dist/` for GitHub Pages (`/`, `/analytics/`, `/network/`, `/roadmap/`, `/planning/`, `/cms/`, `/cites/`, `/users/`).
 
 Daily cron workflow: `.github/workflows/pages.yml` (build from Supabase → deploy).
 
@@ -70,9 +71,9 @@ Set GitHub Actions secrets `PUBLIC_SUPABASE_PROJECT_URL` and `PUBLIC_SUPABASE_PU
 
 ## Site sign-in (AuthN) and admin access (AuthZ)
 
-The shell gates every surface behind Supabase Auth. Users can sign in with **Google OAuth** or an **email magic link**. **Any valid account can sign in.** Admin rights come from Supabase Postgres (`public.app_admins`): only listed emails can edit content, resources, roadmap layouts, trigger analytics rebuilds, or open the **Users** admin app.
+The shell gates every surface behind Supabase Auth. Users can sign in with **Google OAuth** or an **email magic link**. **Any valid account can sign in.** Admin rights come from Supabase Postgres (`public.app_admins`): only listed emails can edit content, resources, roadmap layouts, weekly programs, trigger analytics rebuilds, or open the **Users** admin app.
 
-Non-admin (viewer) accounts see **Network** and **Roadmaps** only; editing UI and admin routes redirect to Network.
+Non-admin (viewer) accounts see **Network**, **Roadmaps**, and **Programa** (read-only labels); editing UI and admin routes redirect to Network.
 
 Unauthenticated visits to `/analytics/`, `/cms/`, and other app routes redirect to the **site home** (`/`), where the login form is shown. After sign-in, the browser returns to the original URL when permitted for that role.
 
@@ -154,6 +155,8 @@ In the SQL editor or via Postgres:
 6. [`workspaces/content/sql/005_analytics_rebuild_status.sql`](workspaces/content/sql/005_analytics_rebuild_status.sql) — rebuild progress for CMS/Cites
 7. [`workspaces/content/sql/006_roadmap_course_layouts.sql`](workspaces/content/sql/006_roadmap_course_layouts.sql) — curated degree roadmap grid overrides
 8. [`workspaces/content/sql/007_roadmap_concept_layouts.sql`](workspaces/content/sql/007_roadmap_concept_layouts.sql) — per-course concept map curations
+9. [`workspaces/content/sql/008_admin_write_rls.sql`](workspaces/content/sql/008_admin_write_rls.sql) — admin-only content writes
+10. [`workspaces/content/sql/009_planning_plans.sql`](workspaces/content/sql/009_planning_plans.sql) — 15-week course programs
 
 **Fast path** (after `.env` has `SUPABASE_DB_*`):
 
@@ -161,7 +164,7 @@ In the SQL editor or via Postgres:
 pnpm apply:analytics-sql
 ```
 
-If the pooler is unreachable from your network, paste `003`–`006` from [`workspaces/content/sql/`](workspaces/content/sql/) into **Supabase → SQL → New query** and run.
+If the pooler is unreachable from your network, paste the required migrations from [`workspaces/content/sql/`](workspaces/content/sql/) into **Supabase → SQL → New query** and run.
 
 Create a Storage bucket named `content` (or set `SUPABASE_STORAGE_BUCKET`) with markdown pages under `pages/{slug}.md`.
 
@@ -202,8 +205,8 @@ curl -X POST "https://<ref>.supabase.co/functions/v1/rebuild-analytics" \
 
 Compiled read models for Analytics, Network, and Roadmap live in **`public.analytics_artifacts`** (`key`, `body` jsonb). They are rebuilt from Storage pages + `public.resources`.
 
-- **After CMS/Cites save (hosted):** browsers call Edge Function `rebuild-analytics` (fire-and-forget, last write wins).
-- **Local dev:** CMS/Cites POST to `/cms/api/rebuild-analytics` or `/cites/api/rebuild-analytics` (Vite middleware).
+- **After CMS/Cites/Planning save (hosted):** browsers call Edge Function `rebuild-analytics` (fire-and-forget, last write wins).
+- **Local dev:** content editors POST to `/api/rebuild-analytics` (Vite middleware).
 - **CLI:** `pnpm build:content` syncs Postgres and refreshes local `_generated/dac/`.
 
 #### Deploy Edge Function

@@ -156,11 +156,15 @@ function renderDashboardContent(
   title.className = "dashboard__header-title";
   title.textContent = dashboard.name;
 
+  const leadRow = document.createElement("div");
+  leadRow.className = "dashboard__header-lead-row";
+
   const lead = document.createElement("p");
   lead.className = "dashboard__header-lead";
   lead.textContent = dashboard.description;
 
-  header.append(title, lead);
+  leadRow.appendChild(lead);
+  header.append(title, leadRow);
   root.appendChild(header);
   root.appendChild(renderMetrics(dashboard.metrics));
 

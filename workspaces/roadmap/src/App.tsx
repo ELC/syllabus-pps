@@ -6,8 +6,15 @@ import {
   type PpsStatusIndicatorOverride,
 } from "@pps/shell/AnalyticsRebuildIndicator";
 import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
+import { WorkspaceNavLink } from "@pps/shell/WorkspaceNavLink";
+import { cmsCoursePageHref } from "@pps/shell/workspace-links";
+import { siteRootFromEnv } from "@pps/shell/site-root";
 
 import { RoadmapApp } from "./components/roadmap/RoadmapApp";
+import {
+  RoadmapHeaderWorkspaceLinks,
+  type RoadmapWorkspaceNav,
+} from "./RoadmapHeaderWorkspaceLinks";
 import type { RoadmapProgress } from "./components/roadmap/progress";
 import {
   mountConceptPanel,
@@ -23,6 +30,20 @@ export function App() {
   const [gridLayoutSemaphore, setGridLayoutSemaphore] =
     useState<PpsStatusIndicatorOverride | null>(null);
   const [gridLayoutEditHint, setGridLayoutEditHint] = useState<string | null>(null);
+  const [openConceptSlug, setOpenConceptSlug] = useState<string | null>(null);
+  const [workspaceNav, setWorkspaceNav] = useState<RoadmapWorkspaceNav | null>(null);
+  const handleWorkspaceNavChange = useCallback((nav: RoadmapWorkspaceNav | null) => {
+    setWorkspaceNav((current) => {
+      if (
+        (current?.degreeSlug ?? null) === (nav?.degreeSlug ?? null) &&
+        (current?.courseSlug ?? null) === (nav?.courseSlug ?? null)
+      ) {
+        return current;
+      }
+      return nav;
+    });
+  }, []);
+  const siteRoot = useMemo(() => siteRootFromEnv(import.meta.env.BASE_URL ?? "/"), []);
   const conceptPanelRef = useRef<HTMLElement>(null);
   const conceptPanelControllerRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
   const panelUrlSyncRef = useRef<{ markApplied: (state: ReturnType<typeof readRoadmapPanelUrl>) => void } | null>(
@@ -31,6 +52,7 @@ export function App() {
   const progressRef = useRef<RoadmapProgress | null>(null);
 
   const handleConceptPanelUrlClose = useCallback(() => {
+    setOpenConceptSlug(null);
     const url = readRoadmapPanelUrl();
     if (!url.concept) {
       return;
@@ -42,6 +64,7 @@ export function App() {
   }, []);
 
   const handleClosePanels = useCallback(() => {
+    setOpenConceptSlug(null);
     conceptPanelControllerRef.current?.close({ updateUrl: false });
   }, []);
 
@@ -77,6 +100,7 @@ export function App() {
   }, [handleConceptPanelUrlClose, isAdmin, panelProgress]);
 
   const handleConceptOpen = useCallback((page: ConceptPage) => {
+    setOpenConceptSlug(page.slug);
     conceptPanelControllerRef.current?.open(page);
   }, []);
 
@@ -88,23 +112,30 @@ export function App() {
   return (
     <div className="dashboard__content">
       <header className="dashboard__header">
-        <div className="roadmap__header-title-row">
-          <h1 className="dashboard__header-title">Degree roadmaps</h1>
-          <div className="roadmap__header-status">
-            <AnalyticsRebuildIndicator
-              status={rebuildStatus}
-              loading={roadmapLoading}
-              override={gridLayoutSemaphore}
-            />
-            {gridLayoutEditHint ? (
-              <p className="roadmap__grid-layout-hint">{gridLayoutEditHint}</p>
-            ) : null}
+        <div className="dashboard__header-top">
+          <div className="dashboard__header-title-band">
+            <div className="roadmap__header-title-row dashboard__header-title-row">
+              <h1 className="dashboard__header-title">Degree roadmaps</h1>
+              <div className="roadmap__header-status">
+                <AnalyticsRebuildIndicator
+                  status={rebuildStatus}
+                  loading={roadmapLoading}
+                  override={gridLayoutSemaphore}
+                />
+                {gridLayoutEditHint ? (
+                  <p className="roadmap__grid-layout-hint">{gridLayoutEditHint}</p>
+                ) : null}
+              </div>
+            </div>
+          </div>
+          <div className="dashboard__header-lead-row">
+            <p className="dashboard__header-lead">
+              Explorá materias por año y correlativas. Abrí una materia para ver conceptos, recursos y
+              tu avance.
+            </p>
+            <RoadmapHeaderWorkspaceLinks nav={workspaceNav} />
           </div>
         </div>
-        <p className="dashboard__header-lead dashboard__header-lead--wide">
-          Explorá las materias del plan, agrupadas por año y correlativas. Abrí una materia para
-          ver su mapa de conceptos, consultar recursos y registrar tu avance mientras estudiás.
-        </p>
       </header>
 
       <section className="roadmap__shell">
@@ -115,6 +146,7 @@ export function App() {
           onLoadingChange={setRoadmapLoading}
           onGridLayoutSemaphoreChange={setGridLayoutSemaphore}
           onGridLayoutEditHintChange={setGridLayoutEditHint}
+          onWorkspaceNavChange={handleWorkspaceNavChange}
           onRegisterPanelUrlSync={(sync) => {
             panelUrlSyncRef.current = sync;
           }}
@@ -135,7 +167,17 @@ export function App() {
           aria-labelledby="graph-concept-panel-title"
         >
           <header className="graph__concept-header">
-            <h2 id="graph-concept-panel-title" className="graph__concept-title" />
+            <div className="graph__concept-header-lead">
+              <h2 id="graph-concept-panel-title" className="graph__concept-title" />
+              {isAdmin && openConceptSlug ? (
+                <WorkspaceNavLink
+                  navId="cms"
+                  href={cmsCoursePageHref(siteRoot, openConceptSlug)}
+                >
+                  Editar
+                </WorkspaceNavLink>
+              ) : null}
+            </div>
             <button type="button" className="graph__concept-close" aria-label="Cerrar">
               ×
             </button>

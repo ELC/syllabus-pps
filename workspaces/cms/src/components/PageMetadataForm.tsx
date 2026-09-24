@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 
 import {
+  buildYearSlug,
   COURSE_TRAYECTO_PRINCIPAL,
+  normalizeTitle,
   PageKind,
+  parseYearSlug,
   yearDisplayLabel,
   type ResourceCatalogEntry,
 } from "@pps/core";
+import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
+import resourceOpenSvg from "@pps/shell/assets/icons/resource-open.svg?raw";
 
 import { courseTitleBySlug, type CoursePageOption } from "../course-pages";
 import type { ConceptPageOption } from "../concept-pages";
@@ -18,7 +23,11 @@ import {
 } from "../page-document";
 import { BodyEditor } from "./BodyEditor";
 import { DependsOnCombobox } from "./DependsOnCombobox";
-import { ContentEditorSkeleton, MetaPrimaryStackSkeleton } from "./MetaFormSkeleton";
+import {
+  ContentEditorSkeleton,
+  MetaDegreeDisplaySkeleton,
+  MetaPrimaryStackSkeleton,
+} from "./MetaFormSkeleton";
 import { MetaDropdown } from "./MetaDropdown";
 
 const KIND_LABELS: Record<EditorPageKind, string> = {
@@ -50,6 +59,8 @@ export interface PageMetadataFormProps {
   degreeTitles: string[];
   /** Long display name (`fullName`) keyed by degree title or slug. */
   degreeDisplayByTitle: ReadonlyMap<string, string>;
+  /** Degree page slug keyed by degree title or slug. */
+  degreeSlugByTitle: ReadonlyMap<string, string>;
   body: string;
   resources: ResourceCatalogEntry[];
   onChange: (metadata: PageMetadata) => void;
@@ -60,6 +71,11 @@ export interface PageMetadataFormProps {
   expectedKind: EditorPageKind | null;
   /** False while the full page catalog is still loading from Storage. */
   catalogReady: boolean;
+  /** Slugs listed in Storage (year buttons mark missing entries). */
+  listedPageSlugs: ReadonlySet<string>;
+  /** Display titles keyed by page slug. */
+  pageTitlesBySlug: ReadonlyMap<string, string>;
+  onOpenPage: (slug: string) => void;
 }
 
 export function PageMetadataForm({
@@ -72,6 +88,7 @@ export function PageMetadataForm({
   coursePages,
   degreeTitles: _degreeTitles,
   degreeDisplayByTitle,
+  degreeSlugByTitle,
   body,
   resources,
   onChange,
@@ -79,6 +96,9 @@ export function PageMetadataForm({
   documentReady,
   expectedKind,
   catalogReady,
+  listedPageSlugs,
+  pageTitlesBySlug,
+  onOpenPage,
 }: PageMetadataFormProps): ReactElement {
   const [dependsOnResetKey, setDependsOnResetKey] = useState(0);
 
@@ -150,6 +170,85 @@ export function PageMetadataForm({
     [coursePages],
   );
 
+  const openCoursePageFromChip = useMemo(() => {
+    const slugSet = new Set(coursePages.map((course) => course.slug));
+    const slugByTitle = new Map(
+      coursePages.map((course) => [normalizeTitle(course.title), course.slug] as const),
+    );
+    return (value: string) => {
+      const trimmed = value.trim();
+      if (!trimmed) {
+        return;
+      }
+      const slug = slugSet.has(trimmed)
+        ? trimmed
+        : slugByTitle.get(normalizeTitle(trimmed));
+      if (slug) {
+        onOpenPage(slug);
+      }
+    };
+  }, [coursePages, onOpenPage]);
+
+  const degreeYearPages = useMemo(() => {
+    if (stackKind !== PageKind.Degree || !metaPrimaryReady) {
+      return [];
+    }
+    const degreeSlug = pageSlug.trim();
+    const yearsCount = metadata.yearsCount;
+    if (!degreeSlug || !yearsCount || yearsCount < 1) {
+      return [];
+    }
+    const entries: Array<{ slug: string; label: string; listed: boolean }> = [];
+    for (let yearIndex = 1; yearIndex <= yearsCount; yearIndex += 1) {
+      const slug = buildYearSlug(degreeSlug, yearIndex);
+      entries.push({
+        slug,
+        label: yearDisplayLabel(yearIndex),
+        listed: listedPageSlugs.has(slug),
+      });
+    }
+    return entries;
+  }, [
+    listedPageSlugs,
+    metaPrimaryReady,
+    metadata.yearsCount,
+    pageSlug,
+    stackKind,
+  ]);
+
+  const linkedDegreeSlug = useMemo(() => {
+    const parsed = parseYearSlug(pageSlug);
+    if (parsed?.degreeSlug) {
+      return parsed.degreeSlug;
+    }
+    const degreeKey = metadata.degree?.trim();
+    if (!degreeKey) {
+      return "";
+    }
+    return degreeSlugByTitle.get(degreeKey) ?? "";
+  }, [degreeSlugByTitle, metadata.degree, pageSlug]);
+
+  const yearDegreeLabelPending = useMemo(() => {
+    if (!catalogReady) {
+      return true;
+    }
+    const degreeKey = metadata.degree?.trim();
+    if (!degreeKey) {
+      return false;
+    }
+    return !degreeDisplayByTitle.has(degreeKey);
+  }, [catalogReady, degreeDisplayByTitle, metadata.degree]);
+
+  const yearDegreeLabel = useMemo(() => {
+    const degreeKey = metadata.degree?.trim();
+    if (!degreeKey) {
+      return "—";
+    }
+    return degreeDisplayByTitle.get(degreeKey) ?? "—";
+  }, [degreeDisplayByTitle, metadata.degree]);
+
+  const isDegreeStack = stackKind === PageKind.Degree;
+
   return (
     <fieldset className="cms__meta">
       <legend className="u-visually-hidden">Metadatos</legend>
@@ -159,6 +258,7 @@ export function PageMetadataForm({
           className={[
             "cms__meta-primary-stack",
             "cms__meta-field--full",
+            isDegreeStack ? "cms__meta-primary-stack--degree" : "",
             !metaPrimaryReady ? "cms__meta-primary-stack--pending" : "",
           ]
             .filter(Boolean)
@@ -242,11 +342,36 @@ export function PageMetadataForm({
                 />
               ) : null}
               {isYear ? (
-                <p className="cms__meta-static-value cms__meta-degree-display" aria-label="Carrera">
-                  {metadata.degree
-                    ? (degreeDisplayByTitle.get(metadata.degree) ?? metadata.degree)
-                    : "—"}
-                </p>
+                yearDegreeLabelPending ? (
+                  <div
+                    className="cms__meta-degree-display-wrap cms__meta-degree-display-wrap--pending"
+                    aria-busy="true"
+                    aria-label="Carrera"
+                  >
+                    <MetaDegreeDisplaySkeleton />
+                  </div>
+                ) : (
+                  <div className="cms__meta-degree-display-wrap">
+                    {linkedDegreeSlug ? (
+                      <button
+                        type="button"
+                        className="cms__meta-degree-open"
+                        onClick={() => onOpenPage(linkedDegreeSlug)}
+                        aria-label="Editar carrera en el CMS"
+                        title="Editar carrera en el CMS"
+                      >
+                        <SvgAssetIcon
+                          svg={resourceOpenSvg}
+                          className="cms__meta-degree-open-icon"
+                          focusable={false}
+                        />
+                      </button>
+                    ) : null}
+                    <p className="cms__meta-static-value cms__meta-degree-display" aria-label="Carrera">
+                      {yearDegreeLabel}
+                    </p>
+                  </div>
+                )
               ) : null}
               {isYear ? (
                 <p className="cms__meta-static-value cms__meta-year-display" aria-label="Etiqueta del año">
@@ -269,17 +394,47 @@ export function PageMetadataForm({
               </div>
 
               {showDegreeFullName ? (
-                <div className="cms__meta-field cms__meta-field--full cms__meta-fullname-field">
-                  <span className="cms__meta-label">Nombre completo</span>
-                  <input
-                    className="cms__meta-input"
-                    type="text"
-                    value={metadata.fullName}
-                    onChange={(event) => patch({ fullName: event.target.value })}
-                    spellCheck={false}
-                    autoComplete="off"
-                    aria-label="Nombre completo"
-                  />
+                <div className="cms__meta-degree-extra">
+                  <div className="cms__meta-field cms__meta-field--full cms__meta-fullname-field cms__meta-fullname-field--compact">
+                    <span className="cms__meta-label">Nombre completo</span>
+                    <input
+                      className="cms__meta-input"
+                      type="text"
+                      value={metadata.fullName}
+                      onChange={(event) => patch({ fullName: event.target.value })}
+                      spellCheck={false}
+                      autoComplete="off"
+                      aria-label="Nombre completo"
+                    />
+                  </div>
+                  {degreeYearPages.length > 0 ? (
+                    <div className="cms__meta-field cms__meta-field--full cms__meta-degree-years">
+                      <span className="cms__meta-label">Páginas de año</span>
+                      <div className="cms__meta-degree-year-links" role="list">
+                        {degreeYearPages.map(({ slug, label, listed }) => (
+                          <button
+                            key={slug}
+                            type="button"
+                            role="listitem"
+                            className={[
+                              "cms__meta-degree-year-link",
+                              listed ? "" : "cms__meta-degree-year-link--pending",
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}
+                            onClick={() => onOpenPage(slug)}
+                            title={
+                              listed
+                                ? `Abrir ${label} en el editor`
+                                : "Guardá la carrera para crear esta página de año en Storage"
+                            }
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
 
@@ -304,6 +459,7 @@ export function PageMetadataForm({
                       emptyWhenFiltered="Ninguna materia coincide."
                       emptyWhenAllSelected="Ya están seleccionadas todas las materias."
                       inputAriaLabel="Agregar materias al año"
+                      onChipActivate={openCoursePageFromChip}
                     />
                   </div>
                 ) : null}
@@ -322,6 +478,7 @@ export function PageMetadataForm({
                       emptyWhenFiltered="Ninguna materia coincide."
                       emptyWhenAllSelected="Ya están seleccionadas todas las materias."
                       inputAriaLabel="Agregar correlativas"
+                      onChipActivate={openCoursePageFromChip}
                     />
                   </div>
                 ) : null}

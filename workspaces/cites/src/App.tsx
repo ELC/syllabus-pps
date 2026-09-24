@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 
 import {
   collectResourceCatalogIssues,
+  parseResourceCatalogEntries,
   serializeResourceCatalogJson,
   type ResourceCatalogEntry,
 } from "@pps/core";
@@ -59,6 +60,7 @@ export function App() {
   const rebuildStatusRef = useRef(rebuildStatus);
   const acknowledgedLastOkAtRef = useRef<string | null>(null);
   const entityServerBaselineRef = useRef<string>("");
+  const entityBaselineSyncedAtRef = useRef<string | null>(null);
   const awaitingOwnRebuildRef = useRef(false);
   const ownRebuildBaselineLastOkAtRef = useRef<string | null>(null);
   const sawOwnRebuildRunningRef = useRef(false);
@@ -147,6 +149,7 @@ export function App() {
       }
       const remoteSnapshot = resourceSnapshot(remote);
       entityServerBaselineRef.current = remoteSnapshot;
+      entityBaselineSyncedAtRef.current = new Date().toISOString();
       if (isEntityContentStale(remoteSnapshot, localSnapshot)) {
         setEntityStale(true);
         setCloudSaveIndicatorAt(null);
@@ -298,6 +301,36 @@ export function App() {
       .map(({ index }) => index);
   }, [entries, query]);
 
+  const hasUnsavedChanges = useMemo(() => {
+    if (!selected || loading || entityStale) {
+      return false;
+    }
+    const baseline = entityServerBaselineRef.current;
+    if (!baseline) {
+      return false;
+    }
+    return resourceSnapshot(selected) !== baseline;
+  }, [entityStale, loading, selected, entries, selectedIndex, savingCatalog]);
+
+  function discardResourceChanges(): void {
+    if (!selected || !hasUnsavedChanges) {
+      return;
+    }
+    const baseline = entityServerBaselineRef.current;
+    if (!baseline) {
+      return;
+    }
+    const restored = parseResourceCatalogEntries(baseline)[0];
+    if (!restored) {
+      return;
+    }
+    setEntries((current) =>
+      current.map((entry, index) =>
+        index === selectedIndex ? { ...restored, id: entry.id } : entry,
+      ),
+    );
+  }
+
   const saveBlockReason = resolveCitesSaveBlockReason({
     entityStale,
     catalogLoading: loading,
@@ -315,9 +348,11 @@ export function App() {
     entityStale,
     savingPage: savingCatalog,
     cloudSaveIndicatorAt,
+    entityBaselineSyncedAt: entityBaselineSyncedAtRef.current,
     saveBlockReason,
     awaitingOwnRebuild,
     rebuildStatus,
+    hasUnsavedChanges,
   });
   const workspaceLocked =
     entityStale ||
@@ -412,34 +447,30 @@ export function App() {
       <div className="dashboard__content">
         <div className="cites__workspace">
           <header className="cites__header">
-            <div className="cites__header-main">
-              <div className="cites__header-title-row">
-                <h1 className="cites__header-title">Catálogo de recursos</h1>
-                <div className="cites__header-status-cluster">
-                  <AnalyticsRebuildIndicator
-                    status={rebuildStatus}
-                    className={
-                      entityStale
-                        ? "cites__rebuild-indicator cites__rebuild-indicator--stale"
-                        : "cites__rebuild-indicator"
-                    }
-                    loading={loading && !headerIndicatorOverride}
-                    override={headerIndicatorOverride}
-                    role={entityStale ? "alert" : "status"}
-                  />
-                  {showSaveBlockHint ? (
-                    <span className="cites__save-blocked-hint" role="status">
-                      {saveBlockMessage}
-                    </span>
-                  ) : null}
+            <div className="dashboard__header-top cites__header-top">
+              <div className="dashboard__header-title-band">
+                <div className="cites__header-title-row dashboard__header-title-row">
+                  <h1 className="cites__header-title dashboard__header-title">Catálogo de recursos</h1>
+                  <div className="cites__header-status-cluster">
+                    <AnalyticsRebuildIndicator
+                      status={rebuildStatus}
+                      className={
+                        entityStale
+                          ? "cites__rebuild-indicator cites__rebuild-indicator--stale"
+                          : "cites__rebuild-indicator"
+                      }
+                      loading={loading && !headerIndicatorOverride}
+                      override={headerIndicatorOverride}
+                      role={entityStale ? "alert" : "status"}
+                    />
+                    {showSaveBlockHint ? (
+                      <span className="cites__save-blocked-hint" role="status">
+                        {saveBlockMessage}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-              <p className="cites__header-lead">
-                Edits save the resource catalog to Supabase Postgres. Local dev uses{" "}
-                <code className="cites__code">pnpm dev</code> without sign-in; the hosted site requires auth.
-              </p>
-            </div>
-            <div className="cites__header-actions">
+                <div className="cites__header-actions dashboard__header-actions">
               {entityStale ? (
                 <button
                   type="button"
@@ -465,6 +496,16 @@ export function App() {
                   </button>
                   <button
                     type="button"
+                    className="cites__button cites__button--secondary cites__button--icon"
+                    disabled={!hasUnsavedChanges || workspaceLocked}
+                    title="Descartar cambios"
+                    aria-label="Descartar cambios y volver al contenido del servidor"
+                    onClick={discardResourceChanges}
+                  >
+                    <SvgAssetIcon svg={refreshSvg} className="cites__button-icon" focusable={false} />
+                  </button>
+                  <button
+                    type="button"
                     className="cites__button cites__button--save cites__button--icon"
                     disabled={!canSave}
                     title="Save catalog"
@@ -478,6 +519,7 @@ export function App() {
                           setEntityStale(false);
                           if (selected?.id) {
                             entityServerBaselineRef.current = resourceSnapshot(selected);
+                            entityBaselineSyncedAtRef.current = savedAt;
                           }
                           pendingCloudSaveAtRef.current = savedAt;
                           ownRebuildBaselineLastOkAtRef.current = rebuildStatus?.lastOkAt ?? null;
@@ -497,6 +539,14 @@ export function App() {
                   </button>
                 </>
               )}
+                </div>
+              </div>
+              <div className="dashboard__header-lead-row">
+                <p className="dashboard__header-lead">
+                  Catálogo de recursos en Supabase Postgres. Local sin login; sitio publicado con
+                  autenticación.
+                </p>
+              </div>
             </div>
           </header>
 

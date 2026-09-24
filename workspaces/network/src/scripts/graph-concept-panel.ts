@@ -6,7 +6,15 @@ import {
   type PanelResourceKind,
   type ResourceCatalogEntry,
 } from "@pps/core";
-import { createResourceIconSvg } from "@pps/shell/concept-panel-icons";
+import { citesEditHref } from "@pps/shell/cites-link";
+import {
+  createEditIconSvg,
+  createOpenIconSvg,
+  createResourceIconSvg,
+} from "@pps/shell/concept-panel-icons";
+import { siteRootFromEnv } from "@pps/shell/site-root";
+import { cmsCoursePageHref } from "@pps/shell/workspace-links";
+import { appendWorkspaceNavLink } from "@pps/shell/workspace-nav-link-dom";
 
 import { capitalizeWords } from "./graph-styles";
 
@@ -45,6 +53,11 @@ function primaryBlockUrl(block: ConceptBlock): string | undefined {
   return block.citations?.[0]?.resolved?.URL ?? block.urls[0]?.target;
 }
 
+function primaryResourceId(block: ConceptBlock): string | undefined {
+  const id = block.citations?.[0]?.id?.trim();
+  return id || undefined;
+}
+
 function classifyResourceKind(block: ConceptBlock): PanelResourceKind {
   const resolved = block.citations?.[0]?.resolved;
   if (resolved) {
@@ -63,6 +76,13 @@ function blockDisplayText(block: ConceptBlock): string {
   }
 
   return display;
+}
+
+function readShowAdminConceptControls(): boolean {
+  if (document.documentElement.classList.contains("pps-shell-access-pending")) {
+    return false;
+  }
+  return document.documentElement.classList.contains("pps-role-admin");
 }
 
 function createResourceMark(kind: PanelResourceKind): HTMLElement {
@@ -86,16 +106,77 @@ function appendResourceLayout(
   container.append(copy);
 }
 
-function renderConceptNote(block: ConceptBlock): HTMLElement {
+function createCitesEditLink(resourceId: string, title?: string): HTMLAnchorElement {
+  const link = document.createElement("a");
+  link.className = "graph__concept-note-edit";
+  const label = title ? `Editar en Cites: ${title}` : "Editar en Cites";
+  link.href = citesEditHref(resourceId);
+  link.title = label;
+  link.setAttribute("aria-label", label);
+  link.appendChild(createEditIconSvg());
+  link.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+  return link;
+}
+
+function createExternalLinkIcon(primaryUrl: string, resolvedTitle: string | undefined, resourceKind: PanelResourceKind): HTMLAnchorElement {
+  const link = document.createElement("a");
+  link.className = "graph__concept-note-open";
+  link.href = primaryUrl;
+  link.setAttribute("aria-label", "Abrir recurso");
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.title = resolvedTitle
+    ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
+    : `${panelResourceLabels[resourceKind]}: ${primaryUrl}`;
+  link.appendChild(createOpenIconSvg());
+  link.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+  return link;
+}
+
+function renderConceptNote(block: ConceptBlock, showCitesEditLinks: boolean): HTMLElement {
   const item = document.createElement("li");
   item.className = "graph__concept-note";
 
   const primaryUrl = primaryBlockUrl(block);
   const resourceKind = classifyResourceKind(block);
   const resolvedTitle = block.citations?.[0]?.resolved?.title;
+  const resourceId = primaryResourceId(block);
   const body = document.createElement("span");
   body.className = "graph__concept-note-body";
   body.textContent = blockDisplayText(block);
+
+  if (showCitesEditLinks && resourceId) {
+    const card = document.createElement("div");
+    card.className = "graph__concept-note-card";
+
+    card.appendChild(createResourceMark(resourceKind));
+
+    const action = document.createElement("div");
+    action.className = "graph__concept-note-action";
+    action.tabIndex = -1;
+
+    const copy = document.createElement("span");
+    copy.className = "graph__concept-note-copy";
+    copy.append(body);
+    action.appendChild(copy);
+    card.appendChild(action);
+
+    const rail = document.createElement("div");
+    rail.className = "graph__concept-note-rail graph__concept-note-rail--with-edit";
+    rail.appendChild(createCitesEditLink(resourceId, resolvedTitle));
+
+    if (primaryUrl) {
+      rail.appendChild(createExternalLinkIcon(primaryUrl, resolvedTitle, resourceKind));
+    }
+
+    card.appendChild(rail);
+    item.appendChild(card);
+    return item;
+  }
 
   if (!primaryUrl) {
     const content = document.createElement("div");
@@ -118,7 +199,11 @@ function renderConceptNote(block: ConceptBlock): HTMLElement {
   return item;
 }
 
-function renderConceptNotes(notesRoot: HTMLElement, blocks: ConceptBlock[]): void {
+function renderConceptNotes(
+  notesRoot: HTMLElement,
+  blocks: ConceptBlock[],
+  showCitesEditLinks: boolean,
+): void {
   notesRoot.replaceChildren();
 
   if (blocks.length === 0) {
@@ -133,10 +218,32 @@ function renderConceptNotes(notesRoot: HTMLElement, blocks: ConceptBlock[]): voi
   list.className = "graph__concept-note-list";
 
   for (const block of blocks) {
-    list.appendChild(renderConceptNote(block));
+    list.appendChild(renderConceptNote(block, showCitesEditLinks));
   }
 
   notesRoot.appendChild(list);
+}
+
+function updateConceptCmsLink(cmsLinkRoot: HTMLElement | null, page: ConceptPage | null): void {
+  if (!cmsLinkRoot) {
+    return;
+  }
+
+  cmsLinkRoot.replaceChildren();
+
+  if (!page || !readShowAdminConceptControls()) {
+    cmsLinkRoot.hidden = true;
+    return;
+  }
+
+  cmsLinkRoot.hidden = false;
+  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
+  appendWorkspaceNavLink(cmsLinkRoot, {
+    navId: "cms",
+    label: "Editar",
+    href: cmsCoursePageHref(siteRoot, page.slug),
+    title: "Editar concepto en el CMS",
+  });
 }
 
 export async function loadConceptPages(): Promise<Map<string, ConceptPage>> {
@@ -166,6 +273,7 @@ export interface ConceptPanel {
 export function mountConceptPanel(root: HTMLElement): ConceptPanel {
   const title = root.querySelector<HTMLElement>(".graph__concept-title");
   const notesRoot = root.querySelector<HTMLElement>(".graph__concept-body");
+  const cmsLinkRoot = root.querySelector<HTMLElement>("#graph-concept-cms-link");
   const closeButton = root.querySelector<HTMLButtonElement>(".graph__concept-close");
   const backdrop = root.querySelector<HTMLElement>(".graph__concept-backdrop");
   const sheet = root.querySelector<HTMLElement>(".graph__concept-sheet");
@@ -174,6 +282,8 @@ export function mountConceptPanel(root: HTMLElement): ConceptPanel {
     throw new Error("Concept panel markup is incomplete");
   }
 
+  let currentPage: ConceptPage | null = null;
+
   const setPanelOpen = (open: boolean) => {
     root.classList.toggle("graph__concept-panel--open", open);
     backdrop.classList.toggle("graph__concept-backdrop--open", open);
@@ -181,15 +291,37 @@ export function mountConceptPanel(root: HTMLElement): ConceptPanel {
     root.setAttribute("aria-hidden", open ? "false" : "true");
   };
 
+  const renderCurrentPage = () => {
+    if (!currentPage) {
+      return;
+    }
+    const showCitesEditLinks = readShowAdminConceptControls();
+    title.textContent = capitalizeWords(currentPage.title);
+    renderConceptNotes(notesRoot, currentPage.blocks, showCitesEditLinks);
+    updateConceptCmsLink(cmsLinkRoot, currentPage);
+  };
+
   const close = () => {
+    currentPage = null;
+    updateConceptCmsLink(cmsLinkRoot, null);
     setPanelOpen(false);
   };
 
   const open = (page: ConceptPage) => {
-    title.textContent = capitalizeWords(page.title);
-    renderConceptNotes(notesRoot, page.blocks);
+    currentPage = page;
+    renderCurrentPage();
     setPanelOpen(true);
   };
+
+  const roleObserver = new MutationObserver(() => {
+    if (currentPage && root.classList.contains("graph__concept-panel--open")) {
+      renderCurrentPage();
+    }
+  });
+  roleObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
 
   closeButton.addEventListener("click", close);
   backdrop.addEventListener("click", close);

@@ -40,6 +40,8 @@ export interface DependsOnComboboxProps {
   layout?: "inline" | "stacked";
   /** Display label for each choice value (default: value as-is). */
   formatChoiceLabel?: (value: string) => string;
+  /** Open the CMS page for this chip value (label click; remove button unchanged). */
+  onChipActivate?: (value: string) => void;
 }
 
 export function DependsOnCombobox({
@@ -55,6 +57,7 @@ export function DependsOnCombobox({
   inputAriaLabel = "Agregar dependencias de concepto",
   layout = "inline",
   formatChoiceLabel = (value) => value,
+  onChipActivate,
 }: DependsOnComboboxProps): ReactElement {
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -169,7 +172,21 @@ export function DependsOnCombobox({
       >
         {selected.map((value) => (
           <span key={value} className="cms__depends-on-chip">
-            <span className="cms__depends-on-chip-label">{formatChoiceLabel(value)}</span>
+            {onChipActivate ? (
+              <button
+                type="button"
+                className="cms__depends-on-chip-label cms__depends-on-chip-open"
+                title={`Abrir ${formatChoiceLabel(value)} en el editor`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onChipActivate(value);
+                }}
+              >
+                {formatChoiceLabel(value)}
+              </button>
+            ) : (
+              <span className="cms__depends-on-chip-label">{formatChoiceLabel(value)}</span>
+            )}
             <button
               type="button"
               className="cms__depends-on-chip-remove"

@@ -8,6 +8,8 @@ import {
   type CourseTrayecto,
 } from "@pps/core";
 
+import { normalizeYearCourseSlugs, type CoursePageOption } from "./course-pages";
+
 const EDITOR_KINDS = pageKinds.filter((kind) => kind !== PageKind.Unknown) as Exclude<
   PageKind,
   PageKind.Unknown
@@ -177,4 +179,22 @@ export function composePageDocument(metadata: PageMetadata, body: string): strin
   }
 
   return stringifyPageSource(record, body);
+}
+
+/** Same shape as the live editor `content` string (normalized year courses, composed frontmatter). */
+export function canonicalEditorPageContent(
+  slug: string,
+  source: string,
+  coursePages: readonly CoursePageOption[],
+): string {
+  const split = splitPageDocument(source, slug);
+  const metadata =
+    split.metadata.kind === PageKind.Year
+      ? {
+          ...split.metadata,
+          courses: normalizeYearCourseSlugs(split.metadata.courses, [...coursePages]),
+        }
+      : split.metadata;
+
+  return composePageDocument({ ...metadata, slug }, split.body);
 }

@@ -20,7 +20,7 @@ export function citesNewResourceHref(): string {
 function readBrowserSiteRoot(): string {
   const pathname = window.location.pathname;
   const normalized = pathname.endsWith("/") ? pathname : `${pathname}/`;
-  const suffixes = ["analytics/", "network/", "roadmap/", "cms/", "cites/"] as const;
+  const suffixes = ["analytics/", "network/", "roadmap/", "planning/", "cms/", "cites/"] as const;
 
   for (const suffix of suffixes) {
     const index = normalized.indexOf(suffix);

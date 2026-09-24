@@ -16,7 +16,6 @@ import {
 import { loadAnalyticsArtifact } from "@pps/content/browser";
 import { MetaDropdown } from "@pps/shell/MetaDropdown";
 import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
-import { siteRootFromEnv } from "@pps/shell/site-root";
 import { useAppAdmin } from "@pps/login/AppAdminContext";
 import editSvg from "@pps/shell/assets/icons/resource-edit.svg?raw";
 import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
@@ -36,11 +35,14 @@ import {
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
   type MouseEvent as ReactMouseEvent,
 } from "react";
+
+import type { RoadmapWorkspaceNav } from "../../RoadmapHeaderWorkspaceLinks";
 
 import type { ConceptPage } from "../../scripts/concept-panel";
 import { buildRoadmapFlow } from "./build-flow";
@@ -216,6 +218,7 @@ interface RoadmapAppProps {
     override: ReturnType<typeof gridLayoutStatusToSemaphore>,
   ) => void;
   onGridLayoutEditHintChange?: (hint: string | null) => void;
+  onWorkspaceNavChange?: (nav: RoadmapWorkspaceNav | null) => void;
 }
 
 export function RoadmapApp({
@@ -226,6 +229,7 @@ export function RoadmapApp({
   onLoadingChange,
   onGridLayoutSemaphoreChange,
   onGridLayoutEditHintChange,
+  onWorkspaceNavChange,
 }: RoadmapAppProps) {
   const { isAdmin } = useAppAdmin();
   const [graph, setGraph] = useState<CurriculumGraph | null>(null);
@@ -250,6 +254,8 @@ export function RoadmapApp({
   const [courseLayoutReadySlug, setCourseLayoutReadySlug] = useState<string | null>(null);
   const [gridLayoutStatus, setGridLayoutStatus] = useState("");
   const lastAppliedUrlKeyRef = useRef<string | null>(null);
+  const courseLayoutEditBaselineRef = useRef<RoadmapCourseLayoutDocument | null>(null);
+  const conceptCurationEditBaselineRef = useRef<RoadmapCuration | null>(null);
 
   useEffect(() => {
     void loadAnalyticsArtifact("curriculum-graph.json")
@@ -1205,6 +1211,7 @@ export function RoadmapApp({
     )
       .then(() => {
         setGridLayoutStatus(GRID_LAYOUT_SAVED_LABEL);
+        courseLayoutEditBaselineRef.current = null;
         setGridLayoutEditMode(false);
       })
       .catch((error: unknown) => {
@@ -1230,6 +1237,7 @@ export function RoadmapApp({
     )
       .then(() => {
         setGridLayoutStatus(CONCEPT_LAYOUT_SAVED_LABEL);
+        conceptCurationEditBaselineRef.current = null;
         setConceptSubgraphEditMode(false);
         clearConceptEditPending();
       })
@@ -1246,31 +1254,86 @@ export function RoadmapApp({
     focusedCourseSlug,
   ]);
 
-  const handleLayoutEditToggle = useCallback(() => {
+  const handleLayoutEditEnter = useCallback(() => {
     if (layoutEditMode) {
-      if (conceptSubgraphEditMode) {
-        handleSaveConceptSubgraph();
-      } else {
-        handleSaveCourseGrid();
-      }
       return;
     }
 
+    setGridLayoutStatus("");
     if (isConceptView) {
+      if (conceptCuration) {
+        conceptCurationEditBaselineRef.current = cloneCurationSnapshot(conceptCuration);
+      }
       setConceptSubgraphEditMode(true);
       setConceptEditTool("select");
       clearConceptEditPending();
     } else {
+      courseLayoutEditBaselineRef.current = courseLayoutDocument
+        ? (JSON.parse(JSON.stringify(courseLayoutDocument)) as RoadmapCourseLayoutDocument)
+        : null;
       setGridLayoutEditMode(true);
+    }
+  }, [
+    clearConceptEditPending,
+    conceptCuration,
+    courseLayoutDocument,
+    isConceptView,
+    layoutEditMode,
+  ]);
+
+  const handleLayoutEditSave = useCallback(() => {
+    if (!layoutEditMode) {
+      return;
+    }
+    if (conceptSubgraphEditMode) {
+      handleSaveConceptSubgraph();
+    } else {
+      handleSaveCourseGrid();
+    }
+  }, [
+    conceptSubgraphEditMode,
+    handleSaveConceptSubgraph,
+    handleSaveCourseGrid,
+    layoutEditMode,
+  ]);
+
+  const handleLayoutEditExit = useCallback(() => {
+    if (!layoutEditMode) {
+      return;
+    }
+
+    const unsaved =
+      gridLayoutStatus === GRID_LAYOUT_UNSAVED_LABEL ||
+      gridLayoutStatus === CONCEPT_LAYOUT_UNSAVED_LABEL;
+    if (unsaved && !window.confirm("Hay cambios sin guardar. ¿Querés salir sin guardar?")) {
+      return;
+    }
+
+    if (conceptSubgraphEditMode) {
+      const baseline = conceptCurationEditBaselineRef.current;
+      if (baseline) {
+        const restored = cloneCurationSnapshot(baseline);
+        setConceptCuration(restored);
+        conceptCurationHistoryRef.current = createConceptCurationHistory(restored);
+        setConceptCurationHistoryTick((tick) => tick + 1);
+      }
+      conceptCurationEditBaselineRef.current = null;
+      setConceptSubgraphEditMode(false);
+      clearConceptEditPending();
+    } else {
+      const baseline = courseLayoutEditBaselineRef.current;
+      setCourseLayoutDocument(
+        baseline ? (JSON.parse(JSON.stringify(baseline)) as RoadmapCourseLayoutDocument) : null,
+      );
+      courseLayoutEditBaselineRef.current = null;
+      setGridLayoutEditMode(false);
     }
 
     setGridLayoutStatus("");
   }, [
     clearConceptEditPending,
     conceptSubgraphEditMode,
-    handleSaveConceptSubgraph,
-    handleSaveCourseGrid,
-    isConceptView,
+    gridLayoutStatus,
     layoutEditMode,
   ]);
 
@@ -1419,6 +1482,22 @@ export function RoadmapApp({
     ],
   );
 
+  useLayoutEffect(() => {
+    if (!graph || !activeCourseRoadmap) {
+      onWorkspaceNavChange?.(null);
+      return;
+    }
+
+    onWorkspaceNavChange?.({
+      degreeSlug: activeCourseRoadmap.degreeSlug,
+      courseSlug: focusedCourseSlug,
+    });
+  }, [activeCourseRoadmap, focusedCourseSlug, graph, onWorkspaceNavChange]);
+
+  useEffect(() => {
+    return () => onWorkspaceNavChange?.(null);
+  }, [onWorkspaceNavChange]);
+
   if (loadError) {
     return <p className="roadmap__error">{loadError}</p>;
   }
@@ -1444,20 +1523,6 @@ export function RoadmapApp({
     ? (focusedCourse?.title ?? activeCourseRoadmap.degree)
     : activeCourseRoadmap.degree;
   const viewportKey = `${activeCourseRoadmap.degreeSlug}:${focusedCourseSlug ?? "courses"}`;
-  const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/");
-  const networkHref = focusedCourseSlug
-    ? (() => {
-        const params = new URLSearchParams({
-          expand: focusedCourseSlug,
-          courseLinks: "mentions",
-        });
-        return `${siteRoot}network/?${params.toString()}`;
-      })()
-    : null;
-  const cmsCourseHref =
-    isAdmin && focusedCourseSlug
-      ? `${siteRoot}cms/?${new URLSearchParams({ page: focusedCourseSlug }).toString()}`
-      : null;
 
   return (
     <div className="roadmap">
@@ -1580,18 +1645,8 @@ export function RoadmapApp({
               {isConceptView ? (
                 <Panel position="top-left" className="roadmap__graph-back">
                   <button type="button" className="roadmap__back-button" onClick={handleBackToCourses}>
-                    ← Volver a materias
+                    ← Volver a carrera
                   </button>
-                  {networkHref ? (
-                    <a className="roadmap__network-link" href={networkHref}>
-                      Ver como Red
-                    </a>
-                  ) : null}
-                  {cmsCourseHref ? (
-                    <a className="roadmap__cms-link" href={cmsCourseHref}>
-                      Añadir Concepto
-                    </a>
-                  ) : null}
                 </Panel>
               ) : null}
               {canEditLayout ? (
@@ -1615,36 +1670,64 @@ export function RoadmapApp({
                       }
                     />
                   ) : null}
-                  <button
-                    type="button"
-                    className="roadmap__grid-layout-toggle"
-                    aria-pressed={layoutEditMode}
-                    onClick={handleLayoutEditToggle}
-                    aria-label={
-                      layoutEditMode
-                        ? isConceptView
-                          ? "Guardar mapa de temas"
-                          : "Guardar grilla"
-                        : isConceptView
-                          ? "Editar mapa de temas"
-                          : "Editar posiciones de la grilla"
-                    }
-                    title={
-                      layoutEditMode
-                        ? isConceptView
-                          ? "Guardar mapa de temas"
-                          : "Guardar grilla"
-                        : isConceptView
-                          ? "Editar mapa de temas"
-                          : "Editar posiciones"
-                    }
-                  >
-                    <SvgAssetIcon
-                      svg={layoutEditMode ? saveSvg : editSvg}
-                      className="roadmap__grid-layout-toggle-icon"
-                      focusable={false}
-                    />
-                  </button>
+                  <div className="roadmap__grid-layout-actions">
+                    {layoutEditMode ? (
+                      <>
+                        <button
+                          type="button"
+                          className="roadmap__grid-layout-toggle roadmap__grid-layout-exit"
+                          onClick={handleLayoutEditExit}
+                          aria-label={
+                            isConceptView ? "Salir del mapa de temas" : "Salir de la edición de grilla"
+                          }
+                          title={
+                            isConceptView
+                              ? "Descartar cambios y salir del mapa de temas"
+                              : "Descartar cambios y salir de la grilla"
+                          }
+                        >
+                          Salir
+                        </button>
+                        <button
+                          type="button"
+                          className="roadmap__grid-layout-toggle"
+                          aria-pressed
+                          onClick={handleLayoutEditSave}
+                          aria-label={
+                            isConceptView ? "Guardar mapa de temas" : "Guardar grilla"
+                          }
+                          title={isConceptView ? "Guardar mapa de temas" : "Guardar grilla"}
+                        >
+                          <SvgAssetIcon
+                            svg={saveSvg}
+                            className="roadmap__grid-layout-toggle-icon"
+                            focusable={false}
+                          />
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        className="roadmap__grid-layout-toggle"
+                        aria-pressed={false}
+                        onClick={handleLayoutEditEnter}
+                        aria-label={
+                          isConceptView
+                            ? "Editar mapa de temas"
+                            : "Editar posiciones de la grilla"
+                        }
+                        title={
+                          isConceptView ? "Editar mapa de temas" : "Editar posiciones"
+                        }
+                      >
+                        <SvgAssetIcon
+                          svg={editSvg}
+                          className="roadmap__grid-layout-toggle-icon"
+                          focusable={false}
+                        />
+                      </button>
+                    )}
+                  </div>
                 </Panel>
               ) : null}
               <MiniMap pannable zoomable className="roadmap__minimap" nodeStrokeWidth={0} />
@@ -1656,18 +1739,8 @@ export function RoadmapApp({
           <>
             <div className="roadmap__graph-back">
               <button type="button" className="roadmap__back-button" onClick={handleBackToCourses}>
-                ← Volver a materias
+                ← Volver a carrera
               </button>
-              {networkHref ? (
-                <a className="roadmap__network-link" href={networkHref}>
-                  Ver como Red
-                </a>
-              ) : null}
-              {cmsCourseHref ? (
-                <a className="roadmap__cms-link" href={cmsCourseHref}>
-                  Añadir Concepto
-                </a>
-              ) : null}
             </div>
             <p className="roadmap__empty">
               {focusedCourse?.title ?? "Esta materia"} no tiene conceptos vinculados todavía.

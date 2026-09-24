@@ -75,15 +75,25 @@ import networkCss from "../styles/network.scss?url";
   </div>
 
   <header class="dashboard__header">
-    <div class="network__header-title-row">
-      <h1 class="dashboard__header-title">Curriculum network</h1>
-      <span id="network-rebuild-indicator"></span>
+    <div class="dashboard__header-top">
+      <div class="dashboard__header-title-band">
+        <div class="network__header-title-row dashboard__header-title-row">
+          <h1 class="dashboard__header-title">Curriculum network</h1>
+          <span id="network-rebuild-indicator"></span>
+        </div>
+      </div>
+      <div class="dashboard__header-lead-row">
+      <p class="dashboard__header-lead">
+        Filter or search to narrow the graph. Click a node to focus; double-click opens CMS. Clear
+        expansions with × on chips.
+      </p>
+      <div
+        id="graph-course-workspace-links"
+        class="network__header-workspace-links pps-workspace-nav-links"
+        hidden
+      ></div>
+      </div>
     </div>
-    <p class="dashboard__header-lead dashboard__header-lead--wide">
-      Use the sidebar filters or search bar to narrow the graph. Click a node to focus its
-      neighborhood; clicking a concept also opens its notes. Remove an expansion with the × on its
-      chip. Double-click to open in the CMS. Click the background to show all nodes again.
-    </p>
     <div class="graph__header-meta graph__header-meta--compact">
       <ul class="graph__legend" aria-label="Tipos de nodo">
         {
@@ -105,20 +115,22 @@ import networkCss from "../styles/network.scss?url";
           TNE
         </li>
       </ul>
-      <div class="graph__search">
-        <label class="u-visually-hidden" for="graph-search">Buscar</label>
-        <input
-          id="graph-search"
-          class="graph__search-input"
-          type="search"
-          placeholder="Filtrar nodos por nombre..."
-          autocomplete="off"
-          role="combobox"
-          aria-expanded="false"
-          aria-controls="graph-search-results"
-          aria-autocomplete="list"
-        />
-        <div id="graph-search-results" class="graph__search-dropdown" role="listbox"></div>
+      <div class="graph__header-actions">
+        <div class="graph__search">
+          <label class="u-visually-hidden" for="graph-search">Buscar</label>
+          <input
+            id="graph-search"
+            class="graph__search-input"
+            type="search"
+            placeholder="Filtrar nodos por nombre..."
+            autocomplete="off"
+            role="combobox"
+            aria-expanded="false"
+            aria-controls="graph-search-results"
+            aria-autocomplete="list"
+          />
+          <div id="graph-search-results" class="graph__search-dropdown" role="listbox"></div>
+        </div>
       </div>
     </div>
   </header>
@@ -137,7 +149,14 @@ import networkCss from "../styles/network.scss?url";
       aria-labelledby="graph-concept-panel-title"
     >
       <header class="graph__concept-header">
-        <h2 id="graph-concept-panel-title" class="graph__concept-title"></h2>
+        <div class="graph__concept-header-lead">
+          <h2 id="graph-concept-panel-title" class="graph__concept-title"></h2>
+          <div
+            id="graph-concept-cms-link"
+            class="graph__concept-cms-link pps-workspace-nav-links"
+            hidden
+          ></div>
+        </div>
         <button type="button" class="graph__concept-close" aria-label="Cerrar">×</button>
       </header>
       <div id="graph-concept-panel-notes" class="graph__concept-body"></div>
@@ -146,7 +165,9 @@ import networkCss from "../styles/network.scss?url";
 
   <script>
     import { mountAnalyticsRebuildIndicator } from "@pps/shell/mount-analytics-rebuild-indicator";
-    import { mountGraph } from "../scripts/graph";
+    import { mountGraph, seedCourseWorkspaceLinksFromUrl } from "../scripts/graph";
+
+    seedCourseWorkspaceLinksFromUrl(document.getElementById("graph-course-workspace-links"));
 
     const rebuildIndicatorHost = document.getElementById("network-rebuild-indicator");
     if (rebuildIndicatorHost) {
@@ -158,6 +179,7 @@ import networkCss from "../styles/network.scss?url";
       searchInputId: "graph-search",
       searchResultsId: "graph-search-results",
       expansionListId: "graph-expansion-list",
+      courseWorkspaceLinksId: "graph-course-workspace-links",
       refreshButtonId: "graph-refresh-layout",
       resetFiltersButtonId: "graph-reset-filters",
       toggleConceptsButtonId: "graph-toggle-concepts",

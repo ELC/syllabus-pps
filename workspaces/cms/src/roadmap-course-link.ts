@@ -67,14 +67,4 @@ export function degreeSlugForCourseInSources(
   return undefined;
 }
 
-export function roadmapCourseSubgraphHref(
-  siteRoot: string,
-  degreeSlug: string,
-  courseSlug: string,
-): string {
-  const params = new URLSearchParams({
-    degree: degreeSlug,
-    course: courseSlug,
-  });
-  return `${siteRoot}roadmap/?${params.toString()}`;
-}
+export { roadmapCourseSubgraphHref } from "@pps/shell/workspace-links";

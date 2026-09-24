@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { notifyAnalyticsRebuildTriggered } from "./analytics-rebuild-status-browser";
 
 /**
- * Fire-and-forget analytics rebuild after CMS/Cites saves (last write wins).
+ * Fire-and-forget analytics rebuild after content-editor saves (last write wins).
  */
 export function triggerAnalyticsRebuild(_appBaseUrl: string): void {
   notifyAnalyticsRebuildTriggered();

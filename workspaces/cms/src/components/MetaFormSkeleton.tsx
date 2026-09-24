@@ -15,3 +15,14 @@ export function ContentEditorSkeleton(): ReactElement {
     </div>
   );
 }
+
+export function MetaDegreeDisplaySkeleton(): ReactElement {
+  return (
+    <div
+      className="cms__skeleton cms__skeleton--input cms__meta-degree-display-skeleton"
+      aria-hidden="true"
+    >
+      <span className="u-visually-hidden">Cargando carrera…</span>
+    </div>
+  );
+}

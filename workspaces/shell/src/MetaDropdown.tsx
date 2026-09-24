@@ -12,6 +12,10 @@ import {
 export interface MetaDropdownOption<T extends string> {
   value: T;
   label: string;
+  /** Non-selectable group heading (e.g. year label in a grouped list). */
+  disabled?: boolean;
+  /** Extra left padding for items under a group heading. */
+  indent?: boolean;
 }
 
 export interface MetaDropdownProps<T extends string> {
@@ -78,11 +82,25 @@ export function MetaDropdown<T extends string>({
 
   function selectOption(index: number): void {
     const option = options[index];
-    if (!option) {
+    if (!option || option.disabled) {
       return;
     }
     onChange(option.value);
     setOpen(false);
+  }
+
+  function nextSelectableIndex(from: number, direction: 1 | -1): number {
+    if (options.length === 0) {
+      return 0;
+    }
+    let index = from;
+    for (let step = 0; step < options.length; step += 1) {
+      index = (index + direction + options.length) % options.length;
+      if (!options[index]?.disabled) {
+        return index;
+      }
+    }
+    return from;
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>): void {
@@ -100,13 +118,13 @@ export function MetaDropdown<T extends string>({
 
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      setActiveIndex((current) => (current + 1) % options.length);
+      setActiveIndex((current) => nextSelectableIndex(current, 1));
       return;
     }
 
     if (event.key === "ArrowUp") {
       event.preventDefault();
-      setActiveIndex((current) => (current - 1 + options.length) % options.length);
+      setActiveIndex((current) => nextSelectableIndex(current, -1));
       return;
     }
 
@@ -157,16 +175,21 @@ export function MetaDropdown<T extends string>({
           }
         >
           {options.map((option, index) => (
-            <li key={option.value || "__empty__"} role="presentation">
+            <li key={`${option.value}-${index}`} role="presentation">
               <button
                 type="button"
                 role="option"
-                aria-selected={option.value === value}
-                className={
-                  index === activeIndex
-                    ? "pps-meta-dropdown__option pps-meta-dropdown__option--active"
-                    : "pps-meta-dropdown__option"
-                }
+                aria-selected={!option.disabled && option.value === value}
+                aria-disabled={option.disabled ? "true" : undefined}
+                disabled={option.disabled}
+                className={[
+                  "pps-meta-dropdown__option",
+                  index === activeIndex ? "pps-meta-dropdown__option--active" : "",
+                  option.disabled ? "pps-meta-dropdown__option--heading" : "",
+                  option.indent ? "pps-meta-dropdown__option--indent" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 onMouseDown={(event) => {
                   event.preventDefault();
                   selectOption(index);

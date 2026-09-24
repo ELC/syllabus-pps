@@ -24,6 +24,9 @@ export const EDITOR_HEADER_LOADING_CATALOG_LABEL = "Cargando el catálogo…";
 
 export const EDITOR_HEADER_UPDATING_ANALYTICS_LABEL = "Actualizando analítica…";
 
+export const EDITOR_HEADER_UNSAVED_CHANGES_LABEL =
+  "Cambios sin guardar. Usá el ícono de guardar.";
+
 export type EditorHeaderIndicatorPhase = "updated" | "updating" | "unknown";
 
 export type EditorHeaderIndicatorOverride = {
@@ -141,6 +144,9 @@ export function resolveEditorHeaderIndicatorOverride(input: {
   saveBlockReason: EditorSaveBlockReason;
   awaitingOwnRebuild: boolean;
   rebuildStatus: AnalyticsRebuildStatus | null;
+  hasUnsavedChanges?: boolean;
+  /** Last known server sync (e.g. page updatedAt) when the editor matches baseline. */
+  entityBaselineSyncedAt?: string | null;
 }): EditorHeaderIndicatorOverride | null {
   if (input.entityStale) {
     return { phase: "unknown", label: EDITOR_CATALOG_STALE_MESSAGE };
@@ -149,7 +155,14 @@ export function resolveEditorHeaderIndicatorOverride(input: {
     return { phase: "updating", label: EDITOR_HEADER_SAVING_LABEL };
   }
   if (input.saveBlockReason === "loading") {
-    return { phase: "updating", label: EDITOR_HEADER_LOADING_CATALOG_LABEL };
+    const openPageSynced =
+      Boolean(input.cloudSaveIndicatorAt) || Boolean(input.entityBaselineSyncedAt);
+    if (!openPageSynced) {
+      return { phase: "updating", label: EDITOR_HEADER_LOADING_CATALOG_LABEL };
+    }
+  }
+  if (input.hasUnsavedChanges) {
+    return { phase: "updating", label: EDITOR_HEADER_UNSAVED_CHANGES_LABEL };
   }
   if (input.awaitingOwnRebuild) {
     return { phase: "updating", label: EDITOR_HEADER_UPDATING_ANALYTICS_LABEL };
@@ -157,10 +170,11 @@ export function resolveEditorHeaderIndicatorOverride(input: {
   if (isAnalyticsRebuildRunning(input.rebuildStatus)) {
     return null;
   }
-  if (input.cloudSaveIndicatorAt) {
+  const syncedAt = input.cloudSaveIndicatorAt ?? input.entityBaselineSyncedAt ?? null;
+  if (syncedAt) {
     return {
       phase: "updated",
-      label: formatEditorCloudSaveIndicatorLabel(input.cloudSaveIndicatorAt),
+      label: formatEditorCloudSaveIndicatorLabel(syncedAt),
     };
   }
   return null;

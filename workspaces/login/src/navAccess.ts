@@ -1,6 +1,14 @@
-export type ShellNavId = "home" | "analytics" | "network" | "roadmap" | "cms" | "cites" | "users";
+export type ShellNavId =
+  | "home"
+  | "analytics"
+  | "network"
+  | "roadmap"
+  | "planning"
+  | "cms"
+  | "cites"
+  | "users";
 
-const VIEWER_NAV_IDS = new Set<ShellNavId>(["network", "roadmap"]);
+const VIEWER_NAV_IDS = new Set<ShellNavId>(["network", "roadmap", "planning"]);
 
 const ADMIN_ROUTE_SEGMENTS = ["", "analytics/", "cms/", "cites/", "users/"] as const;
 
@@ -93,7 +101,15 @@ export function enforceViewerRouteGuard(isAdmin: boolean, siteRoot?: string): vo
 
 function readSiteRootFromWindow(): string {
   const pathname = window.location.pathname;
-  const suffixes = ["analytics/", "network/", "roadmap/", "cms/", "cites/", "users/"] as const;
+  const suffixes = [
+    "analytics/",
+    "network/",
+    "roadmap/",
+    "planning/",
+    "cms/",
+    "cites/",
+    "users/",
+  ] as const;
   for (const suffix of suffixes) {
     const index = pathname.indexOf(`/${suffix}`);
     if (index >= 0) {

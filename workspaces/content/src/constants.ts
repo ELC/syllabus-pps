@@ -7,6 +7,8 @@ export const ROADMAP_COURSE_LAYOUTS_TABLE = "roadmap_course_layouts";
 
 export const ROADMAP_CONCEPT_LAYOUTS_TABLE = "roadmap_concept_layouts";
 
+export const PLANNING_PLANS_TABLE = "planning_plans";
+
 export function pageObjectPath(slug: string): string {
   return `pages/${slug}.md`;
 }

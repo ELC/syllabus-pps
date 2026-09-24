@@ -125,8 +125,20 @@
 
   --dash-header-title-size: 1.75rem;
   --dash-header-title-weight: 700;
+  --dash-header-title-line-height: 1.2;
+  --dash-header-title-row-height: calc(
+    var(--dash-header-title-size) * var(--dash-header-title-line-height)
+  );
+  --dash-header-title-band-height: max(
+    var(--dash-header-title-row-height),
+    var(--dash-header-action-size)
+  );
+  --dash-header-title-lead-gap: 0.35rem;
+  --dash-header-lead-row-height: calc(2 * var(--dash-header-lead-line-height) * 1em);
   --dash-header-lead-size: inherit;
   --dash-header-lead-line-height: 1.5;
+  --dash-header-actions-gutter: 0.85rem;
+  --dash-header-action-size: 2.4375rem;
 
   --dash-scrollbar-size: 0.625rem;
   --dash-scrollbar-track: var(--austral-celeste-suave);

@@ -17,6 +17,26 @@ export function readRoadmapPanelUrl(search = window.location.search): RoadmapPan
   };
 }
 
+const roadmapPanelUrlListeners = new Set<() => void>();
+
+function notifyRoadmapPanelUrlListeners(): void {
+  for (const listener of roadmapPanelUrlListeners) {
+    listener();
+  }
+}
+
+export function subscribeRoadmapPanelUrl(onStoreChange: () => void): () => void {
+  roadmapPanelUrlListeners.add(onStoreChange);
+  const onPopState = (): void => {
+    onStoreChange();
+  };
+  window.addEventListener("popstate", onPopState);
+  return () => {
+    roadmapPanelUrlListeners.delete(onStoreChange);
+    window.removeEventListener("popstate", onPopState);
+  };
+}
+
 export function writeRoadmapPanelUrl(
   state: RoadmapPanelUrlState,
   mode: "replace" | "push" = "replace",
@@ -45,12 +65,18 @@ export function writeRoadmapPanelUrl(
 
   if (mode === "push") {
     window.history.pushState(null, "", nextUrl);
-    return;
+  } else {
+    window.history.replaceState(null, "", nextUrl);
   }
 
-  window.history.replaceState(null, "", nextUrl);
+  notifyRoadmapPanelUrlListeners();
 }
 
 export function roadmapPanelUrlKey(state: RoadmapPanelUrlState): string {
   return `${state.degree ?? ""}|${state.course ?? ""}|${state.concept ?? ""}`;
+}
+
+/** Stable primitive for `useSyncExternalStore` (never return fresh objects from getSnapshot). */
+export function getRoadmapPanelUrlSnapshot(): string {
+  return roadmapPanelUrlKey(readRoadmapPanelUrl());
 }

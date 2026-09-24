@@ -2,6 +2,7 @@ export {
   DEFAULT_STORAGE_BUCKET,
   pageObjectPath,
   RESOURCES_TABLE,
+  PLANNING_PLANS_TABLE,
   ROADMAP_CONCEPT_LAYOUTS_TABLE,
   ROADMAP_COURSE_LAYOUTS_TABLE,
 } from "./constants";
@@ -39,6 +40,15 @@ export {
   type RoadmapCourseLayoutYears,
   type RoadmapCourseLayoutYearTemplate,
 } from "./roadmap-course-layouts-db";
+export {
+  emptyPlanningPlan,
+  fetchPlanningPlan,
+  normalizePlanningPlan,
+  PLANNING_WEEK_COUNT,
+  upsertPlanningPlan,
+  type PlanningPlanDocument,
+  type PlanningWeek,
+} from "./planning-plans-db";
 export {
   assertSupabaseServerEnv,
   createServerClientFromEnv,

@@ -34,7 +34,7 @@ function coursesForDegree(reachable: Set<string>, graph: CurriculumGraph): Zette
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
 }
 
-function conceptsLinkedToCourse(
+export function conceptTitlesLinkedToCourse(
   page: ZettelPage,
   conceptTitles: ReadonlySet<string>,
 ): string[] {
@@ -81,7 +81,7 @@ export function projectCourseRoadmap(
           .map((correlativa) => correlativa.resolvedTarget ?? correlativa.target)
           .filter((title) => courseTitles.has(title)),
       ),
-      concepts: conceptsLinkedToCourse(page, conceptTitles),
+      concepts: conceptTitlesLinkedToCourse(page, conceptTitles),
       trayecto: resolveCourseTrayecto(page.kind, page.trayecto, page.trayectoInvalid),
     })),
     edges,

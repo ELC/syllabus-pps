@@ -4,14 +4,14 @@ import type { PpsStatusIndicatorOverride } from "@pps/shell/AnalyticsRebuildIndi
 export const GRID_LAYOUT_UNSAVED_LABEL = "Cambios sin guardar. Usá el ícono de guardar.";
 
 export const GRID_LAYOUT_EDIT_HINT =
-  "Arrastrá una materia a otra celda; se ajusta a la grilla y intercambia si está ocupada. Guardá con el ícono de arriba a la derecha (iniciá sesión en producción).";
+  "Arrastrá una materia a otra celda; se ajusta a la grilla y intercambia si está ocupada. Guardá con el ícono de guardar o salí con Salir (iniciá sesión en producción).";
 
 export const GRID_LAYOUT_SAVED_LABEL = "Grilla guardada en la nube.";
 
 export const CONCEPT_LAYOUT_UNSAVED_LABEL = "Cambios sin guardar en el mapa de temas.";
 
 export const CONCEPT_LAYOUT_EDIT_HINT =
-  "Subir/Bajar reordenan la columna; Lateral y A columna usan dos clics; Deshacer/Rehacer (⌘Z). Esc cancela. Guardá con el ícono de guardar.";
+  "Subir/Bajar reordenan la columna; Lateral y A columna usan dos clics; Deshacer/Rehacer (⌘Z). Esc cancela la acción en curso. Guardá con el ícono de guardar o salí con Salir.";
 
 export const CONCEPT_LAYOUT_SAVED_LABEL = "Mapa de temas guardado en la nube.";
 

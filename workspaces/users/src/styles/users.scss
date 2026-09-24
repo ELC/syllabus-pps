@@ -28,14 +28,6 @@
     line-height: 1.2;
   }
 
-  &__header-lead {
-    margin: 0;
-    color: var(--dash-muted);
-    max-width: 48rem;
-    font-size: var(--dash-header-lead-size);
-    line-height: var(--dash-header-lead-line-height);
-  }
-
   &__error {
     flex-shrink: 0;
     margin-top: 1rem;

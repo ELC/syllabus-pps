@@ -11,7 +11,7 @@ const filters = require("./generated/quality-filters.json") as {
 export default (
   <Dashboard
     name="Quality"
-    description="Structural and curricular diagnostics generated from the Logseq PPS mirror"
+    description="Structural and curricular diagnostics from the PPS curriculum graph"
     connection="pps_supabase"
   >
     <Row>

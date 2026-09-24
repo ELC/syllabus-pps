@@ -255,6 +255,12 @@ export function subsitesDevPlugins(repoRoot: string): Plugin[] {
       configFile: "vite.config.ts",
       base: "/roadmap/",
     }),
+    createViteSpaDevMiddleware(repoRoot, {
+      name: "planning",
+      workspace: "planning",
+      configFile: "vite.config.ts",
+      base: "/planning/",
+    }),
     createAstroDevMiddleware(repoRoot, {
       name: "analytics",
       workspace: "analytics",

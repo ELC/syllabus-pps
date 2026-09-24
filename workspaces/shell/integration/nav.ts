@@ -13,6 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "analytics", label: "Analytics", segment: "analytics/" },
   { id: "network", label: "Network", segment: "network/" },
   { id: "roadmap", label: "Roadmaps", segment: "roadmap/" },
+  { id: "planning", label: "Programa", segment: "planning/" },
   { id: "cms", label: "Contenido", segment: "cms/" },
   { id: "cites", label: "Recursos", segment: "cites/" },
   { id: "users", label: "Usuarios", segment: "users/" },

@@ -77,6 +77,15 @@
     flex-shrink: 0;
   }
 
+  &__concept-header-lead {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   &__concept-title {
     margin: 0;
     font-family: var(--font-heading);
@@ -263,6 +272,14 @@
       .graph__concept-note-omit {
         grid-column: 2;
         grid-row: 2;
+      }
+
+      &:not(:has(.graph__concept-note-omit)) {
+        grid-template-rows: 1fr;
+
+        .graph__concept-note-open {
+          grid-row: 1 / -1;
+        }
       }
     }
 

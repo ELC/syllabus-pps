@@ -27,6 +27,7 @@ jobs:
       CMS_BASE: /syllabus-pps/cms/
       CITES_BASE: /syllabus-pps/cites/
       USERS_BASE: /syllabus-pps/users/
+      PLANNING_BASE: /syllabus-pps/planning/
       PUBLIC_SUPABASE_PROJECT_URL: ${{ secrets.PUBLIC_SUPABASE_PROJECT_URL }}
       PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.PUBLIC_GA_MEASUREMENT_ID }}
