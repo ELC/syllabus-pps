@@ -75,7 +75,7 @@ kind: concept
 
 - Slug filenames on disk; `title` is the display name and wikilink target.
 - `kind` is required for `degree`, `year`, `course`, and `concept`.
-- Course pages belong to either `Trayecto Principal` (default) or `Trayecto No Estructurado`; declare TNE electives with `trayecto: no-estructurado` or `trayecto: Trayecto No Estructurado` (styled separately in roadmap and network).
+- Year pages (`kind: year`) assign course slugs to `courses` (Trayecto Principal) and/or `coursesNoEstructurado` (Trayecto No Estructurado); the same course may appear in different trayectos across degrees. Roadmap styles TNE per degree; the network graph uses one course color.
 - Wikilinks resolve by title, then slug, then normalized match.
 
 ## PPS Analytics And DAC

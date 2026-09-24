@@ -25,7 +25,8 @@ import {
   type PageSource,
   type ResourceCatalogEntry,
 } from "@pps/core";
-import { normalizeYearCourseSlugs, type CoursePageOption } from "./course-pages";
+import { type CoursePageOption } from "./course-pages";
+import { normalizeYearCourseLists } from "./page-document";
 import { PageMetadataForm } from "./components/PageMetadataForm";
 import { SidebarNavSkeleton } from "@pps/shell/SidebarNavSkeleton";
 import { createDraftPageContent, nextDraftSlug } from "./draft-page";
@@ -42,6 +43,7 @@ import { filterDiagnosticsForPage, pageHasDiagnostics } from "./validation/filte
 import { planDegreeYearSync } from "./degree-year-sync";
 import {
   degreeSlugForCourseInSources,
+  degreeSlugForYearPage,
   roadmapCourseSubgraphHref,
 } from "./roadmap-course-link";
 import {
@@ -261,7 +263,11 @@ export function App() {
       split.metadata.kind === PageKind.Year
         ? {
             ...split.metadata,
-            courses: normalizeYearCourseSlugs(split.metadata.courses, courses),
+            ...normalizeYearCourseLists(
+              split.metadata.courses,
+              split.metadata.coursesNoEstructurado,
+              courses,
+            ),
           }
         : split.metadata;
     setMetadata(metadata);
@@ -382,14 +388,22 @@ export function App() {
       if (current.kind !== PageKind.Year) {
         return current;
       }
-      const courses = normalizeYearCourseSlugs(split.metadata.courses, coursePages);
+      const normalized = normalizeYearCourseLists(
+        split.metadata.courses,
+        split.metadata.coursesNoEstructurado,
+        coursePages,
+      );
       if (
-        courses.length === current.courses.length &&
-        courses.every((slug, index) => slug === current.courses[index])
+        normalized.courses.length === current.courses.length &&
+        normalized.courses.every((slug, index) => slug === current.courses[index]) &&
+        normalized.coursesNoEstructurado.length === current.coursesNoEstructurado.length &&
+        normalized.coursesNoEstructurado.every(
+          (slug, index) => slug === current.coursesNoEstructurado[index],
+        )
       ) {
         return current;
       }
-      return { ...current, courses };
+      return { ...current, ...normalized };
     });
   }, [allSources, coursePages, draftSlugs, loadedSlug, selectedSlug]);
 
@@ -751,11 +765,55 @@ export function App() {
         : selectedSlug;
 
     const navKind = layoutKind ?? expectedKind;
-    const isYearSlug = Boolean(parseYearSlug(selectedSlug));
+    const isYearSlug = Boolean(parseYearSlug(pageSlug));
     const isCourse = navKind === PageKind.Course;
     const isConcept = navKind === PageKind.Concept;
     const isDegree = navKind === PageKind.Degree;
+    const isYear =
+      navKind === PageKind.Year ||
+      (isYearSlug && !isCourse && !isConcept && !isDegree);
     const kindUnknown = navKind === null && !isYearSlug;
+
+    if (isYear) {
+      const degreeSlug = degreeSlugForYearPage(pageSlug, metadata, degreeSlugByTitle);
+      const roadmapHref = degreeSlug ? roadmapDegreeOverviewHref(siteRoot, degreeSlug) : null;
+      const networkHref = degreeSlug ? networkDegreeExpansionHref(siteRoot, degreeSlug) : null;
+      const pendingMeta = navKind === null;
+
+      return (
+        <div className="cms__course-workspace-links pps-workspace-nav-links">
+          <WorkspaceNavLink
+            navId="planning"
+            disabled
+            title="El programa de cursada está en la página de la materia"
+          >
+            Programa
+          </WorkspaceNavLink>
+          <WorkspaceNavLink
+            navId="roadmap"
+            href={roadmapHref}
+            disabled={!roadmapHref}
+            title={
+              pendingMeta
+                ? "Cargando metadatos de la página…"
+                : roadmapHref
+                  ? "Abrir la grilla de la carrera en Roadmap"
+                  : "No se pudo resolver la carrera de este año"
+            }
+          >
+            Roadmap
+          </WorkspaceNavLink>
+          <WorkspaceNavLink
+            navId="network"
+            href={networkHref}
+            disabled={!networkHref}
+            title={pendingMeta ? "Cargando metadatos de la página…" : undefined}
+          >
+            Red
+          </WorkspaceNavLink>
+        </div>
+      );
+    }
 
     if (isCourse || isConcept || kindUnknown) {
       const degreeSlug = degreeSlugForCourseInSources(
@@ -850,6 +908,12 @@ export function App() {
 
     return (
       <div className="cms__course-workspace-links pps-workspace-nav-links">
+        <WorkspaceNavLink navId="planning" disabled title="Sin enlaces de programa para este tipo de página">
+          Programa
+        </WorkspaceNavLink>
+        <WorkspaceNavLink navId="roadmap" disabled title="Sin enlace de Roadmap para este tipo de página">
+          Roadmap
+        </WorkspaceNavLink>
         <WorkspaceNavLink
           navId="network"
           href={networkDegreeExpansionHref(siteRoot, pageSlug)}
@@ -861,9 +925,11 @@ export function App() {
   }, [
     allSources,
     coursePages,
+    degreeSlugByTitle,
     expectedKind,
     layoutKind,
     loadedSlug,
+    metadata.degree,
     metadata.slug,
     metadata.title,
     selectedSlug,
@@ -1032,7 +1098,11 @@ export function App() {
                   slug: selectedSlug,
                   updatedAt: savedAt,
                   ...(metadata.kind === PageKind.Year
-                    ? { courses: normalizeYearCourseSlugs(metadata.courses, coursePages) }
+                    ? normalizeYearCourseLists(
+                        metadata.courses,
+                        metadata.coursesNoEstructurado,
+                        coursePages,
+                      )
                     : {}),
                 };
                 const savedContent = composePageDocument(savedMetadata, body);

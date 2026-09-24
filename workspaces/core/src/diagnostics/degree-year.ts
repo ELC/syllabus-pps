@@ -6,8 +6,10 @@ import {
   degreeYearsCountInvalidDiagnostic,
   degreeYearsMismatchDiagnostic,
   yearCourseNonCourseDiagnostic,
+  yearCourseTrayectoOverlapDiagnostic,
   yearCourseUnresolvedDiagnostic,
   yearCoursesMalformedDiagnostic,
+  yearCoursesNoEstructuradoMalformedDiagnostic,
   yearDegreeInvalidFrontmatterDiagnostic,
   yearDegreeUnresolvedDiagnostic,
   yearIndexInvalidDiagnostic,
@@ -73,20 +75,42 @@ export function degreeYearDiagnostics(graph: CurriculumGraph): Diagnostic[] {
       diagnostics.push(diagnostic);
     }
 
-    const courses = page.courses ?? [];
-    for (const course of courses) {
-      const courseTitle = course.resolvedTarget ?? course.target;
-      const normalizedCourseTitle = normalizeTitle(courseTitle);
-      const targetPage = graph.pages.find(
-        (entry) => normalizeTitle(entry.title) === normalizedCourseTitle,
-      );
-      if (!targetPage) {
-        const diagnostic = yearCourseUnresolvedDiagnostic(page, course);
-        diagnostics.push(diagnostic);
-        continue;
+    if (page.coursesNoEstructuradoInvalid) {
+      const diagnostic = yearCoursesNoEstructuradoMalformedDiagnostic(page);
+      diagnostics.push(diagnostic);
+    }
+
+    const validateYearCourseList = (courses: NonNullable<ZettelPage["courses"]>): void => {
+      for (const course of courses) {
+        const courseTitle = course.resolvedTarget ?? course.target;
+        const normalizedCourseTitle = normalizeTitle(courseTitle);
+        const targetPage = graph.pages.find(
+          (entry) => normalizeTitle(entry.title) === normalizedCourseTitle,
+        );
+        if (!targetPage) {
+          const diagnostic = yearCourseUnresolvedDiagnostic(page, course);
+          diagnostics.push(diagnostic);
+          continue;
+        }
+        if (targetPage.kind !== PageKind.Course) {
+          const diagnostic = yearCourseNonCourseDiagnostic(page, course, targetPage);
+          diagnostics.push(diagnostic);
+        }
       }
-      if (targetPage.kind !== PageKind.Course) {
-        const diagnostic = yearCourseNonCourseDiagnostic(page, course, targetPage);
+    };
+
+    validateYearCourseList(page.courses ?? []);
+    validateYearCourseList(page.coursesNoEstructurado ?? []);
+
+    const principalKeys = new Set(
+      (page.courses ?? []).map((course) =>
+        normalizeTitle(course.resolvedTarget ?? course.target),
+      ),
+    );
+    for (const course of page.coursesNoEstructurado ?? []) {
+      const courseLabel = course.resolvedTarget ?? course.target;
+      if (principalKeys.has(normalizeTitle(courseLabel))) {
+        const diagnostic = yearCourseTrayectoOverlapDiagnostic(page, courseLabel);
         diagnostics.push(diagnostic);
       }
     }
@@ -105,7 +129,8 @@ export function yearBodyLinkDiagnostics(
     if (yearPage.kind !== PageKind.Year) {
       continue;
     }
-    const courseCount = yearPage.courses?.length ?? 0;
+    const courseCount =
+      (yearPage.courses?.length ?? 0) + (yearPage.coursesNoEstructurado?.length ?? 0);
     if (courseCount > 0) {
       continue;
     }

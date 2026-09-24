@@ -5,15 +5,16 @@ kind: year
 degree: LDS
 yearIndex: 4
 courses:
-  - administracion-infraestructura-y-ciberseguridad
-  - automatizacion-y-herramientas-inteligentes
   - calidad-del-software-testing-y-performance
-  - computer-vision
-  - computo-en-la-nube-y-sistemas-distribuidos
   - doctrina-social
   - entrepreneurship
   - etica-profesional-y-aspectos-legales
-  - optimizacion-e-investigacion-operativa
   - proyecto-laboratorio-ii
+coursesNoEstructurado:
+  - administracion-infraestructura-y-ciberseguridad
+  - automatizacion-y-herramientas-inteligentes
+  - computer-vision
+  - computo-en-la-nube-y-sistemas-distribuidos
+  - optimizacion-e-investigacion-operativa
   - redes-y-sistemas-operativos
 ---

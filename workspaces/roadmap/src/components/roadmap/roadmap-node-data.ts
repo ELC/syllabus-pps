@@ -26,4 +26,6 @@ export interface RoadmapYearBandNodeData extends Record<string, unknown> {
   label: string;
   separatorTop: number;
   showYearSeparator: boolean;
+  /** Storage slug for the degree year page (`kind: year`). */
+  yearPageSlug?: string;
 }

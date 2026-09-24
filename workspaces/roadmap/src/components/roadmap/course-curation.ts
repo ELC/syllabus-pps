@@ -189,6 +189,54 @@ export function buildCuratedCourseGrid(
   return { displayRows, columnOf };
 }
 
+/** Grid cells from curation that have no template slot still need a layout row. */
+export function appendUnplacedCuratedCourses(
+  titles: readonly DegreeRoadmapNodeTitle[],
+  columnOf: Map<DegreeRoadmapNodeTitle, number>,
+  displayRows: CuratedCourseDisplayRow[],
+  yearsByTitle: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
+  stageOf: Map<DegreeRoadmapNodeTitle, number>,
+  sortYears: (years: Iterable<string>) => string[],
+): void {
+  const unplaced = titles.filter((title) => !columnOf.has(title));
+  if (unplaced.length === 0) {
+    return;
+  }
+
+  let nextColumn = columnOf.size > 0 ? Math.max(...columnOf.values()) + 1 : 0;
+  const byYear = new Map<string, DegreeRoadmapNodeTitle[]>();
+
+  for (const title of unplaced) {
+    const year = yearsByTitle.get(title) ?? "Sin año";
+    const group = byYear.get(year) ?? [];
+    group.push(title);
+    byYear.set(year, group);
+  }
+
+  for (const year of sortYears(byYear.keys())) {
+    const rowTitles = [...(byYear.get(year) ?? [])].sort((left, right) =>
+      left.localeCompare(right, "es-AR"),
+    );
+    const existingYearRows = displayRows.filter((row) => row.year === year);
+    const withinYearStage =
+      existingYearRows.length > 0
+        ? Math.max(...existingYearRows.map((row) => row.withinYearStage)) + 1
+        : 0;
+
+    for (const title of rowTitles) {
+      columnOf.set(title, nextColumn);
+      nextColumn += 1;
+    }
+
+    displayRows.push({
+      year,
+      withinYearStage,
+      stage: Math.max(...rowTitles.map((title) => stageOf.get(title) ?? 0)),
+      titles: rowTitles,
+    });
+  }
+}
+
 function templateToGrid(templateAreas: string[]): string[][] {
   return templateAreas.map((row) => row.trim().split(/\s+/));
 }

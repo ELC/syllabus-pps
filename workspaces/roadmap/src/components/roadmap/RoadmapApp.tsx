@@ -29,6 +29,9 @@ import {
   projectCourseConceptRoadmap,
   projectDegreeRoadmap,
   PageKind,
+  resolveYearIndex,
+  yearDisplayLabel,
+  yearPagesForDegree,
   type CurriculumGraph,
   type RoadmapCuration,
 } from "@pps/core";
@@ -419,6 +422,23 @@ export function RoadmapApp({
       ),
     [activeCourseRoadmap],
   );
+
+  const yearPageSlugByLabel = useMemo(() => {
+    if (!graph || !activeCourseRoadmap) {
+      return undefined;
+    }
+    const map = new Map<string, string>();
+    for (const yearPage of yearPagesForDegree(graph.pages, activeCourseRoadmap.degree, {
+      degreeSlug: activeCourseRoadmap.degreeSlug,
+    })) {
+      const yearIndex = resolveYearIndex(yearPage);
+      if (!yearIndex) {
+        continue;
+      }
+      map.set(yearDisplayLabel(yearIndex), yearPage.slug);
+    }
+    return map;
+  }, [activeCourseRoadmap, graph]);
 
   const curatedLayoutMetrics = useMemo(() => readCuratedCourseLayoutMetrics(), []);
 
@@ -935,6 +955,7 @@ export function RoadmapApp({
             topicNodeType: isConceptView ? "roadmapTopic" : "roadmapCourse",
             courseYearsByTitle,
             courseTrayectoByTitle,
+            yearPageSlugByLabel,
             courseDagEdges: !isConceptView,
           })
         : { nodes: [], edges: [] },
@@ -943,6 +964,7 @@ export function RoadmapApp({
       adjacency,
       courseYearsByTitle,
       courseTrayectoByTitle,
+      yearPageSlugByLabel,
       isConceptView,
       layout,
       progress.conceptProgressFor,

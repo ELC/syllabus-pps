@@ -49,6 +49,8 @@ interface BuildRoadmapFlowOptions {
   topicNodeType?: "roadmapTopic" | "roadmapCourse";
   courseYearsByTitle?: Map<DegreeRoadmapNodeTitle, string>;
   courseTrayectoByTitle?: Map<DegreeRoadmapNodeTitle, string>;
+  /** Year band label (e.g. año 1) → year page slug in Storage. */
+  yearPageSlugByLabel?: ReadonlyMap<string, string>;
   /** Draw correlativa prerequisite edges directly between staged course nodes. */
   courseDagEdges?: boolean;
 }
@@ -210,6 +212,7 @@ function topicNode(
     BuildRoadmapFlowOptions,
     "topicNodeType" | "courseYearsByTitle" | "courseTrayectoByTitle"
   >,
+  trayectoFromConcept?: RoadmapCourseNodeData["trayecto"],
 ): Node<RoadmapTopicNodeData | RoadmapCourseNodeData> {
   const nodeType = options.topicNodeType ?? "roadmapTopic";
 
@@ -224,7 +227,8 @@ function topicNode(
       data: {
         label: capitalizeWords(placement.title),
         year: options.courseYearsByTitle?.get(placement.title) ?? "",
-        trayecto: options.courseTrayectoByTitle?.get(placement.title),
+        trayecto:
+          trayectoFromConcept ?? options.courseTrayectoByTitle?.get(placement.title),
         role: placement.role,
         stage: placement.stage + 1,
       },
@@ -569,7 +573,7 @@ function yearBandNode(
   band: CourseYearBand,
   minNodeX: number,
   maxNodeX: number,
-  options: { previousBandMaxY?: number },
+  options: { previousBandMaxY?: number; yearPageSlug?: string },
 ): Node<RoadmapYearBandNodeData> {
   const x = minNodeX - COURSE_YEAR_LABEL_GUTTER;
   let y = band.y - YEAR_BAND_MARGIN_TOP;
@@ -599,7 +603,12 @@ function yearBandNode(
     draggable: false,
     focusable: false,
     zIndex: -1,
-    data: { label: band.year, separatorTop, showYearSeparator },
+    data: {
+      label: band.year,
+      separatorTop,
+      showYearSeparator,
+      yearPageSlug: options.yearPageSlug,
+    },
   };
 }
 
@@ -679,6 +688,7 @@ export function buildRoadmapFlow({
   topicNodeType,
   courseYearsByTitle,
   courseTrayectoByTitle,
+  yearPageSlugByLabel,
   courseDagEdges = false,
 }: BuildRoadmapFlowOptions): { nodes: Node[]; edges: Edge[] } {
   const topicNodeOptions = { topicNodeType, courseYearsByTitle, courseTrayectoByTitle };
@@ -707,6 +717,7 @@ export function buildRoadmapFlow({
           previousBandMaxY: previousBand
             ? previousBand.y + previousBand.height
             : undefined,
+          yearPageSlug: yearPageSlugByLabel?.get(band.year),
         }),
       );
     }
@@ -718,7 +729,7 @@ export function buildRoadmapFlow({
       continue;
     }
 
-    nodes.push(topicNode(placement, "default", topicNodeOptions));
+    nodes.push(topicNode(placement, "default", topicNodeOptions, concept.trayecto));
   }
 
   const edges: Edge[] = [];

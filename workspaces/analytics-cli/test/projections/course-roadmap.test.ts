@@ -140,6 +140,63 @@ dependsOn: []
     expect(subRoadmap?.concepts.map((concept) => concept.title)).toEqual(["algoritmos"]);
   });
 
+  it("includes courses listed only on coursesNoEstructurado for the degree", () => {
+    const config = createLoadedConfig({ years: [] });
+    const graph = buildGraphFromPages({
+      config,
+      sources: [
+        {
+          path: "lds.md",
+          content: `---
+title: LDS
+kind: degree
+years: 4
+---
+`,
+        },
+        {
+          path: "lds-ano-4.md",
+          content: `---
+title: LDS · año 4
+slug: lds-ano-4
+kind: year
+degree: LDS
+yearIndex: 4
+coursesNoEstructurado:
+  - computer-vision
+  - redes-y-sistemas-operativos
+---
+`,
+        },
+        {
+          path: "computer-vision.md",
+          content: `---
+title: computer vision
+kind: course
+---
+- visión
+`,
+        },
+        {
+          path: "redes-y-sistemas-operativos.md",
+          content: `---
+title: redes y sistemas operativos
+kind: course
+---
+- redes
+`,
+        },
+      ],
+      resources: [],
+    });
+
+    const roadmap = projectCourseRoadmap(graph, "LDS");
+    expect(roadmap?.courses.map((course) => course.title).sort()).toEqual([
+      "computer vision",
+      "redes y sistemas operativos",
+    ]);
+  });
+
   it("projects trayecto metadata for unstructured-track courses", () => {
     const config = createLoadedConfig({ years: [] });
     const graph = buildGraphFromPages({
@@ -150,8 +207,22 @@ dependsOn: []
           content: `---
 title: LDS
 kind: degree
+years: 1
 ---
 - [[computer vision]]
+`,
+        },
+        {
+          path: "lds-ano-1.md",
+          content: `---
+title: LDS · año 1
+slug: lds-ano-1
+kind: year
+degree: LDS
+yearIndex: 1
+coursesNoEstructurado:
+  - computer-vision
+---
 `,
         },
         {
@@ -159,7 +230,6 @@ kind: degree
           content: `---
 title: computer vision
 kind: course
-trayecto: no-estructurado
 ---
 - visión por computadora
 `,

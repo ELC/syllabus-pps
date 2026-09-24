@@ -5,7 +5,6 @@ kind: year
 degree: LDS
 yearIndex: 2
 courses:
-  - administracion-i
   - estadistica-i
   - etica-general
   - gestion-de-proyectos
@@ -15,4 +14,6 @@ courses:
   - programacion-iii-web-frontend
   - proyecto-laboratorio
   - user-experience
+coursesNoEstructurado:
+  - administracion-i
 ---

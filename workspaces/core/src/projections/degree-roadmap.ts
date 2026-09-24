@@ -6,7 +6,7 @@ import {
   yearPagesForDegree,
 } from "../degree-year";
 import { normalizeTitle } from "../normalize";
-import { CurriculumGraph, GraphEdge, PageKind, ZettelPage, EdgeKind } from "../types";
+import { CourseTrayecto, CurriculumGraph, GraphEdge, PageKind, ZettelPage, EdgeKind } from "../types";
 
 import { attachDegreeRoadmapOpen } from "../roadmap/course-concept-roadmap-open";
 import type { OpenCourseConceptRoadmap } from "../roadmap/course-concept-roadmap-open";
@@ -18,6 +18,8 @@ export interface DegreeRoadmapConcept {
   title: DegreeRoadmapNodeTitle;
   slug: CurriculumPageSlug;
   dependsOn: DegreeRoadmapNodeTitle[];
+  /** Trayecto within the parent degree (principal vs no estructurado). */
+  trayecto?: CourseTrayecto;
 }
 
 export interface DegreeRoadmapData {

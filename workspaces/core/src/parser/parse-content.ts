@@ -86,6 +86,7 @@ export function parsePageContent(source: { path: string; content: string }): Raw
   const dependsOn = parseStringListField(parsed.data.dependsOn);
   const correlativas = parseStringListField(parsed.data.correlativas);
   const courses = parseStringListField(parsed.data.courses);
+  const coursesNoEstructurado = parseStringListField(parsed.data.coursesNoEstructurado);
   const yearsCount = parsePositiveIntField(parsed.data.years);
   const yearIndex = parsePositiveIntField(parsed.data.yearIndex);
   const degreeRaw = parsed.data.degree;
@@ -145,6 +146,8 @@ export function parsePageContent(source: { path: string; content: string }): Raw
     yearIndexInvalid: yearIndex.invalid,
     coursesRaw: courses.raw,
     coursesTargets: courses.targets,
+    coursesNoEstructuradoRaw: coursesNoEstructurado.raw,
+    coursesNoEstructuradoTargets: coursesNoEstructurado.targets,
     blocks,
     nonBulletLines,
   };

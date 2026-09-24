@@ -1,7 +1,6 @@
 ---
 title: administración infraestructura y ciberseguridad
 kind: course
-trayecto: no-estructurado
 correlativas:
   - ingeniería de datos
   - arquitectura e ingeniería del software

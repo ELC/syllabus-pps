@@ -1,4 +1,4 @@
-import { courseTitlesOnYearPage, resolveCoursePageTitle } from "../degree-year";
+import { coursesLinkedToYearPage } from "../degree-year";
 import { normalizeTitle } from "../normalize";
 import { CurriculumYear, ExpectedCurriculum, ZettelPage, PageKind } from "../types";
 
@@ -41,13 +41,10 @@ export function deriveExpectedCurriculum(pages: readonly ZettelPage[]): Pick<Exp
       return (left.yearIndex ?? 0) - (right.yearIndex ?? 0);
     })
     .map((yearPage) => {
-      const fromFrontmatter = courseTitlesOnYearPage(yearPage);
-      const resolvedFromFrontmatter = fromFrontmatter
-        .map((ref) => resolveCoursePageTitle(ref, pages) ?? ref)
-        .filter((title, index, list) => list.indexOf(title) === index);
+      const linked = coursesLinkedToYearPage(yearPage, { pages: [...pages], edges: [] });
       const courses =
-        resolvedFromFrontmatter.length > 0
-          ? [...resolvedFromFrontmatter].sort((left, right) => left.localeCompare(right, "es-AR"))
+        linked.length > 0
+          ? linked
           : legacyCoursesFromRefs(yearPage, pagesByNormalizedTitle).sort((left, right) =>
               left.localeCompare(right, "es-AR"),
             );

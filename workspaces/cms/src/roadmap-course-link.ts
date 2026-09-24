@@ -58,13 +58,38 @@ export function degreeSlugForCourseInSources(
     }
 
     if (
-      yearGridIncludesCourse(metadata.courses, normalizedCourse, courseTitle, coursePages)
+      yearGridIncludesCourse(metadata.courses, normalizedCourse, courseTitle, coursePages) ||
+      yearGridIncludesCourse(
+        metadata.coursesNoEstructurado,
+        normalizedCourse,
+        courseTitle,
+        coursePages,
+      )
     ) {
       return parsedYear.degreeSlug;
     }
   }
 
   return undefined;
+}
+
+/** Parent degree slug for a year page (from slug pattern or frontmatter `degree`). */
+export function degreeSlugForYearPage(
+  pageSlug: string,
+  metadata: { degree?: string },
+  degreeSlugByTitle: ReadonlyMap<string, string>,
+): string | undefined {
+  const parsed = parseYearSlug(pageSlug.trim());
+  if (parsed?.degreeSlug) {
+    return parsed.degreeSlug;
+  }
+
+  const degreeKey = metadata.degree?.trim();
+  if (!degreeKey) {
+    return undefined;
+  }
+
+  return degreeSlugByTitle.get(degreeKey) ?? degreeKey;
 }
 
 export { roadmapCourseSubgraphHref } from "@pps/shell/workspace-links";

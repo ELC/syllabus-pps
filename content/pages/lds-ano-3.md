@@ -11,9 +11,10 @@ courses:
   - calculo-numerico-y-simulacion
   - estadistica-ii
   - ingenieria-de-datos
-  - introduccion-a-la-contabilidad
   - product-development
   - programacion-asistida-por-ia-y-agentes
   - teologia-i
   - teologia-ii
+coursesNoEstructurado:
+  - introduccion-a-la-contabilidad
 ---

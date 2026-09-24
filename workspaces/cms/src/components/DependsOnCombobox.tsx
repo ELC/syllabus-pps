@@ -3,9 +3,41 @@ import {
   useMemo,
   useRef,
   useState,
+  type DragEvent,
   type KeyboardEvent,
   type ReactElement,
 } from "react";
+
+const CHIP_DRAG_MIME = "application/x-pps-cms-chip";
+
+interface ChipDragPayload {
+  group: string;
+  fromListId: string;
+  value: string;
+}
+
+/** Set on dragstart; browsers hide getData until drop. */
+let activeChipDrag: ChipDragPayload | null = null;
+
+function readChipDragPayload(event: DragEvent): ChipDragPayload | null {
+  const raw = event.dataTransfer.getData(CHIP_DRAG_MIME);
+  if (!raw) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(raw) as ChipDragPayload;
+    if (
+      typeof parsed.group === "string" &&
+      typeof parsed.fromListId === "string" &&
+      typeof parsed.value === "string"
+    ) {
+      return parsed;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
 
 function listChoices(
   choices: string[],
@@ -42,6 +74,12 @@ export interface DependsOnComboboxProps {
   formatChoiceLabel?: (value: string) => string;
   /** Open the CMS page for this chip value (label click; remove button unchanged). */
   onChipActivate?: (value: string) => void;
+  /** Enables dragging chips to another combobox with the same group id. */
+  chipDragGroup?: string;
+  /** Identifies this list when moving chips between comboboxes. */
+  chipDragListId?: string;
+  /** Called when a chip from another list in the group is dropped here. */
+  onChipMoveFromList?: (value: string, fromListId: string) => void;
 }
 
 export function DependsOnCombobox({
@@ -58,12 +96,22 @@ export function DependsOnCombobox({
   layout = "inline",
   formatChoiceLabel = (value) => value,
   onChipActivate,
+  chipDragGroup,
+  chipDragListId,
+  onChipMoveFromList,
 }: DependsOnComboboxProps): ReactElement {
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropDepthRef = useRef(0);
   const [query, setQuery] = useState("");
   const [listOpen, setListOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [draggingChip, setDraggingChip] = useState<string | null>(null);
+  const [dropTargetActive, setDropTargetActive] = useState(false);
+
+  const chipDragEnabled = Boolean(
+    chipDragGroup && chipDragListId && onChipMoveFromList && !disabled,
+  );
 
   const selectedSet = useMemo(() => new Set(selected), [selected]);
   const suggestions = useMemo(
@@ -103,6 +151,58 @@ export function DependsOnCombobox({
 
   function removeTitle(title: string): void {
     onChange(selected.filter((entry) => entry !== title));
+  }
+
+  function chipDragPayload(value: string): ChipDragPayload | null {
+    if (!chipDragGroup || !chipDragListId) {
+      return null;
+    }
+    return { group: chipDragGroup, fromListId: chipDragListId, value };
+  }
+
+  function incomingChipDrag(): ChipDragPayload | null {
+    if (!chipDragEnabled || !activeChipDrag) {
+      return null;
+    }
+    if (activeChipDrag.group !== chipDragGroup || activeChipDrag.fromListId === chipDragListId) {
+      return null;
+    }
+    return activeChipDrag;
+  }
+
+  function handleFieldDragEnter(event: DragEvent<HTMLDivElement>): void {
+    if (!incomingChipDrag()) {
+      return;
+    }
+    event.preventDefault();
+    dropDepthRef.current += 1;
+    setDropTargetActive(true);
+  }
+
+  function handleFieldDragLeave(): void {
+    dropDepthRef.current = Math.max(0, dropDepthRef.current - 1);
+    if (dropDepthRef.current === 0) {
+      setDropTargetActive(false);
+    }
+  }
+
+  function handleFieldDragOver(event: DragEvent<HTMLDivElement>): void {
+    if (!incomingChipDrag()) {
+      return;
+    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }
+
+  function handleFieldDrop(event: DragEvent<HTMLDivElement>): void {
+    dropDepthRef.current = 0;
+    setDropTargetActive(false);
+    event.preventDefault();
+    const payload = readChipDragPayload(event) ?? incomingChipDrag();
+    if (!payload) {
+      return;
+    }
+    onChipMoveFromList?.(payload.value, payload.fromListId);
   }
 
   function handleBlur(): void {
@@ -160,23 +260,58 @@ export function DependsOnCombobox({
       ref={rootRef}
     >
       <div
-        className={
+        className={[
           layout === "stacked"
             ? "cms__depends-on-field cms__depends-on-field--stacked"
-            : "cms__depends-on-field"
-        }
+            : "cms__depends-on-field",
+          dropTargetActive ? "cms__depends-on-field--drop-target" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         onClick={() => {
           inputRef.current?.focus();
           openList();
         }}
+        onDragEnter={handleFieldDragEnter}
+        onDragLeave={handleFieldDragLeave}
+        onDragOver={handleFieldDragOver}
+        onDrop={handleFieldDrop}
       >
         {selected.map((value) => (
-          <span key={value} className="cms__depends-on-chip">
+          <span
+            key={value}
+            className={[
+              "cms__depends-on-chip",
+              chipDragEnabled ? "cms__depends-on-chip--draggable" : "",
+              draggingChip === value ? "cms__depends-on-chip--dragging" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            draggable={chipDragEnabled}
+            onDragStart={(event) => {
+              const payload = chipDragPayload(value);
+              if (!payload) {
+                return;
+              }
+              event.stopPropagation();
+              activeChipDrag = payload;
+              setDraggingChip(value);
+              event.dataTransfer.effectAllowed = "move";
+              event.dataTransfer.setData(CHIP_DRAG_MIME, JSON.stringify(payload));
+            }}
+            onDragEnd={() => {
+              activeChipDrag = null;
+              setDraggingChip(null);
+              dropDepthRef.current = 0;
+              setDropTargetActive(false);
+            }}
+          >
             {onChipActivate ? (
               <button
                 type="button"
                 className="cms__depends-on-chip-label cms__depends-on-chip-open"
                 title={`Abrir ${formatChoiceLabel(value)} en el editor`}
+                draggable={false}
                 onClick={(event) => {
                   event.stopPropagation();
                   onChipActivate(value);
@@ -192,6 +327,7 @@ export function DependsOnCombobox({
               className="cms__depends-on-chip-remove"
               aria-label={`Quitar ${formatChoiceLabel(value)}`}
               disabled={disabled}
+              draggable={false}
               onClick={(event) => {
                 event.stopPropagation();
                 removeTitle(value);

@@ -1,5 +1,5 @@
 import { buildCurriculumIndexes } from "../analysis";
-import { resolveCourseTrayecto } from "../course-trayecto";
+import { courseTrayectoForCourseInDegree } from "../degree-year";
 import { yearLabelForCourseInDegree } from "../degree-year";
 import { normalizeTitle, uniqueSorted } from "../normalize";
 import { CourseTrayecto, CurriculumGraph, GraphEdge, ZettelPage, PageKind, EdgeKind } from "../types";
@@ -82,7 +82,7 @@ export function projectCourseRoadmap(
           .filter((title) => courseTitles.has(title)),
       ),
       concepts: conceptTitlesLinkedToCourse(page, conceptTitles),
-      trayecto: resolveCourseTrayecto(page.kind, page.trayecto, page.trayectoInvalid),
+      trayecto: courseTrayectoForCourseInDegree(graph, degreePage.title, page.title, degreePage.slug),
     })),
     edges,
   };
@@ -104,6 +104,7 @@ export function courseRoadmapAsDegreeRoadmap(roadmap: CourseRoadmap): DegreeRoad
       title: course.title,
       slug: course.slug,
       dependsOn: course.correlativas,
+      trayecto: course.trayecto,
     })),
     edges: roadmap.edges,
   });

@@ -53,9 +53,14 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
         showProgressBar ? "roadmap__course--in-progress" : "",
       ].join(" ")}
       title={
-        nodeData.year
-          ? `${nodeData.label} · ${nodeData.year} · ${ROADMAP_STATUS_LABELS[status]}`
-          : `${nodeData.label} · ${ROADMAP_STATUS_LABELS[status]}`
+        [
+          nodeData.label,
+          nodeData.year,
+          isTne ? "TNE" : null,
+          ROADMAP_STATUS_LABELS[status],
+        ]
+          .filter(Boolean)
+          .join(" · ")
       }
       aria-label={`${nodeData.label}: ${ROADMAP_STATUS_LABELS[status]}`}
     >

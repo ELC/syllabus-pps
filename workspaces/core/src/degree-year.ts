@@ -1,5 +1,16 @@
 import { normalizeTitle, uniqueSorted } from "./normalize";
-import { CurriculumGraph, GraphEdge, ZettelPage, PageKind, EdgeKind } from "./types";
+import {
+  COURSE_TRAYECTO_NO_ESTRUCTURADO,
+  COURSE_TRAYECTO_PRINCIPAL,
+  CourseTrayecto,
+  CurriculumGraph,
+  DEFAULT_COURSE_TRAYECTO,
+  GraphEdge,
+  ZettelPage,
+  PageKind,
+  EdgeKind,
+  type CourseCorrelativa,
+} from "./types";
 
 const YEAR_SLUG_PATTERN = /^(.+)-ano-(\d+)$/i;
 const LEGACY_YEAR_SLUG_PATTERN = /^ano-(\d+)$/i;
@@ -102,18 +113,93 @@ export function yearPagesForDegree(
     .sort((left, right) => (resolveYearIndex(left) ?? 0) - (resolveYearIndex(right) ?? 0));
 }
 
-export function courseTitlesOnYearPage(page: ZettelPage): string[] {
-  if (page.kind !== PageKind.Year || !page.courses) {
+function courseRefsOnYearField(
+  page: ZettelPage,
+  field: "courses" | "coursesNoEstructurado",
+): CourseCorrelativa[] {
+  if (page.kind !== PageKind.Year) {
     return [];
   }
-  return page.courses
-    .map((course) => {
-      if (typeof course === "string") {
-        return course;
-      }
-      return course.resolvedTarget ?? course.target;
-    })
+  const refs = page[field];
+  return refs ?? [];
+}
+
+function courseRefLabels(refs: readonly CourseCorrelativa[]): string[] {
+  return refs
+    .map((course) => course.resolvedTarget ?? course.target)
     .filter((title): title is string => typeof title === "string" && title.length > 0);
+}
+
+export function courseTitlesOnYearPage(page: ZettelPage): string[] {
+  return courseRefLabels(courseRefsOnYearField(page, "courses"));
+}
+
+export function courseTitlesNoEstructuradoOnYearPage(page: ZettelPage): string[] {
+  return courseRefLabels(courseRefsOnYearField(page, "coursesNoEstructurado"));
+}
+
+function courseListedOnYearField(
+  yearPage: ZettelPage,
+  field: "courses" | "coursesNoEstructurado",
+  courseTitle: string,
+  pages: readonly ZettelPage[],
+): boolean {
+  const normalizedCourse = normalizeTitle(courseTitle);
+  const coursePage = pages.find(
+    (page) => page.kind === PageKind.Course && normalizeTitle(page.title) === normalizedCourse,
+  );
+  const normalizedSlug = coursePage ? normalizeTitle(coursePage.slug) : undefined;
+
+  for (const ref of courseRefsOnYearField(yearPage, field)) {
+    const label = ref.resolvedTarget ?? ref.target;
+    const normalizedLabel = normalizeTitle(label);
+    if (normalizedLabel === normalizedCourse) {
+      return true;
+    }
+    if (normalizedSlug && normalizedLabel === normalizedSlug) {
+      return true;
+    }
+    const resolvedTitle = resolveCoursePageTitle(label, pages);
+    if (resolvedTitle && normalizeTitle(resolvedTitle) === normalizedCourse) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function courseTrayectoForCourseInDegree(
+  graph: CurriculumGraph,
+  degreeTitle: string,
+  courseTitle: string,
+  degreeSlug?: string,
+  options?: { ignoreLegacyCourseFrontmatter?: boolean },
+): CourseTrayecto {
+  for (const yearPage of yearPagesForDegree(graph.pages, degreeTitle, { degreeSlug })) {
+    if (courseListedOnYearField(yearPage, "coursesNoEstructurado", courseTitle, graph.pages)) {
+      return COURSE_TRAYECTO_NO_ESTRUCTURADO;
+    }
+    if (courseListedOnYearField(yearPage, "courses", courseTitle, graph.pages)) {
+      return COURSE_TRAYECTO_PRINCIPAL;
+    }
+  }
+
+  if (options?.ignoreLegacyCourseFrontmatter) {
+    return COURSE_TRAYECTO_PRINCIPAL;
+  }
+
+  const normalizedCourse = normalizeTitle(courseTitle);
+  const coursePage = graph.pages.find(
+    (page) => page.kind === PageKind.Course && normalizeTitle(page.title) === normalizedCourse,
+  );
+  if (!coursePage) {
+    return COURSE_TRAYECTO_PRINCIPAL;
+  }
+
+  if (coursePage.trayectoInvalid) {
+    return DEFAULT_COURSE_TRAYECTO;
+  }
+
+  return coursePage.trayecto ?? DEFAULT_COURSE_TRAYECTO;
 }
 
 function courseLookupMaps(pages: readonly ZettelPage[]): {
@@ -229,6 +315,9 @@ export function coursesLinkedToYearPage(
   };
 
   for (const title of courseTitlesOnYearPage(yearPage)) {
+    addTitle(title);
+  }
+  for (const title of courseTitlesNoEstructuradoOnYearPage(yearPage)) {
     addTitle(title);
   }
   for (const title of legacyCourseTitlesFromYearRefs(yearPage, pagesByNormalizedTitle)) {

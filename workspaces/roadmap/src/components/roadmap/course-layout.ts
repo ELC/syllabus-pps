@@ -14,6 +14,7 @@ import {
   SPINE_NODE_WIDTH,
 } from "./constants";
 import {
+  appendUnplacedCuratedCourses,
   buildCuratedCourseGrid,
   hasCuratedCourseGrid,
   type CourseRoadmapCuration,
@@ -611,6 +612,15 @@ export function buildStagedCourseRoadmapLayout(
       sortCourseYears,
       slugToTitle,
     ));
+
+    appendUnplacedCuratedCourses(
+      titles,
+      columnOf,
+      displayRows,
+      yearsByTitle!,
+      stageOf,
+      sortCourseYears,
+    );
 
     if (displayRows.length === 0) {
       useCuratedGrid = false;

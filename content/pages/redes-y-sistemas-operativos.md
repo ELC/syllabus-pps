@@ -1,7 +1,6 @@
 ---
 title: redes y sistemas operativos
 kind: course
-trayecto: no-estructurado
 correlativas:
   - algoritmos avanzados y paradigmas de programación
 ---

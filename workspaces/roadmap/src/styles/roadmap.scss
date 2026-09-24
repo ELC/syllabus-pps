@@ -538,6 +538,15 @@
           background: color-mix(in srgb, var(--austral-graph-tne-base, #7b4fb3) 28%, white);
         }
       }
+
+      &.roadmap__course--done {
+        border-color: var(--austral-graph-tne-base, #7b4fb3);
+        background: color-mix(
+          in srgb,
+          var(--austral-graph-tne-base, #7b4fb3) 42%,
+          var(--austral-graph-concept-base)
+        );
+      }
     }
 
     &--done {
@@ -623,6 +632,23 @@
     text-transform: uppercase;
     color: var(--austral-azul-primario);
     white-space: nowrap;
+  }
+
+  &__year-band-link {
+    pointer-events: auto;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--austral-ing-secondary);
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--austral-azul-primario) 45%, transparent);
+      outline-offset: 2px;
+      border-radius: 0.2rem;
+    }
   }
 
   &__course-label {

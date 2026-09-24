@@ -19,3 +19,12 @@ export function courseTrayectoInvalidDiagnostic(page: ZettelPage): Diagnostic {
     page: page.title,
   };
 }
+
+export function courseTrayectoDeprecatedDiagnostic(page: ZettelPage): Diagnostic {
+  return {
+    severity: "warning",
+    code: "course-trayecto-deprecated",
+    message: `Course page "${page.title}" declares trayecto in frontmatter; assign the course to Trayecto Principal or Trayecto No Estructurado on the degree year page instead.`,
+    page: page.title,
+  };
+}

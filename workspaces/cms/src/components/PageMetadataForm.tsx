@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState, type ReactElement } from "react";
 
 import {
   buildYearSlug,
-  COURSE_TRAYECTO_PRINCIPAL,
   normalizeTitle,
   PageKind,
   parseYearSlug,
@@ -15,12 +14,7 @@ import resourceOpenSvg from "@pps/shell/assets/icons/resource-open.svg?raw";
 import { courseTitleBySlug, type CoursePageOption } from "../course-pages";
 import type { ConceptPageOption } from "../concept-pages";
 import type { PageLinkOption } from "../page-link-options";
-import {
-  courseTrayectos,
-  EDITOR_KINDS,
-  type EditorPageKind,
-  type PageMetadata,
-} from "../page-document";
+import { EDITOR_KINDS, type EditorPageKind, type PageMetadata } from "../page-document";
 import { BodyEditor } from "./BodyEditor";
 import { DependsOnCombobox } from "./DependsOnCombobox";
 import {
@@ -110,18 +104,41 @@ export function PageMetadataForm({
     onChange({ ...metadata, ...partial });
   }
 
+  function patchYearCourseList(
+    field: "courses" | "coursesNoEstructurado",
+    next: string[],
+  ): void {
+    const otherField = field === "courses" ? "coursesNoEstructurado" : "courses";
+    const otherSet = new Set(metadata[otherField]);
+    const filtered = next.filter((slug) => !otherSet.has(slug));
+    patch({ [field]: filtered });
+  }
+
+  function sortCourseSlugs(slugs: readonly string[]): string[] {
+    return [...slugs].sort((left, right) =>
+      courseTitleBySlug(coursePages, left).localeCompare(
+        courseTitleBySlug(coursePages, right),
+        "es-AR",
+      ),
+    );
+  }
+
+  function moveYearCourseBetweenTrayectos(
+    slug: string,
+    fromField: "courses" | "coursesNoEstructurado",
+  ): void {
+    const toField = fromField === "courses" ? "coursesNoEstructurado" : "courses";
+    if (!metadata[fromField].includes(slug)) {
+      return;
+    }
+    patch({
+      [fromField]: metadata[fromField].filter((entry) => entry !== slug),
+      [toField]: sortCourseSlugs([...metadata[toField], slug]),
+    });
+  }
+
   const kindOptions = useMemo(
     () => EDITOR_KINDS.map((kind) => ({ value: kind, label: KIND_LABELS[kind] })),
-    [],
-  );
-
-  const trayectoOptions = useMemo(
-    () => [
-      { value: "" as const, label: "Trayecto Principal (predeterminado)" },
-      ...courseTrayectos
-        .filter((trayecto) => trayecto !== COURSE_TRAYECTO_PRINCIPAL)
-        .map((trayecto) => ({ value: trayecto, label: trayecto })),
-    ],
     [],
   );
 
@@ -155,6 +172,9 @@ export function PageMetadataForm({
   const courseSlugChoices = useMemo(() => {
     const slugs = new Set(coursePages.map((course) => course.slug));
     for (const slug of metadata.courses) {
+      slugs.add(slug);
+    }
+    for (const slug of metadata.coursesNoEstructurado) {
       slugs.add(slug);
     }
     return [...slugs].sort((left, right) =>
@@ -275,7 +295,6 @@ export function PageMetadataForm({
                   "cms__meta-field--full",
                   "cms__meta-title-row",
                   wideTitleInput ? "cms__meta-title-row--wide-title" : "",
-                  isCourse ? "cms__meta-title-row--course" : "",
                   isDegree ? "cms__meta-title-row--degree" : "",
                 ]
                   .filter(Boolean)
@@ -294,9 +313,6 @@ export function PageMetadataForm({
                   Slug: {pageSlug || "…"}
                 </span>
               </div>
-              {isCourse ? (
-                <span className="cms__meta-label cms__meta-trayecto-label">Trayecto</span>
-              ) : null}
               {isDegree ? (
                 <span className="cms__meta-label cms__meta-years-count-label">Cantidad de años</span>
               ) : null}
@@ -330,15 +346,6 @@ export function PageMetadataForm({
                     });
                   }}
                   aria-label="Cantidad de años"
-                />
-              ) : null}
-              {isCourse ? (
-                <MetaDropdown
-                  className="cms__meta-trayecto-select"
-                  value={metadata.trayecto}
-                  options={trayectoOptions}
-                  onChange={(trayecto) => patch({ trayecto })}
-                  ariaLabel="Trayecto"
                 />
               ) : null}
               {isYear ? (
@@ -445,22 +452,59 @@ export function PageMetadataForm({
                   </p>
                 ) : null}
                 {showYearCoursesEditor ? (
-                  <div className="cms__meta-field cms__meta-field--full cms__meta-field--overlay">
-                    <span className="cms__meta-label">Materias del año</span>
-                    <DependsOnCombobox
-                      key={`courses-${dependsOnResetKey}`}
-                      listboxId="cms-year-courses-dropdown"
-                      choices={courseSlugChoices}
-                      selected={metadata.courses}
-                      formatChoiceLabel={formatCourseLabel}
-                      onChange={(courses) => patch({ courses })}
-                      placeholderEmpty="Buscar materias para agregar…"
-                      placeholderMore="Agregar otra materia…"
-                      emptyWhenFiltered="Ninguna materia coincide."
-                      emptyWhenAllSelected="Ya están seleccionadas todas las materias."
-                      inputAriaLabel="Agregar materias al año"
-                      onChipActivate={openCoursePageFromChip}
-                    />
+                  <div className="cms__meta-year-trayectos">
+                    <div className="cms__meta-field cms__meta-field--full cms__meta-field--overlay">
+                      <span className="cms__meta-label">Trayecto Principal</span>
+                      <DependsOnCombobox
+                        key={`courses-principal-${dependsOnResetKey}`}
+                        listboxId="cms-year-courses-principal-dropdown"
+                        choices={courseSlugChoices.filter(
+                          (slug) => !metadata.coursesNoEstructurado.includes(slug),
+                        )}
+                        selected={metadata.courses}
+                        formatChoiceLabel={formatCourseLabel}
+                        onChange={(courses) => patchYearCourseList("courses", courses)}
+                        placeholderEmpty="Buscar materias para agregar…"
+                        placeholderMore="Agregar otra materia…"
+                        emptyWhenFiltered="Ninguna materia coincide."
+                        emptyWhenAllSelected="Ya están seleccionadas todas las materias."
+                        inputAriaLabel="Agregar materias al Trayecto Principal"
+                        onChipActivate={openCoursePageFromChip}
+                        chipDragGroup="year-trayecto"
+                        chipDragListId="courses"
+                        onChipMoveFromList={(slug, fromListId) => {
+                          if (fromListId === "coursesNoEstructurado") {
+                            moveYearCourseBetweenTrayectos(slug, fromListId);
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="cms__meta-field cms__meta-field--full cms__meta-field--overlay">
+                      <span className="cms__meta-label">Trayecto No Estructurado</span>
+                      <DependsOnCombobox
+                        key={`courses-tne-${dependsOnResetKey}`}
+                        listboxId="cms-year-courses-tne-dropdown"
+                        choices={courseSlugChoices.filter((slug) => !metadata.courses.includes(slug))}
+                        selected={metadata.coursesNoEstructurado}
+                        formatChoiceLabel={formatCourseLabel}
+                        onChange={(coursesNoEstructurado) =>
+                          patchYearCourseList("coursesNoEstructurado", coursesNoEstructurado)
+                        }
+                        placeholderEmpty="Buscar materias para agregar…"
+                        placeholderMore="Agregar otra materia…"
+                        emptyWhenFiltered="Ninguna materia coincide."
+                        emptyWhenAllSelected="Ya están seleccionadas todas las materias."
+                        inputAriaLabel="Agregar materias al Trayecto No Estructurado"
+                        onChipActivate={openCoursePageFromChip}
+                        chipDragGroup="year-trayecto"
+                        chipDragListId="coursesNoEstructurado"
+                        onChipMoveFromList={(slug, fromListId) => {
+                          if (fromListId === "courses") {
+                            moveYearCourseBetweenTrayectos(slug, fromListId);
+                          }
+                        }}
+                      />
+                    </div>
                   </div>
                 ) : null}
 

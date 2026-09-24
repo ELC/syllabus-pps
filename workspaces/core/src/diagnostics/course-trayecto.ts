@@ -1,6 +1,7 @@
 import { CurriculumGraph, Diagnostic, PageKind } from "../types";
 
 import {
+  courseTrayectoDeprecatedDiagnostic,
   courseTrayectoInvalidDiagnostic,
   courseTrayectoOnNonCourseDiagnostic,
 } from "./course-trayecto-errors";
@@ -21,6 +22,12 @@ export function courseTrayectoDiagnostics(graph: CurriculumGraph): Diagnostic[] 
 
     if (page.trayectoInvalid) {
       const diagnostic = courseTrayectoInvalidDiagnostic(page);
+      diagnostics.push(diagnostic);
+      continue;
+    }
+
+    if (page.trayecto !== undefined) {
+      const diagnostic = courseTrayectoDeprecatedDiagnostic(page);
       diagnostics.push(diagnostic);
     }
   }

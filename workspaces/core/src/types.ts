@@ -97,6 +97,9 @@ export const diagnosticCodes = [
   "course-correlativas-on-non-course",
   "course-trayecto-invalid",
   "course-trayecto-on-non-course",
+  "course-trayecto-deprecated",
+  "year-courses-no-estructurado-invalid",
+  "year-course-trayecto-overlap",
   "citation-unresolved",
   "resource-catalog-invalid",
   "resource-catalog-unused",
@@ -172,8 +175,10 @@ export interface PageFrontmatter {
   degree?: string;
   /** 1-based year index within the degree for kind: year. */
   yearIndex?: number;
-  /** Course page slugs assigned to this year (kind: year). */
+  /** Course page slugs in Trayecto Principal for this year (kind: year). */
   courses?: string[];
+  /** Course page slugs in Trayecto No Estructurado for this year (kind: year). */
+  coursesNoEstructurado?: string[];
 }
 
 export interface ZettelPage {
@@ -213,10 +218,14 @@ export interface ZettelPage {
   yearIndex?: number;
   /** True when frontmatter yearIndex is present but malformed. */
   yearIndexInvalid?: boolean;
-  /** Parsed from frontmatter on year pages. */
+  /** Parsed from frontmatter on year pages (Trayecto Principal). */
   courses?: CourseCorrelativa[];
   /** True when frontmatter courses is present but malformed. */
   coursesInvalid?: boolean;
+  /** Parsed from frontmatter on year pages (Trayecto No Estructurado). */
+  coursesNoEstructurado?: CourseCorrelativa[];
+  /** True when frontmatter coursesNoEstructurado is present but malformed. */
+  coursesNoEstructuradoInvalid?: boolean;
 }
 
 export interface GraphEdge {

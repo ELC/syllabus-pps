@@ -296,7 +296,9 @@
   &__meta-extra-slot {
     display: flex;
     flex-direction: column;
-    flex: 0 0 auto;
+    flex: 0 0 var(--cms-meta-extra-block-height);
+    min-height: var(--cms-meta-extra-block-height);
+    max-height: var(--cms-meta-extra-block-height);
     min-width: 0;
 
     &:empty {
@@ -312,6 +314,33 @@
       max-height: calc(6.9375rem - 1.125rem - 0.3rem);
       overflow-y: auto;
       align-content: flex-start;
+    }
+  }
+
+  &__meta-year-trayectos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    width: 100%;
+
+    .cms__meta-field--full {
+      grid-column: auto;
+    }
+
+    .cms__meta-field {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      min-width: 0;
+    }
+
+    .cms__depends-on-field {
+      flex: 1 1 auto;
+      min-height: 2.5rem;
+      max-height: calc(6.9375rem - 1.125rem - 0.3rem);
     }
   }
 
@@ -362,30 +391,6 @@
       .cms__meta-title-head,
       .cms__meta-title-input {
         grid-column: 1 / 4;
-      }
-    }
-
-    &--course {
-      grid-template-columns: minmax(0, 1fr) 13.25rem 10.5rem;
-
-      .cms__meta-title-head,
-      .cms__meta-title-input {
-        grid-column: 1;
-      }
-
-      .cms__meta-trayecto-label,
-      .cms__meta-trayecto-select {
-        grid-column: 2;
-      }
-
-      .cms__meta-trayecto-select {
-        width: 100%;
-        max-width: 13.25rem;
-      }
-
-      .cms__meta-kind-label,
-      .cms__meta-kind-select {
-        grid-column: 3;
       }
     }
 
@@ -469,11 +474,6 @@
     align-self: center;
   }
 
-  &__meta-trayecto-label {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
   &__meta-kind-label {
     grid-column: 4;
     grid-row: 1;
@@ -509,13 +509,6 @@
     width: 100%;
     box-sizing: border-box;
     align-self: stretch;
-  }
-
-  &__meta-trayecto-select {
-    grid-column: 2;
-    grid-row: 2;
-    width: 100%;
-    min-width: 0;
   }
 
   &__meta-kind-select {
@@ -667,6 +660,11 @@
       outline: 2px solid color-mix(in srgb, var(--dash-accent) 35%, transparent);
       outline-offset: 1px;
     }
+
+    &--drop-target {
+      border-color: var(--dash-accent);
+      background: color-mix(in srgb, var(--dash-accent) 8%, var(--dash-bg, var(--dash-surface)));
+    }
   }
 
   &__depends-on-chip {
@@ -681,6 +679,18 @@
     font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1.2;
+
+    &--draggable {
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    &--dragging {
+      opacity: 0.45;
+    }
   }
 
   &__depends-on-chip-label {

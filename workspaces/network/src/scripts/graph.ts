@@ -1,5 +1,5 @@
 import { loadAnalyticsArtifact } from "@pps/content/browser";
-import { isTrayectoNoEstructurado, structuralPageKindRank } from "@pps/core";
+import { structuralPageKindRank } from "@pps/core";
 import { fetchIsAppAdmin } from "@pps/login/appAdminApi";
 import { isAuthDisabled } from "@pps/login/authDisabled";
 import { createBrowserClient } from "@pps/login/client";
@@ -15,8 +15,6 @@ import {
 import {
   AUSTRAL,
   expansionShadesForBase,
-  AUSTRAL_GRAPH_TNE,
-  courseNodeStyle,
   kindStyleForKind,
 } from "@pps/shell/austral-tokens";
 import { siteRootFromEnv } from "@pps/shell/site-root";
@@ -516,11 +514,7 @@ function matchingNodes(
   );
 }
 
-function kindLabel(kind: string, trayecto?: string): string {
-  if (kind === "course" && isTrayectoNoEstructurado(trayecto)) {
-    return "TNE";
-  }
-
+function kindLabel(kind: string): string {
   const match = GRAPH_NODE_KINDS.find((item) => item.kind === kind);
   return match?.label ?? kind;
 }
@@ -714,10 +708,6 @@ function kindStyle(kind: string) {
 
 function nodeStyle(node: cytoscape.SingularElementArgument) {
   const kind = String(node.data("kind") ?? "");
-  if (kind === "course") {
-    return courseNodeStyle(String(node.data("trayecto") ?? ""));
-  }
-
   return kindStyleForKind(kind);
 }
 
@@ -1438,7 +1428,7 @@ function updateSearchResultsUI(
 
     const meta = document.createElement("span");
     meta.className = "graph__search-result-kind";
-    meta.textContent = kindLabel(String(node.data("kind")), String(node.data("trayecto") ?? ""));
+    meta.textContent = kindLabel(String(node.data("kind")));
 
     item.append(swatch, label, meta);
     item.addEventListener("mousedown", (event) => {
@@ -1882,12 +1872,7 @@ function prepareGraphElements(elements: cytoscape.ElementsDefinition): cytoscape
           : Array.isArray(node.classes)
             ? node.classes.filter((entry): entry is string => typeof entry === "string")
             : [];
-      const classes = [
-        ...existingClasses,
-        ...(String(node.data.kind) === "course" && isTrayectoNoEstructurado(node.data.trayecto)
-          ? ["tne"]
-          : []),
-      ];
+      const classes = [...existingClasses];
 
       return {
         ...node,
@@ -2038,12 +2023,6 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
           height: 76,
           "font-size": 8,
           "text-max-width": "58",
-        },
-      },
-      {
-        selector: "node.tne",
-        style: {
-          "border-color": AUSTRAL_GRAPH_TNE.border,
         },
       },
       {

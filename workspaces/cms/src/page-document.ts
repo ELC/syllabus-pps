@@ -1,11 +1,8 @@
 import {
-  courseTrayectos,
-  parseCourseTrayectoValue,
   parseFrontmatter,
   PageKind,
   pageKinds,
   stringifyPageSource,
-  type CourseTrayecto,
 } from "@pps/core";
 
 import { normalizeYearCourseSlugs, type CoursePageOption } from "./course-pages";
@@ -25,8 +22,6 @@ export interface PageMetadata {
   kind: EditorPageKind;
   version?: number;
   updatedAt?: string;
-  /** Empty string means default (Trayecto Principal). */
-  trayecto: CourseTrayecto | "";
   correlativas: string[];
   dependsOn: string[];
   /** kind: degree — number of year pages to provision. */
@@ -35,11 +30,13 @@ export interface PageMetadata {
   degree?: string;
   /** kind: year — 1-based index within the degree. */
   yearIndex?: number;
-  /** kind: year — assigned course page slugs (not display titles). */
+  /** kind: year — Trayecto Principal course page slugs (not display titles). */
   courses: string[];
+  /** kind: year — Trayecto No Estructurado course page slugs (not display titles). */
+  coursesNoEstructurado: string[];
 }
 
-export { EDITOR_KINDS, courseTrayectos };
+export { EDITOR_KINDS };
 
 function parseKind(value: unknown): EditorPageKind {
   if (typeof value === "string" && EDITOR_KINDS.includes(value as EditorPageKind)) {
@@ -58,16 +55,6 @@ function parseStringList(value: unknown): string[] {
     .filter((item) => item.length > 0);
 }
 
-function parseTrayecto(value: unknown): CourseTrayecto | "" {
-  if (value === undefined || value === null || value === "") {
-    return "";
-  }
-  if (typeof value !== "string") {
-    return "";
-  }
-  return parseCourseTrayectoValue(value) ?? "";
-}
-
 export function defaultPageMetadata(slug: string): PageMetadata {
   return {
     title: slug.replace(/-/g, " "),
@@ -76,10 +63,10 @@ export function defaultPageMetadata(slug: string): PageMetadata {
     kind: PageKind.Concept,
     version: 1,
     updatedAt: new Date().toISOString(),
-    trayecto: "",
     correlativas: [],
     dependsOn: [],
     courses: [],
+    coursesNoEstructurado: [],
   };
 }
 
@@ -95,6 +82,23 @@ function parseYearIndex(value: unknown): number | undefined {
     return undefined;
   }
   return value;
+}
+
+export function normalizeYearCourseLists(
+  courses: readonly string[],
+  coursesNoEstructurado: readonly string[],
+  coursePages: readonly CoursePageOption[],
+): { courses: string[]; coursesNoEstructurado: string[] } {
+  const principalSet = new Set(
+    normalizeYearCourseSlugs([...courses], [...coursePages]),
+  );
+  const tne = normalizeYearCourseSlugs([...coursesNoEstructurado], [...coursePages]).filter(
+    (slug) => !principalSet.has(slug),
+  );
+  return {
+    courses: [...principalSet],
+    coursesNoEstructurado: tne,
+  };
 }
 
 export function splitPageDocument(source: string, fileSlug: string): { metadata: PageMetadata; body: string } {
@@ -122,13 +126,13 @@ export function splitPageDocument(source: string, fileSlug: string): { metadata:
       kind,
       version,
       updatedAt,
-      trayecto: parseTrayecto(data.trayecto),
       correlativas: parseStringList(data.correlativas),
       dependsOn: kind === PageKind.Concept ? [] : parseStringList(data.dependsOn),
       yearsCount: parseYearsCount(data.years),
       degree: typeof data.degree === "string" && data.degree.trim() ? data.degree.trim() : undefined,
       yearIndex: parseYearIndex(data.yearIndex),
       courses: parseStringList(data.courses),
+      coursesNoEstructurado: parseStringList(data.coursesNoEstructurado),
     },
     body: content,
   };
@@ -149,9 +153,6 @@ export function composePageDocument(metadata: PageMetadata, body: string): strin
   }
 
   if (metadata.kind === PageKind.Course) {
-    if (metadata.trayecto) {
-      record.trayecto = metadata.trayecto;
-    }
     if (metadata.correlativas.length > 0) {
       record.correlativas = metadata.correlativas;
     }
@@ -176,6 +177,9 @@ export function composePageDocument(metadata: PageMetadata, body: string): strin
     if (metadata.courses.length > 0) {
       record.courses = metadata.courses;
     }
+    if (metadata.coursesNoEstructurado.length > 0) {
+      record.coursesNoEstructurado = metadata.coursesNoEstructurado;
+    }
   }
 
   return stringifyPageSource(record, body);
@@ -192,7 +196,11 @@ export function canonicalEditorPageContent(
     split.metadata.kind === PageKind.Year
       ? {
           ...split.metadata,
-          courses: normalizeYearCourseSlugs(split.metadata.courses, [...coursePages]),
+          ...normalizeYearCourseLists(
+            split.metadata.courses,
+            split.metadata.coursesNoEstructurado,
+            coursePages,
+          ),
         }
       : split.metadata;
 

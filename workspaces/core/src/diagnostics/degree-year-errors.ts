@@ -69,6 +69,27 @@ export function yearCoursesMalformedDiagnostic(page: ZettelPage): Diagnostic {
   };
 }
 
+export function yearCoursesNoEstructuradoMalformedDiagnostic(page: ZettelPage): Diagnostic {
+  return {
+    severity: "error",
+    code: "year-courses-no-estructurado-invalid",
+    message: `Year page "${page.title}" has malformed coursesNoEstructurado frontmatter.`,
+    page: page.title,
+  };
+}
+
+export function yearCourseTrayectoOverlapDiagnostic(
+  yearPage: ZettelPage,
+  courseLabel: string,
+): Diagnostic {
+  return {
+    severity: "warning",
+    code: "year-course-trayecto-overlap",
+    message: `Year page "${yearPage.title}" lists "${courseLabel}" in both Trayecto Principal and Trayecto No Estructurado.`,
+    page: yearPage.title,
+  };
+}
+
 export function yearCourseUnresolvedDiagnostic(
   yearPage: ZettelPage,
   course: ConceptDependency,

@@ -90,6 +90,12 @@ export function parsePages(
       const courses = coursesInvalid
         ? []
         : page.coursesTargets?.map((target) => resolveCorrelativa(target, index));
+      const coursesNoEstructuradoInvalid =
+        page.coursesNoEstructuradoRaw !== undefined &&
+        page.coursesNoEstructuradoTargets === undefined;
+      const coursesNoEstructurado = coursesNoEstructuradoInvalid
+        ? []
+        : page.coursesNoEstructuradoTargets?.map((target) => resolveCorrelativa(target, index));
 
       return {
         id: page.id,
@@ -119,6 +125,8 @@ export function parsePages(
         yearIndexInvalid: page.yearIndexInvalid,
         courses,
         coursesInvalid,
+        coursesNoEstructurado,
+        coursesNoEstructuradoInvalid,
       };
     })
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));

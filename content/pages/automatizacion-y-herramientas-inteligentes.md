@@ -1,7 +1,6 @@
 ---
 title: automatización y herramientas inteligentes
 kind: course
-trayecto: no-estructurado
 correlativas:
   - arquitectura e ingeniería del software
 ---

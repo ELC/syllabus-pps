@@ -16,12 +16,12 @@ export function buildDefaultYearMetadata(
     kind: PageKind.Year,
     version: existing?.version ?? 1,
     updatedAt: existing?.updatedAt,
-    trayecto: "",
     correlativas: [],
     dependsOn: [],
     degree: degreeTitle,
     yearIndex,
     courses: existing?.courses ?? [],
+    coursesNoEstructurado: existing?.coursesNoEstructurado ?? [],
     yearsCount: undefined,
   };
 }

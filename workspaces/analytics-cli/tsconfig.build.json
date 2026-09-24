@@ -9,8 +9,7 @@
     "declaration": true,
     "sourceMap": true,
     "jsx": "preserve",
-    "lib": ["ES2022"],
-    "customConditions": []
+    "lib": ["ES2022"]
   },
   "include": ["src/**/*.ts", "pps.config.ts"]
 }

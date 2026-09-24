@@ -43,6 +43,8 @@ export interface RawPage {
   yearIndexInvalid?: boolean;
   coursesRaw?: unknown;
   coursesTargets?: string[];
+  coursesNoEstructuradoRaw?: unknown;
+  coursesNoEstructuradoTargets?: string[];
   blocks: ZettelBlock[];
   nonBulletLines: number[];
 }
