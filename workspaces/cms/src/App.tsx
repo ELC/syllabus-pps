@@ -113,7 +113,11 @@ export function App() {
         setPages(items);
         const requested = readPageParam();
         const match = requested ? items.find((item) => item.slug === requested) : undefined;
-        setSelectedSlug(match?.slug ?? items[0]?.slug ?? "");
+        const resolvedSlug = match?.slug ?? items[0]?.slug ?? "";
+        setSelectedSlug(resolvedSlug);
+        if (resolvedSlug) {
+          writePageParam(resolvedSlug, "replace");
+        }
         if (items.length === 0) {
           setLoadError("No se encontraron páginas en Supabase Storage.");
         }
@@ -130,11 +134,15 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (!selectedSlug) {
-      return;
-    }
-    writePageParam(selectedSlug);
-  }, [selectedSlug]);
+    const onPopState = (): void => {
+      const slug = readPageParam();
+      if (slug) {
+        setSelectedSlug(slug);
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   const pageListKey = useMemo(
     () => pages.map((page) => page.slug).sort((left, right) => left.localeCompare(right, "es-AR")).join("\0"),
@@ -291,6 +299,7 @@ export function App() {
     if (selectedSlug && draftSlugs.has(selectedSlug)) {
       persistDraftContent(selectedSlug, content);
     }
+    writePageParam(slug, "push");
     setSelectedSlug(slug);
   }
 
@@ -878,6 +887,7 @@ export function App() {
     setDraftSlugs((current) => new Set(current).add(slug));
     setPages((current) => [{ slug, path, title: draftTitle }, ...current]);
     setAllSources((current) => [{ path, content: draftContent }, ...current]);
+    writePageParam(slug, "push");
     setSelectedSlug(slug);
     loadDocumentFromSource(slug, draftContent);
     setQuery("");

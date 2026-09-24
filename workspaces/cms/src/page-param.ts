@@ -3,11 +3,15 @@ export function readPageParam(): string | null {
   return value?.trim() || null;
 }
 
-export function writePageParam(slug: string): void {
+export function writePageParam(slug: string, mode: "push" | "replace" = "replace"): void {
   const url = new URL(window.location.href);
   if (url.searchParams.get("page") === slug) {
     return;
   }
   url.searchParams.set("page", slug);
-  window.history.replaceState({}, "", url);
+  if (mode === "push") {
+    window.history.pushState({}, "", url);
+  } else {
+    window.history.replaceState({}, "", url);
+  }
 }
