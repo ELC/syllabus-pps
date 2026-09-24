@@ -1,8 +1,10 @@
+import { roadmapCuration, type RoadmapCuration } from "@pps/core";
 import { describe, expect, it } from "vitest";
 
 import {
   canRedoConceptCuration,
   canUndoConceptCuration,
+  cloneCurationSnapshot,
   CONCEPT_CURATION_HISTORY_LIMIT,
   createConceptCurationHistory,
   currentConceptCuration,
@@ -10,40 +12,52 @@ import {
   redoConceptCurationHistory,
   undoConceptCurationHistory,
 } from "../../../roadmap/src/components/roadmap/concept-curation-history";
-import type { RoadmapCuration } from "../../../roadmap/src/components/roadmap/curation";
+import { ConceptCurationEditActionKind } from "../../../roadmap/src/components/roadmap/concept-curation-edit-action";
+import type { ConceptCurationEditActionShift } from "../../../roadmap/src/components/roadmap/concept-curation-edit-action";
 
-function curation(trunkSpine: string[]): RoadmapCuration {
-  return {
+function curation(spine: string[]): RoadmapCuration {
+  return roadmapCuration({
     degreeSlug: "t",
-    parallelLanes: [{ root: trunkSpine[0] ?? "a", spine: trunkSpine }],
-    postMergeSpine: [],
-    trunkSpine,
+    parallelLanes: [{ root: spine[0] ?? "a", spine }],
     branches: {},
     branchOwnerOverrides: {},
-    spineJoins: {},
-  };
+  });
 }
 
-const shift = (title: string, direction: -1 | 1) =>
-  ({ kind: "shift", title, direction }) as const;
+function spineOf(history: ReturnType<typeof createConceptCurationHistory>): string[] {
+  return currentConceptCuration(history).parallelLanes[0]?.spine ?? [];
+}
+
+const shift = (title: string, direction: -1 | 1): ConceptCurationEditActionShift => ({
+  kind: ConceptCurationEditActionKind.Shift,
+  title,
+  direction,
+});
 
 describe("concept curation history", () => {
+  it("cloneCurationSnapshot preserves open() for UI state", () => {
+    const history = createConceptCurationHistory(curation(["a", "b"]));
+    const cloned = cloneCurationSnapshot(currentConceptCuration(history));
+    expect(typeof cloned.open).toBe("function");
+    expect(cloned.open().readLinearLayout().isSuccess()).toBe(true);
+  });
+
   it("undo and redo traverse snapshots", () => {
     let history = createConceptCurationHistory(curation(["a"]));
     history = pushConceptCurationHistory(history, curation(["b"]), shift("a", 1));
     history = pushConceptCurationHistory(history, curation(["c"]), shift("b", 1));
 
-    expect(currentConceptCuration(history).trunkSpine).toEqual(["c"]);
+    expect(spineOf(history)).toEqual(["c"]);
 
     const undone = undoConceptCurationHistory(history);
     expect(undone).not.toBeNull();
     history = undone!;
-    expect(currentConceptCuration(history).trunkSpine).toEqual(["b"]);
+    expect(spineOf(history)).toEqual(["b"]);
     expect(canRedoConceptCuration(history)).toBe(true);
 
     const redone = redoConceptCurationHistory(history);
     history = redone!;
-    expect(currentConceptCuration(history).trunkSpine).toEqual(["c"]);
+    expect(spineOf(history)).toEqual(["c"]);
     expect(canUndoConceptCuration(history)).toBe(true);
   });
 
@@ -54,7 +68,7 @@ describe("concept curation history", () => {
     history = pushConceptCurationHistory(history, curation(["c"]), shift("a", 1));
 
     expect(history.entries).toHaveLength(2);
-    expect(currentConceptCuration(history).trunkSpine).toEqual(["c"]);
+    expect(spineOf(history)).toEqual(["c"]);
     expect(canRedoConceptCuration(history)).toBe(false);
   });
 
@@ -70,8 +84,6 @@ describe("concept curation history", () => {
 
     expect(history.entries).toHaveLength(CONCEPT_CURATION_HISTORY_LIMIT);
     expect(canUndoConceptCuration(history)).toBe(true);
-    expect(currentConceptCuration(history).trunkSpine).toEqual([
-      String(CONCEPT_CURATION_HISTORY_LIMIT + 5),
-    ]);
+    expect(spineOf(history)).toEqual([String(CONCEPT_CURATION_HISTORY_LIMIT + 5)]);
   });
 });

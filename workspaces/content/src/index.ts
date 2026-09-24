@@ -2,6 +2,7 @@ export {
   DEFAULT_STORAGE_BUCKET,
   pageObjectPath,
   RESOURCES_TABLE,
+  ROADMAP_CONCEPT_LAYOUTS_TABLE,
   ROADMAP_COURSE_LAYOUTS_TABLE,
 } from "./constants";
 export {

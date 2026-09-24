@@ -1,24 +1,35 @@
-import type { ConceptCurationEditAction } from "./concept-curation-edit-action";
-import type { RoadmapCuration } from "./curation";
+import {
+  ConceptCurationEditActionKind,
+  type ConceptCurationEditAction,
+} from "./concept-curation-edit-action";
+import { cloneRoadmapCurationData, roadmapCuration, type RoadmapCuration } from "@pps/core";
+
+export function cloneCurationSnapshot(curation: RoadmapCuration): RoadmapCuration {
+  return roadmapCuration(cloneRoadmapCurationData(curation));
+}
 
 export const CONCEPT_CURATION_HISTORY_LIMIT = 20;
 
-export type ConceptCurationHistoryEntry = {
+export interface ConceptCurationHistoryEntry {
   readonly curation: RoadmapCuration;
   readonly action: ConceptCurationEditAction;
-};
+}
 
-export type ConceptCurationHistory = {
+export interface ConceptCurationHistory {
   readonly entries: readonly ConceptCurationHistoryEntry[];
   readonly index: number;
+}
+
+const LOAD_ACTION: ConceptCurationEditAction = {
+  kind: ConceptCurationEditActionKind.Load,
 };
 
 export function createConceptCurationHistory(
   initial: RoadmapCuration,
-  action: ConceptCurationEditAction = { kind: "load" },
+  action: ConceptCurationEditAction = LOAD_ACTION,
 ): ConceptCurationHistory {
   return {
-    entries: [{ curation: structuredClone(initial), action }],
+    entries: [{ curation: cloneCurationSnapshot(initial), action }],
     index: 0,
   };
 }
@@ -57,7 +68,7 @@ export function pushConceptCurationHistory(
   action: ConceptCurationEditAction,
 ): ConceptCurationHistory {
   const snapshot: ConceptCurationHistoryEntry = {
-    curation: structuredClone(next),
+    curation: cloneCurationSnapshot(next),
     action,
   };
   const entries = [...history.entries.slice(0, history.index + 1), snapshot];

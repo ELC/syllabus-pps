@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 
-import { COURSE_TRAYECTO_PRINCIPAL, yearDisplayLabel, type ResourceCatalogEntry } from "@pps/core";
+import {
+  COURSE_TRAYECTO_PRINCIPAL,
+  PageKind,
+  yearDisplayLabel,
+  type ResourceCatalogEntry,
+} from "@pps/core";
 
 import { courseTitleBySlug, type CoursePageOption } from "../course-pages";
 import type { ConceptPageOption } from "../concept-pages";
@@ -100,7 +105,6 @@ export function PageMetadataForm({
     [],
   );
 
-  const dependsOnChoices = titlePickerOptions(conceptTitles, metadata.dependsOn, metadata.title);
   const correlativasChoices = titlePickerOptions(
     courseTitles,
     metadata.correlativas,
@@ -113,8 +117,7 @@ export function PageMetadataForm({
   const isYear = layoutKind === "year";
   const wideTitleInput = Boolean(layoutKind) && !isCourse && !isDegree && !isYear;
   const kindForCatalog = documentReady ? metadata.kind : expectedKind;
-  const needsCatalogForExtras =
-    kindForCatalog === "year" || kindForCatalog === "course" || kindForCatalog === "concept";
+  const needsCatalogForExtras = kindForCatalog === "year" || kindForCatalog === "course";
   const metaPrimaryReady = documentReady;
   const catalogExtrasReady = catalogReady;
   const editorWriteReady = documentReady;
@@ -123,11 +126,9 @@ export function PageMetadataForm({
   const showDegreeFullName = stackKind === "degree";
 
   const showYearCoursesEditor =
-    metaPrimaryReady && catalogExtrasReady && metadata.kind === "year";
+    metaPrimaryReady && catalogExtrasReady && metadata.kind === PageKind.Year;
   const showCorrelativasEditor =
-    metaPrimaryReady && catalogExtrasReady && metadata.kind === "course";
-  const showConceptDependsEditor =
-    metaPrimaryReady && catalogExtrasReady && metadata.kind === "concept";
+    metaPrimaryReady && catalogExtrasReady && metadata.kind === PageKind.Course;
   const showCatalogExtrasPending =
     metaPrimaryReady && needsCatalogForExtras && !catalogExtrasReady;
 
@@ -285,7 +286,7 @@ export function PageMetadataForm({
               <div className="cms__meta-extra-slot">
                 {showCatalogExtrasPending ? (
                   <p className="cms__catalog-pending" role="status">
-                    Cargando el catálogo para correlativas y dependencias…
+                    Cargando el catálogo para correlativas…
                   </p>
                 ) : null}
                 {showYearCoursesEditor ? (
@@ -325,17 +326,6 @@ export function PageMetadataForm({
                   </div>
                 ) : null}
 
-                {showConceptDependsEditor ? (
-                  <div className="cms__meta-field cms__meta-field--full cms__meta-field--overlay">
-                    <span className="cms__meta-label">Depende de otros conceptos:</span>
-                    <DependsOnCombobox
-                      key={dependsOnResetKey}
-                      choices={dependsOnChoices}
-                      selected={metadata.dependsOn}
-                      onChange={(dependsOn) => patch({ dependsOn })}
-                    />
-                  </div>
-                ) : null}
               </div>
             </>
           )}
@@ -352,7 +342,7 @@ export function PageMetadataForm({
             concepts={conceptPages}
             pageLinks={pageLinks}
             currentPageTitle={metadata.title}
-            enableConceptHashtags={metadata.kind === "course"}
+            enableConceptHashtags={metadata.kind === PageKind.Course}
             enablePageWikilinks={!isDegree && !isYear}
             historyKey={pageSlug}
             onChange={onBodyChange}

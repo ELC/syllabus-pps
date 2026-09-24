@@ -5,26 +5,36 @@ import {
   resolveCoursePageTitle,
   yearPagesForDegree,
 } from "../degree-year";
-import { normalizeTitle, uniqueSorted } from "../normalize";
-import { CurriculumGraph, GraphEdge, PageKind, ZettelPage } from "../types";
+import { normalizeTitle } from "../normalize";
+import { CurriculumGraph, GraphEdge, PageKind, ZettelPage, EdgeKind } from "../types";
+
+import { attachDegreeRoadmapOpen } from "../roadmap/course-concept-roadmap-open";
+import type { OpenCourseConceptRoadmap } from "../roadmap/course-concept-roadmap-open";
+import type { CurriculumPageSlug, DegreeRoadmapNodeTitle, RoadmapLayoutSlug } from "../roadmap/titles";
+
+export type { DegreeRoadmapNodeTitle } from "../roadmap/titles";
 
 export interface DegreeRoadmapConcept {
-  title: string;
-  slug: string;
-  dependsOn: string[];
+  title: DegreeRoadmapNodeTitle;
+  slug: CurriculumPageSlug;
+  dependsOn: DegreeRoadmapNodeTitle[];
 }
 
-export interface DegreeRoadmap {
+export interface DegreeRoadmapData {
   degree: string;
-  degreeSlug: string;
+  degreeSlug: RoadmapLayoutSlug;
   concepts: DegreeRoadmapConcept[];
   edges: GraphEdge[];
+}
+
+export interface DegreeRoadmap extends DegreeRoadmapData {
+  open(): OpenCourseConceptRoadmap;
 }
 
 export function reachableFromDegree(graph: CurriculumGraph, degreeTitle: string): Set<string> {
   const { pagesByTitle } = buildCurriculumIndexes(graph);
   const degreePage = pagesByTitle.get(normalizeTitle(degreeTitle));
-  if (!degreePage || degreePage.kind !== "degree") {
+  if (!degreePage || degreePage.kind !== PageKind.Degree) {
     return new Set();
   }
 
@@ -50,7 +60,7 @@ export function reachableFromDegree(graph: CurriculumGraph, degreeTitle: string)
   }
 
   const hasReachableCourse = graph.pages.some(
-    (page) => page.kind === "course" && reachable.has(page.title),
+    (page) => page.kind === PageKind.Course && reachable.has(page.title),
   );
   const expectedYears =
     graph.expected?.years?.length > 0
@@ -79,7 +89,7 @@ export function reachableFromDegree(graph: CurriculumGraph, degreeTitle: string)
     }
 
     for (const edge of graph.edges) {
-      if (edge.kind !== "page-ref" && edge.kind !== "concept-tag") {
+      if (edge.kind !== EdgeKind.PageRef && edge.kind !== EdgeKind.ConceptTag) {
         continue;
       }
 
@@ -98,7 +108,7 @@ export function reachableFromDegree(graph: CurriculumGraph, degreeTitle: string)
 function conceptsForDegree(reachable: Set<string>, graph: CurriculumGraph): ZettelPage[] {
   const titles = new Set(
     graph.pages
-      .filter((page) => page.kind === "concept" && reachable.has(page.title))
+      .filter((page) => page.kind === PageKind.Concept && reachable.has(page.title))
       .map((page) => page.title),
   );
 
@@ -109,42 +119,30 @@ function conceptsForDegree(reachable: Set<string>, graph: CurriculumGraph): Zett
 
 export function listDegreePages(graph: CurriculumGraph): ZettelPage[] {
   return graph.pages
-    .filter((page) => page.kind === "degree")
+    .filter((page) => page.kind === PageKind.Degree)
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
 }
 
 export function projectDegreeRoadmap(graph: CurriculumGraph, degreeTitle: string): DegreeRoadmap | null {
   const { pagesByTitle } = buildCurriculumIndexes(graph);
   const degreePage = pagesByTitle.get(normalizeTitle(degreeTitle));
-  if (!degreePage || degreePage.kind !== "degree") {
+  if (!degreePage || degreePage.kind !== PageKind.Degree) {
     return null;
   }
 
   const reachable = reachableFromDegree(graph, degreePage.title);
   const concepts = conceptsForDegree(reachable, graph);
-  const conceptTitles = new Set(concepts.map((page) => page.title));
 
-  const edges = graph.edges.filter(
-    (edge) =>
-      edge.kind === "concept-dependency" &&
-      conceptTitles.has(edge.source) &&
-      conceptTitles.has(edge.target),
-  );
-
-  return {
+  return attachDegreeRoadmapOpen({
     degree: degreePage.title,
     degreeSlug: degreePage.slug,
     concepts: concepts.map((page) => ({
       title: page.title,
       slug: page.slug,
-      dependsOn: uniqueSorted(
-        (page.dependsOn ?? [])
-          .map((dep) => dep.resolvedTarget ?? dep.target)
-          .filter((title) => conceptTitles.has(title)),
-      ),
+      dependsOn: [],
     })),
-    edges,
-  };
+    edges: [],
+  });
 }
 
 export function projectAllDegreeRoadmaps(graph: CurriculumGraph): DegreeRoadmap[] {
@@ -155,13 +153,13 @@ export function projectAllDegreeRoadmaps(graph: CurriculumGraph): DegreeRoadmap[
 
 export function kindRankForRoadmap(kind: PageKind): number {
   switch (kind) {
-    case "degree":
+    case PageKind.Degree:
       return 0;
-    case "year":
+    case PageKind.Year:
       return 1;
-    case "course":
+    case PageKind.Course:
       return 2;
-    case "concept":
+    case PageKind.Concept:
       return 3;
     default:
       return 4;

@@ -1,6 +1,6 @@
 import { catalogSourceType, isBookResource } from "../resources";
 import { normalizeTitle, uniqueSorted } from "../normalize";
-import { ZettelBlock, ZettelPage } from "../types";
+import { ZettelBlock, ZettelPage, PageKind } from "../types";
 
 export function hasSourceCue(text: string): boolean {
   return /\b(fuente|source|bibliograf|referencia|seg[uú]n|documentaci[oó]n|docs?|paper|art[ií]culo|libro|manual|doi|isbn)\b/i.test(
@@ -28,10 +28,10 @@ export function isSourceReference(
 
   return (
     !targetPage ||
-    (targetPage.kind !== "degree" &&
-      targetPage.kind !== "course" &&
-      targetPage.kind !== "year" &&
-      targetPage.kind !== "administrative")
+    (targetPage.kind !== PageKind.Degree &&
+      targetPage.kind !== PageKind.Course &&
+      targetPage.kind !== PageKind.Year &&
+      targetPage.kind !== PageKind.Administrative)
   );
 }
 

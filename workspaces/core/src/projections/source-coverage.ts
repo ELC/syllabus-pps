@@ -3,7 +3,7 @@ import { match } from "ts-pattern";
 import { buildCurriculumIndexes } from "../analysis/indexes";
 import { collectSourcesForBlock } from "../analysis/sources";
 import { normalizeTitle, uniqueSorted } from "../normalize";
-import { CurriculumGraph } from "../types";
+import { CurriculumGraph, PageKind } from "../types";
 
 export const sourceCoverageGroupModes = ["global", "year", "course"] as const;
 
@@ -26,7 +26,7 @@ export function collectSourceCoverageRows(graph: CurriculumGraph): SourceCoverag
     buildCurriculumIndexes(graph);
 
   return graph.pages
-    .filter((page) => page.kind === "course")
+    .filter((page) => page.kind === PageKind.Course)
     .flatMap((coursePage) => {
       const year = yearByCourse.get(coursePage.normalizedTitle) ?? "(unmapped)";
       const linkedConceptKeys = uniqueSorted([

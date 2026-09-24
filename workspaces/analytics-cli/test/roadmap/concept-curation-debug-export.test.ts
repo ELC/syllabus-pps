@@ -1,32 +1,30 @@
+import { roadmapCuration, type RoadmapCuration } from "@pps/core";
 import { describe, expect, it } from "vitest";
 
+import { ConceptCurationEditActionKind } from "../../../roadmap/src/components/roadmap/concept-curation-edit-action";
 import {
   buildConceptCurationDebugExport,
-  CONCEPT_CURATION_DEBUG_EXPORT_KIND,
+  ConceptCurationDebugExportKind,
 } from "../../../roadmap/src/components/roadmap/concept-curation-debug-export";
 import {
   createConceptCurationHistory,
   pushConceptCurationHistory,
 } from "../../../roadmap/src/components/roadmap/concept-curation-history";
-import type { RoadmapCuration } from "../../../roadmap/src/components/roadmap/curation";
 
-function curation(trunkSpine: string[]): RoadmapCuration {
-  return {
+function curation(spine: string[]): RoadmapCuration {
+  return roadmapCuration({
     degreeSlug: "lds",
-    parallelLanes: [{ root: trunkSpine[0] ?? "a", spine: trunkSpine }],
-    postMergeSpine: [],
-    trunkSpine,
+    parallelLanes: [{ root: spine[0] ?? "a", spine }],
     branches: {},
     branchOwnerOverrides: {},
-    spineJoins: {},
-  };
+  });
 }
 
 describe("concept curation debug export", () => {
   it("includes previous curation and the action that produced the current state", () => {
     let history = createConceptCurationHistory(curation(["modelo", "sql"]));
     history = pushConceptCurationHistory(history, curation(["trans", "sql"]), {
-      kind: "shift",
+      kind: ConceptCurationEditActionKind.Shift,
       title: "trans",
       direction: -1,
     });
@@ -41,14 +39,14 @@ describe("concept curation debug export", () => {
       exportedAt: "2026-01-01T00:00:00.000Z",
     });
 
-    expect(payload.kind).toBe(CONCEPT_CURATION_DEBUG_EXPORT_KIND);
+    expect(payload.kind).toBe(ConceptCurationDebugExportKind.RoadmapConceptLayoutDebug);
     expect(payload.lastAction).toEqual({
-      kind: "shift",
+      kind: ConceptCurationEditActionKind.Shift,
       title: "trans",
       direction: -1,
     });
-    expect(payload.previousCuration?.trunkSpine).toEqual(["modelo", "sql"]);
-    expect(payload.curation.trunkSpine).toEqual(["trans", "sql"]);
+    expect(payload.previousCuration?.parallelLanes[0]?.spine).toEqual(["modelo", "sql"]);
+    expect(payload.curation.parallelLanes[0]?.spine).toEqual(["trans", "sql"]);
     expect(payload.historyIndex).toBe(1);
   });
 });

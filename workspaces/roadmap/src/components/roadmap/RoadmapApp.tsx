@@ -21,12 +21,17 @@ import { useAppAdmin } from "@pps/login/AppAdminContext";
 import editSvg from "@pps/shell/assets/icons/resource-edit.svg?raw";
 import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
 import {
+  buildDegreeRoadmapAdjacency,
+  conceptEditErrorLabel,
   courseRoadmapAsDegreeRoadmap,
+  EMPTY_ROADMAP_CURATION,
   hydrateCurriculumGraph,
   projectAllCourseRoadmaps,
   projectCourseConceptRoadmap,
   projectDegreeRoadmap,
+  PageKind,
   type CurriculumGraph,
+  type RoadmapCuration,
 } from "@pps/core";
 import {
   useCallback,
@@ -38,9 +43,7 @@ import {
 } from "react";
 
 import type { ConceptPage } from "../../scripts/concept-panel";
-import { buildAdjacency, topologicalStages } from "./adjacency";
 import { buildRoadmapFlow } from "./build-flow";
-import { EMPTY_ROADMAP_CURATION, resolveRoadmapCuration, type RoadmapCuration } from "./curation";
 import {
   buildConceptCurationDebugExport,
   copyConceptCurationDebugExport,
@@ -48,28 +51,21 @@ import {
 import {
   conceptLayoutDocumentFromCuration,
   parseConceptLayoutDocument,
-  sliceCurationForCourse,
+  prepareConceptLayoutForStorage,
 } from "./concept-curation";
-import {
-  attachSideConcept,
-  branchOwnerForConcept,
-  inferLayoutBranchOwner,
-  mergeImplicitLayoutBranches,
-  mergeTrunkFork,
-  planShiftOnCuration,
-  promoteConceptToSpine,
-  sanitizeTrunkForkCuration,
-  separateSpineRangeToBranches,
-} from "./concept-curation-ops";
-import { Admissibility } from "../../concept-graph";
+import { bootstrapConceptLayoutForCourse } from "./concept-curation-normalize";
 import {
   conceptEditHintForTool,
   type ConceptEditTool,
 } from "./concept-edit-tools";
-import type { ConceptCurationEditAction } from "./concept-curation-edit-action";
+import {
+  ConceptCurationEditActionKind,
+  type ConceptCurationEditAction,
+} from "./concept-curation-edit-action";
 import {
   canRedoConceptCuration,
   canUndoConceptCuration,
+  cloneCurationSnapshot,
   createConceptCurationHistory,
   currentConceptCuration,
   pushConceptCurationHistory,
@@ -95,13 +91,12 @@ import { findNearestGridCell } from "./course-grid-cells";
 import {
   CONCEPT_LAYOUT_SAVED_LABEL,
   CONCEPT_LAYOUT_UNSAVED_LABEL,
-  conceptEditErrorLabel,
   GRID_LAYOUT_EDIT_HINT,
   GRID_LAYOUT_SAVED_LABEL,
   GRID_LAYOUT_UNSAVED_LABEL,
   gridLayoutStatusToSemaphore,
 } from "./grid-layout-semaphore";
-import { buildRoadmapLayout, type RoadmapBounds } from "./layout";
+import { buildLinearConceptLayout, type RoadmapBounds } from "./layout";
 import { RoadmapCanvasSkeleton } from "./RoadmapCanvasSkeleton";
 import { RoadmapAnchorNode } from "./RoadmapAnchorNode";
 import { RoadmapYearBandNode } from "./RoadmapYearBandNode";
@@ -243,7 +238,6 @@ export function RoadmapApp({
   const [conceptSubgraphEditMode, setConceptSubgraphEditMode] = useState(false);
   const [conceptEditTool, setConceptEditTool] = useState<ConceptEditTool>("select");
   const [conceptSelectedTopic, setConceptSelectedTopic] = useState<string | null>(null);
-  const [branchRangeFirst, setBranchRangeFirst] = useState<string | null>(null);
   const [sidePendingOwner, setSidePendingOwner] = useState<string | null>(null);
   const [conceptCuration, setConceptCuration] = useState<RoadmapCuration | null>(null);
   const conceptCurationHistoryRef = useRef<ConceptCurationHistory | null>(null);
@@ -377,7 +371,7 @@ export function RoadmapApp({
 
     return new Map(
       graph.pages
-        .filter((page) => page.kind === "concept")
+        .filter((page) => page.kind === PageKind.Concept)
         .map((page) => [
           page.title,
           {
@@ -400,26 +394,9 @@ export function RoadmapApp({
   }, [graph]);
 
   const adjacency = useMemo(
-    () => (activeDegreeRoadmap ? buildAdjacency(activeDegreeRoadmap) : null),
+    () => (activeDegreeRoadmap ? buildDegreeRoadmapAdjacency(activeDegreeRoadmap) : null),
     [activeDegreeRoadmap],
   );
-
-  const conceptStageOf = useMemo(() => {
-    if (!activeDegreeRoadmap || !adjacency) {
-      return new Map<string, number>();
-    }
-
-    const stageOf = new Map<string, number>();
-    topologicalStages(
-      activeDegreeRoadmap.concepts.map((concept) => concept.title),
-      adjacency,
-    ).forEach((stage, index) => {
-      for (const title of stage) {
-        stageOf.set(title, index);
-      }
-    });
-    return stageOf;
-  }, [activeDegreeRoadmap, adjacency]);
 
   const courseYearsByTitle = useMemo(
     () =>
@@ -507,25 +484,12 @@ export function RoadmapApp({
     const degreeSlug = activeCourseRoadmap.degreeSlug;
     const courseSlug = focusedCourseSlug;
     const layoutKey = `${degreeSlug}:${courseSlug}`;
-    const fallbackCuration = (() => {
-      const degreeCur = resolveRoadmapCuration(degreeSlug);
-      if (degreeCur) {
-        return sliceCurationForCourse(degreeCur, activeDegreeRoadmap);
-      }
-
-      return {
-        ...EMPTY_ROADMAP_CURATION,
-        degreeSlug: activeDegreeRoadmap.degreeSlug,
-      };
-    })();
-
     setConceptLayoutLoading(true);
     setConceptCuration(null);
     conceptCurationHistoryRef.current = null;
     setConceptLayoutReadyKey(null);
     setConceptSubgraphEditMode(false);
     setConceptSelectedTopic(null);
-    setBranchRangeFirst(null);
     setSidePendingOwner(null);
     setGridLayoutStatus("");
 
@@ -535,11 +499,18 @@ export function RoadmapApp({
           return;
         }
 
-        const parsed = parseConceptLayoutDocument(document, activeDegreeRoadmap);
-        if (parsed) {
-          sanitizeTrunkForkCuration(parsed);
+        const parsed =
+          document === null
+            ? null
+            : parseConceptLayoutDocument(document, activeDegreeRoadmap);
+        const loaded =
+          parsed ?? bootstrapConceptLayoutForCourse(activeDegreeRoadmap);
+
+        if (document !== null && !parsed) {
+          setGridLayoutStatus(
+            "El layout en la nube no es válido; se generó uno nuevo desde el curso. Guardá para reemplazarlo.",
+          );
         }
-        const loaded = parsed ?? fallbackCuration;
         conceptCurationHistoryRef.current = createConceptCurationHistory(loaded);
         setConceptCuration(loaded);
         setConceptCurationHistoryTick((tick) => tick + 1);
@@ -547,8 +518,9 @@ export function RoadmapApp({
       })
       .catch((error: unknown) => {
         if (!cancelled) {
-          conceptCurationHistoryRef.current = createConceptCurationHistory(fallbackCuration);
-          setConceptCuration(fallbackCuration);
+          const recovered = bootstrapConceptLayoutForCourse(activeDegreeRoadmap);
+          conceptCurationHistoryRef.current = createConceptCurationHistory(recovered);
+          setConceptCuration(recovered);
           setConceptCurationHistoryTick((tick) => tick + 1);
           setConceptLayoutReadyKey(layoutKey);
           setGridLayoutStatus(
@@ -588,13 +560,21 @@ export function RoadmapApp({
     return conceptCuration;
   }, [conceptCuration, isConceptView]);
 
+  const conceptLinearLayout = useMemo(
+    () =>
+      isConceptView && conceptCuration
+        ? conceptCuration.open().readLinearLayout()
+        : null,
+    [conceptCuration, isConceptView],
+  );
+
   const layout = useMemo(() => {
     if (!activeDegreeRoadmap || !adjacency) {
       return null;
     }
 
     if (isConceptView) {
-      return buildRoadmapLayout(activeDegreeRoadmap, adjacency, effectiveConceptCuration);
+      return buildLinearConceptLayout(activeDegreeRoadmap, effectiveConceptCuration);
     }
 
     return buildCourseRoadmapLayout(
@@ -652,19 +632,12 @@ export function RoadmapApp({
   const layoutEditMode = gridLayoutEditMode || conceptSubgraphEditMode;
   const canEditLayout = isAdmin && (canEditCourseGrid || canEditConceptSubgraph);
 
-  const conceptEditBranchPhase = useMemo(() => {
-    if (sidePendingOwner) {
-      return "side-owner" as const;
-    }
-    if (branchRangeFirst) {
-      return "range-first" as const;
-    }
-    return "idle" as const;
-  }, [branchRangeFirst, sidePendingOwner]);
+  const conceptEditSidePhase = useMemo(() => {
+    return sidePendingOwner ? ("side-owner" as const) : ("idle" as const);
+  }, [sidePendingOwner]);
 
   const clearConceptEditPending = useCallback(() => {
     setConceptSelectedTopic(null);
-    setBranchRangeFirst(null);
     setSidePendingOwner(null);
   }, []);
 
@@ -692,7 +665,9 @@ export function RoadmapApp({
     }
 
     conceptCurationHistoryRef.current = undone;
-    setConceptCuration(structuredClone(currentConceptCuration(undone)));
+    const restored = currentConceptCuration(undone);
+    const curation = cloneCurationSnapshot(restored);
+    setConceptCuration(curation);
     setConceptCurationHistoryTick((tick) => tick + 1);
     setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
   }, []);
@@ -709,7 +684,9 @@ export function RoadmapApp({
     }
 
     conceptCurationHistoryRef.current = redone;
-    setConceptCuration(structuredClone(currentConceptCuration(redone)));
+    const restored = currentConceptCuration(redone);
+    const curation = cloneCurationSnapshot(restored);
+    setConceptCuration(curation);
     setConceptCurationHistoryTick((tick) => tick + 1);
     setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
   }, []);
@@ -768,7 +745,6 @@ export function RoadmapApp({
   const handleConceptEditToolChange = useCallback(
     (tool: ConceptEditTool) => {
       setConceptEditTool(tool);
-      setBranchRangeFirst(null);
       setSidePendingOwner(null);
       if (tool !== "select") {
         setConceptSelectedTopic(null);
@@ -777,60 +753,61 @@ export function RoadmapApp({
     [],
   );
 
-  const conceptCurationForOrderEdits = useMemo(() => {
-    if (!conceptCuration || !activeDegreeRoadmap || !adjacency) {
-      return conceptCuration;
-    }
+  const canMoveConceptUp = useMemo(
+    () =>
+      Boolean(
+        conceptLinearLayout?.isSuccess() &&
+          conceptSelectedTopic &&
+          conceptLinearLayout.canShift(conceptSelectedTopic, -1),
+      ),
+    [conceptLinearLayout, conceptSelectedTopic],
+  );
 
-    return mergeImplicitLayoutBranches(conceptCuration, activeDegreeRoadmap, adjacency);
-  }, [activeDegreeRoadmap, adjacency, conceptCuration]);
-
-  const conceptMoveAvailability = useMemo(() => {
-    if (!conceptCurationForOrderEdits || !conceptSelectedTopic) {
-      return {
-        up: Admissibility.Blocked as typeof Admissibility.Blocked,
-        down: Admissibility.Blocked as typeof Admissibility.Blocked,
-      };
-    }
-
-    return {
-      up: planShiftOnCuration(conceptCurationForOrderEdits, conceptSelectedTopic, -1)
-        .admissibility,
-      down: planShiftOnCuration(conceptCurationForOrderEdits, conceptSelectedTopic, 1)
-        .admissibility,
-    };
-  }, [conceptCurationForOrderEdits, conceptSelectedTopic]);
+  const canMoveConceptDown = useMemo(
+    () =>
+      Boolean(
+        conceptLinearLayout?.isSuccess() &&
+          conceptSelectedTopic &&
+          conceptLinearLayout.canShift(conceptSelectedTopic, 1),
+      ),
+    [conceptLinearLayout, conceptSelectedTopic],
+  );
 
   const applyConceptOrderShift = useCallback(
     (direction: -1 | 1) => {
-      if (!conceptCuration || !conceptCurationForOrderEdits || !conceptSelectedTopic) {
+      if (
+        !conceptCuration ||
+        !conceptSelectedTopic ||
+        !conceptLinearLayout ||
+        conceptLinearLayout.isFailure()
+      ) {
         return;
       }
 
-      const planned = planShiftOnCuration(
-        conceptCurationForOrderEdits,
-        conceptSelectedTopic,
-        direction,
-      );
-      if (planned.admissibility === Admissibility.Blocked) {
-        setGridLayoutStatus(conceptEditErrorLabel(planned.error));
+      const shifted = conceptLinearLayout.shift(conceptSelectedTopic, direction);
+      if (shifted.isFailure()) {
+        setGridLayoutStatus(conceptEditErrorLabel(shifted.error));
         return;
       }
 
-      commitConceptCurationEdit(planned.curation, {
-        kind: "shift",
+      commitConceptCurationEdit(shifted.curation, {
+        kind: ConceptCurationEditActionKind.Shift,
         title: conceptSelectedTopic,
         direction,
       });
       setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
     },
-    [commitConceptCurationEdit, conceptCuration, conceptCurationForOrderEdits, conceptSelectedTopic],
+    [
+      commitConceptCurationEdit,
+      conceptLinearLayout,
+      conceptSelectedTopic,
+    ],
   );
 
   useEffect(() => {
     if (conceptSubgraphEditMode && canEditConceptSubgraph) {
       onGridLayoutEditHintChange?.(
-        conceptEditHintForTool(conceptEditTool, conceptEditBranchPhase),
+        conceptEditHintForTool(conceptEditTool, conceptEditSidePhase),
       );
       return;
     }
@@ -841,7 +818,7 @@ export function RoadmapApp({
   }, [
     canEditConceptSubgraph,
     canEditCourseGrid,
-    conceptEditBranchPhase,
+    conceptEditSidePhase,
     conceptEditTool,
     conceptSubgraphEditMode,
     gridLayoutEditMode,
@@ -1008,14 +985,7 @@ export function RoadmapApp({
           const nodeData = node.data as RoadmapTopicNodeData;
           const classes = [
             conceptSelectedTopic === node.id ? "roadmap__node--concept-selected" : "",
-            branchRangeFirst === node.id || sidePendingOwner === node.id
-              ? "roadmap__node--branch-fork"
-              : "",
-            branchRangeFirst &&
-            nodeData.role === "spine" &&
-            node.id !== branchRangeFirst
-              ? "roadmap__node--branch-join-target"
-              : "",
+            sidePendingOwner === node.id ? "roadmap__node--branch-fork" : "",
           ]
             .filter(Boolean)
             .join(" ");
@@ -1029,7 +999,6 @@ export function RoadmapApp({
       });
     });
   }, [
-    branchRangeFirst,
     conceptSelectedTopic,
     sidePendingOwner,
     conceptSubgraphEditMode,
@@ -1246,16 +1215,18 @@ export function RoadmapApp({
   }, [activeCourseRoadmap, effectiveCourseCuration]);
 
   const handleSaveConceptSubgraph = useCallback(() => {
-    if (!activeCourseRoadmap || !focusedCourseSlug || !conceptCuration) {
+    if (!activeCourseRoadmap || !activeDegreeRoadmap || !focusedCourseSlug || !conceptCuration) {
       return;
     }
 
     setGridLayoutStatus("Guardando…");
 
+    const stored = prepareConceptLayoutForStorage(conceptCuration, activeDegreeRoadmap);
+
     void saveConceptLayout(
       activeCourseRoadmap.degreeSlug,
       focusedCourseSlug,
-      conceptLayoutDocumentFromCuration(conceptCuration),
+      conceptLayoutDocumentFromCuration(stored),
     )
       .then(() => {
         setGridLayoutStatus(CONCEPT_LAYOUT_SAVED_LABEL);
@@ -1267,7 +1238,13 @@ export function RoadmapApp({
           error instanceof Error ? error.message : "No se pudo guardar el mapa de temas.",
         );
       });
-  }, [activeCourseRoadmap, clearConceptEditPending, conceptCuration, focusedCourseSlug]);
+  }, [
+    activeCourseRoadmap,
+    activeDegreeRoadmap,
+    clearConceptEditPending,
+    conceptCuration,
+    focusedCourseSlug,
+  ]);
 
   const handleLayoutEditToggle = useCallback(() => {
     if (layoutEditMode) {
@@ -1312,44 +1289,7 @@ export function RoadmapApp({
       switch (conceptEditTool) {
         case "select": {
           setConceptSelectedTopic(node.id);
-          setBranchRangeFirst(null);
           setSidePendingOwner(null);
-          return;
-        }
-        case "branch": {
-          if (nodeData.role !== "spine") {
-            return;
-          }
-
-          if (!branchRangeFirst) {
-            setBranchRangeFirst(node.id);
-            setConceptSelectedTopic(node.id);
-            return;
-          }
-
-          if (node.id === branchRangeFirst) {
-            setBranchRangeFirst(null);
-            setConceptSelectedTopic(null);
-            return;
-          }
-
-          const separated = separateSpineRangeToBranches(
-            conceptCuration,
-            branchRangeFirst,
-            node.id,
-          );
-          if (!separated.ok) {
-            setGridLayoutStatus(conceptEditErrorLabel(separated.error));
-            return;
-          }
-
-          commitConceptCurationEdit(separated.curation, {
-            kind: "separate",
-            firstSelectedTitle: branchRangeFirst,
-            lastSelectedTitle: node.id,
-          });
-          clearConceptEditPending();
-          setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
           return;
         }
         case "side": {
@@ -1369,31 +1309,23 @@ export function RoadmapApp({
             return;
           }
 
-          const attached = attachSideConcept(conceptCuration, sidePendingOwner, node.id);
-          if (!attached.ok) {
+          const curationOpen = conceptCuration.open();
+          const layoutRead = curationOpen.readLinearLayout();
+          if (layoutRead.isFailure()) {
+            setGridLayoutStatus(conceptEditErrorLabel(layoutRead.error));
+            return;
+          }
+
+          const attached = layoutRead.attachSide(sidePendingOwner, node.id);
+          if (attached.isFailure()) {
             setGridLayoutStatus(conceptEditErrorLabel(attached.error));
             return;
           }
 
           commitConceptCurationEdit(attached.curation, {
-            kind: "attachSide",
+            kind: ConceptCurationEditActionKind.AttachSide,
             ownerTitle: sidePendingOwner,
             branchTitle: node.id,
-          });
-          clearConceptEditPending();
-          setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
-          return;
-        }
-        case "mergeFork": {
-          const merged = mergeTrunkFork(conceptCuration, node.id);
-          if (!merged.ok) {
-            setGridLayoutStatus(conceptEditErrorLabel(merged.error));
-            return;
-          }
-
-          commitConceptCurationEdit(merged.curation, {
-            kind: "mergeFork",
-            conceptTitle: node.id,
           });
           clearConceptEditPending();
           setGridLayoutStatus(CONCEPT_LAYOUT_UNSAVED_LABEL);
@@ -1404,20 +1336,21 @@ export function RoadmapApp({
             return;
           }
 
-          const inferredOwner =
-            adjacency && conceptStageOf.size > 0
-              ? inferLayoutBranchOwner(node.id, adjacency, conceptStageOf)
-              : undefined;
-          const promoted = promoteConceptToSpine(conceptCuration, node.id, {
-            ownerTitle: inferredOwner,
-          });
-          if (!promoted.ok) {
+          const curationOpen = conceptCuration.open();
+          const layoutRead = curationOpen.readLinearLayout();
+          if (layoutRead.isFailure()) {
+            setGridLayoutStatus(conceptEditErrorLabel(layoutRead.error));
+            return;
+          }
+
+          const promoted = layoutRead.promoteToSpine(node.id);
+          if (promoted.isFailure()) {
             setGridLayoutStatus(conceptEditErrorLabel(promoted.error));
             return;
           }
 
           commitConceptCurationEdit(promoted.curation, {
-            kind: "promoteToSpine",
+            kind: ConceptCurationEditActionKind.PromoteToSpine,
             branchTitle: node.id,
           });
           clearConceptEditPending();
@@ -1429,14 +1362,11 @@ export function RoadmapApp({
       }
     },
     [
-      adjacency,
-      branchRangeFirst,
       clearConceptEditPending,
       commitConceptCurationEdit,
       sidePendingOwner,
       conceptCuration,
       conceptEditTool,
-      conceptStageOf,
       conceptSubgraphEditMode,
     ],
   );
@@ -1670,8 +1600,8 @@ export function RoadmapApp({
                     <RoadmapConceptEditToolbar
                       activeTool={conceptEditTool}
                       onToolChange={handleConceptEditToolChange}
-                      moveUpAdmissibility={conceptMoveAvailability.up}
-                      moveDownAdmissibility={conceptMoveAvailability.down}
+                      canMoveUp={canMoveConceptUp}
+                      canMoveDown={canMoveConceptDown}
                       onMoveUp={() => applyConceptOrderShift(-1)}
                       onMoveDown={() => applyConceptOrderShift(1)}
                       canUndo={conceptHistoryAvailability.undo}

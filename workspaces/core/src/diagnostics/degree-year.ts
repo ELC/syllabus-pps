@@ -1,19 +1,29 @@
 import { normalizeTitle } from "../normalize";
-import { resolveDegreeTitle, yearPagesForDegree } from "../degree-year";
-import { CurriculumGraph, Diagnostic, ZettelPage } from "../types";
+import { yearPagesForDegree } from "../degree-year";
+import { CurriculumGraph, Diagnostic, ZettelPage, PageKind } from "../types";
+
+import {
+  degreeYearsCountInvalidDiagnostic,
+  degreeYearsMismatchDiagnostic,
+  yearCourseNonCourseDiagnostic,
+  yearCourseUnresolvedDiagnostic,
+  yearCoursesMalformedDiagnostic,
+  yearDegreeInvalidFrontmatterDiagnostic,
+  yearDegreeUnresolvedDiagnostic,
+  yearIndexInvalidDiagnostic,
+  yearLinkUnresolvedDiagnostic,
+  yearLinksNonCourseDiagnostic,
+  yearMissingDegreeDiagnostic,
+} from "./degree-year-errors";
 
 export function degreeYearDiagnostics(graph: CurriculumGraph): Diagnostic[] {
   const diagnostics: Diagnostic[] = [];
 
   for (const page of graph.pages) {
-    if (page.kind === "degree") {
+    if (page.kind === PageKind.Degree) {
       if (page.yearsCountInvalid) {
-        diagnostics.push({
-          severity: "error",
-          code: "degree-years-count-invalid",
-          message: `Degree "${page.title}" has an invalid years count in frontmatter.`,
-          page: page.title,
-        });
+        const diagnostic = degreeYearsCountInvalidDiagnostic(page);
+        diagnostics.push(diagnostic);
         continue;
       }
 
@@ -23,91 +33,61 @@ export function degreeYearDiagnostics(graph: CurriculumGraph): Diagnostic[] {
 
       const linkedYears = yearPagesForDegree(graph.pages, page.title);
       if (linkedYears.length !== page.yearsCount) {
-        diagnostics.push({
-          severity: "warning",
-          code: "degree-years-mismatch",
-          message: `Degree "${page.title}" declares ${page.yearsCount} year(s) but ${linkedYears.length} year page(s) reference it.`,
-          page: page.title,
-          details: { declared: page.yearsCount, linked: linkedYears.length },
-        });
+        const diagnostic = degreeYearsMismatchDiagnostic(page, linkedYears);
+        diagnostics.push(diagnostic);
       }
     }
 
-    if (page.kind !== "year") {
+    if (page.kind !== PageKind.Year) {
       continue;
     }
 
     if (page.degreeInvalid) {
-      diagnostics.push({
-        severity: "error",
-        code: "year-degree-unresolved",
-        message: `Year page "${page.title}" has invalid degree frontmatter.`,
-        page: page.title,
-      });
+      const diagnostic = yearDegreeInvalidFrontmatterDiagnostic(page);
+      diagnostics.push(diagnostic);
     } else if (!page.degree) {
-      diagnostics.push({
-        severity: "error",
-        code: "year-missing-degree",
-        message: `Year page "${page.title}" must declare a degree.`,
-        page: page.title,
-      });
+      const diagnostic = yearMissingDegreeDiagnostic(page);
+      diagnostics.push(diagnostic);
     } else {
-      const degreeTitle = page.degree.resolvedTarget ?? page.degree.target;
+      const degree = page.degree;
+      const degreeTitle = degree.resolvedTarget ?? degree.target;
+      const normalizedDegreeTitle = normalizeTitle(degreeTitle);
       const degreePage = graph.pages.find(
         (entry) =>
-          entry.kind === "degree" &&
-          normalizeTitle(entry.title) === normalizeTitle(degreeTitle),
+          entry.kind === PageKind.Degree &&
+          normalizeTitle(entry.title) === normalizedDegreeTitle,
       );
       if (!degreePage) {
-        diagnostics.push({
-          severity: "error",
-          code: "year-degree-unresolved",
-          message: `Year page "${page.title}" references unresolved degree "${page.degree.target}".`,
-          page: page.title,
-        });
+        const diagnostic = yearDegreeUnresolvedDiagnostic(page, degree);
+        diagnostics.push(diagnostic);
       }
     }
 
     if (page.yearIndexInvalid) {
-      diagnostics.push({
-        severity: "error",
-        code: "year-index-invalid",
-        message: `Year page "${page.title}" has an invalid yearIndex.`,
-        page: page.title,
-      });
+      const diagnostic = yearIndexInvalidDiagnostic(page);
+      diagnostics.push(diagnostic);
     }
 
     if (page.coursesInvalid) {
-      diagnostics.push({
-        severity: "error",
-        code: "year-courses-unresolved",
-        message: `Year page "${page.title}" has malformed courses frontmatter.`,
-        page: page.title,
-      });
+      const diagnostic = yearCoursesMalformedDiagnostic(page);
+      diagnostics.push(diagnostic);
     }
 
-    for (const course of page.courses ?? []) {
+    const courses = page.courses ?? [];
+    for (const course of courses) {
       const courseTitle = course.resolvedTarget ?? course.target;
+      const normalizedCourseTitle = normalizeTitle(courseTitle);
       const targetPage = graph.pages.find(
-        (entry) => normalizeTitle(entry.title) === normalizeTitle(courseTitle),
+        (entry) => normalizeTitle(entry.title) === normalizedCourseTitle,
       );
       if (!targetPage) {
-        diagnostics.push({
-          severity: "error",
-          code: "year-courses-unresolved",
-          message: `Year page "${page.title}" lists unresolved course "${course.target}".`,
-          page: page.title,
-        });
+        const diagnostic = yearCourseUnresolvedDiagnostic(page, course);
+        diagnostics.push(diagnostic);
         continue;
       }
-      if (targetPage && targetPage.kind !== "course") {
-        diagnostics.push({
-          severity: "warning",
-          code: "year-courses-non-course",
-          message: `Year page "${page.title}" lists "${course.resolvedTarget}", which is not a course page.`,
-          page: page.title,
-          details: { targetKind: targetPage.kind },
-        });
+      if (targetPage.kind !== PageKind.Course) {
+        const diagnostic = yearCourseNonCourseDiagnostic(page, course, targetPage);
+        diagnostics.push(diagnostic);
       }
     }
   }
@@ -122,10 +102,11 @@ export function yearBodyLinkDiagnostics(
   const diagnostics: Diagnostic[] = [];
 
   for (const yearPage of graph.pages) {
-    if (yearPage.kind !== "year") {
+    if (yearPage.kind !== PageKind.Year) {
       continue;
     }
-    if ((yearPage.courses?.length ?? 0) > 0) {
+    const courseCount = yearPage.courses?.length ?? 0;
+    if (courseCount > 0) {
       continue;
     }
 
@@ -134,30 +115,16 @@ export function yearBodyLinkDiagnostics(
       const normalized = normalizeTitle(targetLabel);
 
       if (!ref.resolvedTarget) {
-        diagnostics.push({
-          severity: "error",
-          code: "year-link-unresolved",
-          message: `Year page "${yearPage.title}" links to unresolved page "${ref.target}".`,
-          page: yearPage.title,
-          line: ref.line,
-        });
+        const diagnostic = yearLinkUnresolvedDiagnostic(yearPage, ref);
+        diagnostics.push(diagnostic);
         continue;
       }
 
       const targetPage = pageByTitle.get(normalized);
-      if (
-        targetPage &&
-        targetPage.kind !== "course" &&
-        normalized !== yearPage.normalizedTitle
-      ) {
-        diagnostics.push({
-          severity: "warning",
-          code: "year-links-non-course",
-          message: `Year page "${yearPage.title}" links to "${targetLabel}", which is not a course page.`,
-          page: yearPage.title,
-          line: ref.line,
-          details: { targetKind: targetPage.kind },
-        });
+      const isSelf = normalized === yearPage.normalizedTitle;
+      if (targetPage && targetPage.kind !== PageKind.Course && !isSelf) {
+        const diagnostic = yearLinksNonCourseDiagnostic(yearPage, ref, targetPage);
+        diagnostics.push(diagnostic);
       }
     }
   }

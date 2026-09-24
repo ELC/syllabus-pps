@@ -8,10 +8,6 @@ import {
   conceptMissingKind,
   conceptNotesWithoutLinks,
 } from "./concepts";
-import {
-  conceptDependsOnCycleDiagnostics,
-  conceptDependsOnDiagnostics,
-} from "./dependencies";
 import { courseCorrelativasDiagnostics } from "./course-correlativas";
 import { courseTrayectoDiagnostics } from "./course-trayecto";
 import { courseWithoutConceptLinks, courseYearDiagnostics } from "./courses";
@@ -51,31 +47,73 @@ export {
 
 export function collectDiagnostics(graph: CurriculumGraph): Diagnostic[] {
   const diagnostics: Diagnostic[] = [];
-  const { pagesByTitle: pageByTitle } = buildCurriculumIndexes(graph);
+  const indexes = buildCurriculumIndexes(graph);
+  const pageByTitle = indexes.pagesByTitle;
   const incomingCounts = incomingEdgeCounts(graph);
-  diagnostics.push(...degreeYearDiagnostics(graph));
-  diagnostics.push(...yearBodyLinkDiagnostics(graph, pageByTitle));
-  diagnostics.push(...emptyPages(graph));
-  diagnostics.push(...selfLinkDiagnostics(graph));
-  diagnostics.push(...nonBulletContentDiagnostics(graph));
-  diagnostics.push(...courseWithoutConceptLinks(graph));
-  diagnostics.push(...courseCorrelativasDiagnostics(graph));
-  diagnostics.push(...courseTrayectoDiagnostics(graph));
-  diagnostics.push(...conceptMissingKind(graph));
-  diagnostics.push(...conceptDependsOnDiagnostics(graph));
-  diagnostics.push(...conceptDependsOnCycleDiagnostics(graph));
-  diagnostics.push(...conceptNotesWithoutLinks(graph));
-  diagnostics.push(...conceptInsufficientSources(graph));
-  diagnostics.push(...conceptMissingBookSource(graph));
-  diagnostics.push(...conceptNotesWithoutSourceLinks(graph));
-  diagnostics.push(...resourceCatalogDiagnostics(graph));
-  diagnostics.push(...unresolvedCitationDiagnostics(graph));
-  diagnostics.push(...conceptLinksToNonConceptPages(graph));
-  diagnostics.push(...conceptLowCourseCoverage(graph));
-  diagnostics.push(...uuidReferenceDiagnostics(graph));
-  diagnostics.push(...orphanDiagnostics(graph, incomingCounts));
-  diagnostics.push(...administrativeDiagnostics(graph));
-  diagnostics.push(...courseYearDiagnostics(graph));
 
-  return diagnostics.sort(compareDiagnostics);
+  const degreeYear = degreeYearDiagnostics(graph);
+  diagnostics.push(...degreeYear);
+
+  const yearBodyLinks = yearBodyLinkDiagnostics(graph, pageByTitle);
+  diagnostics.push(...yearBodyLinks);
+
+  const empty = emptyPages(graph);
+  diagnostics.push(...empty);
+
+  const selfLinks = selfLinkDiagnostics(graph);
+  diagnostics.push(...selfLinks);
+
+  const nonBullet = nonBulletContentDiagnostics(graph);
+  diagnostics.push(...nonBullet);
+
+  const coursesWithoutConcepts = courseWithoutConceptLinks(graph);
+  diagnostics.push(...coursesWithoutConcepts);
+
+  const correlativas = courseCorrelativasDiagnostics(graph);
+  diagnostics.push(...correlativas);
+
+  const trayecto = courseTrayectoDiagnostics(graph);
+  diagnostics.push(...trayecto);
+
+  const missingConceptKind = conceptMissingKind(graph);
+  diagnostics.push(...missingConceptKind);
+
+  const notesWithoutLinks = conceptNotesWithoutLinks(graph);
+  diagnostics.push(...notesWithoutLinks);
+
+  const insufficientSources = conceptInsufficientSources(graph);
+  diagnostics.push(...insufficientSources);
+
+  const missingBookSource = conceptMissingBookSource(graph);
+  diagnostics.push(...missingBookSource);
+
+  const notesWithoutSourceLinks = conceptNotesWithoutSourceLinks(graph);
+  diagnostics.push(...notesWithoutSourceLinks);
+
+  const resourceCatalog = resourceCatalogDiagnostics(graph);
+  diagnostics.push(...resourceCatalog);
+
+  const unresolvedCitations = unresolvedCitationDiagnostics(graph);
+  diagnostics.push(...unresolvedCitations);
+
+  const conceptNonConceptLinks = conceptLinksToNonConceptPages(graph);
+  diagnostics.push(...conceptNonConceptLinks);
+
+  const lowCoverage = conceptLowCourseCoverage(graph);
+  diagnostics.push(...lowCoverage);
+
+  const uuidRefs = uuidReferenceDiagnostics(graph);
+  diagnostics.push(...uuidRefs);
+
+  const orphans = orphanDiagnostics(graph, incomingCounts);
+  diagnostics.push(...orphans);
+
+  const administrative = administrativeDiagnostics(graph);
+  diagnostics.push(...administrative);
+
+  const courseYears = courseYearDiagnostics(graph);
+  diagnostics.push(...courseYears);
+
+  const sorted = diagnostics.sort(compareDiagnostics);
+  return sorted;
 }

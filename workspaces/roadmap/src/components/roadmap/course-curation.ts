@@ -1,3 +1,4 @@
+import type { CurriculumPageSlug, DegreeRoadmapNodeTitle, RoadmapLayoutSlug } from "@pps/core";
 import {
   normalizeRoadmapCourseLayoutDocument,
   normalizeRoadmapCourseLayoutYears,
@@ -14,7 +15,7 @@ export interface YearGridTemplate {
 }
 
 export interface CourseRoadmapCuration {
-  degreeSlug: string;
+  degreeSlug: RoadmapLayoutSlug;
   courses: Record<string, CourseCurationEntry>;
   years: Record<string, YearGridTemplate>;
 }
@@ -23,7 +24,7 @@ export interface CuratedCourseDisplayRow {
   year: string;
   withinYearStage: number;
   stage: number;
-  titles: string[];
+  titles: DegreeRoadmapNodeTitle[];
 }
 
 export interface CourseGridSlot {
@@ -34,7 +35,7 @@ export interface CourseGridSlot {
 const EMPTY_AREA = ".";
 
 export function buildCourseRoadmapCuration(
-  degreeSlug: string,
+  degreeSlug: RoadmapLayoutSlug,
   layout: RoadmapCourseLayoutDocument | null | undefined,
 ): CourseRoadmapCuration | null {
   if (!layout || !hasCuratedCourseGridLayout(layout)) {
@@ -64,8 +65,8 @@ function hasCuratedCourseGridLayout(
 export function resolveCourseTitleFromRegistry(
   areaId: string,
   courses: Readonly<Record<string, CourseCurationEntry>>,
-  slugToTitle: ReadonlyMap<string, string>,
-): string | undefined {
+  slugToTitle: ReadonlyMap<CurriculumPageSlug, DegreeRoadmapNodeTitle>,
+): DegreeRoadmapNodeTitle | undefined {
   const entry = courses[areaId];
   if (!entry) {
     return undefined;
@@ -77,8 +78,8 @@ export function resolveCourseTitleFromRegistry(
 function resolveCourseTitle(
   areaId: string,
   courses: Readonly<Record<string, CourseCurationEntry>>,
-  slugToTitle: ReadonlyMap<string, string>,
-): string | undefined {
+  slugToTitle: ReadonlyMap<CurriculumPageSlug, DegreeRoadmapNodeTitle>,
+): DegreeRoadmapNodeTitle | undefined {
   return resolveCourseTitleFromRegistry(areaId, courses, slugToTitle);
 }
 
@@ -86,9 +87,9 @@ function resolveCourseTitle(
 export function parseTemplateAreas(
   templateAreas: string[],
   courses: Readonly<Record<string, CourseCurationEntry>>,
-  slugToTitle: ReadonlyMap<string, string>,
-): Map<string, CourseGridSlot> {
-  const slots = new Map<string, CourseGridSlot>();
+  slugToTitle: ReadonlyMap<CurriculumPageSlug, DegreeRoadmapNodeTitle>,
+): Map<DegreeRoadmapNodeTitle, CourseGridSlot> {
+  const slots = new Map<DegreeRoadmapNodeTitle, CourseGridSlot>();
 
   for (const [rowIndex, rowTemplate] of templateAreas.entries()) {
     const cells = rowTemplate.trim().split(/\s+/);
@@ -112,9 +113,9 @@ export function parseTemplateAreas(
 
 function courseSlotsFromCuration(
   curation: CourseRoadmapCuration,
-  slugToTitle: ReadonlyMap<string, string>,
-): Map<string, CourseGridSlot & { year: string }> {
-  const slots = new Map<string, CourseGridSlot & { year: string }>();
+  slugToTitle: ReadonlyMap<CurriculumPageSlug, DegreeRoadmapNodeTitle>,
+): Map<DegreeRoadmapNodeTitle, CourseGridSlot & { year: string }> {
+  const slots = new Map<DegreeRoadmapNodeTitle, CourseGridSlot & { year: string }>();
 
   for (const [year, template] of Object.entries(curation.years)) {
     for (const [title, slot] of parseTemplateAreas(
@@ -131,15 +132,18 @@ function courseSlotsFromCuration(
 
 export function buildCuratedCourseGrid(
   curation: CourseRoadmapCuration,
-  titles: string[],
-  yearsByTitle: ReadonlyMap<string, string>,
-  stageOf: Map<string, number>,
+  titles: readonly DegreeRoadmapNodeTitle[],
+  yearsByTitle: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
+  stageOf: Map<DegreeRoadmapNodeTitle, number>,
   sortYears: (years: Iterable<string>) => string[],
-  slugToTitle: ReadonlyMap<string, string>,
-): { displayRows: CuratedCourseDisplayRow[]; columnOf: Map<string, number> } {
+  slugToTitle: ReadonlyMap<CurriculumPageSlug, DegreeRoadmapNodeTitle>,
+): {
+  displayRows: CuratedCourseDisplayRow[];
+  columnOf: Map<DegreeRoadmapNodeTitle, number>;
+} {
   const slots = courseSlotsFromCuration(curation, slugToTitle);
-  const columnOf = new Map<string, number>();
-  const rowsByYear = new Map<string, Map<number, string[]>>();
+  const columnOf = new Map<DegreeRoadmapNodeTitle, number>();
+  const rowsByYear = new Map<string, Map<number, DegreeRoadmapNodeTitle[]>>();
 
   for (const title of titles) {
     const slot = slots.get(title);
@@ -149,7 +153,7 @@ export function buildCuratedCourseGrid(
 
     columnOf.set(title, slot.column);
     const year = yearsByTitle.get(title) ?? slot.year;
-    const yearRows = rowsByYear.get(year) ?? new Map<number, string[]>();
+    const yearRows = rowsByYear.get(year) ?? new Map<number, DegreeRoadmapNodeTitle[]>();
     const rowTitles = yearRows.get(slot.row) ?? [];
     rowTitles.push(title);
     yearRows.set(slot.row, rowTitles);
@@ -195,8 +199,8 @@ function gridToTemplate(grid: string[][]): string[] {
 
 export function resolveAreaIdForTitle(
   curation: CourseRoadmapCuration,
-  title: string,
-  slugToTitle: ReadonlyMap<string, string>,
+  title: DegreeRoadmapNodeTitle,
+  slugToTitle: ReadonlyMap<CurriculumPageSlug, DegreeRoadmapNodeTitle>,
 ): string | undefined {
   for (const [areaId, entry] of Object.entries(curation.courses)) {
     if (slugToTitle.get(entry.slug) === title) {

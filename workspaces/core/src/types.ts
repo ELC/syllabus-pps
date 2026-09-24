@@ -1,14 +1,22 @@
-export const pageKinds = [
-  "degree",
-  "year",
-  "course",
-  "concept",
-  "journal",
-  "administrative",
-  "unknown",
-] as const;
+export enum PageKind {
+  Degree = "degree",
+  Year = "year",
+  Course = "course",
+  Concept = "concept",
+  Journal = "journal",
+  Administrative = "administrative",
+  Unknown = "unknown",
+}
 
-export type PageKind = (typeof pageKinds)[number];
+export const pageKinds: readonly PageKind[] = [
+  PageKind.Degree,
+  PageKind.Year,
+  PageKind.Course,
+  PageKind.Concept,
+  PageKind.Journal,
+  PageKind.Administrative,
+  PageKind.Unknown,
+];
 
 export const courseTrayectos = [
   "Trayecto Principal",
@@ -27,14 +35,19 @@ export const courseTrayectoAliases: Record<string, CourseTrayecto> = {
   "no-estructurado": COURSE_TRAYECTO_NO_ESTRUCTURADO,
 };
 
-export const edgeKinds = [
-  "page-ref",
-  "concept-tag",
-  "concept-dependency",
-  "course-prerequisite",
-] as const;
+export enum EdgeKind {
+  PageRef = "page-ref",
+  ConceptTag = "concept-tag",
+  ConceptDependency = "concept-dependency",
+  CoursePrerequisite = "course-prerequisite",
+}
 
-export type EdgeKind = (typeof edgeKinds)[number];
+export const edgeKinds: readonly EdgeKind[] = [
+  EdgeKind.PageRef,
+  EdgeKind.ConceptTag,
+  EdgeKind.ConceptDependency,
+  EdgeKind.CoursePrerequisite,
+];
 
 export const diagnosticSeverities = ["info", "warning", "error"] as const;
 

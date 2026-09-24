@@ -1377,7 +1377,7 @@ function runGraphLayout(
     eles,
     fit: true,
     padding: 48,
-  } as cytoscape.LayoutOptions).run();
+  } as unknown as cytoscape.LayoutOptions).run();
 }
 
 function refreshGraphLayout(
@@ -1573,12 +1573,12 @@ function canonicalizeLoadedEdgeDirection(
     return [source, target];
   }
 
-  const sourceRank = structuralPageKindRank(kindById.get(source));
-  const targetRank = structuralPageKindRank(kindById.get(target));
+  const sourceRank = structuralPageKindRank(kindById.get(source) ?? "");
+  const targetRank = structuralPageKindRank(kindById.get(target) ?? "");
   if (
-    sourceRank !== undefined &&
-    targetRank !== undefined &&
-    sourceRank > targetRank
+    sourceRank.isStructural &&
+    targetRank.isStructural &&
+    sourceRank.index > targetRank.index
   ) {
     return [target, source];
   }
@@ -1782,7 +1782,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
           "font-family": "Montserrat, sans-serif",
           "font-weight": 700,
           "text-wrap": "wrap",
-          "text-max-width": 42,
+          "text-max-width": "42",
           width: 58,
           height: 58,
           "background-opacity": 0,
@@ -1810,7 +1810,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
           width: 76,
           height: 76,
           "font-size": 8,
-          "text-max-width": 58,
+          "text-max-width": "58",
         },
       },
       {
@@ -1826,7 +1826,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
           width: 48,
           height: 48,
           "font-size": 6,
-          "text-max-width": 34,
+          "text-max-width": "34",
           "font-family": "Montserrat, sans-serif",
           "font-weight": 700,
         },

@@ -1,48 +1,70 @@
 import { coursesLinkedToYearPage } from "../degree-year";
 import { normalizeTitle } from "../normalize";
-import { CurriculumGraph, Diagnostic } from "../types";
+import { CurriculumGraph, Diagnostic, PageKind } from "../types";
+
+import {
+  courseWithoutConceptLinksDiagnostic,
+  courseWithoutYearLinkDiagnostic,
+} from "./courses-errors";
 
 export function courseWithoutConceptLinks(graph: CurriculumGraph): Diagnostic[] {
   const conceptTitles = new Set(
-    graph.pages.filter((page) => page.kind === "concept").map((page) => page.normalizedTitle),
+    graph.pages.filter((page) => page.kind === PageKind.Concept).map((page) => page.normalizedTitle),
   );
 
-  return graph.pages
-    .filter((page) => page.kind === "course")
-    .filter((page) => {
-      const hasConceptTags = page.tags.length > 0;
-      const hasConceptRefs = page.refs.some((ref) =>
-        conceptTitles.has(normalizeTitle(ref.resolvedTarget ?? ref.target)),
-      );
+  const diagnostics: Diagnostic[] = [];
 
-      return !hasConceptTags && !hasConceptRefs;
-    })
-    .map((page) => ({
-      severity: "warning" as const,
-      code: "course-without-concept-links",
-      message: `Course "${page.title}" has no links to concepts.`,
-      page: page.title,
-    }));
+  for (const page of graph.pages) {
+    if (page.kind !== PageKind.Course) {
+      continue;
+    }
+
+    const hasConceptTags = page.tags.length > 0;
+    let hasConceptRefs = false;
+    for (const ref of page.refs) {
+      const refTarget = ref.resolvedTarget ?? ref.target;
+      const normalizedRef = normalizeTitle(refTarget);
+      if (conceptTitles.has(normalizedRef)) {
+        hasConceptRefs = true;
+        break;
+      }
+    }
+
+    if (!hasConceptTags && !hasConceptRefs) {
+      const diagnostic = courseWithoutConceptLinksDiagnostic(page);
+      diagnostics.push(diagnostic);
+    }
+  }
+
+  return diagnostics;
 }
 
 export function courseYearDiagnostics(graph: CurriculumGraph): Diagnostic[] {
-  const pagesByTitle = new Map(graph.pages.map((page) => [page.normalizedTitle, page]));
+  const coursesReferencedByYear = new Set<string>();
 
-  const coursesReferencedByYear = new Set(
-    graph.pages
-      .filter((page) => page.kind === "year")
-      .flatMap((yearPage) =>
-        coursesLinkedToYearPage(yearPage, graph).map((title) => normalizeTitle(title)),
-      ),
-  );
+  for (const yearPage of graph.pages) {
+    if (yearPage.kind !== PageKind.Year) {
+      continue;
+    }
+    const linkedCourses = coursesLinkedToYearPage(yearPage, graph);
+    for (const title of linkedCourses) {
+      const normalized = normalizeTitle(title);
+      coursesReferencedByYear.add(normalized);
+    }
+  }
 
-  return graph.pages
-    .filter((page) => page.kind === "course")
-    .filter((page) => !coursesReferencedByYear.has(page.normalizedTitle))
-    .map((page) => ({
-      severity: "warning" as const,
-      code: "course-without-year-link" as const,
-      message: `Course "${page.title}" is not linked from any year page.`,
-      page: page.title,
-    }));
+  const diagnostics: Diagnostic[] = [];
+
+  for (const page of graph.pages) {
+    if (page.kind !== PageKind.Course) {
+      continue;
+    }
+    if (coursesReferencedByYear.has(page.normalizedTitle)) {
+      continue;
+    }
+    const diagnostic = courseWithoutYearLinkDiagnostic(page);
+    diagnostics.push(diagnostic);
+  }
+
+  return diagnostics;
 }

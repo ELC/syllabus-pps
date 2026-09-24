@@ -27,13 +27,17 @@
     "build:pages": "pnpm build:tooling && pnpm build:apps && pnpm --filter @pps/config merge-pages",
     "dev": "pnpm build:tooling && pnpm --filter @pps/site dev",
     "watch:analytics": "pnpm --filter @pps/analytics-cli watch:analytics",
-    "serve:dac": "pnpm --filter @pps/analytics-cli serve:dac"
+    "serve:dac": "pnpm --filter @pps/analytics-cli serve:dac",
+    "normalize:roadmap-concept-layouts": "pnpm build:core && node --env-file=.env ./node_modules/tsx/dist/cli.mjs scripts/normalize-roadmap-concept-layouts.ts"
   },
   "engines": {
     "node": ">=20"
   },
   "devDependencies": {
+    "@pps/content": "workspace:*",
+    "@pps/core": "workspace:*",
     "esbuild": "^0.25.12",
-    "pg": "^8.23.0"
+    "pg": "^8.23.0",
+    "tsx": "^4.19.4"
   }
 }

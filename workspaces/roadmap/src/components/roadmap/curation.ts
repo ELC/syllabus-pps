@@ -1,74 +1,4 @@
-import type { DegreeRoadmap } from "@pps/core";
-
-import ldsCuration from "../../curations/lds.json";
-
-export interface RoadmapParallelLane {
-  root: string;
-  spine: string[];
-}
-
-export interface RoadmapTrunkFork {
-  after: string;
-  lanes: RoadmapParallelLane[];
-  mergeInto: string;
-}
-
-export interface RoadmapCuration {
-  degreeSlug: string;
-  parallelLanes: RoadmapParallelLane[];
-  postMergeSpine: string[];
-  /** Ordered main trunk after the post-merge prefix; when set, replaces automatic ordering. */
-  trunkSpine?: string[];
-  trunkForks?: RoadmapTrunkFork[];
-  branches: Record<string, string[]>;
-  branchOwnerOverrides: Record<string, string>;
-  spineJoins: Record<string, string>;
-  spinePromotions?: string[];
-  /** When true, left/right branch columns for this spine owner are swapped. */
-  branchLayoutFlips?: Record<string, boolean>;
-}
-
-export const EMPTY_ROADMAP_CURATION: RoadmapCuration = {
-  degreeSlug: "",
-  parallelLanes: [],
-  postMergeSpine: [],
-  trunkSpine: [],
-  trunkForks: [],
-  branches: {},
-  branchOwnerOverrides: {},
-  spineJoins: {},
-  spinePromotions: [],
-  branchLayoutFlips: {},
-};
-
-const curatedModules = import.meta.glob("../../curations/*.json", {
-  eager: true,
-  import: "default",
-}) as Record<string, RoadmapCuration>;
-
-function loadCurations(): Map<string, RoadmapCuration> {
-  const curations = new Map<string, RoadmapCuration>();
-
-  for (const curation of Object.values(curatedModules)) {
-    curations.set(curation.degreeSlug, curation);
-  }
-
-  if (!curations.has(ldsCuration.degreeSlug)) {
-    curations.set(ldsCuration.degreeSlug, ldsCuration);
-  }
-
-  return curations;
-}
-
-const curationsBySlug = loadCurations();
-
-export function listRoadmapCurations(): RoadmapCuration[] {
-  return [...curationsBySlug.values()];
-}
-
-export function resolveRoadmapCuration(degreeSlug: string): RoadmapCuration | null {
-  return curationsBySlug.get(degreeSlug) ?? null;
-}
+import type { DegreeRoadmap, RoadmapCuration } from "@pps/core";
 
 function assertKnownTitle(titles: Set<string>, title: string, context: string): void {
   if (!titles.has(title)) {
@@ -96,14 +26,6 @@ export function validateRoadmapCuration(
     }
   }
 
-  for (const title of curation.postMergeSpine) {
-    assertKnownTitle(titles, title, `post-merge spine for ${roadmap.degreeSlug}`);
-  }
-
-  for (const title of curation.trunkSpine ?? []) {
-    assertKnownTitle(titles, title, `trunk spine for ${roadmap.degreeSlug}`);
-  }
-
   for (const [owner, branches] of Object.entries(curation.branches)) {
     assertKnownTitle(titles, owner, `branch owner for ${roadmap.degreeSlug}`);
     for (const branch of branches) {
@@ -116,24 +38,7 @@ export function validateRoadmapCuration(
     assertKnownTitle(titles, owner, `branch owner override target for ${roadmap.degreeSlug}`);
   }
 
-  for (const [from, to] of Object.entries(curation.spineJoins)) {
-    assertKnownTitle(titles, from, `spine join source for ${roadmap.degreeSlug}`);
-    assertKnownTitle(titles, to, `spine join target for ${roadmap.degreeSlug}`);
-  }
-
   for (const title of curation.spinePromotions ?? []) {
     assertKnownTitle(titles, title, `spine promotion for ${roadmap.degreeSlug}`);
   }
-
-  for (const fork of curation.trunkForks ?? []) {
-    assertKnownTitle(titles, fork.after, `trunk fork source for ${roadmap.degreeSlug}`);
-    assertKnownTitle(titles, fork.mergeInto, `trunk fork merge target for ${roadmap.degreeSlug}`);
-    for (const lane of fork.lanes) {
-      assertKnownTitle(titles, lane.root, `trunk fork lane root for ${roadmap.degreeSlug}`);
-      for (const title of lane.spine) {
-        assertKnownTitle(titles, title, `trunk fork lane spine for ${roadmap.degreeSlug}`);
-      }
-    }
-  }
-
 }

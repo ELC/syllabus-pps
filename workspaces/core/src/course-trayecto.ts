@@ -1,4 +1,4 @@
-import type { CourseTrayecto, PageKind } from "./types";
+import { PageKind, type CourseTrayecto } from "./types";
 import {
   COURSE_TRAYECTO_NO_ESTRUCTURADO,
   courseTrayectoAliases,
@@ -35,7 +35,7 @@ export function resolveCourseTrayecto(
   trayecto?: CourseTrayecto,
   trayectoInvalid?: boolean,
 ): CourseTrayecto {
-  if (kind !== "course" || trayectoInvalid) {
+  if (kind !== PageKind.Course || trayectoInvalid) {
     return DEFAULT_COURSE_TRAYECTO;
   }
 

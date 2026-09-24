@@ -1,4 +1,9 @@
-import { courseTrayectos, CurriculumGraph, Diagnostic } from "../types";
+import { CurriculumGraph, Diagnostic, PageKind } from "../types";
+
+import {
+  courseTrayectoInvalidDiagnostic,
+  courseTrayectoOnNonCourseDiagnostic,
+} from "./course-trayecto-errors";
 
 export function courseTrayectoDiagnostics(graph: CurriculumGraph): Diagnostic[] {
   const diagnostics: Diagnostic[] = [];
@@ -8,23 +13,15 @@ export function courseTrayectoDiagnostics(graph: CurriculumGraph): Diagnostic[] 
       continue;
     }
 
-    if (page.kind !== "course") {
-      diagnostics.push({
-        severity: "warning",
-        code: "course-trayecto-on-non-course",
-        message: `Page "${page.title}" declares trayecto but is not a course page.`,
-        page: page.title,
-      });
+    if (page.kind !== PageKind.Course) {
+      const diagnostic = courseTrayectoOnNonCourseDiagnostic(page);
+      diagnostics.push(diagnostic);
       continue;
     }
 
     if (page.trayectoInvalid) {
-      diagnostics.push({
-        severity: "error",
-        code: "course-trayecto-invalid",
-        message: `Course page "${page.title}" has a malformed trayecto frontmatter field; expected one of ${courseTrayectos.map((trayecto) => `"${trayecto}"`).join(", ")}.`,
-        page: page.title,
-      });
+      const diagnostic = courseTrayectoInvalidDiagnostic(page);
+      diagnostics.push(diagnostic);
     }
   }
 

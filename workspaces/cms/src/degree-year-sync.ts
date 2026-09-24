@@ -1,4 +1,4 @@
-import { buildYearPageTitle, buildYearSlug } from "@pps/core";
+import { buildYearPageTitle, buildYearSlug, PageKind } from "@pps/core";
 import type { PageSource } from "@pps/core";
 
 import { composePageDocument, splitPageDocument, type PageMetadata } from "./page-document";
@@ -13,7 +13,7 @@ export function buildDefaultYearMetadata(
     title: buildYearPageTitle(degreeTitle, yearIndex),
     fullName: "",
     slug: buildYearSlug(degreeSlug, yearIndex),
-    kind: "year",
+    kind: PageKind.Year,
     version: existing?.version ?? 1,
     updatedAt: existing?.updatedAt,
     trayecto: "",
@@ -36,7 +36,7 @@ export function planDegreeYearSync(
   degreeSlug: string,
   allSources: PageSource[],
 ): DegreeYearSyncPlan | null {
-  if (degreeMetadata.kind !== "degree" || degreeMetadata.yearsCount === undefined) {
+  if (degreeMetadata.kind !== PageKind.Degree || degreeMetadata.yearsCount === undefined) {
     return null;
   }
 

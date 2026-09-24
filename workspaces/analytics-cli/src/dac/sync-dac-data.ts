@@ -1,4 +1,9 @@
-import { countDiagnosticsBySeverity, countPagesByKind, sourceCoverageGlobalLabel } from "@pps/core";
+import {
+  countDiagnosticsBySeverity,
+  countPagesByKind,
+  PageKind,
+  sourceCoverageGlobalLabel,
+} from "@pps/core";
 import type { DacRowRecord } from "@pps/content";
 
 import { CurriculumGraph, Diagnostic } from "../types";
@@ -36,9 +41,9 @@ export function buildDacSyncPayload(
   metrics["quality.expected-courses"] = expectedCourses;
   metrics["quality.errors"] = errors;
   metrics["quality.warnings"] = warnings;
-  metrics["quality.concept-pages"] = countPagesByKind(graph, "concept");
-  metrics["quality.course-pages"] = countPagesByKind(graph, "course");
-  metrics["quality.year-pages"] = countPagesByKind(graph, "year");
+  metrics["quality.concept-pages"] = countPagesByKind(graph, PageKind.Concept);
+  metrics["quality.course-pages"] = countPagesByKind(graph, PageKind.Course);
+  metrics["quality.year-pages"] = countPagesByKind(graph, PageKind.Year);
 
   for (const diagnostic of diagnostics) {
     rows.push(
@@ -69,7 +74,7 @@ export function buildDacSyncPayload(
   }
 
   const conceptMapRows = collectConceptMapRows(graph);
-  const conceptCount = graph.pages.filter((page) => page.kind === "concept").length;
+  const conceptCount = graph.pages.filter((page) => page.kind === PageKind.Concept).length;
   const sourcedConcepts = new Set(
     conceptMapRows.filter((entry) => entry.sourceType !== "(missing)").map((entry) => entry.concept),
   );

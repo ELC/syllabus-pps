@@ -1,10 +1,7 @@
 import type { NodeProps } from "@xyflow/react";
 
-export interface RoadmapYearBandNodeData extends Record<string, unknown> {
-  label: string;
-  separatorTop: number;
-  showYearSeparator: boolean;
-}
+export type { RoadmapYearBandNodeData } from "./roadmap-node-data";
+import type { RoadmapYearBandNodeData } from "./roadmap-node-data";
 
 export function RoadmapYearBandNode({ data }: NodeProps) {
   const nodeData = data as unknown as RoadmapYearBandNodeData;

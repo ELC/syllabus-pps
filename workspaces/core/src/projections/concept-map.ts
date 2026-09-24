@@ -1,6 +1,6 @@
 import { buildCurriculumIndexes } from "../analysis/indexes";
 import { collectConceptSources } from "../analysis/sources";
-import { CurriculumGraph } from "../types";
+import { CurriculumGraph, PageKind } from "../types";
 
 export interface ConceptMapRow {
   concept: string;
@@ -14,7 +14,7 @@ export function collectConceptMapRows(graph: CurriculumGraph): ConceptMapRow[] {
   const { curriculumTitles } = buildCurriculumIndexes(graph);
 
   return graph.pages
-    .filter((page) => page.kind === "concept")
+    .filter((page) => page.kind === PageKind.Concept)
     .flatMap((page) => {
       const sources = collectConceptSources(page, curriculumTitles);
 

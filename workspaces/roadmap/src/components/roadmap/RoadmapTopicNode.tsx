@@ -9,14 +9,8 @@ import {
   HANDLE_TOP_IN,
 } from "./constants";
 import { ROADMAP_STATUS_LABELS, useRoadmapProgressContext } from "./progress";
-import type { RoadmapRole } from "./layout";
-
-export interface RoadmapTopicNodeData extends Record<string, unknown> {
-  label: string;
-  role: RoadmapRole;
-  stage: number;
-  state: "default";
-}
+export type { RoadmapTopicNodeData } from "./roadmap-node-data";
+import type { RoadmapTopicNodeData } from "./roadmap-node-data";
 
 const HANDLES = [
   { id: HANDLE_TOP_IN, type: "target", position: Position.Top },

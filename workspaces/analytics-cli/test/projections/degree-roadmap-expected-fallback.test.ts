@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { reachableFromDegree, type CurriculumGraph } from "@pps/core";
+import { PageKind, reachableFromDegree, type CurriculumGraph } from "@pps/core";
 
 import { buildFixtureGraph } from "../support/fixtures";
 
@@ -10,7 +10,7 @@ describe("reachableFromDegree expected-years fallback", () => {
     const stripped: CurriculumGraph = {
       ...graph,
       pages: graph.pages.map((page) =>
-        page.kind === "year"
+        page.kind === PageKind.Year
           ? {
               ...page,
               courses: [],
@@ -18,7 +18,7 @@ describe("reachableFromDegree expected-years fallback", () => {
                 const target = ref.resolvedTarget ?? ref.target;
                 return !graph.pages.some(
                   (candidate) =>
-                    candidate.kind === "course" &&
+                    candidate.kind === PageKind.Course &&
                     (candidate.title === target ||
                       candidate.normalizedTitle === target.toLowerCase()),
                 );
@@ -30,10 +30,10 @@ describe("reachableFromDegree expected-years fallback", () => {
         (edge) =>
           !graph.pages.some(
             (year) =>
-              year.kind === "year" &&
+              year.kind === PageKind.Year &&
               year.title === edge.source &&
               graph.pages.some(
-                (course) => course.kind === "course" && course.title === edge.target,
+                (course) => course.kind === PageKind.Course && course.title === edge.target,
               ),
           ),
       ),

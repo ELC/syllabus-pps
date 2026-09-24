@@ -1,18 +1,15 @@
+import type { RoadmapConceptLayoutDocument } from "@pps/core";
+import { parseRoadmapCurationDocumentOrNull } from "@pps/core";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { ROADMAP_CONCEPT_LAYOUTS_TABLE } from "./constants";
 
-/** RoadmapCuration-shaped JSON stored per course concept subgraph. */
-export type RoadmapConceptLayoutDocument = Record<string, unknown>;
+export type { RoadmapConceptLayoutDocument } from "@pps/core";
 
 interface LayoutRow {
   degree_slug: string;
   course_slug: string;
   curation: unknown;
-}
-
-function isConceptLayoutDocument(value: unknown): value is RoadmapConceptLayoutDocument {
-  return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
 export async function fetchRoadmapConceptLayout(
@@ -31,11 +28,11 @@ export async function fetchRoadmapConceptLayout(
     throw error;
   }
 
-  if (!data?.curation || !isConceptLayoutDocument(data.curation)) {
+  if (!data?.curation) {
     return null;
   }
 
-  return data.curation;
+  return parseRoadmapCurationDocumentOrNull(data.curation);
 }
 
 export async function upsertRoadmapConceptLayout(

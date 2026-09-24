@@ -1,79 +1,104 @@
 import { normalizeTitle } from "../normalize";
-import { CurriculumGraph, Diagnostic } from "../types";
+import { CurriculumGraph, Diagnostic, PageKind, type ZettelPage } from "../types";
+
+import {
+  administrativePageDiagnostic,
+  emptyPageDiagnostic,
+  nonBulletContentDiagnostic,
+  orphanPageDiagnostic,
+  selfLinkDiagnostic,
+} from "./pages-errors";
+
+function isStructurallyNonEmptyPage(page: ZettelPage): boolean {
+  if (page.blocks.length > 0) {
+    return true;
+  }
+  if (page.kind === PageKind.Year && (page.courses?.length ?? 0) > 0) {
+    return true;
+  }
+  if (page.kind === PageKind.Degree && page.yearsCount !== undefined) {
+    return true;
+  }
+  return false;
+}
 
 export function emptyPages(graph: CurriculumGraph): Diagnostic[] {
-  return graph.pages
-    .filter((page) => {
-      if (page.blocks.length > 0) {
-        return false;
-      }
-      if (page.kind === "year" && (page.courses?.length ?? 0) > 0) {
-        return false;
-      }
-      if (page.kind === "degree" && page.yearsCount !== undefined) {
-        return false;
-      }
-      return true;
-    })
-    .map((page) => ({
-      severity: page.kind === "course" || page.kind === "year" ? "error" : "warning",
-      code: "empty-page",
-      message: `Page "${page.title}" has no note blocks.`,
-      page: page.title,
-      details: { kind: page.kind },
-    }));
+  const diagnostics: Diagnostic[] = [];
+
+  for (const page of graph.pages) {
+    if (isStructurallyNonEmptyPage(page)) {
+      continue;
+    }
+    const diagnostic = emptyPageDiagnostic(page);
+    diagnostics.push(diagnostic);
+  }
+
+  return diagnostics;
 }
 
 export function selfLinkDiagnostics(graph: CurriculumGraph): Diagnostic[] {
-  return graph.pages.flatMap((page) =>
-    page.refs
-      .filter((ref) => normalizeTitle(ref.resolvedTarget ?? ref.target) === page.normalizedTitle)
-      .map((ref) => ({
-        severity: "warning" as const,
-        code: "self-link",
-        message: `Page "${page.title}" links to itself.`,
-        page: page.title,
-        line: ref.line,
-        details: { target: ref.resolvedTarget ?? ref.target },
-      })),
-  );
+  const diagnostics: Diagnostic[] = [];
+
+  for (const page of graph.pages) {
+    for (const ref of page.refs) {
+      const refTarget = ref.resolvedTarget ?? ref.target;
+      const normalizedRef = normalizeTitle(refTarget);
+      if (normalizedRef !== page.normalizedTitle) {
+        continue;
+      }
+      const diagnostic = selfLinkDiagnostic(page, ref);
+      diagnostics.push(diagnostic);
+    }
+  }
+
+  return diagnostics;
 }
 
 export function orphanDiagnostics(
   graph: CurriculumGraph,
   incomingCounts: Map<string, number>,
 ): Diagnostic[] {
-  return graph.pages
-    .filter((page) => page.kind !== "degree")
-    .filter((page) => (incomingCounts.get(page.title) ?? 0) === 0)
-    .map((page) => ({
-      severity: page.kind === "course" || page.kind === "year" ? "error" : "warning",
-      code: page.kind === "concept" ? "orphan-concept" : "orphan-page",
-      message: `Page "${page.title}" has no incoming references.`,
-      page: page.title,
-      details: { kind: page.kind },
-    }));
+  const diagnostics: Diagnostic[] = [];
+
+  for (const page of graph.pages) {
+    if (page.kind === PageKind.Degree) {
+      continue;
+    }
+    const incoming = incomingCounts.get(page.title) ?? 0;
+    if (incoming !== 0) {
+      continue;
+    }
+    const diagnostic = orphanPageDiagnostic(page);
+    diagnostics.push(diagnostic);
+  }
+
+  return diagnostics;
 }
 
 export function administrativeDiagnostics(graph: CurriculumGraph): Diagnostic[] {
-  return graph.pages
-    .filter((page) => page.kind === "administrative")
-    .map((page) => ({
-      severity: "error",
-      code: "administrative-page",
-      message: `Administrative page "${page.title}" leaked into the content graph.`,
-      page: page.title,
-    }));
+  const diagnostics: Diagnostic[] = [];
+
+  for (const page of graph.pages) {
+    if (page.kind !== PageKind.Administrative) {
+      continue;
+    }
+    const diagnostic = administrativePageDiagnostic(page);
+    diagnostics.push(diagnostic);
+  }
+
+  return diagnostics;
 }
 
 export function nonBulletContentDiagnostics(graph: CurriculumGraph): Diagnostic[] {
-  return graph.pages.flatMap((page) =>
-    (page.nonBulletLines ?? []).map((line) => ({
-      severity: "warning" as const,
-      code: "non-bullet-content" as const,
-      message: `Line ${line} is not a bullet block; only "- " outline lines are parsed.`,
-      page: page.title,
-      line,
-    })),
-  );
+  const diagnostics: Diagnostic[] = [];
+
+  for (const page of graph.pages) {
+    const lines = page.nonBulletLines ?? [];
+    for (const line of lines) {
+      const diagnostic = nonBulletContentDiagnostic(page, line);
+      diagnostics.push(diagnostic);
+    }
+  }
+
+  return diagnostics;
 }

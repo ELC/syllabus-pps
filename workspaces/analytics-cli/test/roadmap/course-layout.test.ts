@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { DegreeRoadmap } from "@pps/core";
-
-import { buildAdjacency } from "../../../roadmap/src/components/roadmap/adjacency";
+import {
+  buildDegreeRoadmapAdjacency,
+  degreeRoadmap,
+  EdgeKind,
+  type DegreeRoadmap,
+} from "@pps/core";
 import {
   assignCourseColumns,
   assignCourseColumnsByYear,
@@ -13,7 +16,7 @@ import {
 function courseRoadmap(
   courses: Array<{ title: string; year?: string; correlativas?: string[] }>,
 ): DegreeRoadmap {
-  return {
+  return degreeRoadmap({
     degree: "LDS",
     degreeSlug: "test",
     concepts: courses.map((course) => ({
@@ -25,12 +28,12 @@ function courseRoadmap(
       (course.correlativas ?? []).map((prerequisite) => ({
         source: prerequisite,
         target: course.title,
-        kind: "course-prerequisite" as const,
+        kind: EdgeKind.CoursePrerequisite,
         rawTarget: prerequisite,
         line: 0,
       })),
     ),
-  };
+  });
 }
 
 describe("buildStagedCourseRoadmapLayout", () => {
@@ -40,7 +43,7 @@ describe("buildStagedCourseRoadmapLayout", () => {
       { title: "programación i" },
       { title: "introducción a devops", correlativas: ["programación i"] },
     ]);
-    const adjacency = buildAdjacency(roadmap);
+    const adjacency = buildDegreeRoadmapAdjacency(roadmap);
     const stages = assignCourseStages(
       roadmap.concepts.map((course) => course.title),
       adjacency,
@@ -57,7 +60,6 @@ describe("buildStagedCourseRoadmapLayout", () => {
     expect(layout.placements.get("álgebra y geometría")?.y).toBe(
       layout.placements.get("programación i")?.y,
     );
-    expect(layout.parallelLanes).toEqual([]);
     expect(layout.trunk).toEqual([]);
   });
 
@@ -72,7 +74,7 @@ describe("buildStagedCourseRoadmapLayout", () => {
       },
       { title: "product development", correlativas: ["proyecto laboratorio"] },
     ]);
-    const adjacency = buildAdjacency(roadmap);
+    const adjacency = buildDegreeRoadmapAdjacency(roadmap);
     const layout = buildStagedCourseRoadmapLayout(roadmap, adjacency);
 
     const stage = (title: string) => layout.placements.get(title)?.stage;
@@ -92,7 +94,7 @@ describe("buildStagedCourseRoadmapLayout", () => {
       { title: "programación ii", correlativas: ["programación i"] },
       { title: "product development", correlativas: ["programación ii"] },
     ]);
-    const adjacency = buildAdjacency(roadmap);
+    const adjacency = buildDegreeRoadmapAdjacency(roadmap);
     const layout = buildStagedCourseRoadmapLayout(roadmap, adjacency);
 
     const centerX = (title: string) => {
@@ -111,7 +113,7 @@ describe("buildStagedCourseRoadmapLayout", () => {
       { title: "programación ii", correlativas: ["programación i"] },
       { title: "programación iii", correlativas: ["programación i"] },
     ]);
-    const adjacency = buildAdjacency(roadmap);
+    const adjacency = buildDegreeRoadmapAdjacency(roadmap);
     const layout = buildStagedCourseRoadmapLayout(roadmap, adjacency);
 
     const centerX = (title: string) => {
@@ -130,7 +132,7 @@ describe("buildStagedCourseRoadmapLayout", () => {
       { title: "introducción a devops", year: "año 2", correlativas: ["programación i"] },
       { title: "product development", year: "año 3", correlativas: ["introducción a devops"] },
     ]);
-    const adjacency = buildAdjacency(roadmap);
+    const adjacency = buildDegreeRoadmapAdjacency(roadmap);
     const yearsByTitle = new Map(
       roadmap.concepts.map((course) => [
         course.title,
@@ -161,7 +163,7 @@ describe("buildStagedCourseRoadmapLayout", () => {
         correlativas: ["programación ii", "programación iii"],
       },
     ]);
-    const adjacency = buildAdjacency(roadmap);
+    const adjacency = buildDegreeRoadmapAdjacency(roadmap);
     const yearsByTitle = new Map(roadmap.concepts.map((course) => [course.title, "año 2"]));
     const layout = buildStagedCourseRoadmapLayout(roadmap, adjacency, yearsByTitle);
 
@@ -180,7 +182,7 @@ describe("buildStagedCourseRoadmapLayout", () => {
       { title: "gestión de proyectos", year: "año 2" },
       { title: "programación ii - web backend", year: "año 2", correlativas: ["programación i"] },
     ]);
-    const adjacency = buildAdjacency(roadmap);
+    const adjacency = buildDegreeRoadmapAdjacency(roadmap);
     const yearsByTitle = new Map([
       ["programación i", "año 1"],
       ["introducción a devops", "año 2"],
@@ -223,7 +225,7 @@ describe("buildStagedCourseRoadmapLayout", () => {
     roadmap.degreeSlug = "lds";
     roadmap.degree = "LDS";
 
-    const adjacency = buildAdjacency(roadmap);
+    const adjacency = buildDegreeRoadmapAdjacency(roadmap);
     const yearsByTitle = new Map([
       ["álgebra y geometría", "año 1"],
       ["programación i", "año 1"],
@@ -250,7 +252,7 @@ describe("buildStagedCourseRoadmapLayout", () => {
       },
       { title: "product development", year: "año 3", correlativas: ["proyecto laboratorio"] },
     ]);
-    const adjacency = buildAdjacency(roadmap);
+    const adjacency = buildDegreeRoadmapAdjacency(roadmap);
     const yearsByTitle = new Map([
       ["programación i", "año 1"],
       ["programación ii", "año 2"],

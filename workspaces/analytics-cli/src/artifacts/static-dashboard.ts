@@ -7,6 +7,7 @@ import {
   collectSourceCoverageRows,
   countPagesByKind,
   countDiagnosticsBySeverity,
+  PageKind,
   metricFormat,
   sourceCoverageGlobalLabel,
   staticFilterAllValue,
@@ -87,19 +88,19 @@ function buildQualityDashboard(graph: CurriculumGraph, diagnostics: Diagnostic[]
       {
         name: "Concept Pages",
         description: "Pages classified as concepts. These should contain source links and connect course content.",
-        value: countPagesByKind(graph, "concept"),
+        value: countPagesByKind(graph, PageKind.Concept),
         format: metricFormat.integer,
       },
       {
         name: "Course Pages",
         description: "Pages classified as courses. These are expected to link forward into concept pages.",
-        value: countPagesByKind(graph, "course"),
+        value: countPagesByKind(graph, PageKind.Course),
         format: metricFormat.integer,
       },
       {
         name: "Year Pages",
         description: "Pages classified as curriculum years. These should reference their expected courses.",
-        value: countPagesByKind(graph, "year"),
+        value: countPagesByKind(graph, PageKind.Year),
         format: metricFormat.integer,
       },
     ],
@@ -427,7 +428,7 @@ function buildSourceCoverageDashboard(graph: CurriculumGraph): StaticDashboard {
 
 function buildConceptMapDashboard(graph: CurriculumGraph): StaticDashboard {
   const rows = collectConceptMapRows(graph);
-  const conceptCount = graph.pages.filter((page) => page.kind === "concept").length;
+  const conceptCount = graph.pages.filter((page) => page.kind === PageKind.Concept).length;
   const sourcedConcepts = new Set(
     rows.filter((row) => row.sourceType !== "(missing)").map((row) => row.concept),
   );

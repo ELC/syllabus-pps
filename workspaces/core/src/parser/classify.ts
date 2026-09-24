@@ -12,31 +12,31 @@ export function classifyPage(
   }
 
   if (page.normalizedTitle === "lds") {
-    return "degree";
+    return PageKind.Degree;
   }
 
   if (options.expectedYearTitles?.has(page.normalizedTitle) || /^año \d+$/.test(page.normalizedTitle)) {
-    return "year";
+    return PageKind.Year;
   }
 
   if (options.expectedCourseTitles?.has(page.normalizedTitle)) {
-    return "course";
+    return PageKind.Course;
   }
 
   if (options.administrativeTitles?.has(page.normalizedTitle)) {
-    return "administrative";
+    return PageKind.Administrative;
   }
 
   if (
     conceptTitles.has(page.normalizedTitle) ||
     tags.some((tag) => tag.normalizedTarget === page.normalizedTitle)
   ) {
-    return "concept";
+    return PageKind.Concept;
   }
 
   if (page.blocks.length === 0) {
-    return "concept";
+    return PageKind.Concept;
   }
 
-  return "unknown";
+  return PageKind.Unknown;
 }

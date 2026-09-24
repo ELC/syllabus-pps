@@ -1,4 +1,4 @@
-import { isTrayectoNoEstructurado, type CourseTrayecto } from "@pps/core";
+import { isTrayectoNoEstructurado } from "@pps/core";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 
 import {
@@ -11,15 +11,8 @@ import {
 } from "./constants";
 import { courseLabelDensityClass, courseUsesDenseLabel } from "./course-label-style";
 import { ROADMAP_STATUS_LABELS, useRoadmapProgressContext } from "./progress";
-import type { RoadmapRole } from "./layout";
-
-export interface RoadmapCourseNodeData extends Record<string, unknown> {
-  label: string;
-  year: string;
-  role: RoadmapRole;
-  stage: number;
-  trayecto?: CourseTrayecto;
-}
+export type { RoadmapCourseNodeData } from "./roadmap-node-data";
+import type { RoadmapCourseNodeData } from "./roadmap-node-data";
 
 const HANDLES = [
   { id: HANDLE_TOP_IN, type: "target", position: Position.Top },

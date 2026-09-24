@@ -2,7 +2,9 @@ import { buildCurriculumIndexes } from "../analysis";
 import { resolveCourseTrayecto } from "../course-trayecto";
 import { yearLabelForCourseInDegree } from "../degree-year";
 import { normalizeTitle, uniqueSorted } from "../normalize";
-import { CourseTrayecto, CurriculumGraph, GraphEdge, ZettelPage } from "../types";
+import { CourseTrayecto, CurriculumGraph, GraphEdge, ZettelPage, PageKind, EdgeKind } from "../types";
+import { attachDegreeRoadmapOpen } from "../roadmap/course-concept-roadmap-open";
+import type { CurriculumPageSlug, DegreeRoadmapNodeTitle, RoadmapLayoutSlug } from "../roadmap/titles";
 import {
   type DegreeRoadmap,
   type DegreeRoadmapConcept,
@@ -11,24 +13,24 @@ import {
 } from "./degree-roadmap";
 
 export interface CourseRoadmapCourse {
-  title: string;
-  slug: string;
+  title: DegreeRoadmapNodeTitle;
+  slug: CurriculumPageSlug;
   year: string;
-  correlativas: string[];
-  concepts: string[];
+  correlativas: DegreeRoadmapNodeTitle[];
+  concepts: DegreeRoadmapNodeTitle[];
   trayecto: CourseTrayecto;
 }
 
 export interface CourseRoadmap {
   degree: string;
-  degreeSlug: string;
+  degreeSlug: RoadmapLayoutSlug;
   courses: CourseRoadmapCourse[];
   edges: GraphEdge[];
 }
 
 function coursesForDegree(reachable: Set<string>, graph: CurriculumGraph): ZettelPage[] {
   return graph.pages
-    .filter((page) => page.kind === "course" && reachable.has(page.title))
+    .filter((page) => page.kind === PageKind.Course && reachable.has(page.title))
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
 }
 
@@ -52,7 +54,7 @@ export function projectCourseRoadmap(
 ): CourseRoadmap | null {
   const { pagesByTitle, conceptTitles } = buildCurriculumIndexes(graph);
   const degreePage = pagesByTitle.get(normalizeTitle(degreeTitle));
-  if (!degreePage || degreePage.kind !== "degree") {
+  if (!degreePage || degreePage.kind !== PageKind.Degree) {
     return null;
   }
 
@@ -62,7 +64,7 @@ export function projectCourseRoadmap(
 
   const edges = graph.edges.filter(
     (edge) =>
-      edge.kind === "course-prerequisite" &&
+      edge.kind === EdgeKind.CoursePrerequisite &&
       courseTitles.has(edge.source) &&
       courseTitles.has(edge.target),
   );
@@ -88,14 +90,14 @@ export function projectCourseRoadmap(
 
 export function projectAllCourseRoadmaps(graph: CurriculumGraph): CourseRoadmap[] {
   return graph.pages
-    .filter((page) => page.kind === "degree")
+    .filter((page) => page.kind === PageKind.Degree)
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"))
     .map((degreePage) => projectCourseRoadmap(graph, degreePage.title))
     .filter((roadmap): roadmap is CourseRoadmap => roadmap !== null);
 }
 
 export function courseRoadmapAsDegreeRoadmap(roadmap: CourseRoadmap): DegreeRoadmap {
-  return {
+  return attachDegreeRoadmapOpen({
     degree: roadmap.degree,
     degreeSlug: roadmap.degreeSlug,
     concepts: roadmap.courses.map((course) => ({
@@ -104,7 +106,7 @@ export function courseRoadmapAsDegreeRoadmap(roadmap: CourseRoadmap): DegreeRoad
       dependsOn: course.correlativas,
     })),
     edges: roadmap.edges,
-  };
+  });
 }
 
 export function projectCourseConceptRoadmap(
@@ -129,23 +131,23 @@ export function projectCourseConceptRoadmap(
     return null;
   }
 
-  const conceptTitles = new Set(course.concepts);
-  const concepts: DegreeRoadmapConcept[] = degreeRoadmap.concepts
-    .filter((concept) => conceptTitles.has(concept.title))
-    .map((concept) => ({
-      ...concept,
-      dependsOn: concept.dependsOn.filter((prerequisite) => conceptTitles.has(prerequisite)),
-    }));
-
-  const scopedTitles = new Set(concepts.map((concept) => concept.title));
-  const edges = degreeRoadmap.edges.filter(
-    (edge) => scopedTitles.has(edge.source) && scopedTitles.has(edge.target),
+  const byTitle = new Map(
+    degreeRoadmap.concepts.map((concept) => [concept.title, concept] as const),
   );
+  /** Concept editor order follows course page links; correlativas are not used here. */
+  const concepts: DegreeRoadmapConcept[] = course.concepts.flatMap((title) => {
+    const concept = byTitle.get(title);
+    if (!concept) {
+      return [];
+    }
 
-  return {
+    return [{ ...concept, dependsOn: [] }];
+  });
+
+  return attachDegreeRoadmapOpen({
     degree: course.title,
     degreeSlug: course.slug,
     concepts,
-    edges,
-  };
+    edges: [],
+  });
 }

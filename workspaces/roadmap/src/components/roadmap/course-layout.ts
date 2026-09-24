@@ -1,6 +1,11 @@
-import type { DegreeRoadmap } from "@pps/core";
-
-import { topologicalStages, type RoadmapAdjacency } from "./adjacency";
+import {
+  degreeRoadmapNodeTitles,
+  topologicalDegreeRoadmapStages,
+  type CurriculumPageSlug,
+  type DegreeRoadmap,
+  type DegreeRoadmapAdjacency,
+  type DegreeRoadmapNodeTitle,
+} from "@pps/core";
 import {
   ANCHOR_GAP,
   ANCHOR_NODE_HEIGHT,
@@ -38,11 +43,11 @@ const COURSE_SAME_BAND_Y_THRESHOLD = 16;
 
 /** Layer index = longest path from entry courses (no correlativas). */
 export function assignCourseStages(
-  titles: string[],
-  adjacency: RoadmapAdjacency,
-): Map<string, number> {
-  const stageOf = new Map<string, number>();
-  const order = topologicalStages(titles, adjacency).flat();
+  titles: readonly DegreeRoadmapNodeTitle[],
+  adjacency: DegreeRoadmapAdjacency,
+): Map<DegreeRoadmapNodeTitle, number> {
+  const stageOf = new Map<DegreeRoadmapNodeTitle, number>();
+  const order = topologicalDegreeRoadmapStages(titles, adjacency).flat();
 
   for (const title of order) {
     const prerequisites = [...(adjacency.prerequisites.get(title) ?? [])];
@@ -79,13 +84,13 @@ export function sortCourseYears(years: Iterable<string>): string[] {
 
 /** Layer index using only prerequisites inside `scope` (e.g. the same year band). */
 export function assignCourseStagesWithinScope(
-  titles: string[],
-  adjacency: RoadmapAdjacency,
-  scope: ReadonlySet<string>,
-): Map<string, number> {
-  const stageOf = new Map<string, number>();
-  const stages: string[][] = [];
-  const placed = new Set<string>();
+  titles: readonly DegreeRoadmapNodeTitle[],
+  adjacency: DegreeRoadmapAdjacency,
+  scope: ReadonlySet<DegreeRoadmapNodeTitle>,
+): Map<DegreeRoadmapNodeTitle, number> {
+  const stageOf = new Map<DegreeRoadmapNodeTitle, number>();
+  const stages: DegreeRoadmapNodeTitle[][] = [];
+  const placed = new Set<DegreeRoadmapNodeTitle>();
 
   while (placed.size < titles.length) {
     const pending = titles.filter((title) => !placed.has(title));
@@ -112,9 +117,9 @@ export function assignCourseStagesWithinScope(
 }
 
 function averageNeighborIndex(
-  title: string,
-  neighbors: Iterable<string>,
-  indexByTitle: ReadonlyMap<string, number>,
+  title: DegreeRoadmapNodeTitle,
+  neighbors: Iterable<DegreeRoadmapNodeTitle>,
+  indexByTitle: ReadonlyMap<DegreeRoadmapNodeTitle, number>,
 ): number | undefined {
   const indices = [...neighbors]
     .map((neighbor) => indexByTitle.get(neighbor))
@@ -129,8 +134,8 @@ function averageNeighborIndex(
 
 /** Reorder rows to align prerequisites above dependents and reduce edge crossings. */
 export function orderCourseRowsByBarycenter(
-  rows: string[][],
-  adjacency: RoadmapAdjacency,
+  rows: DegreeRoadmapNodeTitle[][],
+  adjacency: DegreeRoadmapAdjacency,
 ): void {
   if (rows.length === 0) {
     return;
@@ -186,10 +191,10 @@ export function orderCourseRowsByBarycenter(
 
 /** Integer column per course so prerequisites stay vertically above dependents. */
 export function assignCourseColumns(
-  rows: string[][],
-  adjacency: RoadmapAdjacency,
-): Map<string, number> {
-  const columnOf = new Map<string, number>();
+  rows: DegreeRoadmapNodeTitle[][],
+  adjacency: DegreeRoadmapAdjacency,
+): Map<DegreeRoadmapNodeTitle, number> {
+  const columnOf = new Map<DegreeRoadmapNodeTitle, number>();
   const firstRow = rows[0];
   if (!firstRow) {
     return columnOf;
@@ -237,11 +242,11 @@ export function assignCourseColumns(
 
 /** Columns align across years so prerequisite chains stay vertical. */
 export function assignCourseColumnsByYear(
-  titles: string[],
-  yearsByTitle: ReadonlyMap<string, string>,
-  adjacency: RoadmapAdjacency,
-): Map<string, number> {
-  const columnOf = new Map<string, number>();
+  titles: readonly DegreeRoadmapNodeTitle[],
+  yearsByTitle: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
+  adjacency: DegreeRoadmapAdjacency,
+): Map<DegreeRoadmapNodeTitle, number> {
+  const columnOf = new Map<DegreeRoadmapNodeTitle, number>();
   const groupedYears = [
     ...sortCourseYears(titles.map((title) => yearsByTitle.get(title) ?? "")),
     ...(titles.some((title) => !yearsByTitle.get(title)) ? [""] : []),
@@ -293,8 +298,8 @@ function appendWrappedDisplayRows(
     year: string;
     withinYearStage: number;
     stage: number;
-    titles: string[];
-    columnOf: Map<string, number>;
+    titles: DegreeRoadmapNodeTitle[];
+    columnOf: Map<DegreeRoadmapNodeTitle, number>;
     maxCoursesPerRow?: number;
   },
 ): void {
@@ -316,8 +321,8 @@ function appendWrappedDisplayRows(
 }
 
 function buildCourseDisplayRows(
-  rows: string[][],
-  columnOf: Map<string, number>,
+  rows: DegreeRoadmapNodeTitle[][],
+  columnOf: Map<DegreeRoadmapNodeTitle, number>,
 ): CourseDisplayRow[] {
   const displayRows: CourseDisplayRow[] = [];
 
@@ -339,11 +344,11 @@ function buildCourseDisplayRows(
 }
 
 function buildCourseDisplayRowsByYear(
-  titles: string[],
-  yearsByTitle: ReadonlyMap<string, string>,
-  globalStageOf: Map<string, number>,
-  columnOf: Map<string, number>,
-  adjacency: RoadmapAdjacency,
+  titles: readonly DegreeRoadmapNodeTitle[],
+  yearsByTitle: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
+  globalStageOf: Map<DegreeRoadmapNodeTitle, number>,
+  columnOf: Map<DegreeRoadmapNodeTitle, number>,
+  adjacency: DegreeRoadmapAdjacency,
   maxCoursesPerRowByYear?: ReadonlyMap<string, number>,
 ): CourseDisplayRow[] {
   const displayRows: CourseDisplayRow[] = [];
@@ -365,7 +370,10 @@ function buildCourseDisplayRowsByYear(
       yearScope,
     );
     const maxWithinYearStage = Math.max(...withinYearStageOf.values());
-    const rows: string[][] = Array.from({ length: maxWithinYearStage + 1 }, () => []);
+    const rows: DegreeRoadmapNodeTitle[][] = Array.from(
+      { length: maxWithinYearStage + 1 },
+      () => [],
+    );
 
     for (const title of yearTitles) {
       rows[withinYearStageOf.get(title) ?? 0]!.push(title);
@@ -394,8 +402,8 @@ function buildCourseDisplayRowsByYear(
 
 /** Keep curated shifts from placing two courses in the same grid column on one row. */
 export function resolveCourseRowColumnCollisions(
-  titles: string[],
-  columnOf: Map<string, number>,
+  titles: readonly DegreeRoadmapNodeTitle[],
+  columnOf: Map<DegreeRoadmapNodeTitle, number>,
 ): void {
   const sorted = [...titles].sort((left, right) => {
     const leftColumn = columnOf.get(left) ?? 0;
@@ -427,7 +435,7 @@ function placementsOverlap(
 
 /** Nudge overlapping nodes apart after correlativa enforcement. */
 export function resolvePlacementOverlaps(
-  placements: Map<string, RoadmapPlacement>,
+  placements: Map<DegreeRoadmapNodeTitle, RoadmapPlacement>,
   stride: number,
 ): void {
   let changed = true;
@@ -468,8 +476,8 @@ export function resolvePlacementOverlaps(
 
 /** Every correlativa sits above the courses that require it. */
 export function enforceCorrelativaVerticalOrder(
-  placements: Map<string, RoadmapPlacement>,
-  adjacency: RoadmapAdjacency,
+  placements: Map<DegreeRoadmapNodeTitle, RoadmapPlacement>,
+  adjacency: DegreeRoadmapAdjacency,
 ): void {
   const minGap = COURSE_SUBROW_GAP;
   let changed = true;
@@ -500,8 +508,8 @@ export function enforceCorrelativaVerticalOrder(
 }
 
 function computeCourseYearBands(
-  yearsByTitle: ReadonlyMap<string, string>,
-  placements: Map<string, RoadmapPlacement>,
+  yearsByTitle: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
+  placements: Map<DegreeRoadmapNodeTitle, RoadmapPlacement>,
 ): CourseYearBand[] {
   const bandExtents = new Map<string, { minY: number; maxY: number }>();
 
@@ -531,9 +539,9 @@ function computeCourseYearBands(
 }
 
 function shouldGroupCoursesByYear(
-  titles: string[],
-  yearsByTitle?: ReadonlyMap<string, string>,
-): yearsByTitle is ReadonlyMap<string, string> {
+  titles: readonly DegreeRoadmapNodeTitle[],
+  yearsByTitle?: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
+): yearsByTitle is ReadonlyMap<DegreeRoadmapNodeTitle, string> {
   return (
     yearsByTitle !== undefined &&
     yearsByTitle.size > 0 &&
@@ -547,20 +555,17 @@ function shouldGroupCoursesByYear(
  */
 export function buildStagedCourseRoadmapLayout(
   roadmap: DegreeRoadmap,
-  adjacency: RoadmapAdjacency,
-  yearsByTitle?: ReadonlyMap<string, string>,
+  adjacency: DegreeRoadmapAdjacency,
+  yearsByTitle?: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
   curatedLayoutMetrics?: CuratedCourseLayoutMetrics | null,
   courseLayoutCuration?: CourseRoadmapCuration | null,
 ): RoadmapLayout {
-  const titles = roadmap.concepts.map((concept) => concept.title);
+  const titles = degreeRoadmapNodeTitles(roadmap);
   if (titles.length === 0) {
     return {
       placements: new Map(),
       attached: new Map(),
-      parallelLanes: [],
       trunk: [],
-      lateJoins: [],
-      trunkForks: [],
       start: { x: -ANCHOR_NODE_WIDTH / 2, y: 0 },
       end: { x: -ANCHOR_NODE_WIDTH / 2, y: ANCHOR_NODE_HEIGHT + ANCHOR_GAP },
       bounds: {
@@ -574,7 +579,7 @@ export function buildStagedCourseRoadmapLayout(
 
   const stageOf = assignCourseStages(titles, adjacency);
   const maxStage = Math.max(...stageOf.values());
-  const rows: string[][] = Array.from({ length: maxStage + 1 }, () => []);
+  const rows: DegreeRoadmapNodeTitle[][] = Array.from({ length: maxStage + 1 }, () => []);
 
   for (const title of titles) {
     rows[stageOf.get(title) ?? 0]!.push(title);
@@ -583,7 +588,7 @@ export function buildStagedCourseRoadmapLayout(
   orderCourseRowsByBarycenter(rows, adjacency);
   const groupByYear = shouldGroupCoursesByYear(titles, yearsByTitle);
   const courseCuration = courseLayoutCuration ?? null;
-  let slugToTitle: Map<string, string> | undefined;
+  let slugToTitle: Map<CurriculumPageSlug, DegreeRoadmapNodeTitle> | undefined;
   let useCuratedGrid =
     groupByYear &&
     yearsByTitle &&
@@ -591,7 +596,7 @@ export function buildStagedCourseRoadmapLayout(
     hasCuratedCourseGrid(courseCuration);
 
   let displayRows: CourseDisplayRow[] = [];
-  let columnOf = new Map<string, number>();
+  let columnOf = new Map<DegreeRoadmapNodeTitle, number>();
 
   if (useCuratedGrid && courseCuration) {
     slugToTitle = new Map(
@@ -632,7 +637,7 @@ export function buildStagedCourseRoadmapLayout(
     }
   }
 
-  const placements = new Map<string, RoadmapPlacement>();
+  const placements = new Map<DegreeRoadmapNodeTitle, RoadmapPlacement>();
   const curatedMetrics =
     useCuratedGrid && curatedLayoutMetrics
       ? resolveCuratedGridMetrics(curatedLayoutMetrics)
@@ -735,10 +740,7 @@ export function buildStagedCourseRoadmapLayout(
     courseYearBands,
     courseGridCells,
     attached: new Map(),
-    parallelLanes: [],
     trunk: [],
-    lateJoins: [],
-    trunkForks: [],
     start: { x: anchorX, y: 0 },
     end,
     bounds: {
@@ -752,8 +754,8 @@ export function buildStagedCourseRoadmapLayout(
 
 export function buildCourseRoadmapLayout(
   roadmap: DegreeRoadmap,
-  adjacency: RoadmapAdjacency,
-  yearsByTitle?: ReadonlyMap<string, string>,
+  adjacency: DegreeRoadmapAdjacency,
+  yearsByTitle?: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
   curatedLayoutMetrics?: CuratedCourseLayoutMetrics | null,
   courseLayoutCuration?: CourseRoadmapCuration | null,
 ): RoadmapLayout {

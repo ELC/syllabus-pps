@@ -1,29 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { buildGraphFromPages, collectDiagnostics, createLoadedConfig } from "@pps/core";
 
-describe("concept dependsOn diagnostics", () => {
-  it("reports missing dependsOn on concept pages", () => {
-    const config = createLoadedConfig({ years: [] });
-    const graph = buildGraphFromPages({
-      config,
-      sources: [
-        {
-          path: "concepto.md",
-          content: `---
-title: concepto
-kind: concept
----
-- nota https://example.com
-`,
-        },
-      ],
-    });
-
-    const diagnostics = collectDiagnostics(graph);
-    expect(diagnostics.some((item) => item.code === "concept-missing-depends-on")).toBe(true);
-  });
-
-  it("reports unresolved and cyclic dependencies", () => {
+describe("concept dependsOn (removed)", () => {
+  it("ignores legacy dependsOn frontmatter on concept pages", () => {
     const config = createLoadedConfig({ years: [] });
     const graph = buildGraphFromPages({
       config,
@@ -53,7 +32,10 @@ dependsOn:
       ],
     });
 
+    expect(graph.edges.some((edge) => edge.kind === "concept-dependency")).toBe(false);
+
     const diagnostics = collectDiagnostics(graph);
-    expect(diagnostics.some((item) => item.code === "concept-depends-on-cycle")).toBe(true);
+    expect(diagnostics.some((item) => item.code === "concept-missing-depends-on")).toBe(false);
+    expect(diagnostics.some((item) => item.code === "concept-depends-on-cycle")).toBe(false);
   });
 });

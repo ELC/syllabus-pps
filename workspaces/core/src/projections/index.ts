@@ -22,7 +22,22 @@ export {
   reachableFromDegree,
   type DegreeRoadmap,
   type DegreeRoadmapConcept,
+  type DegreeRoadmapData,
 } from "./degree-roadmap";
+export {
+  buildDegreeRoadmapAdjacency,
+  degreeRoadmapNodeTitles,
+  topologicalDegreeRoadmapStages,
+  type DegreeRoadmapAdjacency,
+  type DegreeRoadmapNodeTitle,
+} from "./degree-roadmap-adjacency";
+export type {
+  CurriculumPageSlug,
+  LinearSpineShiftDirection,
+  ReadonlyRoadmapConceptTitleSet,
+  RoadmapConceptTitle,
+  RoadmapLayoutSlug,
+} from "../roadmap/titles";
 export {
   courseRoadmapAsDegreeRoadmap,
   projectAllCourseRoadmaps,

@@ -1,6 +1,6 @@
 import { courseTitlesOnYearPage, resolveCoursePageTitle } from "../degree-year";
 import { normalizeTitle } from "../normalize";
-import { CurriculumYear, ExpectedCurriculum, ZettelPage } from "../types";
+import { CurriculumYear, ExpectedCurriculum, ZettelPage, PageKind } from "../types";
 
 function legacyCoursesFromRefs(
   yearPage: ZettelPage,
@@ -12,7 +12,7 @@ function legacyCoursesFromRefs(
   for (const ref of yearPage.refs) {
     const normalized = normalizeTitle(ref.resolvedTarget ?? ref.target);
     const targetPage = pagesByNormalizedTitle.get(normalized);
-    if (targetPage?.kind !== "course") {
+    if (targetPage?.kind !== PageKind.Course) {
       continue;
     }
     if (seen.has(normalized)) {
@@ -29,7 +29,7 @@ export function deriveExpectedCurriculum(pages: readonly ZettelPage[]): Pick<Exp
   const pagesByNormalizedTitle = new Map(pages.map((page) => [page.normalizedTitle, page]));
 
   const years: CurriculumYear[] = pages
-    .filter((page) => page.kind === "year")
+    .filter((page) => page.kind === PageKind.Year)
     .sort((left, right) => {
       const byDegree = (left.degree?.resolvedTarget ?? left.degree?.target ?? "").localeCompare(
         right.degree?.resolvedTarget ?? right.degree?.target ?? "",

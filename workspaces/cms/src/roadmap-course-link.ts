@@ -1,4 +1,4 @@
-import { normalizeTitle, parseYearSlug } from "@pps/core";
+import { normalizeTitle, PageKind, parseYearSlug } from "@pps/core";
 
 import { normalizeYearCourseSlugs, type CoursePageOption } from "./course-pages";
 import { splitPageDocument } from "./page-document";
@@ -53,7 +53,7 @@ export function degreeSlugForCourseInSources(
     }
 
     const { metadata } = splitPageDocument(page.content, fileSlug);
-    if (metadata.kind !== "year") {
+    if (metadata.kind !== PageKind.Year) {
       continue;
     }
 

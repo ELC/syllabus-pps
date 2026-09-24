@@ -10,7 +10,6 @@ describe("stringifyPageSource", () => {
         title: "algoritmos",
         slug: "algoritmos",
         kind: "concept",
-        dependsOn: [],
       },
       body,
     );

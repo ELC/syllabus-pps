@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { exportToCytoscape } from "@pps/core";
+import { EdgeKind, exportToCytoscape } from "@pps/core";
 import { buildFixtureGraph } from "../support/fixtures";
 
 function uniqueEdgeCount(
@@ -18,7 +18,7 @@ describe("exportToCytoscape", () => {
     expect(exported.elements.nodes.length).toBe(graph.pages.length);
     expect(graph.edges.length).toBeGreaterThan(uniqueEdgeCount(graph));
     expect(exported.elements.edges.length).toBe(
-      uniqueEdgeCount(graph, ["page-ref", "concept-tag"]),
+      uniqueEdgeCount(graph, [EdgeKind.PageRef, EdgeKind.ConceptTag]),
     );
     expect(exported.elements.nodes[0]?.data.slug).toBeTruthy();
   });
@@ -28,7 +28,7 @@ describe("exportToCytoscape", () => {
     graph.edges.push({
       source: "programación i",
       target: "nonexistent course",
-      kind: "page-ref",
+      kind: EdgeKind.PageRef,
       rawTarget: "nonexistent course",
       line: 1,
     });
@@ -45,7 +45,7 @@ describe("exportToCytoscape", () => {
     graph.edges.push({
       source: "algoritmos",
       target: "programación i",
-      kind: "concept-dependency",
+      kind: EdgeKind.ConceptDependency,
       rawTarget: "algoritmos",
       line: 0,
     });

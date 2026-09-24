@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import { canonicalStructuralEdgeDirection } from "@pps/core";
-import type { PageKind } from "@pps/core";
+import { PageKind } from "@pps/core";
 
 describe("canonicalStructuralEdgeDirection", () => {
   const kinds = new Map<string, PageKind>([
-    ["LDS", "degree"],
-    ["año 1", "year"],
-    ["bases de datos", "course"],
+    ["LDS", PageKind.Degree],
+    ["año 1", PageKind.Year],
+    ["bases de datos", PageKind.Course],
   ]);
 
   it("keeps degree to year", () => {

@@ -2,13 +2,16 @@ import {
   courseTrayectos,
   parseCourseTrayectoValue,
   parseFrontmatter,
+  PageKind,
   pageKinds,
   stringifyPageSource,
   type CourseTrayecto,
-  type PageKind,
 } from "@pps/core";
 
-const EDITOR_KINDS = pageKinds.filter((kind) => kind !== "unknown") as Exclude<PageKind, "unknown">[];
+const EDITOR_KINDS = pageKinds.filter((kind) => kind !== PageKind.Unknown) as Exclude<
+  PageKind,
+  PageKind.Unknown
+>[];
 
 export type EditorPageKind = (typeof EDITOR_KINDS)[number];
 
@@ -40,7 +43,7 @@ function parseKind(value: unknown): EditorPageKind {
   if (typeof value === "string" && EDITOR_KINDS.includes(value as EditorPageKind)) {
     return value as EditorPageKind;
   }
-  return "concept";
+  return PageKind.Concept;
 }
 
 function parseStringList(value: unknown): string[] {
@@ -68,7 +71,7 @@ export function defaultPageMetadata(slug: string): PageMetadata {
     title: slug.replace(/-/g, " "),
     fullName: "",
     slug,
-    kind: "concept",
+    kind: PageKind.Concept,
     version: 1,
     updatedAt: new Date().toISOString(),
     trayecto: "",
@@ -105,7 +108,7 @@ export function splitPageDocument(source: string, fileSlug: string): { metadata:
 
   const kind = parseKind(data.kind);
   const fullName =
-    kind === "degree" && typeof data.fullName === "string" && data.fullName.trim()
+    kind === PageKind.Degree && typeof data.fullName === "string" && data.fullName.trim()
       ? data.fullName.trim()
       : "";
 
@@ -119,7 +122,7 @@ export function splitPageDocument(source: string, fileSlug: string): { metadata:
       updatedAt,
       trayecto: parseTrayecto(data.trayecto),
       correlativas: parseStringList(data.correlativas),
-      dependsOn: parseStringList(data.dependsOn),
+      dependsOn: kind === PageKind.Concept ? [] : parseStringList(data.dependsOn),
       yearsCount: parseYearsCount(data.years),
       degree: typeof data.degree === "string" && data.degree.trim() ? data.degree.trim() : undefined,
       yearIndex: parseYearIndex(data.yearIndex),
@@ -143,7 +146,7 @@ export function composePageDocument(metadata: PageMetadata, body: string): strin
     record.updatedAt = metadata.updatedAt;
   }
 
-  if (metadata.kind === "course") {
+  if (metadata.kind === PageKind.Course) {
     if (metadata.trayecto) {
       record.trayecto = metadata.trayecto;
     }
@@ -152,11 +155,7 @@ export function composePageDocument(metadata: PageMetadata, body: string): strin
     }
   }
 
-  if (metadata.kind === "concept") {
-    record.dependsOn = metadata.dependsOn;
-  }
-
-  if (metadata.kind === "degree") {
+  if (metadata.kind === PageKind.Degree) {
     if (metadata.fullName.trim()) {
       record.fullName = metadata.fullName.trim();
     }
@@ -165,7 +164,7 @@ export function composePageDocument(metadata: PageMetadata, body: string): strin
     }
   }
 
-  if (metadata.kind === "year") {
+  if (metadata.kind === PageKind.Year) {
     if (metadata.degree) {
       record.degree = metadata.degree;
     }

@@ -20,6 +20,7 @@ import {
 import {
   createSeverityClassNameResolver,
   hasBlockingDiagnostics,
+  PageKind,
   type PageSource,
   type ResourceCatalogEntry,
 } from "@pps/core";
@@ -156,7 +157,7 @@ export function App() {
     for (const page of allSources) {
       const slug = page.path.replace(/\.md$/i, "");
       const { metadata: pageMeta } = splitPageDocument(page.content, slug);
-      if (pageMeta.kind === "concept") {
+      if (pageMeta.kind === PageKind.Concept) {
         const conceptSlug = pageMeta.slug.trim() || slug;
         concepts.push({ title: pageMeta.title, slug: conceptSlug });
       }
@@ -171,7 +172,7 @@ export function App() {
     for (const page of allSources) {
       const slug = page.path.replace(/\.md$/i, "");
       const { metadata: pageMeta } = splitPageDocument(page.content, slug);
-      if (pageMeta.kind === "degree") {
+      if (pageMeta.kind === PageKind.Degree) {
         titles.push(pageMeta.title);
       }
     }
@@ -183,7 +184,7 @@ export function App() {
     for (const page of allSources) {
       const fileSlug = page.path.replace(/\.md$/i, "");
       const { metadata: pageMeta } = splitPageDocument(page.content, fileSlug);
-      if (pageMeta.kind !== "degree") {
+      if (pageMeta.kind !== PageKind.Degree) {
         continue;
       }
       const display = pageMeta.fullName.trim() || pageMeta.title;
@@ -199,7 +200,7 @@ export function App() {
     for (const page of allSources) {
       const fileSlug = page.path.replace(/\.md$/i, "");
       const { metadata: pageMeta } = splitPageDocument(page.content, fileSlug);
-      if (pageMeta.kind === "course") {
+      if (pageMeta.kind === PageKind.Course) {
         courses.push({
           slug: pageMeta.slug.trim() || fileSlug,
           title: pageMeta.title,
@@ -222,7 +223,7 @@ export function App() {
   function loadDocumentFromSource(slug: string, source: string, serverBaseline?: string): void {
     const split = splitPageDocument(source, slug);
     const metadata =
-      split.metadata.kind === "year"
+      split.metadata.kind === PageKind.Year
         ? {
             ...split.metadata,
             courses: normalizeYearCourseSlugs(split.metadata.courses, coursePages),
@@ -298,11 +299,11 @@ export function App() {
       return;
     }
     const split = splitPageDocument(cached.content, selectedSlug);
-    if (split.metadata.kind !== "year") {
+    if (split.metadata.kind !== PageKind.Year) {
       return;
     }
     setMetadata((current) => {
-      if (current.kind !== "year") {
+      if (current.kind !== PageKind.Year) {
         return current;
       }
       const courses = normalizeYearCourseSlugs(split.metadata.courses, coursePages);
@@ -798,7 +799,7 @@ export function App() {
                   ...metadata,
                   slug: selectedSlug,
                   updatedAt: savedAt,
-                  ...(metadata.kind === "year"
+                  ...(metadata.kind === PageKind.Year
                     ? { courses: normalizeYearCourseSlugs(metadata.courses, coursePages) }
                     : {}),
                 };
@@ -810,7 +811,7 @@ export function App() {
                     : page,
                 );
                 const syncPlan =
-                  savedMetadata.kind === "degree"
+                  savedMetadata.kind === PageKind.Degree
                     ? planDegreeYearSync(savedMetadata, selectedSlug, sourcesForSync)
                     : null;
 

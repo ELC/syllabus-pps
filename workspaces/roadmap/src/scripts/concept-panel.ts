@@ -313,17 +313,23 @@ export interface ConceptPanelOptions {
   showCitesEditLinks?: boolean;
 }
 
+function isConceptPanelOptions(
+  value: ConceptPanelOptions | ConceptPanelHandlers,
+): value is ConceptPanelOptions {
+  return "handlers" in value || "showCitesEditLinks" in value;
+}
+
 export function mountConceptPanel(
   root: HTMLElement,
   progress?: ConceptPanelProgress,
   options?: ConceptPanelOptions | ConceptPanelHandlers,
 ): ConceptPanel {
   const resolvedOptions: ConceptPanelOptions =
-    options && "handlers" in options
-      ? options
-      : options && "onClose" in options
-        ? { handlers: options }
-        : (options ?? {});
+    options === undefined
+      ? {}
+      : isConceptPanelOptions(options)
+        ? options
+        : { handlers: options };
   const handlers = resolvedOptions.handlers;
   const showCitesEditLinks = resolvedOptions.showCitesEditLinks ?? false;
   const title = root.querySelector<HTMLElement>(".graph__concept-title");

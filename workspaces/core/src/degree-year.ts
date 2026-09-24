@@ -1,5 +1,5 @@
 import { normalizeTitle, uniqueSorted } from "./normalize";
-import { CurriculumGraph, GraphEdge, ZettelPage } from "./types";
+import { CurriculumGraph, GraphEdge, ZettelPage, PageKind, EdgeKind } from "./types";
 
 const YEAR_SLUG_PATTERN = /^(.+)-ano-(\d+)$/i;
 const LEGACY_YEAR_SLUG_PATTERN = /^ano-(\d+)$/i;
@@ -49,7 +49,7 @@ export function buildYearPageTitle(degreeTitle: string, yearIndex: number): stri
 
 export function pageDisplayLabel(page: ZettelPage): string {
   const yearIndex = resolveYearIndex(page);
-  if (page.kind === "year" && yearIndex !== undefined) {
+  if (page.kind === PageKind.Year && yearIndex !== undefined) {
     return yearDisplayLabel(yearIndex);
   }
   return page.title;
@@ -66,12 +66,12 @@ export function yearPagesForDegree(
 ): ZettelPage[] {
   const normalizedDegree = normalizeTitle(degreeTitle);
   const degreeSlugNorm = options?.degreeSlug ? normalizeTitle(options.degreeSlug) : undefined;
-  const degreePages = pages.filter((page) => page.kind === "degree");
+  const degreePages = pages.filter((page) => page.kind === PageKind.Degree);
   const singleDegree = degreePages.length === 1 ? degreePages[0] : undefined;
 
   return pages
     .filter((page) => {
-      if (page.kind !== "year") {
+      if (page.kind !== PageKind.Year) {
         return false;
       }
 
@@ -103,7 +103,7 @@ export function yearPagesForDegree(
 }
 
 export function courseTitlesOnYearPage(page: ZettelPage): string[] {
-  if (page.kind !== "year" || !page.courses) {
+  if (page.kind !== PageKind.Year || !page.courses) {
     return [];
   }
   return page.courses
@@ -123,7 +123,7 @@ function courseLookupMaps(pages: readonly ZettelPage[]): {
   const pagesByNormalizedTitle = new Map(pages.map((page) => [page.normalizedTitle, page]));
   const courseByNormalizedSlug = new Map<string, ZettelPage>();
   for (const page of pages) {
-    if (page.kind === "course") {
+    if (page.kind === PageKind.Course) {
       courseByNormalizedSlug.set(normalizeTitle(page.slug), page);
     }
   }
@@ -138,7 +138,7 @@ export function resolveCoursePageTitle(
   const { pagesByNormalizedTitle, courseByNormalizedSlug } = courseLookupMaps(pages);
   const normalized = normalizeTitle(ref);
   const byTitle = pagesByNormalizedTitle.get(normalized);
-  if (byTitle?.kind === "course") {
+  if (byTitle?.kind === PageKind.Course) {
     return byTitle.title;
   }
   return courseByNormalizedSlug.get(normalized)?.title;
@@ -154,7 +154,7 @@ function legacyCourseTitlesFromYearRefs(
   for (const ref of yearPage.refs) {
     const normalized = normalizeTitle(ref.resolvedTarget ?? ref.target);
     const targetPage = pagesByNormalizedTitle.get(normalized);
-    if (targetPage?.kind !== "course") {
+    if (targetPage?.kind !== PageKind.Course) {
       continue;
     }
     if (seen.has(normalized)) {
@@ -176,12 +176,12 @@ function courseTitlesFromYearEdges(
   const seen = new Set<string>();
 
   for (const edge of edges) {
-    if (edge.kind !== "page-ref" || edge.source !== yearPage.title) {
+    if (edge.kind !== EdgeKind.PageRef || edge.source !== yearPage.title) {
       continue;
     }
     const normalized = normalizeTitle(edge.target);
     const targetPage = pagesByTitle.get(normalized);
-    if (targetPage?.kind !== "course") {
+    if (targetPage?.kind !== PageKind.Course) {
       continue;
     }
     if (seen.has(normalized)) {
@@ -199,7 +199,7 @@ export function coursesLinkedToYearPage(
   yearPage: ZettelPage,
   graph: Pick<CurriculumGraph, "pages" | "edges">,
 ): string[] {
-  if (yearPage.kind !== "year") {
+  if (yearPage.kind !== PageKind.Year) {
     return [];
   }
 
@@ -215,7 +215,7 @@ export function coursesLinkedToYearPage(
       (() => {
         const normalized = normalizeTitle(ref);
         const targetPage = pagesByNormalizedTitle.get(normalized);
-        return targetPage?.kind === "course" ? targetPage.title : undefined;
+        return targetPage?.kind === PageKind.Course ? targetPage.title : undefined;
       })();
     if (!resolved) {
       return;

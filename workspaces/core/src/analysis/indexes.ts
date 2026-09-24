@@ -1,5 +1,5 @@
 import { normalizeTitle } from "../normalize";
-import { CurriculumGraph, ZettelPage } from "../types";
+import { CurriculumGraph, ZettelPage, PageKind } from "../types";
 
 export interface CurriculumIndexes {
   pagesByTitle: ReadonlyMap<string, ZettelPage>;
@@ -13,10 +13,10 @@ export function buildCurriculumIndexes(graph: CurriculumGraph): CurriculumIndexe
   const pagesByTitle = new Map(graph.pages.map((page) => [page.normalizedTitle, page]));
   const curriculumTitles = new Set(
     graph.pages
-      .filter((page) => page.kind === "degree" || page.kind === "course" || page.kind === "year")
+      .filter((page) => page.kind === PageKind.Degree || page.kind === PageKind.Course || page.kind === PageKind.Year)
       .map((page) => page.normalizedTitle),
   );
-  const conceptPages = graph.pages.filter((page) => page.kind === "concept");
+  const conceptPages = graph.pages.filter((page) => page.kind === PageKind.Concept);
   const conceptTitles = new Set(conceptPages.map((page) => page.normalizedTitle));
   const conceptPagesByTitle = new Map(conceptPages.map((page) => [page.normalizedTitle, page]));
   const yearByCourse = new Map(

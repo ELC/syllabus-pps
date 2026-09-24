@@ -1,5 +1,5 @@
 import { ResourceCatalogIndex } from "../resources";
-import { ZettelPage } from "../types";
+import { PageKind, ZettelPage } from "../types";
 import { classifyPage } from "./classify";
 import { buildPageIndex } from "./page-index";
 import { parsePageContent } from "./parse-content";
@@ -66,11 +66,14 @@ export function parsePages(
   return resolvedPages
     .map((page) => {
       const kind = classifyPage(page, page.tags, options, conceptTitles);
+      const dependsOn =
+        kind === PageKind.Concept
+          ? undefined
+          : page.dependsOnTargets?.map((target) => resolveDependsOn(target, index));
       const dependsOnInvalid =
-        page.dependsOnRaw !== undefined && page.dependsOnTargets === undefined;
-      const dependsOn = dependsOnInvalid
-        ? []
-        : page.dependsOnTargets?.map((target) => resolveDependsOn(target, index));
+        kind === PageKind.Concept
+          ? false
+          : page.dependsOnRaw !== undefined && page.dependsOnTargets === undefined;
       const correlativasInvalid =
         page.correlativasRaw !== undefined && page.correlativasTargets === undefined;
       const correlativas = correlativasInvalid

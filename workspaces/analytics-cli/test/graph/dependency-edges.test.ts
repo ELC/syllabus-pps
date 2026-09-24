@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildGraphFromPages, createLoadedConfig } from "@pps/core";
 
 describe("concept dependency edges", () => {
-  it("emits prerequisite to dependent edges from frontmatter", () => {
+  it("does not emit edges from concept dependsOn frontmatter", () => {
     const config = createLoadedConfig({ years: [] });
     const graph = buildGraphFromPages({
       config,
@@ -31,12 +31,6 @@ dependsOn:
       ],
     });
 
-    expect(graph.edges).toContainEqual({
-      source: "base",
-      target: "siguiente",
-      kind: "concept-dependency",
-      rawTarget: "base",
-      line: 0,
-    });
+    expect(graph.edges.filter((edge) => edge.kind === "concept-dependency")).toEqual([]);
   });
 });

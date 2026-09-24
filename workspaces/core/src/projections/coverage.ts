@@ -1,8 +1,8 @@
 import { buildCurriculumIndexes } from "../analysis/indexes";
 import { normalizeTitle, uniqueSorted } from "../normalize";
-import { CurriculumGraph } from "../types";
+import { CurriculumGraph, PageKind } from "../types";
 
-export function countPagesByKind(graph: CurriculumGraph, kind: string): number {
+export function countPagesByKind(graph: CurriculumGraph, kind: PageKind): number {
   return graph.pages.filter((page) => page.kind === kind).length;
 }
 
@@ -10,7 +10,7 @@ export function collectCourseConceptRows(graph: CurriculumGraph): string[][] {
   const { conceptTitles, yearByCourse } = buildCurriculumIndexes(graph);
 
   return graph.pages
-    .filter((page) => page.kind === "course")
+    .filter((page) => page.kind === PageKind.Course)
     .flatMap((page) => {
       const concepts = uniqueSorted([
         ...page.tags.map((tag) => tag.resolvedTarget ?? tag.target),
@@ -50,7 +50,7 @@ export function collectCourseBlockCoverage(graph: CurriculumGraph): Array<{
   const { conceptTitles } = buildCurriculumIndexes(graph);
 
   return graph.pages
-    .filter((page) => page.kind === "course")
+    .filter((page) => page.kind === PageKind.Course)
     .flatMap((page) =>
       page.blocks.map((block) => {
         const conceptLinks = uniqueSorted([

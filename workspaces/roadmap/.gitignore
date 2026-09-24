@@ -1,0 +1,4 @@
+# Accidental tsc output under src/ (roadmap uses Vite + noEmit typecheck only)
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts

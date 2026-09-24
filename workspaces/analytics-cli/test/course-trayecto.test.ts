@@ -7,6 +7,7 @@ import {
   createLoadedConfig,
   DEFAULT_COURSE_TRAYECTO,
   exportToCytoscape,
+  PageKind,
   isTrayectoNoEstructurado,
   parseCourseTrayectoValue,
   resolveCourseTrayecto,
@@ -36,11 +37,11 @@ describe("isTrayectoNoEstructurado", () => {
 
 describe("resolveCourseTrayecto", () => {
   it("defaults course pages to trayecto principal", () => {
-    expect(resolveCourseTrayecto("course")).toBe(DEFAULT_COURSE_TRAYECTO);
+    expect(resolveCourseTrayecto(PageKind.Course)).toBe(DEFAULT_COURSE_TRAYECTO);
   });
 
   it("defaults non-course pages to trayecto principal", () => {
-    expect(resolveCourseTrayecto("concept")).toBe(DEFAULT_COURSE_TRAYECTO);
+    expect(resolveCourseTrayecto(PageKind.Concept)).toBe(DEFAULT_COURSE_TRAYECTO);
   });
 });
 

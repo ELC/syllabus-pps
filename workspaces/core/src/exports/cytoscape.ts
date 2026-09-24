@@ -51,7 +51,7 @@ export function exportToCytoscape(graph: CurriculumGraph): CytoscapeGraphExport 
   const edges: CytoscapeElementEdge[] = [];
 
   for (const edge of graph.edges) {
-    if (edge.kind === "concept-dependency") {
+    if (edge.kind === EdgeKind.ConceptDependency) {
       continue;
     }
 

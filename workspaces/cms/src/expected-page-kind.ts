@@ -1,4 +1,4 @@
-import { parseYearSlug } from "@pps/core";
+import { PageKind, parseYearSlug } from "@pps/core";
 
 import { splitPageDocument, type EditorPageKind } from "./page-document";
 
@@ -16,7 +16,7 @@ export function expectedEditorKind(
   }
 
   if (parseYearSlug(slug)) {
-    return "year";
+    return PageKind.Year;
   }
 
   return null;

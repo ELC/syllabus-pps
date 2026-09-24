@@ -153,6 +153,7 @@ In the SQL editor or via Postgres:
 5. [`workspaces/content/sql/004_analytics_dac.sql`](workspaces/content/sql/004_analytics_dac.sql) — Bruin DAC query tables
 6. [`workspaces/content/sql/005_analytics_rebuild_status.sql`](workspaces/content/sql/005_analytics_rebuild_status.sql) — rebuild progress for CMS/Cites
 7. [`workspaces/content/sql/006_roadmap_course_layouts.sql`](workspaces/content/sql/006_roadmap_course_layouts.sql) — curated degree roadmap grid overrides
+8. [`workspaces/content/sql/007_roadmap_concept_layouts.sql`](workspaces/content/sql/007_roadmap_concept_layouts.sql) — per-course concept map curations
 
 **Fast path** (after `.env` has `SUPABASE_DB_*`):
 
@@ -173,6 +174,22 @@ pnpm build:content
 ```
 
 You should see `Synced analytics artifacts and DAC tables to Supabase Postgres` with no warning.
+
+### Roadmap concept layouts (Postgres)
+
+Per-course concept maps live in `public.roadmap_concept_layouts`. The typed document shape is `RoadmapCuration` / `RoadmapConceptLayoutDocument` in `@pps/core` (parse with `parseRoadmapCurationDocument`). Storage is exactly **one** `parallelLanes[0].spine` (on-column order) plus `branches` / `branchOwnerOverrides` for laterals; the parser rejects multiple lanes. Layouts load from Postgres (or start empty until saved). Clear browser storage after deploy if you cached old curation JSON locally.
+
+Dry-run normalization for all rows (requires `.env` with Supabase server keys):
+
+```sh
+node --env-file=.env node_modules/.bin/tsx scripts/normalize-roadmap-concept-layouts.ts
+node --env-file=.env node_modules/.bin/tsx scripts/normalize-roadmap-concept-layouts.ts --write
+node --env-file=.env node_modules/.bin/tsx scripts/normalize-roadmap-concept-layouts.ts --write --degree lds
+```
+
+After `pnpm install`, `pnpm normalize:roadmap-concept-layouts` runs a dry-run (builds `@pps/core` and `@pps/content` first). Pass `--write` and optional `--degree <slug>` as extra args: `pnpm normalize:roadmap-concept-layouts -- --write --degree lds`.
+
+Saving from the Roadmap concept editor applies the same normalization before upsert.
 
 Or invoke the Edge Function:
 

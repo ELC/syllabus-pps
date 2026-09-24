@@ -1,13 +1,11 @@
 import type { ConceptEditTool } from "./concept-edit-tools";
 import { CONCEPT_EDIT_TOOL_LABELS } from "./concept-edit-tools";
 
-import { Admissibility } from "../../concept-graph";
-
 interface RoadmapConceptEditToolbarProps {
   activeTool: ConceptEditTool;
   onToolChange: (tool: ConceptEditTool) => void;
-  moveUpAdmissibility: typeof Admissibility.Allowed | typeof Admissibility.Blocked;
-  moveDownAdmissibility: typeof Admissibility.Allowed | typeof Admissibility.Blocked;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
   onMoveUp: () => void;
   onMoveDown: () => void;
   canUndo: boolean;
@@ -17,19 +15,13 @@ interface RoadmapConceptEditToolbarProps {
   onCopyDebugJson?: () => void;
 }
 
-const TOOLS: ConceptEditTool[] = [
-  "select",
-  "branch",
-  "side",
-  "mergeFork",
-  "spine",
-];
+const TOOLS: ConceptEditTool[] = ["select", "side", "spine"];
 
 export function RoadmapConceptEditToolbar({
   activeTool,
   onToolChange,
-  moveUpAdmissibility,
-  moveDownAdmissibility,
+  canMoveUp,
+  canMoveDown,
   onMoveUp,
   onMoveDown,
   canUndo,
@@ -64,7 +56,7 @@ export function RoadmapConceptEditToolbar({
         <button
           type="button"
           className="roadmap__concept-edit-tool"
-          disabled={moveUpAdmissibility === Admissibility.Blocked}
+          disabled={!canMoveUp}
           onClick={onMoveUp}
         >
           Subir
@@ -72,7 +64,7 @@ export function RoadmapConceptEditToolbar({
         <button
           type="button"
           className="roadmap__concept-edit-tool"
-          disabled={moveDownAdmissibility === Admissibility.Blocked}
+          disabled={!canMoveDown}
           onClick={onMoveDown}
         >
           Bajar

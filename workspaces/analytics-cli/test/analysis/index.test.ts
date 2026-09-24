@@ -7,7 +7,7 @@ import {
 } from "../../src/analysis";
 import { normalizeTitle } from "../../src/normalize";
 import { buildFixtureGraph } from "../support/fixtures";
-import type { ZettelPage } from "../../src/types";
+import { PageKind, type ZettelPage } from "../../src/types";
 
 describe("buildCurriculumIndexes", () => {
   it("indexes curriculum pages, concepts, and year-by-course mappings", () => {
@@ -34,11 +34,12 @@ describe("collectSourcesForBlock", () => {
       title: "recursividad",
       normalizedTitle: "recursividad",
       path: "recursividad.md",
-      kind: "concept",
+      kind: PageKind.Concept,
       blocks: [],
       refs: [],
       tags: [],
       urls: [],
+      citations: [],
     };
     const block = {
       line: 1,
@@ -74,8 +75,8 @@ describe("collectPageSources", () => {
       title: "algoritmos",
       normalizedTitle: "algoritmos",
       path: "algoritmos.md",
-      kind: "concept",
-      declaredKind: "concept",
+      kind: PageKind.Concept,
+      declaredKind: PageKind.Concept,
       blocks: [
         {
           line: 1,
@@ -100,6 +101,7 @@ describe("collectPageSources", () => {
       refs: [],
       tags: [],
       urls: [],
+      citations: [],
     };
 
     expect(collectPageSources(page, new Set())).toEqual([

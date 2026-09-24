@@ -6,12 +6,14 @@ import {
   previousConceptCurationHistoryEntry,
   type ConceptCurationHistory,
 } from "./concept-curation-history";
-import type { RoadmapCuration } from "./curation";
+import type { RoadmapConceptLayoutDocument, RoadmapCuration } from "@pps/core";
 
-export const CONCEPT_CURATION_DEBUG_EXPORT_KIND = "roadmap-concept-layout-debug" as const;
+export enum ConceptCurationDebugExportKind {
+  RoadmapConceptLayoutDebug = "roadmap-concept-layout-debug",
+}
 
-export type ConceptCurationDebugExport = {
-  readonly kind: typeof CONCEPT_CURATION_DEBUG_EXPORT_KIND;
+export interface ConceptCurationDebugExport {
+  readonly kind: ConceptCurationDebugExportKind.RoadmapConceptLayoutDebug;
   readonly exportedAt: string;
   readonly degreeSlug: string;
   readonly courseSlug: string;
@@ -20,19 +22,23 @@ export type ConceptCurationDebugExport = {
   readonly historyIndex: number;
   readonly historyLength: number;
   readonly lastAction: ConceptCurationEditAction | null;
-  readonly previousCuration: Record<string, unknown> | null;
-  readonly curation: Record<string, unknown>;
-};
+  readonly previousCuration: RoadmapConceptLayoutDocument | null;
+  readonly curation: RoadmapConceptLayoutDocument;
+}
 
-export function buildConceptCurationDebugExport(input: {
-  degreeSlug: string;
-  courseSlug: string;
-  curation: RoadmapCuration;
-  history: ConceptCurationHistory | null;
-  selectedTopic: string | null;
-  editTool: ConceptEditTool;
-  exportedAt?: string;
-}): ConceptCurationDebugExport {
+export interface ConceptCurationDebugExportInput {
+  readonly degreeSlug: string;
+  readonly courseSlug: string;
+  readonly curation: RoadmapCuration;
+  readonly history: ConceptCurationHistory | null;
+  readonly selectedTopic: string | null;
+  readonly editTool: ConceptEditTool;
+  readonly exportedAt?: string;
+}
+
+export function buildConceptCurationDebugExport(
+  input: ConceptCurationDebugExportInput,
+): ConceptCurationDebugExport {
   const history = input.history;
   const currentEntry = history
     ? currentConceptCurationHistoryEntry(history)
@@ -40,8 +46,8 @@ export function buildConceptCurationDebugExport(input: {
   const previousEntry = history ? previousConceptCurationHistoryEntry(history) : null;
   const curation = currentEntry?.curation ?? input.curation;
 
-  return {
-    kind: CONCEPT_CURATION_DEBUG_EXPORT_KIND,
+  const payload: ConceptCurationDebugExport = {
+    kind: ConceptCurationDebugExportKind.RoadmapConceptLayoutDebug,
     exportedAt: input.exportedAt ?? new Date().toISOString(),
     degreeSlug: input.degreeSlug,
     courseSlug: input.courseSlug,
@@ -55,6 +61,8 @@ export function buildConceptCurationDebugExport(input: {
       : null,
     curation: conceptLayoutDocumentFromCuration(curation),
   };
+
+  return payload;
 }
 
 export async function copyConceptCurationDebugExport(

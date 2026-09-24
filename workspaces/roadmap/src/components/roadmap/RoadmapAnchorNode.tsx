@@ -2,10 +2,8 @@ import { Handle, Position, type NodeProps } from "@xyflow/react";
 
 import { HANDLE_BOTTOM_OUT, HANDLE_TOP_IN } from "./constants";
 
-export interface RoadmapAnchorNodeData extends Record<string, unknown> {
-  label: string;
-  variant: "start" | "end";
-}
+export type { RoadmapAnchorNodeData } from "./roadmap-node-data";
+import type { RoadmapAnchorNodeData } from "./roadmap-node-data";
 
 export function RoadmapAnchorNode({ data }: NodeProps) {
   const nodeData = data as unknown as RoadmapAnchorNodeData;

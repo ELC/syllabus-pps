@@ -1,17 +1,47 @@
+import type { LinearSpineShiftDirection, RoadmapConceptTitle } from "@pps/core";
+
+export enum ConceptCurationEditActionKind {
+  Load = "load",
+  Undo = "undo",
+  Redo = "redo",
+  Shift = "shift",
+  AttachSide = "attachSide",
+  PromoteToSpine = "promoteToSpine",
+}
+
+export interface ConceptCurationEditActionLoad {
+  readonly kind: ConceptCurationEditActionKind.Load;
+}
+
+export interface ConceptCurationEditActionUndo {
+  readonly kind: ConceptCurationEditActionKind.Undo;
+}
+
+export interface ConceptCurationEditActionRedo {
+  readonly kind: ConceptCurationEditActionKind.Redo;
+}
+
+export interface ConceptCurationEditActionShift {
+  readonly kind: ConceptCurationEditActionKind.Shift;
+  readonly title: RoadmapConceptTitle;
+  readonly direction: LinearSpineShiftDirection;
+}
+
+export interface ConceptCurationEditActionAttachSide {
+  readonly kind: ConceptCurationEditActionKind.AttachSide;
+  readonly ownerTitle: RoadmapConceptTitle;
+  readonly branchTitle: RoadmapConceptTitle;
+}
+
+export interface ConceptCurationEditActionPromoteToSpine {
+  readonly kind: ConceptCurationEditActionKind.PromoteToSpine;
+  readonly branchTitle: RoadmapConceptTitle;
+}
+
 export type ConceptCurationEditAction =
-  | { readonly kind: "load" }
-  | { readonly kind: "undo" }
-  | { readonly kind: "redo" }
-  | { readonly kind: "shift"; readonly title: string; readonly direction: -1 | 1 }
-  | {
-      readonly kind: "separate";
-      readonly firstSelectedTitle: string;
-      readonly lastSelectedTitle: string;
-    }
-  | {
-      readonly kind: "attachSide";
-      readonly ownerTitle: string;
-      readonly branchTitle: string;
-    }
-  | { readonly kind: "mergeFork"; readonly conceptTitle: string }
-  | { readonly kind: "promoteToSpine"; readonly branchTitle: string };
+  | ConceptCurationEditActionLoad
+  | ConceptCurationEditActionUndo
+  | ConceptCurationEditActionRedo
+  | ConceptCurationEditActionShift
+  | ConceptCurationEditActionAttachSide
+  | ConceptCurationEditActionPromoteToSpine;

@@ -3,7 +3,7 @@ import { deriveExpectedCurriculum } from "../curriculum";
 import { coursesLinkedToYearPage, yearPagesForDegree } from "../degree-year";
 import { indexResourceCatalog, ResourceCatalogEntry } from "../resources";
 import { parsePages, PageSource } from "../parser";
-import { CurriculumGraph, ExpectedCurriculum, GraphEdge, PageKind, ZettelPage } from "../types";
+import { CurriculumGraph, ExpectedCurriculum, GraphEdge, PageKind, ZettelPage, EdgeKind } from "../types";
 import { structuralPageKindRankByKind } from "./structural-kind-rank";
 
 export function canonicalStructuralEdgeDirection(
@@ -19,7 +19,11 @@ export function canonicalStructuralEdgeDirection(
 
   const sourceRank = structuralPageKindRankByKind[sourceKind];
   const targetRank = structuralPageKindRankByKind[targetKind];
-  if (sourceRank === undefined || targetRank === undefined || sourceRank <= targetRank) {
+  if (
+    !sourceRank.isStructural ||
+    !targetRank.isStructural ||
+    sourceRank.index <= targetRank.index
+  ) {
     return { source, target };
   }
 
@@ -65,7 +69,7 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
   const titleSet = new Set(pages.map((page) => page.title));
 
   const edges = pages.flatMap((page) => [
-    ...(page.kind === "course" ? (page.correlativas ?? []) : []).flatMap((correlativa) => {
+    ...(page.kind === PageKind.Course ? (page.correlativas ?? []) : []).flatMap((correlativa) => {
       const prerequisite = correlativa.resolvedTarget ?? correlativa.target;
       if (!titleSet.has(prerequisite)) {
         return [];
@@ -75,24 +79,8 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
         {
           source: prerequisite,
           target: page.title,
-          kind: "course-prerequisite" as const,
+          kind: EdgeKind.CoursePrerequisite,
           rawTarget: correlativa.target,
-          line: 0,
-        },
-      ];
-    }),
-    ...(page.kind === "concept" ? (page.dependsOn ?? []) : []).flatMap((dep) => {
-      const prerequisite = dep.resolvedTarget ?? dep.target;
-      if (!titleSet.has(prerequisite)) {
-        return [];
-      }
-
-      return [
-        {
-          source: prerequisite,
-          target: page.title,
-          kind: "concept-dependency" as const,
-          rawTarget: dep.target,
           line: 0,
         },
       ];
@@ -104,7 +92,7 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
       return {
         source: direction.source,
         target: direction.target,
-        kind: "page-ref" as const,
+        kind: EdgeKind.PageRef,
         rawTarget: ref.target,
         line: ref.line,
       };
@@ -112,7 +100,7 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
     ...page.tags.map((tag) => ({
       source: page.title,
       target: tag.resolvedTarget ?? tag.target,
-      kind: "concept-tag" as const,
+      kind: EdgeKind.ConceptTag,
       rawTarget: tag.target,
       line: tag.line,
     })),
@@ -120,7 +108,7 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
 
   const preliminaryGraph = { pages, edges };
   for (const page of pages) {
-    if (page.kind !== "year") {
+    if (page.kind !== PageKind.Year) {
       continue;
     }
     for (const courseTitle of coursesLinkedToYearPage(page, preliminaryGraph)) {
@@ -135,7 +123,7 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
       edges.push({
         source: direction.source,
         target: direction.target,
-        kind: "page-ref",
+        kind: EdgeKind.PageRef,
         rawTarget: courseTitle,
         line: 0,
       });
@@ -143,7 +131,7 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
   }
 
   for (const degreePage of pages) {
-    if (degreePage.kind !== "degree") {
+    if (degreePage.kind !== PageKind.Degree) {
       continue;
     }
     for (const yearPage of yearPagesForDegree(pages, degreePage.title, {
@@ -157,7 +145,7 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
       edges.push({
         source: direction.source,
         target: direction.target,
-        kind: "page-ref",
+        kind: EdgeKind.PageRef,
         rawTarget: yearPage.title,
         line: 0,
       });
