@@ -147,9 +147,10 @@
     }
 
     &--concept {
+      /* Match Cytoscape concept nodes (ellipse, width = height). */
       width: 0.85rem;
       height: 0.85rem;
-      border-radius: 0.2rem;
+      border-radius: 999px;
     }
   }
 

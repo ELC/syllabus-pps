@@ -40,14 +40,14 @@ export function buildDegreeDropdownOptions(pages: readonly ZettelPage[]): Degree
 
 /** Distinct course border hues by año index within a degree (Okabe–Ito–aligned). */
 const YEAR_COURSE_BASES = [
-  "#D97706",
-  "#2E3092",
-  "#9D4470",
-  "#CA9161",
-  "#0072B2",
-  "#CC79A7",
-  "#56B4E9",
-  "#F0E442",
+  "#D97706", // año 1 — amber (default materia)
+  "#2E3092", // año 2 — navy
+  "#9D4470", // año 3 — magenta
+  "#56B4E9", // año 4 — sky blue (avoid warm tan too close to año 1)
+  "#0072B2", // año 5 — blue
+  "#CC79A7", // año 6 — pink
+  "#009E73", // año 7 — green
+  "#F0E442", // año 8 — yellow
 ] as const;
 
 export function borderColorForYearIndex(yearIndex: number): string {

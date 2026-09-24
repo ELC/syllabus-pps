@@ -1,5 +1,10 @@
 import { yearDisplayLabel, type ZettelPage } from "@pps/core";
-import { AUSTRAL_GRAPH_TNE, kindStyleForKind, tint } from "@pps/shell/austral-tokens";
+import { AUSTRAL, kindStyleForKind, tint } from "@pps/shell/austral-tokens";
+
+/** Legend-only grey dashed swatch (graph nodes keep year color + dashed border). */
+const LEGEND_TNE_LABEL = "Trayecto No Estructurado";
+const LEGEND_TNE_BORDER = AUSTRAL.muted;
+const LEGEND_TNE_SWATCH = tint(AUSTRAL.muted, 0.22);
 
 import { borderColorForYearIndex, courseMetaForDegree } from "./graph-degree-scope";
 import { GRAPH_NODE_KINDS } from "./graph-styles";
@@ -22,20 +27,12 @@ export interface GraphLegendEntry {
 }
 
 function defaultLegendEntries(): GraphLegendEntry[] {
-  const entries: GraphLegendEntry[] = GRAPH_NODE_KINDS.map((item) => ({
+  return GRAPH_NODE_KINDS.map((item) => ({
     label: item.label,
     borderColor: item.border,
     swatchFill: item.swatchFill,
     kind: item.kind === "concept" ? "concept" : undefined,
   }));
-
-  entries.push({
-    label: "TNE",
-    borderColor: AUSTRAL_GRAPH_TNE.border,
-    swatchFill: AUSTRAL_GRAPH_TNE.swatchFill,
-  });
-
-  return entries;
 }
 
 function scopedLegendEntries(
@@ -45,12 +42,12 @@ function scopedLegendEntries(
   const degreeSlug = viewState.degreeScopeSlug.trim();
   const meta = courseMetaForDegree(degreeContext.pages, degreeSlug);
   const yearIndices = new Set<number>();
-  const tneYearIndices = new Set<number>();
+  let hasTneCourses = false;
 
   for (const courseMeta of meta.values()) {
     yearIndices.add(courseMeta.yearIndex);
     if (courseMeta.tne) {
-      tneYearIndices.add(courseMeta.yearIndex);
+      hasTneCourses = true;
     }
   }
 
@@ -65,12 +62,11 @@ function scopedLegendEntries(
       };
     });
 
-  for (const yearIndex of [...tneYearIndices].sort((left, right) => left - right)) {
-    const borderColor = borderColorForYearIndex(yearIndex);
+  if (hasTneCourses) {
     entries.push({
-      label: `${yearDisplayLabel(yearIndex)} · TNE`,
-      borderColor,
-      swatchFill: tint(borderColor, 0.22),
+      label: LEGEND_TNE_LABEL,
+      borderColor: LEGEND_TNE_BORDER,
+      swatchFill: LEGEND_TNE_SWATCH,
       dashed: true,
     });
   }

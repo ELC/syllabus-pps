@@ -1211,6 +1211,7 @@ export function App() {
           onBodyChange={setBody}
           listedPageSlugs={listedPageSlugs}
           pageTitlesBySlug={pageTitlesBySlug}
+          allSources={allSources}
           onOpenPage={selectPage}
         />
       </section>

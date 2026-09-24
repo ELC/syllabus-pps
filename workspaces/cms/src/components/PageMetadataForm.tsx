@@ -8,17 +8,26 @@ import {
   yearDisplayLabel,
   type ResourceCatalogEntry,
 } from "@pps/core";
-import { SvgAssetIcon } from "@pps/shell/SvgAssetIcon";
-import resourceOpenSvg from "@pps/shell/assets/icons/resource-open.svg?raw";
-
 import { courseTitleBySlug, type CoursePageOption } from "../course-pages";
 import type { ConceptPageOption } from "../concept-pages";
 import type { PageLinkOption } from "../page-link-options";
-import { EDITOR_KINDS, type EditorPageKind, type PageMetadata } from "../page-document";
+import {
+  buildEditorCatalogGraph,
+  conceptsForCourseInGraph,
+  coursesForConceptInGraph,
+  yearPagesForCourseInSources,
+} from "../page-catalog-links";
+import {
+  composePageDocument,
+  EDITOR_KINDS,
+  type EditorPageKind,
+  type PageMetadata,
+} from "../page-document";
 import { BodyEditor } from "./BodyEditor";
 import { DependsOnCombobox } from "./DependsOnCombobox";
 import {
   ContentEditorSkeleton,
+  MetaCatalogLinkRowSkeleton,
   MetaDegreeDisplaySkeleton,
   MetaPrimaryStackSkeleton,
 } from "./MetaFormSkeleton";
@@ -69,6 +78,8 @@ export interface PageMetadataFormProps {
   listedPageSlugs: ReadonlySet<string>;
   /** Display titles keyed by page slug. */
   pageTitlesBySlug: ReadonlyMap<string, string>;
+  /** Full Storage catalog (year grids, concept backlinks). */
+  allSources: ReadonlyArray<{ path: string; content: string }>;
   onOpenPage: (slug: string) => void;
 }
 
@@ -92,6 +103,7 @@ export function PageMetadataForm({
   catalogReady,
   listedPageSlugs,
   pageTitlesBySlug,
+  allSources,
   onOpenPage,
 }: PageMetadataFormProps): ReactElement {
   const [dependsOnResetKey, setDependsOnResetKey] = useState(0);
@@ -154,7 +166,7 @@ export function PageMetadataForm({
   const isYear = layoutKind === "year";
   const wideTitleInput = Boolean(layoutKind) && !isCourse && !isDegree && !isYear;
   const kindForCatalog = documentReady ? metadata.kind : expectedKind;
-  const needsCatalogForExtras = kindForCatalog === "year" || kindForCatalog === "course";
+  const needsCatalogForExtras = kindForCatalog === PageKind.Year;
   const metaPrimaryReady = documentReady;
   const catalogExtrasReady = catalogReady;
   const editorWriteReady = documentReady;
@@ -166,8 +178,15 @@ export function PageMetadataForm({
     metaPrimaryReady && catalogExtrasReady && metadata.kind === PageKind.Year;
   const showCorrelativasEditor =
     metaPrimaryReady && catalogExtrasReady && metadata.kind === PageKind.Course;
+  const showCourseCatalogPending =
+    metaPrimaryReady && isCourse && !catalogExtrasReady;
   const showCatalogExtrasPending =
     metaPrimaryReady && needsCatalogForExtras && !catalogExtrasReady;
+  const showConceptCourseSection =
+    metaPrimaryReady && metadata.kind === PageKind.Concept;
+  const showCourseYearPageSection =
+    metaPrimaryReady && metadata.kind === PageKind.Course;
+  const catalogBacklinkLinksReady = catalogExtrasReady && allSources.length > 0;
 
   const courseSlugChoices = useMemo(() => {
     const slugs = new Set(coursePages.map((course) => course.slug));
@@ -268,6 +287,59 @@ export function PageMetadataForm({
   }, [degreeDisplayByTitle, metadata.degree]);
 
   const isDegreeStack = stackKind === PageKind.Degree;
+  const isConceptStack = stackKind === PageKind.Concept;
+  const isCourseStack = stackKind === PageKind.Course;
+
+  const editorCatalogGraph = useMemo(() => {
+    const patchedSources = allSources.map((page) => {
+      const fileSlug = page.path.replace(/\.md$/i, "");
+      if (!metaPrimaryReady || fileSlug !== pageSlug) {
+        return page;
+      }
+      return {
+        ...page,
+        content: composePageDocument({ ...metadata, slug: pageSlug }, body),
+      };
+    });
+    return buildEditorCatalogGraph([...patchedSources], resources);
+  }, [allSources, body, metaPrimaryReady, metadata, pageSlug, resources]);
+
+  const courseYearPageLinks = useMemo(() => {
+    if (!catalogExtrasReady || stackKind !== PageKind.Course) {
+      return [];
+    }
+    return yearPagesForCourseInSources(
+      allSources,
+      pageSlug,
+      metadata.title,
+      coursePages,
+      listedPageSlugs,
+      pageTitlesBySlug,
+    );
+  }, [
+    allSources,
+    catalogExtrasReady,
+    coursePages,
+    listedPageSlugs,
+    metadata.title,
+    pageSlug,
+    pageTitlesBySlug,
+    stackKind,
+  ]);
+
+  const conceptCourseLinks = useMemo(() => {
+    if (!catalogExtrasReady || stackKind !== PageKind.Concept) {
+      return [];
+    }
+    return coursesForConceptInGraph(editorCatalogGraph, pageSlug, metadata.title);
+  }, [catalogExtrasReady, editorCatalogGraph, metadata.title, pageSlug, stackKind]);
+
+  const courseConceptLinks = useMemo(() => {
+    if (!catalogExtrasReady || stackKind !== PageKind.Course) {
+      return [];
+    }
+    return conceptsForCourseInGraph(editorCatalogGraph, pageSlug, metadata.title);
+  }, [catalogExtrasReady, editorCatalogGraph, metadata.title, pageSlug, stackKind]);
 
   return (
     <fieldset className="cms__meta">
@@ -279,6 +351,8 @@ export function PageMetadataForm({
             "cms__meta-primary-stack",
             "cms__meta-field--full",
             isDegreeStack ? "cms__meta-primary-stack--degree" : "",
+            isConceptStack ? "cms__meta-primary-stack--concept" : "",
+            isCourseStack ? "cms__meta-primary-stack--course" : "",
             !metaPrimaryReady ? "cms__meta-primary-stack--pending" : "",
           ]
             .filter(Boolean)
@@ -295,6 +369,7 @@ export function PageMetadataForm({
                   "cms__meta-field--full",
                   "cms__meta-title-row",
                   wideTitleInput ? "cms__meta-title-row--wide-title" : "",
+                  isCourse ? "cms__meta-title-row--course" : "",
                   isDegree ? "cms__meta-title-row--degree" : "",
                 ]
                   .filter(Boolean)
@@ -359,24 +434,25 @@ export function PageMetadataForm({
                   </div>
                 ) : (
                   <div className="cms__meta-degree-display-wrap">
-                    {linkedDegreeSlug ? (
-                      <button
-                        type="button"
-                        className="cms__meta-degree-open"
-                        onClick={() => onOpenPage(linkedDegreeSlug)}
-                        aria-label="Editar carrera en el CMS"
-                        title="Editar carrera en el CMS"
-                      >
-                        <SvgAssetIcon
-                          svg={resourceOpenSvg}
-                          className="cms__meta-degree-open-icon"
-                          focusable={false}
-                        />
-                      </button>
-                    ) : null}
-                    <p className="cms__meta-static-value cms__meta-degree-display" aria-label="Carrera">
-                      {yearDegreeLabel}
-                    </p>
+                    <span
+                      className="cms__depends-on-chip cms__depends-on-chip--meta-readonly"
+                      aria-label="Carrera"
+                    >
+                      {linkedDegreeSlug ? (
+                        <button
+                          type="button"
+                          className="cms__depends-on-chip-label cms__depends-on-chip-open cms__depends-on-chip-label--meta-degree"
+                          onClick={() => onOpenPage(linkedDegreeSlug)}
+                          title="Editar carrera en el CMS"
+                        >
+                          {yearDegreeLabel}
+                        </button>
+                      ) : (
+                        <span className="cms__depends-on-chip-label cms__depends-on-chip-label--meta-degree">
+                          {yearDegreeLabel}
+                        </span>
+                      )}
+                    </span>
                   </div>
                 )
               ) : null}
@@ -398,7 +474,113 @@ export function PageMetadataForm({
                   ariaLabel="Tipo"
                 />
               )}
+              {isCourse ? (
+                <>
+                  <span className="cms__meta-label cms__meta-correlativas-label">Correlativas:</span>
+                  {showCourseCatalogPending ? (
+                    <p className="cms__catalog-pending cms__meta-correlativas-wrap" role="status">
+                      Cargando el catálogo para correlativas…
+                    </p>
+                  ) : showCorrelativasEditor ? (
+                    <div className="cms__meta-correlativas-wrap cms__meta-field--overlay">
+                      <DependsOnCombobox
+                        key={`correlativas-${dependsOnResetKey}`}
+                        listboxId="cms-correlativas-dropdown"
+                        choices={correlativasChoices}
+                        selected={metadata.correlativas}
+                        onChange={(correlativas) => patch({ correlativas })}
+                        placeholderEmpty="Buscar materias para agregar…"
+                        placeholderMore="Agregar otra…"
+                        emptyWhenFiltered="Ninguna materia coincide."
+                        emptyWhenAllSelected="Ya están seleccionadas todas las materias."
+                        inputAriaLabel="Agregar correlativas"
+                        onChipActivate={openCoursePageFromChip}
+                      />
+                    </div>
+                  ) : null}
+                </>
+              ) : null}
               </div>
+
+              {showCourseYearPageSection ? (
+                <div className="cms__meta-course-extra" aria-busy={!catalogBacklinkLinksReady}>
+                  <div className="cms__meta-course-backlinks">
+                    <div className="cms__meta-field cms__meta-field--full cms__meta-course-years">
+                      <span className="cms__meta-label">Páginas de año</span>
+                      {!catalogBacklinkLinksReady ? (
+                        <MetaCatalogLinkRowSkeleton />
+                      ) : (
+                        <div className="cms__meta-degree-year-links" role="list">
+                          {courseYearPageLinks.map(({ slug, label, listed, title }) => (
+                            <button
+                              key={slug}
+                              type="button"
+                              role="listitem"
+                              className={[
+                                "cms__meta-degree-year-link",
+                                listed ? "" : "cms__meta-degree-year-link--pending",
+                              ]
+                                .filter(Boolean)
+                                .join(" ")}
+                              onClick={() => onOpenPage(slug)}
+                              title={listed ? title : "La página de año no está en Storage"}
+                            >
+                              {label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="cms__meta-field cms__meta-field--full cms__meta-course-concepts">
+                      <span className="cms__meta-label">Conceptos</span>
+                      {!catalogBacklinkLinksReady ? (
+                        <MetaCatalogLinkRowSkeleton />
+                      ) : (
+                        <div className="cms__meta-degree-year-links" role="list">
+                          {courseConceptLinks.map(({ slug, title }) => (
+                            <button
+                              key={slug}
+                              type="button"
+                              role="listitem"
+                              className="cms__meta-degree-year-link"
+                              onClick={() => onOpenPage(slug)}
+                              title={`Abrir ${title} en el editor`}
+                            >
+                              {title}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {showConceptCourseSection ? (
+                <div className="cms__meta-concept-extra" aria-busy={!catalogBacklinkLinksReady}>
+                  <div className="cms__meta-field cms__meta-field--full cms__meta-concept-courses">
+                    <span className="cms__meta-label">Materias</span>
+                    {!catalogBacklinkLinksReady ? (
+                      <MetaCatalogLinkRowSkeleton />
+                    ) : (
+                      <div className="cms__meta-degree-year-links" role="list">
+                        {conceptCourseLinks.map(({ slug, title }) => (
+                          <button
+                            key={slug}
+                            type="button"
+                            role="listitem"
+                            className="cms__meta-degree-year-link"
+                            onClick={() => onOpenPage(slug)}
+                            title={`Abrir ${title} en el editor`}
+                          >
+                            {title}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : null}
 
               {showDegreeFullName ? (
                 <div className="cms__meta-degree-extra">
@@ -448,7 +630,7 @@ export function PageMetadataForm({
               <div className="cms__meta-extra-slot">
                 {showCatalogExtrasPending ? (
                   <p className="cms__catalog-pending" role="status">
-                    Cargando el catálogo para correlativas…
+                    Cargando el catálogo de materias…
                   </p>
                 ) : null}
                 {showYearCoursesEditor ? (
@@ -505,25 +687,6 @@ export function PageMetadataForm({
                         }}
                       />
                     </div>
-                  </div>
-                ) : null}
-
-                {showCorrelativasEditor ? (
-                  <div className="cms__meta-field cms__meta-field--full cms__meta-field--overlay">
-                    <span className="cms__meta-label">Correlativas:</span>
-                    <DependsOnCombobox
-                      key={`correlativas-${dependsOnResetKey}`}
-                      listboxId="cms-correlativas-dropdown"
-                      choices={correlativasChoices}
-                      selected={metadata.correlativas}
-                      onChange={(correlativas) => patch({ correlativas })}
-                      placeholderEmpty="Buscar materias para agregar…"
-                      placeholderMore="Agregar otra…"
-                      emptyWhenFiltered="Ninguna materia coincide."
-                      emptyWhenAllSelected="Ya están seleccionadas todas las materias."
-                      inputAriaLabel="Agregar correlativas"
-                      onChipActivate={openCoursePageFromChip}
-                    />
                   </div>
                 ) : null}
 

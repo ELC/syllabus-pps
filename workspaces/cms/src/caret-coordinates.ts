@@ -39,3 +39,59 @@ export function getTextareaCaretOffset(
     left: left - textarea.scrollLeft + fontSize * 0.45,
   };
 }
+
+/** Best-effort character index at a client point (for hit-testing `[@id]` citations). */
+export function getTextareaOffsetFromClientPoint(
+  textarea: HTMLTextAreaElement,
+  clientX: number,
+  clientY: number,
+): number {
+  const length = textarea.value.length;
+  if (length === 0) {
+    return 0;
+  }
+
+  const rect = textarea.getBoundingClientRect();
+  const targetY = clientY - rect.top;
+  const targetX = clientX - rect.left;
+
+  let low = 0;
+  let high = length;
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2);
+    const { top } = getTextareaCaretOffset(textarea, mid);
+    if (top < targetY) {
+      low = mid + 1;
+    } else {
+      high = mid;
+    }
+  }
+
+  const lineAnchor = Math.min(low, length);
+  const anchorTop = getTextareaCaretOffset(textarea, lineAnchor).top;
+
+  let lineStart = lineAnchor;
+  while (lineStart > 0) {
+    const previousTop = getTextareaCaretOffset(textarea, lineStart - 1).top;
+    if (previousTop < anchorTop - 1) {
+      break;
+    }
+    lineStart -= 1;
+  }
+
+  let best = lineStart;
+  let bestDistance = Infinity;
+  for (let index = lineStart; index <= length; index += 1) {
+    const position = getTextareaCaretOffset(textarea, index);
+    if (index > lineStart && position.top > anchorTop + 1) {
+      break;
+    }
+    const distance = Math.hypot(position.left - targetX, position.top - targetY);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      best = index;
+    }
+  }
+
+  return best;
+}

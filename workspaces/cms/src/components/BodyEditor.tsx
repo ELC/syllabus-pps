@@ -8,16 +8,25 @@ import {
   type ChangeEvent,
   type CSSProperties,
   type KeyboardEvent,
+  type MouseEvent,
   type ReactElement,
 } from "react";
 import { createPortal } from "react-dom";
 
 import { normalizeTitle, type ResourceCatalogEntry } from "@pps/core";
-import { citesNewResourceHref } from "@pps/shell/cites-link";
+import { citesEditHref, citesNewResourceHref } from "@pps/shell/cites-link";
 
+import {
+  clearCitationHighlights,
+  syncCitationHighlights,
+} from "../body-editor-citation-highlights";
+import { resourceCitationIdAtOffset } from "../body-editor-citations";
 import { filterConceptPages, type ConceptPageOption } from "../concept-pages";
 import { filterPageLinks, type PageLinkOption } from "../page-link-options";
-import { getTextareaCaretOffset } from "../caret-coordinates";
+import {
+  getTextareaCaretOffset,
+  getTextareaOffsetFromClientPoint,
+} from "../caret-coordinates";
 
 const MAX_BODY_HISTORY = 200;
 const ADD_NEW_CITATION_LABEL = "Agregar nuevo concepto";
@@ -74,6 +83,10 @@ export type SuggestTrigger =
 
 /** Find an in-progress `[@…` citation at the caret, or a bare `@` query suffix. */
 export function findCitationTrigger(value: string, caret: number): CitationTrigger | null {
+  if (resourceCitationIdAtOffset(value, caret)) {
+    return null;
+  }
+
   const before = value.slice(0, caret);
   const bracketAt = before.lastIndexOf("[@");
   if (bracketAt >= 0) {
@@ -253,6 +266,8 @@ export function BodyEditor({
   const activeIndexRef = useRef(0);
   const [trigger, setTrigger] = useState<SuggestTrigger | null>(null);
   const [suggestStyle, setSuggestStyle] = useState<{ top: number; left: number } | null>(null);
+  const [citationHit, setCitationHit] = useState(false);
+  const citationHitFrameRef = useRef<number | null>(null);
   const pastRef = useRef<string[]>([]);
   const futureRef = useRef<string[]>([]);
   const lastCommittedRef = useRef(value);
@@ -384,6 +399,52 @@ export function BodyEditor({
     });
   }, [trigger]);
 
+  const handleEditorScroll = useCallback(() => {
+    updateSuggestPosition();
+  }, [updateSuggestPosition]);
+
+  function openResourceCitation(resourceId: string, event: { metaKey: boolean; ctrlKey: boolean }): void {
+    setTrigger(null);
+    const href = citesEditHref(resourceId);
+    if (event.metaKey || event.ctrlKey) {
+      window.open(href, "_blank", "noopener,noreferrer");
+      return;
+    }
+    window.location.assign(href);
+  }
+
+  function handleEditorClick(event: MouseEvent<HTMLTextAreaElement>): void {
+    const textarea = event.currentTarget;
+    const resourceId = resourceCitationIdAtOffset(value, textarea.selectionStart);
+    if (resourceId) {
+      openResourceCitation(resourceId, event);
+      return;
+    }
+    syncTrigger();
+  }
+
+  function handleEditorMouseMove(event: MouseEvent<HTMLTextAreaElement>): void {
+    const textarea = event.currentTarget;
+    const { clientX, clientY } = event;
+    if (citationHitFrameRef.current !== null) {
+      return;
+    }
+    citationHitFrameRef.current = window.requestAnimationFrame(() => {
+      citationHitFrameRef.current = null;
+      const offset = getTextareaOffsetFromClientPoint(textarea, clientX, clientY);
+      setCitationHit(Boolean(resourceCitationIdAtOffset(value, offset)));
+    });
+  }
+
+  useEffect(
+    () => () => {
+      if (citationHitFrameRef.current !== null) {
+        window.cancelAnimationFrame(citationHitFrameRef.current);
+      }
+    },
+    [],
+  );
+
   const syncTrigger = useCallback(() => {
     const textarea = textareaRef.current;
     if (!textarea) {
@@ -413,6 +474,16 @@ export function BodyEditor({
   useEffect(() => {
     setActiveIndex(0);
   }, [trigger?.query, trigger?.start]);
+
+  useLayoutEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      return;
+    }
+    syncCitationHighlights(textarea, value);
+  }, [value]);
+
+  useEffect(() => () => clearCitationHighlights(), []);
 
   useLayoutEffect(() => {
     if (!suggestOpen) {
@@ -730,13 +801,17 @@ export function BodyEditor({
       <div ref={wrapRef} className="cms__editor-wrap">
         <textarea
           ref={textareaRef}
-          className="cms__editor"
+          className={["cms__editor", citationHit ? "cms__editor--citation-hit" : ""]
+            .filter(Boolean)
+            .join(" ")}
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          onClick={syncTrigger}
+          onMouseMove={handleEditorMouseMove}
+          onMouseLeave={() => setCitationHit(false)}
+          onClick={handleEditorClick}
           onKeyUp={syncTrigger}
-          onScroll={updateSuggestPosition}
+          onScroll={handleEditorScroll}
           spellCheck={false}
           aria-autocomplete={suggestOpen ? "list" : undefined}
           aria-controls={suggestOpen ? suggestListId : undefined}

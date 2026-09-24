@@ -26,3 +26,14 @@ export function MetaDegreeDisplaySkeleton(): ReactElement {
     </div>
   );
 }
+
+export function MetaCatalogLinkRowSkeleton(): ReactElement {
+  return (
+    <div className="cms__meta-catalog-link-row-skeleton" aria-busy="true">
+      <span className="cms__skeleton cms__skeleton--pill" aria-hidden="true" />
+      <span className="cms__skeleton cms__skeleton--pill cms__skeleton--pill-wide" aria-hidden="true" />
+      <span className="cms__skeleton cms__skeleton--pill" aria-hidden="true" />
+      <span className="u-visually-hidden">Cargando enlaces del catálogo…</span>
+    </div>
+  );
+}
