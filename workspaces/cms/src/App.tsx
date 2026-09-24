@@ -49,6 +49,7 @@ import {
 import {
   networkCourseExpansionHref,
   networkDegreeExpansionHref,
+  networkExpandHref,
   planningCoursePageHref,
   roadmapDegreeOverviewHref,
 } from "@pps/shell/workspace-links";
@@ -777,7 +778,7 @@ export function App() {
     if (isYear) {
       const degreeSlug = degreeSlugForYearPage(pageSlug, metadata, degreeSlugByTitle);
       const roadmapHref = degreeSlug ? roadmapDegreeOverviewHref(siteRoot, degreeSlug) : null;
-      const networkHref = degreeSlug ? networkDegreeExpansionHref(siteRoot, degreeSlug) : null;
+      const networkHref = degreeSlug ? networkExpandHref(siteRoot, pageSlug, degreeSlug) : null;
       const pendingMeta = navKind === null;
 
       return (
@@ -807,7 +808,13 @@ export function App() {
             navId="network"
             href={networkHref}
             disabled={!networkHref}
-            title={pendingMeta ? "Cargando metadatos de la página…" : undefined}
+            title={
+              pendingMeta
+                ? "Cargando metadatos de la página…"
+                : networkHref
+                  ? undefined
+                  : "No se pudo resolver la carrera de este año"
+            }
           >
             Red
           </WorkspaceNavLink>
@@ -827,7 +834,7 @@ export function App() {
         ? roadmapCourseSubgraphHref(siteRoot, degreeSlug, pageSlug)
         : null;
       const courseNetworkHref = networkCourseExpansionHref(siteRoot, pageSlug);
-      const conceptNetworkHref = networkDegreeExpansionHref(siteRoot, pageSlug);
+      const conceptNetworkHref = networkCourseExpansionHref(siteRoot, pageSlug);
       const networkEnabled = isCourse || isConcept;
       const networkHref = isCourse
         ? courseNetworkHref
@@ -914,10 +921,7 @@ export function App() {
         <WorkspaceNavLink navId="roadmap" disabled title="Sin enlace de Roadmap para este tipo de página">
           Roadmap
         </WorkspaceNavLink>
-        <WorkspaceNavLink
-          navId="network"
-          href={networkDegreeExpansionHref(siteRoot, pageSlug)}
-        >
+        <WorkspaceNavLink navId="network" disabled title="Sin enlace de Red para este tipo de página">
           Red
         </WorkspaceNavLink>
       </div>

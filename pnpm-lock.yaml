@@ -324,6 +324,9 @@ importers:
       '@pps/shell':
         specifier: workspace:*
         version: link:../shell
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 4.7.0(vite@6.4.3(@types/node@24.13.4)(sass@1.104.1)(tsx@4.23.15)(yaml@2.9.1))
       astro:
         specifier: 'catalog:'
         version: 5.18.2(@types/node@24.13.4)(rollup@4.63.1)(sass@1.104.1)(tsx@4.23.15)(typescript@5.9.3)(yaml@2.9.1)
@@ -339,6 +342,12 @@ importers:
       dagre:
         specifier: ^0.8.5
         version: 0.8.5
+      react:
+        specifier: 'catalog:'
+        version: 19.3.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.0(react@19.3.0)
     devDependencies:
       '@astrojs/check':
         specifier: 'catalog:'
@@ -349,6 +358,12 @@ importers:
       '@pps/config':
         specifier: workspace:*
         version: link:../config
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
       sass:
         specifier: 'catalog:'
         version: 1.104.1

@@ -14,6 +14,72 @@
   flex-shrink: 0;
 }
 
+.network__degree-label {
+  flex-shrink: 0;
+  color: var(--dash-muted);
+  font: 600 0.8125rem var(--font-heading);
+  white-space: nowrap;
+}
+
+.network__degree-control {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  flex: 1 1 12rem;
+  align-items: stretch;
+  min-height: 2.4375rem;
+
+  > .network__skeleton--course,
+  > .network__degree-dropdown-host {
+    grid-area: 1 / 1;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.network__degree-dropdown-host {
+  &[hidden] {
+    display: none !important;
+  }
+}
+
+@keyframes network-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.network__skeleton {
+  display: block;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--dash-muted) 16%, var(--dash-surface));
+  animation: network-skeleton-pulse 1.35s ease-in-out infinite;
+
+  &[hidden] {
+    display: none !important;
+  }
+
+  &--course {
+    height: 2.4375rem;
+  }
+}
+
+.network__degree-dropdown {
+  min-width: 0;
+  width: 100%;
+
+  .pps-meta-dropdown__trigger {
+    min-height: 2.125rem;
+    padding: 0.45rem 2rem 0.45rem 0.65rem;
+    background-color: var(--dash-surface);
+  }
+}
+
 .graph {
   &__header-meta {
     display: grid;
@@ -21,16 +87,20 @@
     align-items: center;
     gap: 0.75rem 1rem;
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 0.65rem;
     overflow: visible;
-
-    &--compact {
-      margin-top: 0.65rem;
-    }
 
     @media (max-width: 900px) {
       grid-template-columns: minmax(0, 1fr);
     }
+  }
+
+  &__header-meta-leading {
+    display: flex;
+    min-width: 0;
+    max-width: min(100%, 22rem);
+    align-items: center;
+    gap: 0.5rem;
   }
 
   &__legend {
@@ -41,6 +111,10 @@
     padding: 0;
     list-style: none;
     min-width: 0;
+
+    &--below-meta {
+      margin-top: 0.65rem;
+    }
   }
 
   &__legend-item {
@@ -50,6 +124,14 @@
     font-size: 0.8125rem;
     font-weight: 600;
     color: var(--dash-text);
+
+    &--concept .graph__legend-label {
+      color: var(--austral-graph-concept-base, #009e73);
+    }
+  }
+
+  &__legend-label {
+    color: inherit;
   }
 
   &__legend-swatch {
@@ -59,6 +141,16 @@
     border: 3px solid;
     flex-shrink: 0;
     box-sizing: border-box;
+
+    &--dashed {
+      border-style: dashed;
+    }
+
+    &--concept {
+      width: 0.85rem;
+      height: 0.85rem;
+      border-radius: 0.2rem;
+    }
   }
 
   &__sidebar-filters {

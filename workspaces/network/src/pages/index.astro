@@ -1,11 +1,11 @@
 ---
 import ShellLayout from "@pps/shell/ShellLayout.astro";
-import { AUSTRAL_GRAPH_TNE } from "@pps/shell/austral-tokens";
-import { GRAPH_NODE_KINDS } from "../scripts/graph-styles";
+import metaDropdownCss from "@pps/shell/styles/meta-dropdown.scss?url";
 import networkCss from "../styles/network.scss?url";
 ---
 
 <ShellLayout title="PPS Network" activeNav="network">
+  <link slot="head" rel="stylesheet" href={metaDropdownCss} />
   <link slot="head" rel="stylesheet" href={networkCss} />
   <div slot="sidebar" class="graph__sidebar-filters dashboard__nav--sub">
     <button
@@ -24,15 +24,6 @@ import networkCss from "../styles/network.scss?url";
       title="Volver a mostrar los nodos de concepto"
     >
       Mostrar conceptos
-    </button>
-    <button
-      id="graph-toggle-years"
-      type="button"
-      class="graph__sidebar-toggle-years"
-      aria-pressed="true"
-      title="Volver a mostrar los nodos de carrera y año"
-    >
-      Mostrar carrera y años
     </button>
     <button
       id="graph-toggle-course-links"
@@ -90,31 +81,22 @@ import networkCss from "../styles/network.scss?url";
       <div
         id="graph-course-workspace-links"
         class="network__header-workspace-links pps-workspace-nav-links"
-        hidden
       ></div>
       </div>
     </div>
     <div class="graph__header-meta graph__header-meta--compact">
-      <ul class="graph__legend" aria-label="Tipos de nodo">
-        {
-          GRAPH_NODE_KINDS.map((item) => (
-            <li class="graph__legend-item">
-              <span
-                class="graph__legend-swatch"
-                style={`background:${item.swatchFill};border-color:${item.border}`}
-              />
-              {item.label}
-            </li>
-          ))
-        }
-        <li class="graph__legend-item">
+      <div class="graph__header-meta-leading">
+        <span class="network__degree-label">Carrera</span>
+        <div class="network__degree-control">
           <span
-            class="graph__legend-swatch"
-            style={`background:${AUSTRAL_GRAPH_TNE.swatchFill};border-color:${AUSTRAL_GRAPH_TNE.border}`}
-          />
-          TNE
-        </li>
-      </ul>
+            id="graph-degree-scope-skeleton"
+            class="network__skeleton network__skeleton--course"
+            aria-hidden="true"
+            aria-busy="true"
+          ></span>
+          <div id="graph-degree-scope-root" class="network__degree-dropdown-host" hidden></div>
+        </div>
+      </div>
       <div class="graph__header-actions">
         <div class="graph__search">
           <label class="u-visually-hidden" for="graph-search">Buscar</label>
@@ -133,6 +115,7 @@ import networkCss from "../styles/network.scss?url";
         </div>
       </div>
     </div>
+    <ul id="graph-legend" class="graph__legend graph__legend--below-meta" aria-label="Tipos de nodo"></ul>
   </header>
 
   <section class="graph__panel">
@@ -183,7 +166,9 @@ import networkCss from "../styles/network.scss?url";
       refreshButtonId: "graph-refresh-layout",
       resetFiltersButtonId: "graph-reset-filters",
       toggleConceptsButtonId: "graph-toggle-concepts",
-      toggleYearsButtonId: "graph-toggle-years",
+      degreeScopeRootId: "graph-degree-scope-root",
+      degreeScopeSkeletonId: "graph-degree-scope-skeleton",
+      legendRootId: "graph-legend",
       toggleCourseLinksButtonId: "graph-toggle-course-links",
       conceptPanelId: "graph-concept-panel",
     }).catch((error) => {

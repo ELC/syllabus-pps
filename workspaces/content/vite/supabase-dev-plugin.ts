@@ -43,6 +43,7 @@ function normalizeApiPath(url: string, base: string): string | null {
 const ROADMAP_LAYOUT_SITE_PATH =
   /^\/roadmap\/api\/roadmap-(?:layout\/[^/?]+|concept-layout\/[^/?]+\/[^/?]+)(?:\?|$)/;
 const PLANNING_API_SITE_PATH = /^\/planning\/api\//;
+const NETWORK_API_SITE_PATH = /^\/network\/api\//;
 
 function loadRepoEnv(repoRoot: string): void {
   const env = loadEnv("development", repoRoot, "");
@@ -286,6 +287,29 @@ export function siteRoadmapLayoutDevPlugin(options: SupabaseDevPluginOptions): P
       server.middlewares.use((req, res, next) => {
         const path = requestPathname(req.url ?? "");
         if (!ROADMAP_LAYOUT_SITE_PATH.test(path)) {
+          next();
+          return;
+        }
+        handler(req, res, next);
+      });
+    },
+  };
+}
+
+/** Handles network dev API on the main site server before the nested Astro app. */
+export function siteNetworkPagesDevPlugin(options: SupabaseDevPluginOptions): Plugin {
+  const handler = createSupabaseDevMiddleware("/network/", {
+    ...options,
+    pages: true,
+  });
+
+  return {
+    name: "pps-site-network-pages-dev",
+    apply: "serve",
+    enforce: "pre",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use((req, res, next) => {
+        if (!NETWORK_API_SITE_PATH.test(requestPathname(req.url ?? ""))) {
           next();
           return;
         }

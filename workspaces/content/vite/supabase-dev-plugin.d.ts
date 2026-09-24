@@ -10,6 +10,7 @@ export interface SupabaseDevPluginOptions {
 export declare function createSupabaseDevMiddleware(base: string, options: SupabaseDevPluginOptions): Connect.NextHandleFunction;
 export declare function supabaseDevPlugin(options: SupabaseDevPluginOptions): Plugin;
 export declare function siteRoadmapLayoutDevPlugin(options: SupabaseDevPluginOptions): Plugin;
+export declare function siteNetworkPagesDevPlugin(options: SupabaseDevPluginOptions): Plugin;
 export declare function sitePlanningDevPlugin(options: SupabaseDevPluginOptions): Plugin;
 /** @deprecated Use sitePlanningDevPlugin */
 export declare function sitePlanningPlanDevPlugin(options: SupabaseDevPluginOptions): Plugin;

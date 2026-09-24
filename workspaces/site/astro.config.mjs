@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
 import { siteRebuildDevPlugin } from "@pps/analytics-cli/vite/rebuild-dev";
 import {
+  siteNetworkPagesDevPlugin,
   sitePlanningDevPlugin,
   siteRoadmapLayoutDevPlugin,
 } from "@pps/content/vite/supabase-dev";
@@ -42,6 +43,7 @@ export default defineConfig({
       ...withSharedVitePlugins(repoRoot),
       siteRebuildDevPlugin({ repoRoot }),
       siteRoadmapLayoutDevPlugin({ repoRoot }),
+      siteNetworkPagesDevPlugin({ repoRoot }),
       sitePlanningDevPlugin({ repoRoot }),
       quietEmbeddedDevPlugin({ scope: "site", disableHmr: false }),
       ...subsitesDevPlugins(repoRoot),

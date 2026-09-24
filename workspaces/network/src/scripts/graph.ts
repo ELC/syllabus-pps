@@ -1,5 +1,5 @@
 import { loadAnalyticsArtifact } from "@pps/content/browser";
-import { structuralPageKindRank } from "@pps/core";
+import { PageKind, parsePages, structuralPageKindRank, type ZettelPage } from "@pps/core";
 import { fetchIsAppAdmin } from "@pps/login/appAdminApi";
 import { isAuthDisabled } from "@pps/login/authDisabled";
 import { createBrowserClient } from "@pps/login/client";
@@ -22,6 +22,7 @@ import { appendWorkspaceNavLink } from "@pps/shell/workspace-nav-link-dom";
 import {
   cmsCoursePageHref,
   planningCoursePageHref,
+  planningDegreePageHref,
   roadmapCourseSubgraphHref,
   roadmapDegreeOverviewHref,
 } from "@pps/shell/workspace-links";
@@ -32,15 +33,26 @@ import {
   GRAPH_NODE_KINDS,
 } from "./graph-styles";
 import {
+  mountGraphDegreeDropdown,
+  type GraphDegreeDropdownHandle,
+} from "./graph-degree-dropdown";
+import { updateGraphLegendUI } from "./graph-legend";
+import {
+  buildConceptNodeIdsByCourseSlug,
+  buildDegreeDropdownOptions,
+  buildDegreeDropdownOptionsFromEntries,
+  courseMetaForDegree,
+  nodeIdsInDegreeScope,
+} from "./graph-degree-scope";
+import { loadGraphPageSources } from "./graph-page-sources";
+import {
   DEFAULT_GRAPH_CONCEPTS_HIDDEN,
   DEFAULT_GRAPH_COURSE_LINK_MODE,
-  DEFAULT_GRAPH_YEARS_HIDDEN,
   parseGraphUrlState,
   writeGraphUrlState,
   type CourseLinkMode,
   type GraphUrlState,
 } from "./graph-url";
-
 export { GRAPH_FILTER_KINDS, GRAPH_NODE_KINDS };
 
 cytoscape.use(fcose);
@@ -61,7 +73,9 @@ export interface MountGraphOptions {
   refreshButtonId?: string;
   resetFiltersButtonId?: string;
   toggleConceptsButtonId?: string;
-  toggleYearsButtonId?: string;
+  degreeScopeRootId?: string;
+  degreeScopeSkeletonId?: string;
+  legendRootId?: string;
   toggleCourseLinksButtonId?: string;
   conceptPanelId?: string;
 }
@@ -72,6 +86,7 @@ type KindFilters = Record<KindFilterKey, string>;
 
 interface GraphUi {
   expansionListRoot: HTMLElement | null;
+  degreeContext: GraphDegreeContext | null;
   syncView: (fit?: boolean) => void;
 }
 
@@ -100,8 +115,13 @@ interface GraphViewState {
   kindFilters: KindFilters;
   searchQuery: string;
   conceptsHidden: boolean;
-  yearsHidden: boolean;
+  degreeScopeSlug: string;
   courseLinkMode: CourseLinkMode;
+}
+
+interface GraphDegreeContext {
+  pages: ZettelPage[];
+  conceptsByCourseSlug: Map<string, Set<string>>;
 }
 
 function createKindFilters(): KindFilters {
@@ -206,7 +226,7 @@ function urlStateFromViewState(cy: cytoscape.Core, viewState: GraphViewState): G
     expansionSlugs,
     filterSlugs,
     conceptsHidden: viewState.conceptsHidden,
-    yearsHidden: viewState.yearsHidden,
+    degreeScopeSlug: viewState.degreeScopeSlug,
     courseLinkMode: viewState.courseLinkMode,
   };
 }
@@ -240,7 +260,7 @@ function applyUrlStateToViewState(
 
   viewState.kindFilters = kindFilters;
   viewState.conceptsHidden = urlState.conceptsHidden;
-  viewState.yearsHidden = urlState.yearsHidden;
+  viewState.degreeScopeSlug = urlState.degreeScopeSlug;
   viewState.courseLinkMode = urlState.courseLinkMode;
   viewState.expansionNodeIds = expansionNodeIds.length > 0 ? expansionNodeIds : null;
   viewState.focusedNodeId =
@@ -267,7 +287,7 @@ function applyRestoredUrlView(cy: cytoscape.Core, viewState: GraphViewState, ui:
   }
 
   ui.syncView();
-  refreshGraphLayout(cy, viewState);
+  refreshGraphLayout(cy, viewState, ui.degreeContext);
 }
 
 const ELASTIC_NEIGHBOR_DRAG_FACTOR = 0.35;
@@ -403,17 +423,20 @@ function inducedNodeIdsForNode(
 function visibleLayoutElements(
   cy: cytoscape.Core,
   viewState: GraphViewState,
+  degreeContext: GraphDegreeContext | null,
 ): cytoscape.Collection {
-  applyElementVisibility(cy, viewState);
+  applyElementVisibility(cy, viewState, degreeContext);
+  applyDegreeScopePresentation(cy, viewState, degreeContext);
   return cy.elements().not(".filtered-out");
 }
 
 function visibleLayoutSubgraph(
   cy: cytoscape.Core,
   viewState: GraphViewState,
+  degreeContext: GraphDegreeContext | null,
   nodeIds: Set<string>,
 ): cytoscape.Collection {
-  const visible = visibleLayoutElements(cy, viewState);
+  const visible = visibleLayoutElements(cy, viewState, degreeContext);
   const nodes = visible.nodes().filter((node) => nodeIds.has(node.id()));
   const activeNodeIds = new Set(nodes.map((node) => node.id()));
   const edges = visible.edges().filter(
@@ -476,11 +499,12 @@ function shouldHideYearNodes(
   viewState: GraphViewState,
   focusVisibleNodeIds: Set<string> | null,
 ): boolean {
+  if (viewState.degreeScopeSlug.trim()) {
+    return !focusVisibleNodeIds;
+  }
+
   return (
-    viewState.yearsHidden &&
-    !focusVisibleNodeIds &&
-    !viewState.kindFilters.year &&
-    !viewState.kindFilters.degree
+    !focusVisibleNodeIds && !viewState.kindFilters.year && !viewState.kindFilters.degree
   );
 }
 
@@ -573,8 +597,22 @@ function intersectNodeIdSets(left: Set<string>, right: Set<string>): Set<string>
 function computeGlobalVisibleNodeIds(
   cy: cytoscape.Core,
   viewState: GraphViewState,
+  degreeContext: GraphDegreeContext | null,
 ): Set<string> | null {
   const constraints: Set<string>[] = [];
+
+  const scopedDegree = viewState.degreeScopeSlug.trim();
+  if (scopedDegree && degreeContext) {
+    constraints.push(
+      nodeIdsInDegreeScope(
+        cy,
+        scopedDegree,
+        degreeContext.pages,
+        degreeContext.conceptsByCourseSlug,
+        { includeConcepts: !viewState.conceptsHidden },
+      ),
+    );
+  }
 
   for (const { kind } of GRAPH_FILTER_KINDS) {
     const nodeId = viewState.kindFilters[kind];
@@ -602,12 +640,16 @@ function computeGlobalVisibleNodeIds(
   });
 }
 
-function applyElementVisibility(cy: cytoscape.Core, viewState: GraphViewState): cytoscape.Collection {
+function applyElementVisibility(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  degreeContext: GraphDegreeContext | null,
+): cytoscape.Collection {
   const focusVisibleNodeIds =
     viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0
       ? visibleNodeIdsForExpansions(cy, viewState.expansionNodeIds, viewState.courseLinkMode)
       : null;
-  const globalVisibleNodeIds = computeGlobalVisibleNodeIds(cy, viewState);
+  const globalVisibleNodeIds = computeGlobalVisibleNodeIds(cy, viewState, degreeContext);
 
   cy.nodes().forEach((node) => {
     const nodeId = node.id();
@@ -708,7 +750,56 @@ function kindStyle(kind: string) {
 
 function nodeStyle(node: cytoscape.SingularElementArgument) {
   const kind = String(node.data("kind") ?? "");
+  if (kind === "course") {
+    const scopedBorder = node.data("degreeBorderColor");
+    if (typeof scopedBorder === "string" && scopedBorder.length > 0) {
+      const baseStyle = kindStyleForKind("course");
+      return { ...baseStyle, border: scopedBorder, base: scopedBorder };
+    }
+  }
+
   return kindStyleForKind(kind);
+}
+
+function applyDegreeScopePresentation(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  degreeContext: GraphDegreeContext | null,
+): void {
+  cy.nodes('[kind = "course"]')
+    .removeClass("course-tne-scoped")
+    .removeData("degreeBorderColor");
+  cy.edges().removeClass("edge-tne-scoped");
+
+  const degreeSlug = viewState.degreeScopeSlug.trim();
+  if (!degreeSlug || !degreeContext) {
+    return;
+  }
+
+  const metaBySlug = courseMetaForDegree(degreeContext.pages, degreeSlug);
+  for (const [slug, meta] of metaBySlug) {
+    const node = findNodeBySlug(cy, slug);
+    if (!node) {
+      continue;
+    }
+
+    node.data("degreeBorderColor", meta.borderColor);
+    if (meta.tne) {
+      node.addClass("course-tne-scoped");
+    }
+  }
+
+  cy.edges().forEach((edge) => {
+    if (edge.hasClass("filtered-out")) {
+      return;
+    }
+
+    const source = edge.source();
+    const target = edge.target();
+    if (source.hasClass("course-tne-scoped") || target.hasClass("course-tne-scoped")) {
+      edge.addClass("edge-tne-scoped");
+    }
+  });
 }
 
 function edgeLineColor(edge: cytoscape.EdgeSingular): string {
@@ -758,6 +849,7 @@ function renderCourseWorkspaceLinks(
 ): void {
   linksRoot.replaceChildren();
   linksRoot.hidden = false;
+  linksRoot.removeAttribute("hidden");
   const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
 
   appendAdminEditarLink(linksRoot, siteRoot, isAdmin, courseSlug, true);
@@ -844,8 +936,8 @@ function renderDegreeWorkspaceLinks(
   appendWorkspaceNavLink(linksRoot, {
     navId: "planning",
     label: "Programa",
-    disabled: true,
-    title: "Disponible cuando la expansión es una materia del plan",
+    href: planningDegreePageHref(siteRoot, degreeSlug),
+    title: "Abrir el programador semanal con esta carrera preseleccionada",
   });
 
   appendWorkspaceNavLink(linksRoot, {
@@ -864,6 +956,7 @@ function renderDisabledCourseWorkspaceLinks(
 ): void {
   linksRoot.replaceChildren();
   linksRoot.hidden = false;
+  linksRoot.removeAttribute("hidden");
   const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL ?? "/network/");
 
   appendAdminEditarLink(linksRoot, siteRoot, isAdmin, editPageSlug, false);
@@ -885,26 +978,35 @@ function renderDisabledCourseWorkspaceLinks(
 const COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE =
   "Disponible cuando la expansión es una materia del plan";
 
-/** Show disabled Programa/Roadmap until the graph confirms a course expansion. */
+const COURSE_WORKSPACE_LINKS_IDLE_TITLE =
+  "Disponible al expandir un solo nodo en el grafo";
+
+/** Disabled Programa/Roadmap until the graph confirms a single-node expansion. */
 export function seedCourseWorkspaceLinksFromUrl(linksRoot: HTMLElement | null): void {
   if (!linksRoot) {
     return;
   }
 
-  const slugs = parseGraphUrlState().expansionSlugs;
-  if (slugs.length === 1) {
-    renderDisabledCourseWorkspaceLinks(
-      linksRoot,
-      COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE,
-      false,
-      slugs[0],
-    );
+  const urlState = parseGraphUrlState();
+  const scopedDegree = urlState.degreeScopeSlug.trim();
+  if (scopedDegree && urlState.expansionSlugs.length === 0) {
+    renderDegreeWorkspaceLinks(linksRoot, scopedDegree, false);
+    return;
   }
+
+  const slugs = urlState.expansionSlugs;
+  renderDisabledCourseWorkspaceLinks(
+    linksRoot,
+    slugs.length === 1 ? COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE : COURSE_WORKSPACE_LINKS_IDLE_TITLE,
+    false,
+    slugs.length === 1 ? slugs[0] : undefined,
+  );
 }
 
 function renderWorkspaceLinksForSingleNode(
   linksRoot: HTMLElement,
   cy: cytoscape.Core,
+  viewState: GraphViewState,
   node: cytoscape.NodeSingular,
   isAdmin: boolean,
 ): boolean {
@@ -915,7 +1017,10 @@ function renderWorkspaceLinksForSingleNode(
   }
 
   if (kind === "course") {
-    renderCourseWorkspaceLinks(linksRoot, slug, findDegreeSlugForCourseNode(cy, node), isAdmin);
+    const scopedDegree = viewState.degreeScopeSlug.trim();
+    const degreeSlug =
+      scopedDegree || findDegreeSlugForCourseNode(cy, node) || undefined;
+    renderCourseWorkspaceLinks(linksRoot, slug, degreeSlug, isAdmin);
     return true;
   }
   if (kind === "degree") {
@@ -951,7 +1056,7 @@ function updateCourseWorkspaceLinksUI(
     if (singleExpansion) {
       const node = cy.getElementById(expansionNodeIds[0]!);
       if (node.nonempty() && node.isNode()) {
-        if (renderWorkspaceLinksForSingleNode(linksRoot, cy, node, isAdmin)) {
+        if (renderWorkspaceLinksForSingleNode(linksRoot, cy, viewState, node, isAdmin)) {
           return;
         }
       }
@@ -976,7 +1081,7 @@ function updateCourseWorkspaceLinksUI(
     const slug = urlSlugs[0]!;
     const node = findNodeBySlug(cy, slug);
     if (node && node.nonempty() && node.isNode()) {
-      if (renderWorkspaceLinksForSingleNode(linksRoot, cy, node, isAdmin)) {
+      if (renderWorkspaceLinksForSingleNode(linksRoot, cy, viewState, node, isAdmin)) {
         return;
       }
     }
@@ -989,8 +1094,17 @@ function updateCourseWorkspaceLinksUI(
     return;
   }
 
-  linksRoot.replaceChildren();
-  linksRoot.hidden = true;
+  const scopedDegree = viewState.degreeScopeSlug.trim();
+  if (scopedDegree) {
+    renderDegreeWorkspaceLinks(linksRoot, scopedDegree, isAdmin);
+    return;
+  }
+
+  renderDisabledCourseWorkspaceLinks(
+    linksRoot,
+    COURSE_WORKSPACE_LINKS_IDLE_TITLE,
+    isAdmin,
+  );
 }
 
 function updateExpansionListUI(
@@ -1137,7 +1251,7 @@ function mountKindFilters(
     select.addEventListener("change", () => {
       viewState.kindFilters[kind] = select.value;
       ui.syncView();
-      refreshGraphLayout(cy, viewState);
+      refreshGraphLayout(cy, viewState, ui.degreeContext);
     });
 
     field.append(fieldLabel, select);
@@ -1181,7 +1295,7 @@ function restoreGraphViewFromUrl(
   ui: GraphUi,
   filtersRoot: HTMLElement | null,
   toggleConceptsButton: HTMLButtonElement | null,
-  toggleYearsButton: HTMLButtonElement | null,
+  degreeScopeDropdown: GraphDegreeDropdownHandle | null,
 ): boolean {
   const hadExpansion = isExpansionActive(viewState);
   const urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
@@ -1190,9 +1304,7 @@ function restoreGraphViewFromUrl(
   if (toggleConceptsButton) {
     syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
   }
-  if (toggleYearsButton) {
-    syncToggleYearsButton(toggleYearsButton, viewState.yearsHidden);
-  }
+  degreeScopeDropdown?.setValue(viewState.degreeScopeSlug);
 
   if (isExpansionActive(viewState)) {
     if (viewState.fullGraphPositions) {
@@ -1212,10 +1324,68 @@ function restoreGraphViewFromUrl(
 
   ui.syncView(true);
   if (viewState.initialLayoutSaved) {
-    refreshGraphLayout(cy, viewState);
+    refreshGraphLayout(cy, viewState, ui.degreeContext);
   }
 
   return urlRestorePending;
+}
+
+function degreeEntriesFromGraph(cy: cytoscape.Core): { slug: string; title: string }[] {
+  const degrees: { slug: string; title: string }[] = [];
+
+  cy.nodes().forEach((node) => {
+    if (String(node.data("kind")) !== "degree") {
+      return;
+    }
+
+    const slug = nodeSlug(node);
+    if (!slug) {
+      return;
+    }
+
+    degrees.push({ slug, title: nodeTitle(node, slug) });
+  });
+
+  return degrees;
+}
+
+function resolveDegreeScopeOptions(
+  cy: cytoscape.Core,
+  pages: readonly ZettelPage[],
+): ReturnType<typeof buildDegreeDropdownOptions> {
+  if (pages.some((page) => page.kind === PageKind.Degree)) {
+    return buildDegreeDropdownOptions(pages);
+  }
+
+  return buildDegreeDropdownOptionsFromEntries(degreeEntriesFromGraph(cy));
+}
+
+function revealDegreeScopeDropdown(
+  skeleton: HTMLElement | null,
+  host: HTMLElement,
+): void {
+  skeleton?.remove();
+  host.hidden = false;
+}
+
+function mountDegreeScopeDropdown(
+  cy: cytoscape.Core,
+  viewState: GraphViewState,
+  ui: GraphUi,
+  host: HTMLElement,
+  pages: ZettelPage[],
+): GraphDegreeDropdownHandle {
+  return mountGraphDegreeDropdown(host, {
+    value: viewState.degreeScopeSlug,
+    options: resolveDegreeScopeOptions(cy, pages),
+    onChange: (value) => {
+      viewState.degreeScopeSlug = value;
+      ui.syncView(true);
+      if (!isExpansionActive(viewState)) {
+        refreshGraphLayout(cy, viewState, ui.degreeContext);
+      }
+    },
+  });
 }
 
 function mountResetFiltersButton(
@@ -1228,7 +1398,7 @@ function mountResetFiltersButton(
   resetButton.addEventListener("click", () => {
     resetKindFilters(filtersRoot, viewState);
     ui.syncView();
-    refreshGraphLayout(cy, viewState);
+    refreshGraphLayout(cy, viewState, ui.degreeContext);
   });
 }
 
@@ -1246,7 +1416,7 @@ function setConceptsHidden(
   ui.syncView();
 
   if (!isExpansionActive(viewState)) {
-    refreshGraphLayout(cy, viewState);
+    refreshGraphLayout(cy, viewState, ui.degreeContext);
   }
 }
 
@@ -1269,42 +1439,6 @@ function mountToggleConceptsButton(
   button.addEventListener("click", () => {
     setConceptsHidden(cy, viewState, ui, !viewState.conceptsHidden);
     syncToggleConceptsButton(button, viewState.conceptsHidden);
-  });
-}
-
-function setYearsHidden(
-  cy: cytoscape.Core,
-  viewState: GraphViewState,
-  ui: GraphUi,
-  hidden: boolean,
-): void {
-  viewState.yearsHidden = hidden;
-  ui.syncView();
-
-  if (!isExpansionActive(viewState)) {
-    refreshGraphLayout(cy, viewState);
-  }
-}
-
-function syncToggleYearsButton(button: HTMLButtonElement, hidden: boolean): void {
-  button.setAttribute("aria-pressed", hidden ? "true" : "false");
-  button.textContent = hidden ? "Mostrar carrera y años" : "Ocultar carrera y años";
-  button.title = hidden
-    ? "Volver a mostrar los nodos de carrera y año"
-    : "Ocultar nodos de carrera y año en la vista general; al hacer clic en un nodo siguen visibles";
-}
-
-function mountToggleYearsButton(
-  cy: cytoscape.Core,
-  viewState: GraphViewState,
-  ui: GraphUi,
-  button: HTMLButtonElement,
-): void {
-  syncToggleYearsButton(button, viewState.yearsHidden);
-
-  button.addEventListener("click", () => {
-    setYearsHidden(cy, viewState, ui, !viewState.yearsHidden);
-    syncToggleYearsButton(button, viewState.yearsHidden);
   });
 }
 
@@ -1340,7 +1474,7 @@ function setCourseLinkMode(
   }
 
   ui.syncView(true);
-  refreshGraphLayout(cy, viewState);
+  refreshGraphLayout(cy, viewState, ui.degreeContext);
 }
 
 function mountToggleCourseLinksButton(
@@ -1595,8 +1729,9 @@ function runGraphLayout(
 function refreshGraphLayout(
   cy: cytoscape.Core,
   viewState: GraphViewState,
+  degreeContext: GraphDegreeContext | null,
 ): void {
-  const visibleElements = visibleLayoutElements(cy, viewState);
+  const visibleElements = visibleLayoutElements(cy, viewState, degreeContext);
   if (visibleElements.length === 0) {
     return;
   }
@@ -1619,10 +1754,11 @@ function refreshGraphLayout(
 function mountRefreshButton(
   cy: cytoscape.Core,
   viewState: GraphViewState,
+  ui: GraphUi,
   refreshButton: HTMLButtonElement,
 ): void {
   refreshButton.addEventListener("click", () => {
-    refreshGraphLayout(cy, viewState);
+    refreshGraphLayout(cy, viewState, ui.degreeContext);
   });
 }
 
@@ -1650,14 +1786,14 @@ function removeExpansionNode(
     return;
   }
 
-  applyFocusView(cy, viewState, ui, { randomize: false });
+  applyFocusView(cy, viewState, ui, { randomize: true, forceRelayout: true });
 }
 
 function applyFocusView(
   cy: cytoscape.Core,
   viewState: GraphViewState,
   ui: GraphUi,
-  options: { randomize: boolean; focusNode?: cytoscape.NodeSingular },
+  options: { randomize: boolean; focusNode?: cytoscape.NodeSingular; forceRelayout?: boolean },
 ): void {
   const expansionNodeIds = viewState.expansionNodeIds;
   if (!expansionNodeIds || expansionNodeIds.length === 0) {
@@ -1670,7 +1806,7 @@ function applyFocusView(
     expansionNodeIds,
     viewState.courseLinkMode,
   );
-  const focusEles = visibleLayoutSubgraph(cy, viewState, visibleNodeIds);
+  const focusEles = visibleLayoutSubgraph(cy, viewState, ui.degreeContext, visibleNodeIds);
   const sessionKey = expansionSessionKey(expansionNodeIds, viewState.courseLinkMode);
 
   cy.elements().removeClass("focused");
@@ -1682,11 +1818,13 @@ function applyFocusView(
 
   ui.syncView();
 
-  const cached = viewState.focusLayoutCache.get(sessionKey);
-  if (cached) {
-    restorePositions(cy, cached);
-    fitVisibleGraph(cy);
-    return;
+  if (!options.forceRelayout) {
+    const cached = viewState.focusLayoutCache.get(sessionKey);
+    if (cached) {
+      restorePositions(cy, cached);
+      fitVisibleGraph(cy);
+      return;
+    }
   }
 
   runGraphLayout(focusEles, {
@@ -1744,7 +1882,8 @@ function focusOrExpandNeighborhood(
   }
 
   applyFocusView(cy, viewState, ui, {
-    randomize: !inFocus,
+    randomize: true,
+    forceRelayout: true,
     focusNode: node,
   });
 }
@@ -1768,6 +1907,7 @@ function clearNeighborhoodFilter(
   }
 
   ui.syncView(true);
+  refreshGraphLayout(cy, viewState, ui.degreeContext);
 }
 
 function compareNodes(left: string, right: string): number {
@@ -1961,7 +2101,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
 
   const allowCmsNavigation = await resolveAllowCmsNavigation();
 
-  const [graphLoaded, conceptPagesBySlug] = await Promise.all([
+  const [graphLoaded, conceptPagesBySlug, pageSources] = await Promise.all([
     loadAnalyticsArtifact("graph.cy.json"),
     options.conceptPanelId
       ? loadConceptPages().catch((error) => {
@@ -1969,7 +2109,13 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
           return new Map<string, ConceptPage>();
         })
       : Promise.resolve(new Map<string, ConceptPage>()),
+    loadGraphPageSources().catch((error) => {
+      console.error(error);
+      return [];
+    }),
   ]);
+
+  const curriculumPages = parsePages(pageSources);
 
   const payload =
     typeof graphLoaded === "string"
@@ -2026,6 +2172,18 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
         },
       },
       {
+        selector: "node[kind = 'course'][degreeBorderColor]",
+        style: {
+          "border-color": "data(degreeBorderColor)",
+        },
+      },
+      {
+        selector: "node.course-tne-scoped",
+        style: {
+          "border-style": "dashed",
+        },
+      },
+      {
         selector: "node[kind = 'concept']",
         style: {
           "border-color": kindStyle("concept").border,
@@ -2073,8 +2231,19 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
           width: 2,
         },
       },
+      {
+        selector: "edge.edge-tne-scoped",
+        style: {
+          "line-style": "dashed",
+        },
+      },
     ],
   });
+
+  const degreeContext: GraphDegreeContext = {
+    pages: curriculumPages,
+    conceptsByCourseSlug: buildConceptNodeIdsByCourseSlug(cy),
+  };
 
   container.style.cursor = "grab";
   cy.on("mousedown", () => {
@@ -2104,6 +2273,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
     ? document.getElementById(options.conceptPanelId)
     : null;
   const conceptPanel = conceptPanelRoot ? mountConceptPanel(conceptPanelRoot) : null;
+  const legendRoot = options.legendRootId ? document.getElementById(options.legendRootId) : null;
 
   const viewState: GraphViewState = {
     fullGraphPositions: null,
@@ -2115,7 +2285,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
     kindFilters: createKindFilters(),
     searchQuery: "",
     conceptsHidden: DEFAULT_GRAPH_CONCEPTS_HIDDEN,
-    yearsHidden: DEFAULT_GRAPH_YEARS_HIDDEN,
+    degreeScopeSlug: parseGraphUrlState().degreeScopeSlug,
     courseLinkMode: DEFAULT_GRAPH_COURSE_LINK_MODE,
   };
   let urlRestorePending = applyUrlStateToViewState(cy, viewState, parseGraphUrlState());
@@ -2123,9 +2293,12 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
 
   const ui: GraphUi = {
     expansionListRoot,
+    degreeContext,
     syncView: (fit = false) => {
-      applyElementVisibility(cy, viewState);
+      applyElementVisibility(cy, viewState, degreeContext);
+      applyDegreeScopePresentation(cy, viewState, degreeContext);
       applyExpansionEdgeColors(cy, viewState);
+      updateGraphLegendUI(legendRoot, viewState, degreeContext);
       updateExpansionListUI(cy, viewState, expansionListRoot, ui);
       updateCourseWorkspaceLinksUI(cy, viewState, courseWorkspaceLinksRoot, allowCmsNavigation);
       writeGraphUrlState(urlStateFromViewState(cy, viewState));
@@ -2140,6 +2313,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
     if (!viewState.initialLayoutSaved) {
       viewState.fullGraphPositions = snapshotPositions(cy);
       viewState.initialLayoutSaved = true;
+      updateGraphLegendUI(legendRoot, viewState, degreeContext);
       if (urlRestorePending && isExpansionActive(viewState)) {
         applyRestoredUrlView(cy, viewState, ui);
       }
@@ -2179,13 +2353,31 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
     syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
   }
 
-  const toggleYearsButton = options.toggleYearsButtonId
-    ? document.getElementById(options.toggleYearsButtonId)
+  const degreeScopeRoot = options.degreeScopeRootId
+    ? document.getElementById(options.degreeScopeRootId)
+    : null;
+  const degreeScopeSkeleton = options.degreeScopeSkeletonId
+    ? document.getElementById(options.degreeScopeSkeletonId)
     : null;
 
-  if (toggleYearsButton instanceof HTMLButtonElement) {
-    mountToggleYearsButton(cy, viewState, ui, toggleYearsButton);
-    syncToggleYearsButton(toggleYearsButton, viewState.yearsHidden);
+  let degreeScopeDropdown: GraphDegreeDropdownHandle | null = null;
+  if (degreeScopeRoot instanceof HTMLElement) {
+    try {
+      degreeScopeDropdown = mountDegreeScopeDropdown(
+        cy,
+        viewState,
+        ui,
+        degreeScopeRoot,
+        curriculumPages,
+      );
+      revealDegreeScopeDropdown(
+        degreeScopeSkeleton instanceof HTMLElement ? degreeScopeSkeleton : null,
+        degreeScopeRoot,
+      );
+    } catch (error) {
+      console.error(error);
+      degreeScopeRoot.hidden = true;
+    }
   }
 
   const toggleCourseLinksButton = options.toggleCourseLinksButtonId
@@ -2196,6 +2388,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
     mountToggleCourseLinksButton(cy, viewState, ui, toggleCourseLinksButton);
   }
 
+  updateGraphLegendUI(legendRoot, viewState, degreeContext);
   if (urlRestorePending && !isExpansionActive(viewState)) {
     ui.syncView();
   }
@@ -2210,7 +2403,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
   }
 
   if (refreshButton instanceof HTMLButtonElement) {
-    mountRefreshButton(cy, viewState, refreshButton);
+    mountRefreshButton(cy, viewState, ui, refreshButton);
   }
 
   let tapTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -2224,7 +2417,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
       ui,
       filtersRoot,
       toggleConceptsButton instanceof HTMLButtonElement ? toggleConceptsButton : null,
-      toggleYearsButton instanceof HTMLButtonElement ? toggleYearsButton : null,
+      degreeScopeDropdown,
     );
   });
 
@@ -2285,7 +2478,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
     openInCms(cmsBase, slug);
   });
 
-  runGraphLayout(visibleLayoutElements(cy, viewState), {
+  runGraphLayout(visibleLayoutElements(cy, viewState, degreeContext), {
     quality: "proof",
     randomize: true,
   });

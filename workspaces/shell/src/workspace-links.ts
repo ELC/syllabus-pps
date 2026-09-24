@@ -7,6 +7,11 @@ export function cmsCoursePageHref(siteRoot: string, courseSlug: string): string 
   return `${siteRootPrefix(siteRoot)}cms/?${params.toString()}`;
 }
 
+export function planningDegreePageHref(siteRoot: string, degreeSlug: string): string {
+  const params = new URLSearchParams({ degree: degreeSlug.trim() });
+  return `${siteRootPrefix(siteRoot)}planning/?${params.toString()}`;
+}
+
 export function planningCoursePageHref(
   siteRoot: string,
   courseSlug: string,
@@ -20,6 +25,19 @@ export function planningCoursePageHref(
   return `${siteRootPrefix(siteRoot)}planning/?${params.toString()}`;
 }
 
+export function networkExpandHref(
+  siteRoot: string,
+  nodeSlug: string,
+  degreeSlug?: string | null,
+): string {
+  const params = new URLSearchParams({ expand: nodeSlug.trim() });
+  const degree = degreeSlug?.trim();
+  if (degree) {
+    params.set("degree", degree);
+  }
+  return `${siteRootPrefix(siteRoot)}network/?${params.toString()}`;
+}
+
 export function networkCourseExpansionHref(siteRoot: string, courseSlug: string): string {
   const params = new URLSearchParams({
     expand: courseSlug.trim(),
@@ -28,9 +46,17 @@ export function networkCourseExpansionHref(siteRoot: string, courseSlug: string)
   return `${siteRootPrefix(siteRoot)}network/?${params.toString()}`;
 }
 
-export function networkDegreeExpansionHref(siteRoot: string, degreeSlug: string): string {
-  const params = new URLSearchParams({ expand: degreeSlug.trim() });
+export function networkDegreeScopeHref(siteRoot: string, degreeSlug: string): string {
+  const params = new URLSearchParams({ degree: degreeSlug.trim() });
   return `${siteRootPrefix(siteRoot)}network/?${params.toString()}`;
+}
+
+/** @deprecated Prefer {@link networkDegreeScopeHref}. */
+export function networkDegreeExpansionHref(
+  siteRoot: string,
+  degreeSlug: string,
+): string {
+  return networkDegreeScopeHref(siteRoot, degreeSlug);
 }
 
 export function roadmapDegreeOverviewHref(siteRoot: string, degreeSlug: string): string {
