@@ -3,7 +3,7 @@ import { GRAPH_FILTER_KINDS } from "./graph-styles";
 export const GRAPH_URL_EXPAND_PARAM = "expand";
 export const GRAPH_URL_HIDE_CONCEPTS_PARAM = "hideConcepts";
 export const GRAPH_URL_COURSE_LINKS_PARAM = "courseLinks";
-/** Selected degree in the Carrera dropdown (`Todas las carreras` when absent). */
+/** Selected degree in the Carrera dropdown (`Todas` when absent). */
 export const GRAPH_URL_DEGREE_SCOPE_PARAM = "degree";
 
 export type CourseLinkMode = "mentions" | "correlativas";

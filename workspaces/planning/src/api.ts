@@ -19,7 +19,12 @@ export async function loadPageSources(): Promise<PageSource[]> {
   if (useDevApi) {
     const response = await fetch(assetUrl("api/pages/sources"));
     if (!response.ok) {
-      throw new Error(`No se pudo cargar el catálogo (${response.status}).`);
+      const detail = (await response.text().catch(() => "")).trim();
+      throw new Error(
+        detail
+          ? `No se pudo cargar el catálogo (${response.status}): ${detail}`
+          : `No se pudo cargar el catálogo (${response.status}).`,
+      );
     }
     return (await response.json()) as PageSource[];
   }

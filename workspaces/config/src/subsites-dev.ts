@@ -132,6 +132,7 @@ function createViteSpaDevMiddleware(repoRoot: string, spec: ViteSpaDevSpec): Plu
                 "@pps/content/vite/supabase-dev",
                 "@pps/analytics-cli",
                 "@pps/analytics-cli/vite/rebuild-dev",
+                "@pps/roadmap",
               ],
             },
             appType: "spa",

@@ -1,7 +1,8 @@
-import type {
-  DegreeRoadmap,
-  DegreeRoadmapAdjacency,
-  DegreeRoadmapNodeTitle,
+import {
+  isTrayectoNoEstructurado,
+  type DegreeRoadmap,
+  type DegreeRoadmapAdjacency,
+  type DegreeRoadmapNodeTitle,
 } from "@pps/core";
 import type { Edge, Node } from "@xyflow/react";
 
@@ -602,7 +603,7 @@ function yearBandNode(
     selectable: false,
     draggable: false,
     focusable: false,
-    zIndex: -1,
+    zIndex: 0,
     data: {
       label: band.year,
       separatorTop,
@@ -612,11 +613,22 @@ function yearBandNode(
   };
 }
 
+function tneEdgeSuffix(
+  source: string,
+  target: string,
+  courseTrayectoByTitle?: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
+): string {
+  const sourceTne = isTrayectoNoEstructurado(courseTrayectoByTitle?.get(source));
+  const targetTne = isTrayectoNoEstructurado(courseTrayectoByTitle?.get(target));
+  return sourceTne || targetTne ? " roadmap__edge--tne" : "";
+}
+
 function emitCourseDagLinks(
   links: SpineLink[],
   layout: RoadmapLayout,
   edges: Edge[],
   activeSuffix: (source: string, target: string) => string,
+  courseTrayectoByTitle?: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
 ): void {
   for (const link of links) {
     const handles = pickCourseDagHandles(layout, link.source, link.target);
@@ -626,7 +638,7 @@ function emitCourseDagLinks(
       target: link.target,
       sourceHandle: handles.sourceHandle,
       targetHandle: handles.targetHandle,
-      className: `roadmap__edge roadmap__edge--spine roadmap__edge--course-dag${activeSuffix(link.source, link.target)}`,
+      className: `roadmap__edge roadmap__edge--spine roadmap__edge--course-dag${activeSuffix(link.source, link.target)}${tneEdgeSuffix(link.source, link.target, courseTrayectoByTitle)}`,
       focusable: false,
       interactionWidth: 0,
       selectable: false,
@@ -695,21 +707,26 @@ export function buildRoadmapFlow({
   const styleSuffix = (source: string, target: string) =>
     edgeStyleSuffix(source, target, isTopicDone);
 
-  const nodes: Node[] = [
-    anchorNode(ROADMAP_START_ID, "start", "Inicio", layout.start),
-    anchorNode(ROADMAP_END_ID, "end", "Objetivo", layout.end),
-  ];
+  const nodes: Node[] = [];
+
+  if (!courseDagEdges) {
+    nodes.push(
+      anchorNode(ROADMAP_START_ID, "start", "Inicio", layout.start),
+      anchorNode(ROADMAP_END_ID, "end", "Objetivo", layout.end),
+    );
+  }
 
   if (courseDagEdges && layout.courseYearBands) {
     const placementExtents = [...layout.placements.values()];
-    const minNodeX = Math.min(
-      ...placementExtents.map((placement) => placement.x),
-      layout.start.x,
-    );
-    const maxNodeX = Math.max(
-      ...placementExtents.map((placement) => placement.x + placement.width),
-      layout.end.x + ANCHOR_NODE_WIDTH,
-    );
+    // Course columns only — bounds.minX already subtracts COURSE_YEAR_LABEL_GUTTER for the labels.
+    const minNodeX =
+      placementExtents.length > 0
+        ? Math.min(...placementExtents.map((placement) => placement.x))
+        : layout.bounds.minX + COURSE_YEAR_LABEL_GUTTER;
+    const maxNodeX =
+      placementExtents.length > 0
+        ? Math.max(...placementExtents.map((placement) => placement.x + placement.width))
+        : layout.bounds.maxX;
     for (const [index, band] of layout.courseYearBands.entries()) {
       const previousBand = index > 0 ? layout.courseYearBands[index - 1] : undefined;
       nodes.push(
@@ -771,7 +788,7 @@ export function buildRoadmapFlow({
       }
     }
 
-    emitCourseDagLinks(spineLinks, layout, edges, styleSuffix);
+    emitCourseDagLinks(spineLinks, layout, edges, styleSuffix, courseTrayectoByTitle);
     return { nodes, edges };
   }
 

@@ -16,6 +16,33 @@ function titleFromPageMarkdown(content: string): string | undefined {
   return title || undefined;
 }
 
+const PAGE_STORAGE_READ_CONCURRENCY = 12;
+
+async function mapWithConcurrency<T, R>(
+  items: readonly T[],
+  concurrency: number,
+  mapItem: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  if (items.length === 0) {
+    return [];
+  }
+
+  const results = new Array<R>(items.length);
+  let nextIndex = 0;
+
+  async function worker(): Promise<void> {
+    while (nextIndex < items.length) {
+      const index = nextIndex;
+      nextIndex += 1;
+      results[index] = await mapItem(items[index]!, index);
+    }
+  }
+
+  const workerCount = Math.min(concurrency, items.length);
+  await Promise.all(Array.from({ length: workerCount }, () => worker()));
+  return results;
+}
+
 export async function listPages(client: SupabaseClient, bucket: string): Promise<PageListItem[]> {
   const { data, error } = await client.storage.from(bucket).list("pages", { limit: 1000 });
   if (error) {
@@ -36,15 +63,13 @@ export async function listPagesWithTitles(
   bucket: string,
 ): Promise<PageListItem[]> {
   const pages = await listPages(client, bucket);
-  return Promise.all(
-    pages.map(async (page) => {
-      const content = await readPage(client, bucket, page.slug);
-      return {
-        ...page,
-        title: titleFromPageMarkdown(content),
-      };
-    }),
-  );
+  return mapWithConcurrency(pages, PAGE_STORAGE_READ_CONCURRENCY, async (page) => {
+    const content = await readPage(client, bucket, page.slug);
+    return {
+      ...page,
+      title: titleFromPageMarkdown(content),
+    };
+  });
 }
 
 export async function readPage(
@@ -81,10 +106,8 @@ export async function fetchAllPageSources(
   bucket: string,
 ): Promise<PageSource[]> {
   const pages = await listPages(client, bucket);
-  return Promise.all(
-    pages.map(async (page) => ({
-      path: page.path,
-      content: await readPage(client, bucket, page.slug),
-    })),
-  );
+  return mapWithConcurrency(pages, PAGE_STORAGE_READ_CONCURRENCY, async (page) => ({
+    path: page.path,
+    content: await readPage(client, bucket, page.slug),
+  }));
 }

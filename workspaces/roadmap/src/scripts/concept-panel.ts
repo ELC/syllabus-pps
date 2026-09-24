@@ -161,6 +161,65 @@ function createCitesEditLink(resourceId: string, title?: string): HTMLAnchorElem
   return link;
 }
 
+function renderConceptNoteCatalogCard(
+  block: ConceptBlock,
+  resourceKind: PanelResourceKind,
+  body: HTMLElement,
+  primaryUrl: string | undefined,
+  resolvedTitle: string | undefined,
+  resourceId: string,
+): HTMLElement {
+  const item = document.createElement("li");
+  item.className = "graph__concept-note";
+
+  const card = document.createElement("div");
+  card.className = "graph__concept-note-card graph__concept-note-card--catalog";
+
+  card.appendChild(createResourceMark(resourceKind));
+
+  const copy = document.createElement("span");
+  copy.className = "graph__concept-note-copy";
+  copy.append(body);
+
+  const browseTitle = resolvedTitle
+    ? `${panelResourceLabels[resourceKind]}: ${resolvedTitle}`
+    : primaryUrl
+      ? `${panelResourceLabels[resourceKind]}: ${primaryUrl}`
+      : blockDisplayText(block);
+
+  if (primaryUrl) {
+    const main = document.createElement("a");
+    main.className = "graph__concept-note-action graph__concept-note-action--browse";
+    main.href = primaryUrl;
+    main.target = "_blank";
+    main.rel = "noopener noreferrer";
+    main.title = browseTitle;
+    main.appendChild(copy);
+    card.appendChild(main);
+  } else {
+    const main = document.createElement("div");
+    main.className = "graph__concept-note-action graph__concept-note-action--browse";
+    main.title = browseTitle;
+    main.appendChild(copy);
+    card.appendChild(main);
+  }
+
+  const rail = document.createElement("div");
+  rail.className = "graph__concept-note-rail graph__concept-note-rail--with-edit";
+  rail.appendChild(createCitesEditLink(resourceId, resolvedTitle));
+
+  if (primaryUrl) {
+    const openLink = createExternalLinkIcon();
+    openLink.href = primaryUrl;
+    openLink.title = browseTitle;
+    rail.appendChild(openLink);
+  }
+
+  card.appendChild(rail);
+  item.appendChild(card);
+  return item;
+}
+
 function renderConceptNote(
   block: ConceptBlock,
   slug: string,
@@ -178,6 +237,18 @@ function renderConceptNote(
   body.textContent = blockDisplayText(block);
 
   if (!progress) {
+    const resourceId = primaryResourceId(block);
+    if (showCitesEditLinks && resourceId) {
+      return renderConceptNoteCatalogCard(
+        block,
+        resourceKind,
+        body,
+        primaryUrl,
+        resolvedTitle,
+        resourceId,
+      );
+    }
+
     if (!primaryUrl) {
       const content = document.createElement("div");
       content.className = "graph__concept-note-static";

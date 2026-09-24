@@ -36,7 +36,8 @@ export function App() {
     setWorkspaceNav((current) => {
       if (
         (current?.degreeSlug ?? null) === (nav?.degreeSlug ?? null) &&
-        (current?.courseSlug ?? null) === (nav?.courseSlug ?? null)
+        (current?.courseSlug ?? null) === (nav?.courseSlug ?? null) &&
+        (current?.scopeAllCarreras ?? false) === (nav?.scopeAllCarreras ?? false)
       ) {
         return current;
       }

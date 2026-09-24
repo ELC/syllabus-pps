@@ -38,11 +38,20 @@ export function networkExpandHref(
   return `${siteRootPrefix(siteRoot)}network/?${params.toString()}`;
 }
 
-export function networkCourseExpansionHref(siteRoot: string, courseSlug: string): string {
+/** Opens Red on a course expand; omitting `courseLinks` uses correlativas (network default). */
+export function networkCourseExpansionHref(
+  siteRoot: string,
+  courseSlug: string,
+  degreeSlug?: string | null,
+): string {
   const params = new URLSearchParams({
     expand: courseSlug.trim(),
-    courseLinks: "mentions",
+    hideConcepts: "0",
   });
+  const degree = degreeSlug?.trim();
+  if (degree) {
+    params.set("degree", degree);
+  }
   return `${siteRootPrefix(siteRoot)}network/?${params.toString()}`;
 }
 
@@ -66,12 +75,13 @@ export function roadmapDegreeOverviewHref(siteRoot: string, degreeSlug: string):
 
 export function roadmapCourseSubgraphHref(
   siteRoot: string,
-  degreeSlug: string,
+  degreeSlug: string | null | undefined,
   courseSlug: string,
 ): string {
-  const params = new URLSearchParams({
-    degree: degreeSlug.trim(),
-    course: courseSlug.trim(),
-  });
+  const params = new URLSearchParams({ course: courseSlug.trim() });
+  const degree = degreeSlug?.trim();
+  if (degree) {
+    params.set("degree", degree);
+  }
   return `${siteRootPrefix(siteRoot)}roadmap/?${params.toString()}`;
 }

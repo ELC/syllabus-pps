@@ -73,6 +73,20 @@ export function createSupabaseDevMiddleware(
     planningPlans = false,
   } = options;
 
+  let inflightPageSources: Promise<Awaited<ReturnType<typeof fetchAllPageSources>>> | null = null;
+
+  const loadAllPageSources = (
+    client: ReturnType<typeof createServerClientFromEnv>,
+    bucket: string,
+  ): Promise<Awaited<ReturnType<typeof fetchAllPageSources>>> => {
+    if (!inflightPageSources) {
+      inflightPageSources = fetchAllPageSources(client, bucket).finally(() => {
+        inflightPageSources = null;
+      });
+    }
+    return inflightPageSources;
+  };
+
   return (req: IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
     const apiPath = normalizeApiPath(req.url ?? "", base);
     if (!apiPath) {
@@ -202,7 +216,7 @@ export function createSupabaseDevMiddleware(
         }
 
         if (pages && apiPath === "/api/pages/sources" && req.method === "GET") {
-          const sources = await fetchAllPageSources(client, bucket);
+          const sources = await loadAllPageSources(client, bucket);
           res.setHeader("Content-Type", "application/json; charset=utf-8");
           res.end(JSON.stringify(sources));
           return;

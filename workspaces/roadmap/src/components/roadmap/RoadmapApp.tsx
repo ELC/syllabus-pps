@@ -124,6 +124,10 @@ import {
   writeRoadmapPanelUrl,
   type RoadmapPanelUrlState,
 } from "../../scripts/roadmap-panel-url";
+import {
+  buildRoadmapCourseSelectOptions,
+  isRoadmapCourseGroupOptionValue,
+} from "./roadmap-course-select-options";
 
 import "@xyflow/react/dist/style.css";
 
@@ -142,9 +146,6 @@ const edgeTypes: EdgeTypes = {
 };
 
 const VIEWPORT_PADDING = 48;
-/** Below this the labels stop being readable, so wide roadmaps are panned instead of shrunk. */
-const MIN_READABLE_ZOOM = 0.55;
-const MIN_COURSE_READABLE_ZOOM = 0.38;
 
 function parseGeneratedPayload<T>(content: string): T {
   const newlineIndex = content.indexOf("\n");
@@ -171,38 +172,45 @@ function normalizeCurriculumGraph(loaded: unknown): CurriculumGraph {
   return hydrateCurriculumGraph(raw as CurriculumGraph);
 }
 
+export function viewportForRoadmapBounds(
+  bounds: RoadmapBounds,
+  width: number,
+  height: number,
+  padding = VIEWPORT_PADDING,
+): { x: number; y: number; zoom: number } {
+  const contentWidth = Math.max(bounds.maxX - bounds.minX, 1);
+  const contentHeight = Math.max(bounds.maxY - bounds.minY, 1);
+  const zoomX = (width - padding * 2) / contentWidth;
+  const zoomY = (height - padding * 2) / contentHeight;
+  const zoom = Math.min(1, zoomX, zoomY);
+  const centerX = (bounds.minX + bounds.maxX) / 2;
+  const centerY = (bounds.minY + bounds.maxY) / 2;
+
+  return {
+    x: width / 2 - centerX * zoom,
+    y: height / 2 - centerY * zoom,
+    zoom,
+  };
+}
+
 function CanvasViewport({
   bounds,
   viewportKey,
-  minReadableZoom = MIN_READABLE_ZOOM,
 }: {
   bounds: RoadmapBounds;
   viewportKey: string;
-  minReadableZoom?: number;
 }) {
   const { setViewport } = useReactFlow();
   const width = useStore((state) => state.width);
   const height = useStore((state) => state.height);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (width === 0 || height === 0) {
       return;
     }
 
-    const contentWidth = Math.max(bounds.maxX - bounds.minX, 1);
-    const fitted = (width - VIEWPORT_PADDING * 2) / contentWidth;
-    const zoom = Math.min(1, Math.max(minReadableZoom, fitted));
-    const centerX = (bounds.minX + bounds.maxX) / 2;
-
-    setViewport({
-      x:
-        fitted >= minReadableZoom
-          ? width / 2 - centerX * zoom
-          : VIEWPORT_PADDING - bounds.minX * zoom,
-      y: VIEWPORT_PADDING - bounds.minY * zoom,
-      zoom,
-    });
-  }, [bounds, height, minReadableZoom, setViewport, viewportKey, width]);
+    setViewport(viewportForRoadmapBounds(bounds, width, height));
+  }, [bounds, height, setViewport, viewportKey, width]);
 
   return null;
 }
@@ -282,13 +290,27 @@ export function RoadmapApp({
     () => (graph ? projectAllCourseRoadmaps(graph) : []),
     [graph],
   );
-  const activeCourseRoadmap = useMemo(
-    () =>
-      courseRoadmaps.find((roadmap) => roadmap.degree === selectedDegree) ??
-      courseRoadmaps[0] ??
-      null,
-    [courseRoadmaps, selectedDegree],
-  );
+  const activeCourseRoadmap = useMemo(() => {
+    if (selectedDegree) {
+      return (
+        courseRoadmaps.find((roadmap) => roadmap.degree === selectedDegree) ??
+        courseRoadmaps[0] ??
+        null
+      );
+    }
+
+    if (focusedCourseSlug) {
+      return (
+        courseRoadmaps.find((roadmap) =>
+          roadmap.courses.some((entry) => entry.slug === focusedCourseSlug),
+        ) ??
+        courseRoadmaps[0] ??
+        null
+      );
+    }
+
+    return courseRoadmaps[0] ?? null;
+  }, [courseRoadmaps, focusedCourseSlug, selectedDegree]);
 
   const isConceptView = focusedCourseSlug !== null;
 
@@ -350,10 +372,34 @@ export function RoadmapApp({
       }
     }
 
-    if (!selectedDegree && courseRoadmaps[0]) {
-      setSelectedDegree(courseRoadmaps[0].degree);
+    if (!url.degree && url.course) {
+      setSelectedDegree("");
+      setFocusedCourseSlug(url.course);
+      return;
     }
-  }, [courseRoadmaps, selectedDegree]);
+
+    if (!url.degree && !url.course) {
+      const first = courseRoadmaps[0];
+      if (first) {
+        setSelectedDegree(first.degree);
+        setFocusedCourseSlug(null);
+      }
+    }
+  }, [courseRoadmaps, urlRevision]);
+
+  useEffect(() => {
+    if (courseRoadmaps.length === 0 || focusedCourseSlug !== null) {
+      return;
+    }
+    if (selectedDegree.trim()) {
+      return;
+    }
+    const fallback = activeCourseRoadmap ?? courseRoadmaps[0];
+    if (!fallback) {
+      return;
+    }
+    setSelectedDegree(fallback.degree);
+  }, [activeCourseRoadmap, courseRoadmaps, focusedCourseSlug, selectedDegree]);
 
   useEffect(() => {
     onRegisterPanelUrlSync?.({
@@ -1060,12 +1106,24 @@ export function RoadmapApp({
     [],
   );
 
+  const syncPanelUrlForScope = useCallback(
+    (state: RoadmapPanelUrlState, mode: "replace" | "push" = "push") => {
+      if (!selectedDegree) {
+        const { degree: _degree, ...withoutDegree } = state;
+        syncPanelUrl(withoutDegree, mode);
+        return;
+      }
+      syncPanelUrl(state, mode);
+    },
+    [selectedDegree, syncPanelUrl],
+  );
+
   const handleConceptOpen = useCallback(
     (title: string) => {
       const page = conceptPages.get(title);
       const slug = degreeConceptSlugByTitle.get(title);
       if (activeCourseRoadmap && slug && focusedCourseSlug) {
-        syncPanelUrl({
+        syncPanelUrlForScope({
           degree: activeCourseRoadmap.degreeSlug,
           course: focusedCourseSlug,
           concept: slug,
@@ -1082,7 +1140,7 @@ export function RoadmapApp({
       focusedCourseSlug,
       onConceptOpen,
       degreeConceptSlugByTitle,
-      syncPanelUrl,
+      syncPanelUrlForScope,
     ],
   );
 
@@ -1094,10 +1152,13 @@ export function RoadmapApp({
       }
 
       setFocusedCourseSlug(course.slug);
-      syncPanelUrl({ degree: activeCourseRoadmap.degreeSlug, course: course.slug }, "push");
+      syncPanelUrlForScope(
+        { degree: activeCourseRoadmap.degreeSlug, course: course.slug },
+        "push",
+      );
       onClosePanels?.();
     },
-    [activeCourseRoadmap, onClosePanels, syncPanelUrl],
+    [activeCourseRoadmap, onClosePanels, syncPanelUrlForScope],
   );
 
   const handleBackToCourses = useCallback(() => {
@@ -1106,38 +1167,36 @@ export function RoadmapApp({
     }
 
     setFocusedCourseSlug(null);
+    if (!selectedDegree.trim()) {
+      setSelectedDegree(activeCourseRoadmap.degree);
+    }
     syncPanelUrl({ degree: activeCourseRoadmap.degreeSlug }, "push");
     onClosePanels?.();
-  }, [activeCourseRoadmap, onClosePanels, syncPanelUrl]);
-
-  const sortedCourses = useMemo(
-    () =>
-      [...(activeCourseRoadmap?.courses ?? [])].sort(
-        (left, right) =>
-          left.year.localeCompare(right.year, "es-AR") ||
-          left.title.localeCompare(right.title, "es-AR"),
-      ),
-    [activeCourseRoadmap],
-  );
+  }, [activeCourseRoadmap, onClosePanels, selectedDegree, syncPanelUrl]);
 
   const degreeSelectOptions = useMemo(
-    () =>
-      courseRoadmaps.map((roadmap) => ({
+    () => [
+      {
+        value: "",
+        label: "Todas",
+        disabled: focusedCourseSlug === null,
+      },
+      ...courseRoadmaps.map((roadmap) => ({
         value: roadmap.degree,
         label: roadmap.degree,
       })),
-    [courseRoadmaps],
+    ],
+    [courseRoadmaps, focusedCourseSlug],
   );
 
   const courseSelectOptions = useMemo(
-    () => [
-      { value: "", label: "Todas" },
-      ...sortedCourses.map((course) => ({
-        value: course.slug,
-        label: course.title,
-      })),
-    ],
-    [sortedCourses],
+    () =>
+      buildRoadmapCourseSelectOptions(
+        graph,
+        activeCourseRoadmap,
+        Boolean(selectedDegree.trim()),
+      ),
+    [activeCourseRoadmap, graph, selectedDegree],
   );
 
   const handleCourseSelect = useCallback(
@@ -1146,8 +1205,10 @@ export function RoadmapApp({
         return;
       }
 
-      if (!slug) {
-        handleBackToCourses();
+      if (!slug || isRoadmapCourseGroupOptionValue(slug)) {
+        if (!slug) {
+          handleBackToCourses();
+        }
         return;
       }
 
@@ -1513,8 +1574,9 @@ export function RoadmapApp({
     onWorkspaceNavChange?.({
       degreeSlug: activeCourseRoadmap.degreeSlug,
       courseSlug: focusedCourseSlug,
+      scopeAllCarreras: !selectedDegree.trim() && focusedCourseSlug !== null,
     });
-  }, [activeCourseRoadmap, focusedCourseSlug, graph, onWorkspaceNavChange]);
+  }, [activeCourseRoadmap, focusedCourseSlug, graph, onWorkspaceNavChange, selectedDegree]);
 
   useEffect(() => {
     return () => onWorkspaceNavChange?.(null);
@@ -1555,15 +1617,54 @@ export function RoadmapApp({
             <MetaDropdown
               className="roadmap__toolbar-dropdown"
               ariaLabel="Carrera"
-              value={activeCourseRoadmap.degree}
+              value={selectedDegree}
               options={degreeSelectOptions}
               onChange={(degree) => {
-                setSelectedDegree(degree);
-                setFocusedCourseSlug(null);
-                const roadmap = courseRoadmaps.find((entry) => entry.degree === degree);
-                if (roadmap) {
-                  syncPanelUrl({ degree: roadmap.degreeSlug });
+                if (!degree && focusedCourseSlug === null) {
+                  return;
                 }
+
+                const panelUrl = readRoadmapPanelUrl();
+                setSelectedDegree(degree);
+
+                if (!degree) {
+                  if (focusedCourseSlug) {
+                    const next: RoadmapPanelUrlState = { course: focusedCourseSlug };
+                    if (panelUrl.concept) {
+                      next.concept = panelUrl.concept;
+                    }
+                    syncPanelUrl(next, "push");
+                  } else {
+                    syncPanelUrl({});
+                  }
+                  onClosePanels?.();
+                  return;
+                }
+
+                const roadmap = courseRoadmaps.find((entry) => entry.degree === degree);
+                if (!roadmap) {
+                  onClosePanels?.();
+                  return;
+                }
+
+                if (
+                  focusedCourseSlug &&
+                  roadmap.courses.some((entry) => entry.slug === focusedCourseSlug)
+                ) {
+                  const next: RoadmapPanelUrlState = {
+                    degree: roadmap.degreeSlug,
+                    course: focusedCourseSlug,
+                  };
+                  if (panelUrl.concept) {
+                    next.concept = panelUrl.concept;
+                  }
+                  syncPanelUrl(next, "push");
+                  onClosePanels?.();
+                  return;
+                }
+
+                setFocusedCourseSlug(null);
+                syncPanelUrl({ degree: roadmap.degreeSlug }, "push");
                 onClosePanels?.();
               }}
             />
@@ -1659,11 +1760,7 @@ export function RoadmapApp({
                 }
               }}
             >
-              <CanvasViewport
-                bounds={layout.bounds}
-                viewportKey={viewportKey}
-                minReadableZoom={isConceptView ? MIN_READABLE_ZOOM : MIN_COURSE_READABLE_ZOOM}
-              />
+              <CanvasViewport bounds={layout.bounds} viewportKey={viewportKey} />
               {isConceptView ? (
                 <Panel position="top-left" className="roadmap__graph-back">
                   <button type="button" className="roadmap__back-button" onClick={handleBackToCourses}>

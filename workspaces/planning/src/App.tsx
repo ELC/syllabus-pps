@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { mountConceptPanel, type ConceptPage } from "@pps/roadmap/concept-panel";
 
 import {
   emptyPlanningPlan,
@@ -31,15 +33,17 @@ import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-stat
 import refreshSvg from "@pps/shell/assets/icons/ui-refresh.svg?raw";
 import saveSvg from "@pps/shell/assets/icons/ui-save.svg?raw";
 import { loadPageSources, loadPlan, savePlan } from "./api";
+import { loadConceptPagesBySlug } from "./load-concept-pages";
 import {
   PLANNING_REBUILD_STATUS_POLL,
   resolvePlanningHeaderIndicatorOverride,
   resolvePlanningSaveBlockReason,
 } from "./catalog-sync";
 import { ConceptCombobox } from "./ConceptCombobox";
+import { PlanningCalendar } from "./PlanningCalendar";
+import { buildProgramWeekGrid } from "./planning-calendar";
 import {
   cmsCoursePageHref,
-  degreeSlugForCoursePage,
   networkCourseExpansionHref,
   roadmapCourseSubgraphHref,
 } from "./course-links";
@@ -48,14 +52,25 @@ import {
   buildDegreeDropdownOptions,
   selectableCourseSlugsFromOptions,
 } from "./planning-course-catalog";
-import { readCourseParam, readDegreeParam, writePlanningUrlParams } from "./course-param";
+import {
+  isPlanningCalendarViewParam,
+  PLANNING_CALENDAR_VIEW,
+  planningUrlKey,
+  readConceptParam,
+  readCourseParam,
+  readDegreeParam,
+  writePlanningConceptParam,
+  writePlanningUrlParams,
+} from "./course-param";
 
 interface CatalogItem {
   slug: string;
   title: string;
 }
 
-type WeekColumn = keyof PlanningWeek;
+const PLANNING_TABLE_COLUMNS = ["topic", "prerequisite"] as const satisfies readonly (keyof PlanningWeek)[];
+
+type WeekColumn = (typeof PLANNING_TABLE_COLUMNS)[number];
 
 function planSnapshot(plan: PlanningPlanDocument | null): string {
   return JSON.stringify(plan ? normalizePlanningPlan(plan) : emptyPlanningPlan());
@@ -68,9 +83,44 @@ function PlanHeadRow() {
         Semana
       </th>
       <th scope="col">Tema</th>
-      <th scope="col">Prerequisito</th>
-      <th scope="col">Opcional</th>
+      <th scope="col">Sugerido</th>
     </tr>
+  );
+}
+
+function PlanCalendarSkeleton() {
+  const grid = buildProgramWeekGrid();
+
+  return (
+    <div className="planning__calendar-wrap planning__calendar-wrap--loading" aria-hidden="true">
+      <div className="planning-calendar planning-calendar--skeleton">
+        <header className="planning-calendar__header">
+          <span className="planning__skeleton planning__skeleton--calendar-title" />
+          <span className="planning__skeleton planning__skeleton--calendar-subtitle" />
+        </header>
+        <div className="planning-calendar__grid">
+          {grid.map((row, rowIndex) => (
+            <div className="planning-calendar__block" key={rowIndex}>
+              {row.map((week, columnIndex) => (
+                <div
+                  className={
+                    week == null
+                      ? "planning-calendar__cell planning-calendar__cell--empty planning-calendar__cell--skeleton"
+                      : "planning-calendar__cell planning-calendar__cell--skeleton"
+                  }
+                  key={columnIndex}
+                >
+                  {week != null ? (
+                    <span className="planning-calendar__week-label">Semana {week}</span>
+                  ) : null}
+                  <span className="planning__skeleton planning__skeleton--calendar-ribbon" />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -87,7 +137,7 @@ function PlanTableSkeleton() {
               <th className="planning__week-col" scope="row">
                 {index + 1}
               </th>
-              {(["topic", "prerequisite", "optional"] as const).map((column) => (
+              {PLANNING_TABLE_COLUMNS.map((column) => (
                 <td className="planning__cell planning__cell--concept planning__cell--skeleton" key={column}>
                   <div className="planning__cell-skeleton-fill">
                     <span className="planning__skeleton planning__skeleton--cell" />
@@ -105,9 +155,11 @@ function PlanTableSkeleton() {
 function ConceptLabels({
   slugs,
   labels,
+  onConceptOpen,
 }: {
   slugs: string[];
   labels: Map<string, string>;
+  onConceptOpen?: (slug: string) => void;
 }) {
   if (slugs.length === 0) {
     return <span className="planning__labels-empty">—</span>;
@@ -116,8 +168,14 @@ function ConceptLabels({
   return (
     <ul className="planning__labels">
       {slugs.map((slug) => (
-        <li className="planning__chip planning__chip--label" key={slug}>
-          {labels.get(slug) ?? slug}
+        <li key={slug}>
+          <button
+            type="button"
+            className="planning__chip planning__chip--label"
+            onClick={() => onConceptOpen?.(slug)}
+          >
+            {labels.get(slug) ?? slug}
+          </button>
         </li>
       ))}
     </ul>
@@ -143,6 +201,7 @@ export function App() {
   const [awaitingOwnRebuild, setAwaitingOwnRebuild] = useState(false);
   const [cloudSaveIndicatorAt, setCloudSaveIndicatorAt] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [calendarOpen, setCalendarOpen] = useState(() => isPlanningCalendarViewParam());
   const rebuildStatus = useAnalyticsRebuildStatus(PLANNING_REBUILD_STATUS_POLL);
   const requestRef = useRef(0);
   const rebuildStatusRef = useRef(rebuildStatus);
@@ -152,6 +211,12 @@ export function App() {
   const ownRebuildBaselineLastOkAtRef = useRef<string | null>(null);
   const sawOwnRebuildRunningRef = useRef(false);
   const pendingCloudSaveAtRef = useRef<string | null>(null);
+  const conceptPanelRef = useRef<HTMLElement>(null);
+  const conceptPanelControllerRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
+  const lastAppliedPlanningUrlKeyRef = useRef<string | null>(null);
+  const [planningUrlRevision, setPlanningUrlRevision] = useState(0);
+  const [openConceptSlug, setOpenConceptSlug] = useState<string | null>(null);
+  const [conceptPagesBySlug, setConceptPagesBySlug] = useState(() => new Map<string, ConceptPage>());
 
   const conceptLabels = useMemo(
     () => new Map(concepts.map((concept) => [concept.slug, concept.title])),
@@ -175,20 +240,110 @@ export function App() {
     () => (courseSlug ? cmsCoursePageHref(siteRoot, courseSlug) : null),
     [courseSlug, siteRoot],
   );
-  const networkCourseHref = useMemo(
-    () => (courseSlug ? networkCourseExpansionHref(siteRoot, courseSlug) : null),
-    [courseSlug, siteRoot],
-  );
+  const networkCourseHref = useMemo(() => {
+    if (!courseSlug) {
+      return null;
+    }
+    const normalizedDegree = degreeSlug.trim();
+    return networkCourseExpansionHref(
+      siteRoot,
+      courseSlug,
+      normalizedDegree || undefined,
+    );
+  }, [courseSlug, degreeSlug, siteRoot]);
   const roadmapCourseHref = useMemo(() => {
     if (!courseSlug) {
       return null;
     }
-    const degreeSlug = degreeSlugForCoursePage(pages, courseSlug);
-    if (!degreeSlug) {
-      return null;
+    const normalizedDegree = degreeSlug.trim();
+    return roadmapCourseSubgraphHref(
+      siteRoot,
+      normalizedDegree || undefined,
+      courseSlug,
+    );
+  }, [courseSlug, degreeSlug, siteRoot]);
+
+  useEffect(() => {
+    void loadConceptPagesBySlug()
+      .then(setConceptPagesBySlug)
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const handleConceptPanelUrlClose = useCallback(() => {
+    setOpenConceptSlug(null);
+    if (!readConceptParam()) {
+      return;
     }
-    return roadmapCourseSubgraphHref(siteRoot, degreeSlug, courseSlug);
-  }, [courseSlug, pages, siteRoot]);
+    writePlanningConceptParam(null, "push");
+    lastAppliedPlanningUrlKeyRef.current = planningUrlKey();
+  }, []);
+
+  useEffect(() => {
+    const conceptRoot = conceptPanelRef.current;
+    if (!conceptRoot) {
+      return;
+    }
+
+    const conceptPanel = mountConceptPanel(conceptRoot, undefined, {
+      handlers: { onClose: handleConceptPanelUrlClose },
+      showCitesEditLinks: isAdmin,
+    });
+    conceptPanelControllerRef.current = conceptPanel;
+
+    return () => {
+      conceptPanelControllerRef.current = null;
+    };
+  }, [handleConceptPanelUrlClose, isAdmin]);
+
+  const openConceptPanel = useCallback(
+    (slug: string) => {
+      const page = conceptPagesBySlug.get(slug);
+      if (!page) {
+        return;
+      }
+      setOpenConceptSlug(slug);
+      conceptPanelControllerRef.current?.open(page);
+      if (!courseSlug) {
+        return;
+      }
+      writePlanningUrlParams(courseSlug, degreeSlug, "push", "preserve", slug);
+      lastAppliedPlanningUrlKeyRef.current = planningUrlKey();
+    },
+    [conceptPagesBySlug, courseSlug, degreeSlug],
+  );
+
+  useEffect(() => {
+    if (!courseSlug || catalogLoading) {
+      return;
+    }
+
+    const urlCourse = readCourseParam();
+    if (urlCourse !== courseSlug) {
+      return;
+    }
+
+    const urlKey = planningUrlKey();
+    if (lastAppliedPlanningUrlKeyRef.current === urlKey) {
+      return;
+    }
+
+    const conceptSlug = readConceptParam();
+    if (conceptSlug) {
+      const page = conceptPagesBySlug.get(conceptSlug);
+      if (page) {
+        lastAppliedPlanningUrlKeyRef.current = urlKey;
+        setOpenConceptSlug(conceptSlug);
+        conceptPanelControllerRef.current?.open(page);
+      }
+      return;
+    }
+
+    lastAppliedPlanningUrlKeyRef.current = urlKey;
+    setOpenConceptSlug(null);
+    conceptPanelControllerRef.current?.close({ updateUrl: false });
+  }, [catalogLoading, conceptPagesBySlug, courseSlug, planningUrlRevision]);
 
   useEffect(() => {
     void loadPageSources()
@@ -252,21 +407,24 @@ export function App() {
       if (courseSlug) {
         setCourseSlug("");
       }
-      writePlanningUrlParams("", degreeSlug, "replace");
+      writePlanningUrlParams("", degreeSlug, "replace", "preserve", null);
       return;
     }
 
     if (!courseSlug || !selectableCourseSlugs.includes(courseSlug)) {
       const nextCourse = selectableCourseSlugs[0]!;
       setCourseSlug(nextCourse);
-      writePlanningUrlParams(nextCourse, degreeSlug, "replace");
+      writePlanningUrlParams(nextCourse, degreeSlug, "replace", "preserve", null);
     }
   }, [catalogLoading, courseSlug, degreeSlug, selectableCourseSlugs]);
 
   useEffect(() => {
     const onPopState = (): void => {
+      lastAppliedPlanningUrlKeyRef.current = null;
       setDegreeSlug(readDegreeParam() ?? "");
       setCourseSlug(readCourseParam() ?? "");
+      setCalendarOpen(isPlanningCalendarViewParam());
+      setPlanningUrlRevision((revision) => revision + 1);
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
@@ -432,7 +590,7 @@ export function App() {
       courseSlug && nextSlugs.includes(courseSlug) ? courseSlug : (nextSlugs[0] ?? "");
     setDegreeSlug(nextDegree);
     setCourseSlug(nextCourse);
-    writePlanningUrlParams(nextCourse, nextDegree, "push");
+    writePlanningUrlParams(nextCourse, nextDegree, "push", "preserve", null);
   }
 
   function selectCourse(nextSlug: string): void {
@@ -440,7 +598,18 @@ export function App() {
       return;
     }
     setCourseSlug(nextSlug);
-    writePlanningUrlParams(nextSlug, degreeSlug, "push");
+    writePlanningUrlParams(nextSlug, degreeSlug, "push", "preserve", null);
+  }
+
+  function toggleCalendarView(): void {
+    const nextOpen = !calendarOpen;
+    setCalendarOpen(nextOpen);
+    writePlanningUrlParams(
+      courseSlug,
+      degreeSlug,
+      "push",
+      nextOpen ? PLANNING_CALENDAR_VIEW : null,
+    );
   }
 
   function discardPlanChanges(): void {
@@ -623,11 +792,6 @@ export function App() {
                   navId="roadmap"
                   href={roadmapCourseHref}
                   disabled={catalogLoading || !courseSlug || !roadmapCourseHref}
-                  title={
-                    !catalogLoading && courseSlug && !roadmapCourseHref
-                      ? "Asigná esta materia a un año en la grilla de la carrera para abrir el mapa"
-                      : undefined
-                  }
                 >
                   Roadmap
                 </WorkspaceNavLink>
@@ -676,6 +840,19 @@ export function App() {
               />
             )}
           </div>
+          <div className="planning__course-actions">
+            <button
+              type="button"
+              className={`pps-form-control planning__calendar-toggle${
+                calendarOpen ? " planning__calendar-toggle--active" : ""
+              }`}
+              disabled={catalogLoading || !courseSlug || contentLoading}
+              aria-pressed={calendarOpen}
+              onClick={toggleCalendarView}
+            >
+              {calendarOpen ? "Ver programa" : "Ver Calendario"}
+            </button>
+          </div>
         </div>
 
         <div className="planning__body">
@@ -688,8 +865,16 @@ export function App() {
               <span className="u-visually-hidden" role="status">
                 Cargando el programa…
               </span>
-              <PlanTableSkeleton />
+              {calendarOpen ? <PlanCalendarSkeleton /> : <PlanTableSkeleton />}
             </>
+          ) : courseSlug && calendarOpen ? (
+            <div className="planning__calendar-wrap">
+              <PlanningCalendar
+                plan={plan}
+                labels={conceptLabels}
+                onConceptOpen={openConceptPanel}
+              />
+            </div>
           ) : courseSlug ? (
             <div className="planning__table-wrap">
               <table className="planning__table">
@@ -702,7 +887,7 @@ export function App() {
                       <th className="planning__week-col" scope="row">
                         {index + 1}
                       </th>
-                      {(["topic", "prerequisite", "optional"] as const).map((column) => (
+                      {PLANNING_TABLE_COLUMNS.map((column) => (
                         <td
                           className={
                             isAdmin
@@ -719,6 +904,7 @@ export function App() {
                               labels={conceptLabels}
                               linkedSlugs={linkedConceptSlugs}
                               disabled={disabled}
+                              onConceptOpen={openConceptPanel}
                               warningTitles={
                                 column === "topic"
                                   ? week.topic
@@ -729,7 +915,11 @@ export function App() {
                               onChange={(values) => updateWeek(index, column, values)}
                             />
                           ) : (
-                            <ConceptLabels slugs={week[column]} labels={conceptLabels} />
+                            <ConceptLabels
+                              slugs={week[column]}
+                              labels={conceptLabels}
+                              onConceptOpen={openConceptPanel}
+                            />
                           )}
                         </td>
                       ))}
@@ -741,6 +931,39 @@ export function App() {
           ) : null}
         </div>
       </div>
+
+      <aside
+        ref={conceptPanelRef}
+        id="planning-concept-panel"
+        className="graph__concept-panel"
+        aria-hidden="true"
+      >
+        <div className="graph__concept-backdrop" />
+        <div
+          className="graph__concept-sheet"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="graph-concept-panel-title"
+        >
+          <header className="graph__concept-header">
+            <div className="graph__concept-header-lead">
+              <h2 id="graph-concept-panel-title" className="graph__concept-title" />
+              {isAdmin && openConceptSlug ? (
+                <WorkspaceNavLink
+                  navId="cms"
+                  href={cmsCoursePageHref(siteRoot, openConceptSlug)}
+                >
+                  Editar
+                </WorkspaceNavLink>
+              ) : null}
+            </div>
+            <button type="button" className="graph__concept-close" aria-label="Cerrar">
+              ×
+            </button>
+          </header>
+          <div id="graph-concept-panel-notes" className="graph__concept-body" />
+        </div>
+      </aside>
     </div>
   );
 }

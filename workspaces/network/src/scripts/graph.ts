@@ -22,7 +22,6 @@ import { appendWorkspaceNavLink } from "@pps/shell/workspace-nav-link-dom";
 import {
   cmsCoursePageHref,
   planningCoursePageHref,
-  planningDegreePageHref,
   roadmapCourseSubgraphHref,
   roadmapDegreeOverviewHref,
 } from "@pps/shell/workspace-links";
@@ -152,42 +151,6 @@ function isStructuralHierarchyEdge(edge: cytoscape.EdgeSingular): boolean {
     (sourceKind === "degree" && (targetKind === "year" || targetKind === "course")) ||
     (sourceKind === "year" && targetKind === "course")
   );
-}
-
-function findDegreeSlugForCourseNode(
-  cy: cytoscape.Core,
-  courseNode: cytoscape.NodeSingular,
-): string | undefined {
-  const queue = [courseNode.id()];
-  const seen = new Set<string>(queue);
-
-  while (queue.length > 0) {
-    const nodeId = queue.shift()!;
-    const node = cy.getElementById(nodeId);
-    if (node.empty() || !node.isNode()) {
-      continue;
-    }
-
-    if (String(node.data("kind")) === "degree") {
-      return nodeSlug(node);
-    }
-
-    node.incomers("edge").forEach((edge) => {
-      if (!isStructuralHierarchyEdge(edge)) {
-        return;
-      }
-
-      const sourceId = edge.source().id();
-      if (seen.has(sourceId)) {
-        return;
-      }
-
-      seen.add(sourceId);
-      queue.push(sourceId);
-    });
-  }
-
-  return undefined;
 }
 
 function findNodeBySlug(cy: cytoscape.Core, slug: string): cytoscape.NodeSingular | undefined {
@@ -360,8 +323,9 @@ function restorePositions(cy: cytoscape.Core, positions: Map<string, cytoscape.P
 function expansionSessionKey(
   expansionNodeIds: string[],
   courseLinkMode: CourseLinkMode,
+  conceptsHidden: boolean,
 ): string {
-  return `${courseLinkMode}::${[...expansionNodeIds].sort(compareNodes).join("|")}`;
+  return `${courseLinkMode}::${conceptsHidden ? "hideConcepts" : "showConcepts"}::${[...expansionNodeIds].sort(compareNodes).join("|")}`;
 }
 
 function persistCurrentPositions(cy: cytoscape.Core, viewState: GraphViewState): void {
@@ -369,7 +333,11 @@ function persistCurrentPositions(cy: cytoscape.Core, viewState: GraphViewState):
 
   if (viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0) {
     viewState.focusLayoutCache.set(
-      expansionSessionKey(viewState.expansionNodeIds, viewState.courseLinkMode),
+      expansionSessionKey(
+        viewState.expansionNodeIds,
+        viewState.courseLinkMode,
+        viewState.conceptsHidden,
+      ),
       positions,
     );
   }
@@ -495,17 +463,17 @@ function shouldHideConceptNodes(
   );
 }
 
-function shouldHideYearNodes(
-  viewState: GraphViewState,
-  focusVisibleNodeIds: Set<string> | null,
-): boolean {
-  if (viewState.degreeScopeSlug.trim()) {
-    return !focusVisibleNodeIds;
-  }
+function hasActiveExpansions(viewState: GraphViewState): boolean {
+  return Boolean(viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0);
+}
 
-  return (
-    !focusVisibleNodeIds && !viewState.kindFilters.year && !viewState.kindFilters.degree
-  );
+/** Hide degree/year when viewing all carreras, or a scoped carrera with no expansion (año = course color). */
+function shouldHideHierarchyNodes(viewState: GraphViewState): boolean {
+  const scopedDegree = viewState.degreeScopeSlug.trim();
+  if (!scopedDegree) {
+    return true;
+  }
+  return !hasActiveExpansions(viewState);
 }
 
 function matchingNodes(
@@ -609,7 +577,10 @@ function computeGlobalVisibleNodeIds(
         scopedDegree,
         degreeContext.pages,
         degreeContext.conceptsByCourseSlug,
-        { includeConcepts: !viewState.conceptsHidden },
+        {
+          includeConcepts: !viewState.conceptsHidden,
+          includeHierarchy: hasActiveExpansions(viewState),
+        },
       ),
     );
   }
@@ -659,7 +630,7 @@ function applyElementVisibility(
       visible = false;
     }
 
-    if (shouldHideYearNodes(viewState, focusVisibleNodeIds) && isHierarchyNode(node)) {
+    if (shouldHideHierarchyNodes(viewState) && isHierarchyNode(node)) {
       visible = false;
     }
 
@@ -841,6 +812,12 @@ function appendAdminEditarLink(
   });
 }
 
+const COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE =
+  "Disponible cuando la expansión es una materia del plan";
+
+const COURSE_WORKSPACE_LINKS_IDLE_TITLE =
+  "Disponible al expandir un solo nodo en el grafo";
+
 function renderCourseWorkspaceLinks(
   linksRoot: HTMLElement,
   courseSlug: string,
@@ -864,11 +841,8 @@ function renderCourseWorkspaceLinks(
   appendWorkspaceNavLink(linksRoot, {
     navId: "roadmap",
     label: "Roadmap",
-    href: degreeSlug ? roadmapCourseSubgraphHref(siteRoot, degreeSlug, courseSlug) : undefined,
-    disabled: !degreeSlug,
-    title: degreeSlug
-      ? "Abrir esta materia en el mapa de Roadmap"
-      : "Asigná esta materia a un año en la grilla de la carrera para abrir el mapa",
+    href: roadmapCourseSubgraphHref(siteRoot, degreeSlug, courseSlug),
+    title: "Abrir esta materia en el mapa de Roadmap",
   });
 }
 
@@ -936,8 +910,8 @@ function renderDegreeWorkspaceLinks(
   appendWorkspaceNavLink(linksRoot, {
     navId: "planning",
     label: "Programa",
-    href: planningDegreePageHref(siteRoot, degreeSlug),
-    title: "Abrir el programador semanal con esta carrera preseleccionada",
+    disabled: true,
+    title: COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE,
   });
 
   appendWorkspaceNavLink(linksRoot, {
@@ -974,12 +948,6 @@ function renderDisabledCourseWorkspaceLinks(
     title: disabledTitle,
   });
 }
-
-const COURSE_WORKSPACE_LINKS_COURSE_ONLY_TITLE =
-  "Disponible cuando la expansión es una materia del plan";
-
-const COURSE_WORKSPACE_LINKS_IDLE_TITLE =
-  "Disponible al expandir un solo nodo en el grafo";
 
 /** Disabled Programa/Roadmap until the graph confirms a single-node expansion. */
 export function seedCourseWorkspaceLinksFromUrl(linksRoot: HTMLElement | null): void {
@@ -1018,8 +986,7 @@ function renderWorkspaceLinksForSingleNode(
 
   if (kind === "course") {
     const scopedDegree = viewState.degreeScopeSlug.trim();
-    const degreeSlug =
-      scopedDegree || findDegreeSlugForCourseNode(cy, node) || undefined;
+    const degreeSlug = scopedDegree || undefined;
     renderCourseWorkspaceLinks(linksRoot, slug, degreeSlug, isAdmin);
     return true;
   }
@@ -1381,9 +1348,7 @@ function mountDegreeScopeDropdown(
     onChange: (value) => {
       viewState.degreeScopeSlug = value;
       ui.syncView(true, "push");
-      if (!isExpansionActive(viewState)) {
-        refreshGraphLayout(cy, viewState, ui.degreeContext);
-      }
+      refreshGraphLayout(cy, viewState, ui.degreeContext);
     },
   });
 }
@@ -1412,12 +1377,23 @@ function setConceptsHidden(
   ui: GraphUi,
   hidden: boolean,
 ): void {
+  if (isExpansionActive(viewState)) {
+    persistCurrentPositions(cy, viewState);
+  }
+
   viewState.conceptsHidden = hidden;
   ui.syncView(false, "push");
 
-  if (!isExpansionActive(viewState)) {
-    refreshGraphLayout(cy, viewState, ui.degreeContext);
+  if (isExpansionActive(viewState)) {
+    applyFocusView(cy, viewState, ui, {
+      randomize: true,
+      forceRelayout: true,
+      historyMode: "push",
+    });
+    return;
   }
+
+  refreshGraphLayout(cy, viewState, ui.degreeContext);
 }
 
 function syncToggleConceptsButton(button: HTMLButtonElement, hidden: boolean): void {
@@ -1526,7 +1502,7 @@ function updateSearchResultsUI(
   const query = searchInput.value;
   const matches = matchingNodes(cy, query, {
     excludeConcepts: shouldHideConceptNodes(viewState, null),
-    excludeYears: shouldHideYearNodes(viewState, null),
+    excludeYears: shouldHideHierarchyNodes(viewState),
   });
   resultsRoot.replaceChildren();
 
@@ -1741,7 +1717,11 @@ function refreshGraphLayout(
   const inFocus = Boolean(viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0);
   if (inFocus && viewState.expansionNodeIds) {
     viewState.focusLayoutCache.delete(
-      expansionSessionKey(viewState.expansionNodeIds, viewState.courseLinkMode),
+      expansionSessionKey(
+        viewState.expansionNodeIds,
+        viewState.courseLinkMode,
+        viewState.conceptsHidden,
+      ),
     );
   }
 
@@ -1816,7 +1796,11 @@ function applyFocusView(
     viewState.courseLinkMode,
   );
   const focusEles = visibleLayoutSubgraph(cy, viewState, ui.degreeContext, visibleNodeIds);
-  const sessionKey = expansionSessionKey(expansionNodeIds, viewState.courseLinkMode);
+  const sessionKey = expansionSessionKey(
+    expansionNodeIds,
+    viewState.courseLinkMode,
+    viewState.conceptsHidden,
+  );
 
   cy.elements().removeClass("focused");
 
@@ -2332,7 +2316,11 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
 
     if (viewState.expansionNodeIds && viewState.expansionNodeIds.length > 0) {
       viewState.focusLayoutCache.set(
-        expansionSessionKey(viewState.expansionNodeIds, viewState.courseLinkMode),
+        expansionSessionKey(
+          viewState.expansionNodeIds,
+          viewState.courseLinkMode,
+          viewState.conceptsHidden,
+        ),
         snapshotPositions(cy),
       );
     } else {

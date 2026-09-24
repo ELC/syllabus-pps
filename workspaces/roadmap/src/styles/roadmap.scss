@@ -59,6 +59,7 @@
     grid-template-columns: auto minmax(0, 1fr);
     align-items: end;
     gap: 0.75rem 1.5rem;
+    overflow: visible;
 
     @media (max-width: 900px) {
       grid-template-columns: 1fr;
@@ -110,10 +111,14 @@
     flex-direction: column;
     gap: 0.25rem;
     min-width: 0;
+    overflow: visible;
+    padding-inline: 1px;
+    margin-inline: -1px;
   }
 
   &__course-field {
     min-width: 0;
+    overflow: visible;
   }
 
   &__degree-label {
@@ -128,6 +133,7 @@
   &__toolbar-dropdown {
     width: 100%;
     min-width: 0;
+    overflow: visible;
 
     .pps-meta-dropdown__trigger {
       padding: 0.55rem 2rem 0.55rem 0.75rem;
@@ -507,46 +513,14 @@
     gap: 0.2rem;
     padding: 0.45rem 0.75rem;
     border-radius: 0.7rem;
-    border: 2px solid var(--austral-graph-course-base, #d97706);
-    background: rgba(217, 119, 6, 0.08);
+    border: 2px solid var(--roadmap-course-border, var(--austral-graph-course-base, #d97706));
+    background: var(--roadmap-course-bg, rgba(217, 119, 6, 0.08));
     box-shadow: 0 8px 20px rgba(30, 41, 59, 0.08);
     overflow: hidden;
     cursor: pointer;
 
-    &--spine {
-      border-color: var(--austral-graph-course-base, #d97706);
-      background: rgba(217, 119, 6, 0.16);
-    }
-
     &--tne {
-      border-color: var(--austral-graph-tne-base, #7b4fb3);
-      background: color-mix(in srgb, var(--austral-graph-tne-base, #7b4fb3) 10%, white);
-
-      &.roadmap__course--spine {
-        border-color: var(--austral-graph-tne-base, #7b4fb3);
-        background: color-mix(in srgb, var(--austral-graph-tne-base, #7b4fb3) 18%, white);
-      }
-
-      &.roadmap__course--in-progress {
-        background: color-mix(in srgb, var(--austral-graph-tne-base, #7b4fb3) 10%, white);
-
-        .roadmap__course-progress {
-          background: color-mix(in srgb, var(--austral-graph-tne-base, #7b4fb3) 10%, white);
-        }
-
-        .roadmap__course-progress-fill {
-          background: color-mix(in srgb, var(--austral-graph-tne-base, #7b4fb3) 28%, white);
-        }
-      }
-
-      &.roadmap__course--done {
-        border-color: var(--austral-graph-tne-base, #7b4fb3);
-        background: color-mix(
-          in srgb,
-          var(--austral-graph-tne-base, #7b4fb3) 42%,
-          var(--austral-graph-concept-base)
-        );
-      }
+      border-style: dashed;
     }
 
     &--done {
@@ -560,7 +534,7 @@
     }
 
     &--in-progress {
-      background: rgba(217, 119, 6, 0.08);
+      background: var(--roadmap-course-progress-bg, rgba(217, 119, 6, 0.08));
     }
 
     &--dense-label {
@@ -574,13 +548,13 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    background: rgba(217, 119, 6, 0.08);
+    background: var(--roadmap-course-progress-bg, rgba(217, 119, 6, 0.08));
   }
 
   &__course-progress-fill {
     display: block;
     height: 100%;
-    background: rgba(217, 119, 6, 0.24);
+    background: var(--roadmap-course-progress-fill, rgba(217, 119, 6, 0.24));
     transition: width 0.2s ease;
   }
 
@@ -882,6 +856,10 @@
     &--course-dag .react-flow__edge-path {
       stroke-width: 1.75;
       stroke-opacity: 0.62;
+    }
+
+    &--tne .react-flow__edge-path {
+      stroke-dasharray: 6 4;
     }
 
     &--branch .react-flow__edge-path {

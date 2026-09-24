@@ -1,7 +1,5 @@
 /** Mirror of @pps/shell/styles/_tokens.scss for Cytoscape runtime. */
 
-import { isTrayectoNoEstructurado } from "@pps/core";
-
 export const AUSTRAL = {
   azulPrimario: "#2E3092",
   azulHover: "#2429AA",
@@ -67,6 +65,45 @@ const GRAPH_KIND_BASES = [
   { kind: "concept", label: "Concepto", base: "#009E73" },
 ] as const;
 
+/** Distinct course border hues by año index within a degree (Okabe–Ito–aligned; matches Network). */
+const YEAR_COURSE_BORDER_COLORS = [
+  "#D97706",
+  "#2E3092",
+  "#9D4470",
+  "#56B4E9",
+  "#0072B2",
+  "#CC79A7",
+  "#009E73",
+  "#F0E442",
+] as const;
+
+export function borderColorForYearIndex(yearIndex: number): string {
+  const index = Math.max(1, yearIndex) - 1;
+  return (
+    YEAR_COURSE_BORDER_COLORS[index % YEAR_COURSE_BORDER_COLORS.length] ??
+    kindStyleForKind("course").border
+  );
+}
+
+export function courseYearPresentation(
+  yearIndex: number,
+  options: { spine?: boolean } = {},
+): {
+  borderColor: string;
+  backgroundColor: string;
+  progressBackgroundColor: string;
+  progressFillColor: string;
+} {
+  const borderColor = borderColorForYearIndex(yearIndex);
+  const spine = options.spine ?? false;
+  return {
+    borderColor,
+    backgroundColor: tint(borderColor, spine ? 0.16 : 0.08),
+    progressBackgroundColor: tint(borderColor, 0.08),
+    progressFillColor: tint(borderColor, 0.24),
+  };
+}
+
 export const AUSTRAL_GRAPH_NODE_KINDS = GRAPH_KIND_BASES.map(({ kind, label, base }) => ({
   kind,
   label,
@@ -104,16 +141,13 @@ export function kindStyleForKind(kind: string): {
   };
 }
 
-export function courseNodeStyle(trayecto?: string): {
+/** Default materia styling when año index is unknown (TNE uses year hue + dashed border in Network/Roadmap). */
+export function courseNodeStyle(_trayecto?: string): {
   base: string;
   fill: string;
   swatchFill: string;
   border: string;
 } {
-  if (isTrayectoNoEstructurado(trayecto)) {
-    return AUSTRAL_GRAPH_TNE;
-  }
-
   return kindStyleForKind("course");
 }
 

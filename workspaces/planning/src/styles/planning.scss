@@ -1,3 +1,4 @@
+@use "../../../shell/src/styles/concept-panel";
 @use "../../../shell/src/styles/meta-dropdown";
 
 @mixin planning-scrollbars {
@@ -187,6 +188,7 @@
     gap: 0.75rem 1rem;
     margin-top: 1.5rem;
     flex-shrink: 0;
+    overflow: visible;
   }
 
   &__course-field {
@@ -226,6 +228,81 @@
       padding: 0.55rem 2rem 0.55rem 0.65rem;
       background-color: var(--dash-surface);
     }
+  }
+
+  &__course-actions {
+    margin-left: auto;
+    flex: 0 0 auto;
+    overflow: visible;
+    padding-inline: 1px;
+  }
+
+  &__calendar-toggle {
+    display: inline-flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-height: 2.4375rem;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--dash-border);
+    border-radius: 0.65rem;
+    font: 600 0.8125rem var(--font-heading);
+    line-height: 1.25;
+    color: var(--dash-text);
+    background: var(--dash-surface);
+    cursor: pointer;
+    white-space: nowrap;
+    appearance: none;
+
+    &.pps-form-control {
+      border: 1px solid var(--dash-border);
+      border-radius: 0.65rem;
+      font: 600 0.8125rem var(--font-heading);
+      line-height: 1.25;
+      color: var(--dash-text);
+      background: var(--dash-surface);
+      cursor: pointer;
+    }
+
+    &:not(:disabled) {
+      opacity: 1;
+    }
+
+    &:hover:not(:disabled):not(&--active) {
+      border-color: var(--austral-ing-secondary);
+      background: var(--austral-celeste-suave);
+      color: var(--dash-text);
+    }
+
+    &--active:not(:disabled) {
+      border-color: var(--austral-ing-secondary);
+      background: var(--dash-surface);
+      color: var(--dash-text);
+      cursor: pointer;
+    }
+
+    &:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--dash-accent) 35%, transparent);
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      color: var(--dash-muted);
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+
+  &__calendar-wrap {
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+    margin-top: 1.25rem;
+    overflow: hidden;
+    border: 1px solid var(--dash-border);
+    border-radius: 0.75rem;
+    background: var(--dash-surface);
   }
 
   &__message {
@@ -521,6 +598,23 @@
       min-height: 0;
       border-radius: 0.35rem;
     }
+
+    &--calendar-title {
+      width: min(100%, 14rem);
+      height: 1.25rem;
+    }
+
+    &--calendar-subtitle {
+      width: min(100%, 22rem);
+      height: 0.85rem;
+      margin-top: 0.35rem;
+    }
+
+    &--calendar-ribbon {
+      height: var(--planning-calendar-ribbon-height, 1.45rem);
+      margin-top: 0.35rem;
+      border-radius: 0.35rem;
+    }
   }
 
   &__labels {
@@ -542,30 +636,74 @@
 
   &__chip {
     display: inline-flex;
-    max-width: 100%;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.15rem;
+    max-width: 100%;
+    border: 1px solid var(--dash-border);
     border-radius: 999px;
-    padding: 0.18rem 0.28rem 0.18rem 0.5rem;
-    background: color-mix(in srgb, var(--dash-accent) 12%, var(--dash-surface));
-    font-size: var(--planning-chip-font-size);
-    line-height: 1.25;
+    background: var(--dash-surface);
+    padding: 0.12rem 0.15rem 0.12rem 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.2;
 
-    &--label {
-      padding-right: 0.55rem;
+    &--openable {
+      cursor: pointer;
+
+      .planning__chip-label {
+        cursor: inherit;
+      }
     }
 
-    span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    button {
+    &-label {
+      appearance: none;
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+      padding: 0;
       border: 0;
       background: transparent;
+      font: inherit;
       color: inherit;
-      cursor: pointer;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 14rem;
+    }
+
+    &-remove {
+      appearance: none;
+      display: inline-flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      padding: 0;
+      font-size: 1rem;
       line-height: 1;
+      color: var(--dash-muted);
+      cursor: pointer;
+
+      &:hover:not(:disabled) {
+        background: color-mix(in srgb, var(--dash-accent) 12%, transparent);
+        color: var(--dash-text);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+      }
+    }
+
+    &--label {
+      padding: 0.12rem 0.55rem;
+      cursor: pointer;
+      font: inherit;
     }
   }
 
@@ -626,6 +764,188 @@
       margin-top: 0.2rem;
       padding-top: 0.45rem;
       border-top: 1px solid var(--dash-border);
+    }
+  }
+
+  .planning-calendar {
+    --planning-calendar-cols: 4;
+    --planning-calendar-ribbon-height: 1.45rem;
+
+    &--skeleton {
+      pointer-events: none;
+
+      .planning-calendar__cell--skeleton {
+        justify-content: flex-start;
+      }
+    }
+    --planning-calendar-ribbon-gap: 0.28rem;
+    --planning-calendar-label-block: 1.35rem;
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.25rem 1.35rem 1.35rem;
+
+    &__header {
+      flex-shrink: 0;
+    }
+
+    &__title {
+      margin: 0;
+      font: 700 1.15rem var(--font-heading);
+      letter-spacing: -0.02em;
+    }
+
+    &__subtitle {
+      margin: 0.35rem 0 0;
+      color: var(--dash-muted);
+      font-size: 0.8125rem;
+      line-height: 1.45;
+
+      strong {
+        color: var(--dash-text);
+        font-weight: 600;
+      }
+    }
+
+    &__grid {
+      display: flex;
+      flex: 1 1 auto;
+      min-height: 0;
+      flex-direction: column;
+      border: 1px solid var(--dash-border);
+      border-radius: 0.65rem;
+      overflow: hidden;
+    }
+
+    &__block {
+      position: relative;
+      display: grid;
+      flex: 1 1 0;
+      min-height: 0;
+      grid-template-columns: repeat(var(--planning-calendar-cols), minmax(0, 1fr));
+      border-top: 1px solid var(--dash-border);
+
+      &:first-of-type {
+        border-top: 0;
+      }
+    }
+
+    &__cells {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: subgrid;
+      height: 100%;
+      min-height: 0;
+    }
+
+    &__cell {
+      display: flex;
+      height: 100%;
+      min-height: 0;
+      min-width: 0;
+      flex-direction: column;
+      padding: 0.65rem 0.55rem 0.65rem;
+      border-top: 1px solid var(--dash-border);
+      background: color-mix(in srgb, var(--dash-surface) 92%, var(--dash-border));
+
+      &:not(:last-child) {
+        border-right: 1px solid var(--dash-border);
+      }
+
+      &--empty {
+        background: color-mix(in srgb, var(--dash-surface) 96%, var(--dash-bg, #000));
+      }
+    }
+
+    &__week-label {
+      flex-shrink: 0;
+      color: var(--dash-muted);
+      font: 700 0.6875rem var(--font-heading);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    &__ribbon-layer {
+      position: absolute;
+      top: calc(0.65rem + var(--planning-calendar-label-block));
+      left: 0;
+      right: 0;
+      bottom: 0.65rem;
+      display: grid;
+      grid-template-columns: repeat(var(--planning-calendar-cols), minmax(0, 1fr));
+      grid-template-rows: repeat(var(--planning-calendar-lanes, 1), var(--planning-calendar-ribbon-height));
+      gap: var(--planning-calendar-ribbon-gap) 0;
+      align-content: start;
+      padding-inline: 0.2rem;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    &__ribbon {
+      appearance: none;
+      display: flex;
+      box-sizing: border-box;
+      height: var(--planning-calendar-ribbon-height);
+      max-height: var(--planning-calendar-ribbon-height);
+      min-width: 0;
+      margin-left: 0.45rem;
+      margin-right: 0.45rem;
+      align-items: center;
+      padding: 0 0.55rem;
+      border: 0;
+      border-radius: 0.4rem;
+      font: 600 0.75rem var(--font-heading);
+      line-height: 1.2;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      pointer-events: auto;
+      cursor: pointer;
+      text-align: left;
+
+      &:focus-visible {
+        outline: 2px solid color-mix(in srgb, var(--dash-accent) 55%, transparent);
+        outline-offset: 1px;
+      }
+
+      &--continues-before {
+        margin-left: 0;
+        border-top-left-radius: 0.14rem;
+        border-bottom-left-radius: 0.14rem;
+      }
+
+      &--continues-after {
+        margin-right: 0;
+        border-top-right-radius: 0.14rem;
+        border-bottom-right-radius: 0.14rem;
+      }
+
+      &--prerequisite {
+        color: var(--dash-text);
+        font-weight: 700;
+        border: 1px solid color-mix(in srgb, var(--planning-calendar-stripe-color) 72%, var(--dash-border));
+        background-color: color-mix(in srgb, var(--planning-calendar-stripe-color) 24%, var(--dash-surface));
+        background-image: repeating-linear-gradient(
+          -45deg,
+          color-mix(in srgb, var(--planning-calendar-stripe-color) 12%, var(--dash-surface)) 0 7px,
+          color-mix(in srgb, var(--planning-calendar-stripe-color) 58%, transparent) 7px 8px
+        );
+      }
+    }
+
+    &__ribbon-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__ribbon--prerequisite &__ribbon-label {
+      padding: 0 0.2rem;
+      border-radius: 0.15rem;
+      color: var(--dash-text);
+      background: color-mix(in srgb, var(--dash-surface) 92%, var(--austral-blanco));
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--dash-border) 70%, transparent);
     }
   }
 

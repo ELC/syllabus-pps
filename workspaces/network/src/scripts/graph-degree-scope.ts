@@ -7,7 +7,7 @@ import {
   yearPagesForDegree,
   type ZettelPage,
 } from "@pps/core";
-import { kindStyleForKind } from "@pps/shell/austral-tokens";
+import { borderColorForYearIndex } from "@pps/shell/austral-tokens";
 import type cytoscape from "cytoscape";
 
 export interface DegreeDropdownOption {
@@ -19,7 +19,7 @@ export function buildDegreeDropdownOptionsFromEntries(
   degrees: readonly { slug: string; title: string }[],
 ): DegreeDropdownOption[] {
   return [
-    { value: "", label: "Todas las carreras" },
+    { value: "", label: "Todas" },
     ...[...degrees]
       .sort((left, right) => left.title.localeCompare(right.title, "es-AR"))
       .map((degree) => ({ value: degree.slug, label: degree.title })),
@@ -33,27 +33,12 @@ export function buildDegreeDropdownOptions(pages: readonly ZettelPage[]): Degree
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
 
   return [
-    { value: "", label: "Todas las carreras" },
+    { value: "", label: "Todas" },
     ...degrees.map((degree) => ({ value: degree.slug, label: degree.title })),
   ];
 }
 
-/** Distinct course border hues by año index within a degree (Okabe–Ito–aligned). */
-const YEAR_COURSE_BASES = [
-  "#D97706", // año 1 — amber (default materia)
-  "#2E3092", // año 2 — navy
-  "#9D4470", // año 3 — magenta
-  "#56B4E9", // año 4 — sky blue (avoid warm tan too close to año 1)
-  "#0072B2", // año 5 — blue
-  "#CC79A7", // año 6 — pink
-  "#009E73", // año 7 — green
-  "#F0E442", // año 8 — yellow
-] as const;
-
-export function borderColorForYearIndex(yearIndex: number): string {
-  const index = Math.max(1, yearIndex) - 1;
-  return YEAR_COURSE_BASES[index % YEAR_COURSE_BASES.length] ?? kindStyleForKind("course").border;
-}
+export { borderColorForYearIndex } from "@pps/shell/austral-tokens";
 
 export interface CourseDegreeScopeMeta {
   yearIndex: number;
@@ -168,16 +153,66 @@ function addConceptNeighborsForCourse(
   });
 }
 
+function addScopedHierarchyNodeIds(
+  cy: cytoscape.Core,
+  pages: readonly ZettelPage[],
+  degreeSlug: string,
+  visible: Set<string>,
+): void {
+  const normalizedDegree = degreeSlug.trim();
+  const degreePage = pages.find(
+    (page) => page.kind === PageKind.Degree && page.slug === normalizedDegree,
+  );
+  const degreeTitle = degreePage?.title.trim();
+  if (!degreeTitle) {
+    return;
+  }
+
+  cy.nodes().forEach((node) => {
+    if (!node.isNode()) {
+      return;
+    }
+    const kind = String(node.data("kind"));
+    const slug = node.data("slug");
+    if (typeof slug !== "string" || !slug) {
+      return;
+    }
+    if (kind === "degree" && slug === normalizedDegree) {
+      visible.add(node.id());
+    }
+  });
+
+  for (const yearPage of yearPagesForDegree(pages, degreeTitle, { degreeSlug: normalizedDegree })) {
+    const yearSlug = yearPage.slug.trim();
+    if (!yearSlug) {
+      continue;
+    }
+    cy.nodes().forEach((node) => {
+      if (!node.isNode()) {
+        return;
+      }
+      if (String(node.data("kind")) === "year" && node.data("slug") === yearSlug) {
+        visible.add(node.id());
+      }
+    });
+  }
+}
+
 export function nodeIdsInDegreeScope(
   cy: cytoscape.Core,
   degreeSlug: string,
   pages: readonly ZettelPage[],
   conceptsByCourseSlug: Map<string, Set<string>>,
-  options: { includeConcepts?: boolean } = {},
+  options: { includeConcepts?: boolean; includeHierarchy?: boolean } = {},
 ): Set<string> {
   const includeConcepts = options.includeConcepts ?? false;
+  const includeHierarchy = options.includeHierarchy ?? true;
   const courseMeta = courseMetaForDegree(pages, degreeSlug);
   const visible = new Set<string>();
+
+  if (includeHierarchy) {
+    addScopedHierarchyNodeIds(cy, pages, degreeSlug, visible);
+  }
 
   for (const courseSlug of courseMeta.keys()) {
     const courseNode = cy.nodes().filter((node) => {

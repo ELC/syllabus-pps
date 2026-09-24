@@ -854,11 +854,6 @@
     color: inherit;
     cursor: pointer;
     text-align: left;
-
-    &:hover {
-      color: var(--dash-accent);
-      text-decoration: underline;
-    }
   }
 
   &__depends-on-chip-remove {

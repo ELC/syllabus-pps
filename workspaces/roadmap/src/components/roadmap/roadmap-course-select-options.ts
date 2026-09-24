@@ -3,43 +3,25 @@ import {
   PageKind,
   parseYearSlug,
   yearDisplayLabel,
+  type CourseRoadmap,
+  type CurriculumGraph,
   type ZettelPage,
 } from "@pps/core";
-
 import type { MetaDropdownOption } from "@pps/shell/MetaDropdown";
 
-export interface PlanningCatalogItem {
-  slug: string;
-  title: string;
-}
+const GROUP_PREFIX = "__roadmap-group:";
 
-const GROUP_PREFIX = "__planning-group:";
-
-export function planningGroupOptionValue(key: string): string {
-  return `${GROUP_PREFIX}${key}`;
-}
-
-export function isPlanningGroupOptionValue(value: string): boolean {
+export function isRoadmapCourseGroupOptionValue(value: string): boolean {
   return value.startsWith(GROUP_PREFIX);
 }
 
-export function buildDegreeDropdownOptions(
-  pages: readonly ZettelPage[],
-): MetaDropdownOption<string>[] {
-  const degrees = pages
-    .filter((page) => page.kind === PageKind.Degree)
-    .map((page) => ({ slug: page.slug, title: page.title.trim() || page.slug }))
-    .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));
-
-  return [
-    { value: "", label: "Todas" },
-    ...degrees.map((degree) => ({ value: degree.slug, label: degree.title })),
-  ];
+function roadmapCourseGroupOptionValue(key: string): string {
+  return `${GROUP_PREFIX}${key}`;
 }
 
 function resolveCourseSlugFromRef(
   ref: string,
-  courses: readonly PlanningCatalogItem[],
+  courses: readonly { slug: string; title: string }[],
 ): string | undefined {
   const trimmed = ref.trim();
   if (!trimmed) {
@@ -55,20 +37,40 @@ function resolveCourseSlugFromRef(
   return courses.find((course) => normalizeTitle(course.title) === key)?.slug;
 }
 
-export function buildCourseDropdownOptions(
-  pages: readonly ZettelPage[],
-  courses: readonly PlanningCatalogItem[],
-  degreeSlug: string,
+function flatCourseOptions(
+  courses: CourseRoadmap["courses"],
 ): MetaDropdownOption<string>[] {
-  const normalizedDegree = degreeSlug.trim();
-  if (!normalizedDegree) {
-    return [...courses]
-      .sort((left, right) => left.title.localeCompare(right.title, "es-AR"))
-      .map((course) => ({ value: course.slug, label: course.title }));
+  return [...courses]
+    .sort(
+      (left, right) =>
+        left.year.localeCompare(right.year, "es-AR") ||
+        left.title.localeCompare(right.title, "es-AR"),
+    )
+    .map((course) => ({ value: course.slug, label: course.title }));
+}
+
+export function buildRoadmapCourseSelectOptions(
+  graph: CurriculumGraph | null,
+  roadmap: CourseRoadmap | null,
+  degreeSelected: boolean,
+): MetaDropdownOption<string>[] {
+  const head: MetaDropdownOption<string>[] = [{ value: "", label: "Todas" }];
+  if (!roadmap) {
+    return head;
   }
 
-  const titleBySlug = new Map(courses.map((course) => [course.slug, course.title] as const));
-  const yearPages = pages
+  if (!degreeSelected || !graph) {
+    return [...head, ...flatCourseOptions(roadmap.courses)];
+  }
+
+  const catalog = roadmap.courses.map((course) => ({
+    slug: course.slug,
+    title: course.title,
+  }));
+  const titleBySlug = new Map(catalog.map((course) => [course.slug, course.title] as const));
+  const normalizedDegree = roadmap.degreeSlug.trim();
+
+  const yearPages = graph.pages
     .filter((page) => page.kind === PageKind.Year)
     .map((page) => ({ page, parsed: parseYearSlug(page.slug) }))
     .filter(
@@ -81,13 +83,13 @@ export function buildCourseDropdownOptions(
       return leftIndex - rightIndex;
     });
 
-  const options: MetaDropdownOption<string>[] = [];
+  const options: MetaDropdownOption<string>[] = [...head];
   const listed = new Set<string>();
 
   for (const { page, parsed } of yearPages) {
     const yearIndex = page.yearIndex ?? parsed.yearIndex;
     options.push({
-      value: planningGroupOptionValue(`year-${yearIndex}`),
+      value: roadmapCourseGroupOptionValue(`year-${yearIndex}`),
       label: yearDisplayLabel(yearIndex),
       disabled: true,
     });
@@ -95,7 +97,7 @@ export function buildCourseDropdownOptions(
     const slugsInYear: string[] = [];
     for (const entry of page.courses ?? []) {
       const ref = (entry.resolvedTarget ?? entry.target).trim();
-      const slug = resolveCourseSlugFromRef(ref, courses);
+      const slug = resolveCourseSlugFromRef(ref, catalog);
       if (!slug || listed.has(slug)) {
         continue;
       }
@@ -117,10 +119,4 @@ export function buildCourseDropdownOptions(
   }
 
   return options;
-}
-
-export function selectableCourseSlugsFromOptions(
-  options: readonly MetaDropdownOption<string>[],
-): string[] {
-  return options.filter((option) => !option.disabled).map((option) => option.value);
 }

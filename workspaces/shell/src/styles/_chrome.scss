@@ -546,7 +546,8 @@ body.dashboard--body {
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    overflow: hidden;
+    overflow-x: visible;
+    overflow-y: hidden;
   }
 
   &__main--scroll &__content {
@@ -684,13 +685,15 @@ body.dashboard--body {
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
-    height: var(--dash-header-lead-row-height);
-    min-height: var(--dash-header-lead-row-height);
-    max-height: var(--dash-header-lead-row-height);
+    min-height: max(var(--dash-header-lead-row-height), var(--dash-header-action-size));
+    overflow: visible;
 
     .pps-workspace-nav-links {
       grid-column: 2;
       justify-self: end;
+      overflow: visible;
+      padding-block: 2px;
+      margin-block: -2px;
     }
   }
 

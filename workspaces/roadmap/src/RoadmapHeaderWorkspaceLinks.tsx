@@ -19,10 +19,23 @@ import {
 export interface RoadmapWorkspaceNav {
   degreeSlug: string | null;
   courseSlug: string | null;
+  /** Carrera dropdown is Todas (cross-app links omit `degree=`). */
+  scopeAllCarreras: boolean;
 }
 
 export interface RoadmapHeaderWorkspaceLinksProps {
   nav: RoadmapWorkspaceNav | null;
+}
+
+/** Degree query param for cross-app links (omit when Carrera = Todas). */
+export function degreeSlugForWorkspaceLinks(
+  panelUrl: ReturnType<typeof readRoadmapPanelUrl>,
+  nav: RoadmapWorkspaceNav | null,
+): string {
+  if (nav?.scopeAllCarreras) {
+    return "";
+  }
+  return panelUrl.degree?.trim() || nav?.degreeSlug?.trim() || "";
 }
 
 export function RoadmapHeaderWorkspaceLinks({ nav }: RoadmapHeaderWorkspaceLinksProps) {
@@ -36,10 +49,14 @@ export function RoadmapHeaderWorkspaceLinks({ nav }: RoadmapHeaderWorkspaceLinks
   const panelUrl = useMemo(() => readRoadmapPanelUrl(), [panelUrlKey]);
 
   const courseSlug = panelUrl.course?.trim() || nav?.courseSlug?.trim() || "";
-  const degreeSlug = panelUrl.degree?.trim() || nav?.degreeSlug?.trim() || "";
+  const degreeSlug = degreeSlugForWorkspaceLinks(panelUrl, nav);
 
   if (courseSlug) {
-    const networkHref = networkCourseExpansionHref(siteRoot, courseSlug);
+    const networkHref = networkCourseExpansionHref(
+      siteRoot,
+      courseSlug,
+      degreeSlug || undefined,
+    );
     const planningHref = planningCoursePageHref(
       siteRoot,
       courseSlug,

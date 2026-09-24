@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     "./App": "./src/App.tsx",
+    "./concept-panel": "./src/scripts/concept-panel.ts",
     "./styles/roadmap.scss": "./src/styles/roadmap.scss"
   },
   "scripts": {

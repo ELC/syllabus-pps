@@ -32,6 +32,6 @@ export default defineConfig({
     fs: { allow: ["../.."] },
   },
   ssr: {
-    noExternal: ["@pps/content", "@pps/core", "@pps/login", "@pps/shell"],
+    noExternal: ["@pps/content", "@pps/core", "@pps/login", "@pps/roadmap", "@pps/shell"],
   },
 });

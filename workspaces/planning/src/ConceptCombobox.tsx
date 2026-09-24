@@ -16,6 +16,7 @@ interface ConceptComboboxProps {
   labels: Map<string, string>;
   linkedSlugs: Set<string>;
   onChange: (values: string[]) => void;
+  onConceptOpen?: (slug: string) => void;
   id: string;
   disabled?: boolean;
   warningTitles?: string[];
@@ -35,6 +36,7 @@ export function ConceptCombobox({
   labels,
   linkedSlugs,
   onChange,
+  onConceptOpen,
   id,
   disabled = false,
   warningTitles = [],
@@ -239,10 +241,39 @@ export function ConceptCombobox({
         }}
       >
         {selected.map((value) => (
-          <span className="planning__chip" key={value}>
-            <span>{labels.get(value) ?? value}</span>
+          <span
+            className={
+              onConceptOpen
+                ? "planning__chip planning__chip--openable"
+                : "planning__chip"
+            }
+            key={value}
+            onClick={
+              onConceptOpen
+                ? (event) => {
+                    if (
+                      (event.target as HTMLElement).closest(
+                        'button[aria-label^="Quitar"]',
+                      )
+                    ) {
+                      return;
+                    }
+                    event.stopPropagation();
+                    onConceptOpen(value);
+                  }
+                : undefined
+            }
+          >
             <button
               type="button"
+              className="planning__chip-label"
+              disabled={disabled && !onConceptOpen}
+            >
+              {labels.get(value) ?? value}
+            </button>
+            <button
+              type="button"
+              className="planning__chip-remove"
               disabled={disabled}
               aria-label={`Quitar ${labels.get(value) ?? value}`}
               onClick={(event) => {

@@ -7,7 +7,6 @@ export const PLANNING_WEEK_COUNT = 15;
 export interface PlanningWeek {
   topic: string[];
   prerequisite: string[];
-  optional: string[];
 }
 
 export interface PlanningPlanDocument {
@@ -31,7 +30,6 @@ function normalizeWeek(value: unknown): PlanningWeek {
   return {
     topic: normalizeConcepts(week.topic),
     prerequisite: normalizeConcepts(week.prerequisite),
-    optional: normalizeConcepts(week.optional),
   };
 }
 

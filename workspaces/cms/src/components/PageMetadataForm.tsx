@@ -506,7 +506,7 @@ export function PageMetadataForm({
                 <div className="cms__meta-course-extra" aria-busy={!catalogBacklinkLinksReady}>
                   <div className="cms__meta-course-backlinks">
                     <div className="cms__meta-field cms__meta-field--full cms__meta-course-years">
-                      <span className="cms__meta-label">Páginas de año</span>
+                      <span className="cms__meta-label">Carreras con esta materia</span>
                       {!catalogBacklinkLinksReady ? (
                         <MetaCatalogLinkRowSkeleton />
                       ) : (

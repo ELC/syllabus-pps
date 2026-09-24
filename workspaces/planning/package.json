@@ -12,6 +12,7 @@
     "@pps/content": "workspace:*",
     "@pps/core": "workspace:*",
     "@pps/login": "workspace:*",
+    "@pps/roadmap": "workspace:*",
     "@pps/shell": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"

@@ -382,6 +382,9 @@ importers:
       '@pps/login':
         specifier: workspace:*
         version: link:../login
+      '@pps/roadmap':
+        specifier: workspace:*
+        version: link:../roadmap
       '@pps/shell':
         specifier: workspace:*
         version: link:../shell

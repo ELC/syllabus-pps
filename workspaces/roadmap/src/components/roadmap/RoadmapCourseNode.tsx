@@ -1,5 +1,7 @@
-import { isTrayectoNoEstructurado } from "@pps/core";
+import { isTrayectoNoEstructurado, yearIndexFromDisplayLabel } from "@pps/core";
+import { courseYearPresentation } from "@pps/shell/austral-tokens";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
+import type { CSSProperties } from "react";
 
 import {
   HANDLE_BOTTOM_OUT,
@@ -39,9 +41,19 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
   const isTne = isTrayectoNoEstructurado(nodeData.trayecto);
   const labelDensity = courseLabelDensityClass(nodeData.label);
   const denseLabel = courseUsesDenseLabel(nodeData.label);
+  const yearIndex = yearIndexFromDisplayLabel(nodeData.year) ?? 1;
+  const yearColors = courseYearPresentation(yearIndex, { spine: isSpine });
 
   return (
     <div
+      style={
+        {
+          "--roadmap-course-border": yearColors.borderColor,
+          "--roadmap-course-bg": yearColors.backgroundColor,
+          "--roadmap-course-progress-bg": yearColors.progressBackgroundColor,
+          "--roadmap-course-progress-fill": yearColors.progressFillColor,
+        } as CSSProperties
+      }
       className={[
         "roadmap__course",
         "roadmap__course-drag-surface",

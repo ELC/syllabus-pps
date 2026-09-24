@@ -567,14 +567,9 @@ export function buildStagedCourseRoadmapLayout(
       placements: new Map(),
       attached: new Map(),
       trunk: [],
-      start: { x: -ANCHOR_NODE_WIDTH / 2, y: 0 },
-      end: { x: -ANCHOR_NODE_WIDTH / 2, y: ANCHOR_NODE_HEIGHT + ANCHOR_GAP },
-      bounds: {
-        minX: -ANCHOR_NODE_WIDTH / 2,
-        maxX: ANCHOR_NODE_WIDTH / 2,
-        minY: 0,
-        maxY: ANCHOR_NODE_HEIGHT * 2 + ANCHOR_GAP,
-      },
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 0 },
+      bounds: { minX: 0, maxX: 0, minY: 0, maxY: 0 },
     };
   }
 
@@ -657,7 +652,7 @@ export function buildStagedCourseRoadmapLayout(
   const columns = [...columnOf.values()];
   const graphCenter =
     columns.length === 0 ? 0 : (Math.min(...columns) + Math.max(...columns)) / 2;
-  let cursorY = ANCHOR_NODE_HEIGHT + ANCHOR_GAP;
+  let cursorY = 0;
 
   for (const [rowIndex, row] of displayRows.entries()) {
     if (rowIndex > 0) {
@@ -701,12 +696,6 @@ export function buildStagedCourseRoadmapLayout(
     resolvePlacementOverlaps(placements, stride);
   }
 
-  cursorY = Math.max(
-    cursorY,
-    ...[...placements.values()].map((placement) => placement.y + placement.height),
-  );
-  cursorY += ANCHOR_GAP;
-
   const positioned = [...placements.values()];
   const courseYearBands =
     groupByYear && yearsByTitle
@@ -719,11 +708,14 @@ export function buildStagedCourseRoadmapLayout(
           Math.max(...positioned.map((node) => node.x + node.width))) /
         2;
   const anchorX = graphMidX - ANCHOR_NODE_WIDTH / 2;
-  const end = { x: anchorX, y: cursorY };
-  const minNodeX =
+  const maxContentY =
     positioned.length === 0
-      ? anchorX
-      : Math.min(anchorX, ...positioned.map((node) => node.x));
+      ? 0
+      : Math.max(...positioned.map((placement) => placement.y + placement.height));
+  const minNodeX =
+    positioned.length === 0 ? 0 : Math.min(...positioned.map((node) => node.x));
+  const maxNodeX =
+    positioned.length === 0 ? 0 : Math.max(...positioned.map((node) => node.x + node.width));
   const labelGutter = courseYearBands ? COURSE_YEAR_LABEL_GUTTER : 0;
 
   let courseGridCells;
@@ -752,12 +744,12 @@ export function buildStagedCourseRoadmapLayout(
     attached: new Map(),
     trunk: [],
     start: { x: anchorX, y: 0 },
-    end,
+    end: { x: anchorX, y: maxContentY },
     bounds: {
       minX: minNodeX - labelGutter,
-      maxX: Math.max(anchorX + ANCHOR_NODE_WIDTH, ...positioned.map((node) => node.x + node.width)),
+      maxX: maxNodeX,
       minY: 0,
-      maxY: end.y + ANCHOR_NODE_HEIGHT,
+      maxY: maxContentY,
     },
   };
 }

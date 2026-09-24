@@ -53,6 +53,15 @@ export function yearDisplayLabel(yearIndex: number): string {
   return `año ${yearIndex}`;
 }
 
+export function yearIndexFromDisplayLabel(label: string): number | null {
+  const match = /^año\s+(\d+)$/iu.exec(label.trim());
+  if (!match) {
+    return null;
+  }
+  const yearIndex = Number.parseInt(match[1] ?? "", 10);
+  return Number.isFinite(yearIndex) && yearIndex > 0 ? yearIndex : null;
+}
+
 /** Unique stored title for a degree-scoped year page. */
 export function buildYearPageTitle(degreeTitle: string, yearIndex: number): string {
   return `${degreeTitle} · ${yearDisplayLabel(yearIndex)}`;
