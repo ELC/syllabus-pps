@@ -10,6 +10,8 @@ import {
   ANCHOR_GAP,
   ANCHOR_NODE_HEIGHT,
   ANCHOR_NODE_WIDTH,
+  COURSE_NODE_HEIGHT,
+  COURSE_NODE_WIDTH,
   SPINE_NODE_HEIGHT,
   SPINE_NODE_WIDTH,
 } from "./constants";
@@ -26,10 +28,10 @@ import {
   resolveCuratedRowStride,
   type CuratedCourseLayoutMetrics,
 } from "./course-layout-metrics";
-import type { CourseYearBand, RoadmapLayout, RoadmapPlacement } from "./layout";
+import type { CourseYearBand, RoadmapBounds, RoadmapLayout, RoadmapPlacement } from "./layout";
 
-/** Horizontal gap between course nodes in the same row. */
-const COURSE_COLUMN_GAP = 140;
+/** Horizontal gap between course nodes in the same row (non-curated fallback). */
+const COURSE_COLUMN_GAP = 90;
 /** Vertical gap between course layers when year grouping is off. */
 const COURSE_STAGE_GAP = 144;
 /** Extra gap when a year band wraps onto a second row. */
@@ -647,8 +649,9 @@ export function buildStagedCourseRoadmapLayout(
     useCuratedGrid && curatedLayoutMetrics
       ? resolveCuratedGridMetrics(curatedLayoutMetrics)
       : null;
-  const stride = curatedMetrics?.stride ?? SPINE_NODE_WIDTH + COURSE_COLUMN_GAP;
-  const nodeWidth = curatedMetrics?.nodeWidth ?? SPINE_NODE_WIDTH;
+  const stride = curatedMetrics?.stride ?? COURSE_NODE_WIDTH + COURSE_COLUMN_GAP;
+  const nodeWidth = curatedMetrics?.nodeWidth ?? COURSE_NODE_WIDTH;
+  const nodeHeight = curatedMetrics?.nodeHeight ?? COURSE_NODE_HEIGHT;
   const columns = [...columnOf.values()];
   const graphCenter =
     columns.length === 0 ? 0 : (Math.min(...columns) + Math.max(...columns)) / 2;
@@ -660,7 +663,7 @@ export function buildStagedCourseRoadmapLayout(
 
       if (useCuratedGrid && curatedLayoutMetrics) {
         cursorY += resolveCuratedRowStride(curatedLayoutMetrics, row, previousRow, {
-          nodeHeight: SPINE_NODE_HEIGHT,
+          nodeHeight,
           subrowGap: COURSE_SUBROW_GAP,
         });
       } else {
@@ -672,7 +675,7 @@ export function buildStagedCourseRoadmapLayout(
           gap = COURSE_SUBROW_GAP;
         }
 
-        cursorY += SPINE_NODE_HEIGHT + gap;
+        cursorY += nodeHeight + gap;
       }
     }
 
@@ -686,7 +689,7 @@ export function buildStagedCourseRoadmapLayout(
         x: centerX - nodeWidth / 2,
         y: cursorY,
         width: nodeWidth,
-        height: SPINE_NODE_HEIGHT,
+        height: nodeHeight,
       });
     }
   }
@@ -732,7 +735,7 @@ export function buildStagedCourseRoadmapLayout(
       graphCenter,
       stride,
       nodeWidth,
-      nodeHeight: SPINE_NODE_HEIGHT,
+      nodeHeight,
       slugToTitle,
     });
   }
@@ -768,4 +771,75 @@ export function buildCourseRoadmapLayout(
     curatedLayoutMetrics,
     courseLayoutCuration,
   );
+}
+
+/** When width limits zoom, scale layout height so fit-to-view fills the panel vertically. */
+export function verticalStretchToFillViewport(
+  bounds: RoadmapBounds,
+  viewportWidth: number,
+  viewportHeight: number,
+  padding: number,
+): number {
+  if (viewportWidth <= padding * 2 || viewportHeight <= padding * 2) {
+    return 1;
+  }
+
+  const contentWidth = Math.max(bounds.maxX - bounds.minX, 1);
+  const contentHeight = Math.max(bounds.maxY - bounds.minY, 1);
+  const zoomX = (viewportWidth - padding * 2) / contentWidth;
+  const zoomY = (viewportHeight - padding * 2) / contentHeight;
+  if (zoomX >= zoomY) {
+    return 1;
+  }
+
+  const desiredHeight = (viewportHeight - padding * 2) / zoomX;
+  return Math.max(1, desiredHeight / contentHeight);
+}
+
+export function stretchCourseRoadmapLayoutVertically(
+  layout: RoadmapLayout,
+  yearsByTitle: ReadonlyMap<DegreeRoadmapNodeTitle, string> | undefined,
+  stretch: number,
+): RoadmapLayout {
+  if (stretch <= 1.001) {
+    return layout;
+  }
+
+  const anchorY = layout.bounds.minY;
+  const placements = new Map<DegreeRoadmapNodeTitle, RoadmapPlacement>();
+  for (const [title, placement] of layout.placements) {
+    placements.set(title, {
+      ...placement,
+      y: anchorY + (placement.y - anchorY) * stretch,
+    });
+  }
+
+  const courseYearBands =
+    yearsByTitle && layout.courseYearBands
+      ? computeCourseYearBands(yearsByTitle, placements)
+      : layout.courseYearBands;
+
+  const positioned = [...placements.values()];
+  const maxContentY =
+    positioned.length === 0
+      ? layout.bounds.maxY
+      : Math.max(...positioned.map((placement) => placement.y + placement.height));
+
+  const courseGridCells = layout.courseGridCells?.map((cell) => {
+    const y = anchorY + (cell.y - anchorY) * stretch;
+    const centerY = anchorY + (cell.centerY - anchorY) * stretch;
+    return { ...cell, y, centerY };
+  });
+
+  return {
+    ...layout,
+    placements,
+    courseYearBands,
+    courseGridCells,
+    end: { ...layout.end, y: maxContentY },
+    bounds: {
+      ...layout.bounds,
+      maxY: maxContentY,
+    },
+  };
 }

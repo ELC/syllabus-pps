@@ -3,11 +3,11 @@ export function courseLabelDensityClass(label: string): string {
   const text = label.trim();
   const wordCount = text.split(/\s+/).filter(Boolean).length;
 
-  if (text.length > 28 || wordCount >= 5) {
+  if (text.length > 42 || wordCount >= 7) {
     return "roadmap__course-label--compact";
   }
 
-  if (text.length > 20 || wordCount >= 4) {
+  if (text.length > 34 || wordCount >= 6) {
     return "roadmap__course-label--compact-md";
   }
 

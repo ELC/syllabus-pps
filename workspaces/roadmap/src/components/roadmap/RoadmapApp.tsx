@@ -81,7 +81,11 @@ import {
 import { RoadmapConceptEditToolbar } from "./RoadmapConceptEditToolbar";
 import type { RoadmapTopicNodeData } from "./RoadmapTopicNode";
 import { loadConceptLayout, saveConceptLayout } from "../../api/concept-layout";
-import { buildCourseRoadmapLayout } from "./course-layout";
+import {
+  buildCourseRoadmapLayout,
+  stretchCourseRoadmapLayoutVertically,
+  verticalStretchToFillViewport,
+} from "./course-layout";
 import { readCuratedCourseLayoutMetrics } from "./course-layout-metrics";
 import { loadCourseLayout, saveCourseLayout } from "../../api/course-layout";
 import type { RoadmapCourseLayoutDocument } from "@pps/content";
@@ -254,6 +258,8 @@ export function RoadmapApp({
   const [conceptEditTool, setConceptEditTool] = useState<ConceptEditTool>("select");
   const [conceptSelectedTopic, setConceptSelectedTopic] = useState<string | null>(null);
   const [sidePendingOwner, setSidePendingOwner] = useState<string | null>(null);
+  const [canvasPanelSize, setCanvasPanelSize] = useState({ width: 0, height: 0 });
+  const canvasPanelRef = useRef<HTMLElement | null>(null);
   const [conceptCuration, setConceptCuration] = useState<RoadmapCuration | null>(null);
   const conceptCurationHistoryRef = useRef<ConceptCurationHistory | null>(null);
   const [conceptCurationHistoryTick, setConceptCurationHistoryTick] = useState(0);
@@ -649,16 +655,27 @@ export function RoadmapApp({
       return buildLinearConceptLayout(activeDegreeRoadmap, effectiveConceptCuration);
     }
 
-    return buildCourseRoadmapLayout(
+    const baseLayout = buildCourseRoadmapLayout(
       activeDegreeRoadmap,
       adjacency,
       courseYearsByTitle,
       curatedLayoutMetrics,
       effectiveCourseCuration,
     );
+
+    const stretch = verticalStretchToFillViewport(
+      baseLayout.bounds,
+      canvasPanelSize.width,
+      canvasPanelSize.height,
+      VIEWPORT_PADDING,
+    );
+
+    return stretchCourseRoadmapLayoutVertically(baseLayout, courseYearsByTitle, stretch);
   }, [
     activeDegreeRoadmap,
     adjacency,
+    canvasPanelSize.height,
+    canvasPanelSize.width,
     courseYearsByTitle,
     curatedLayoutMetrics,
     effectiveConceptCuration,
@@ -684,6 +701,25 @@ export function RoadmapApp({
   );
 
   const showLayoutSkeleton = showCourseLayoutSkeleton || showConceptLayoutSkeleton;
+
+  useEffect(() => {
+    const panel = canvasPanelRef.current;
+    if (!panel) {
+      return;
+    }
+
+    const updateSize = (): void => {
+      setCanvasPanelSize({
+        width: panel.clientWidth,
+        height: panel.clientHeight,
+      });
+    };
+
+    updateSize();
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, [isConceptView, showLayoutSkeleton]);
 
   const canEditCourseGrid = Boolean(
     !isConceptView &&
@@ -1717,6 +1753,7 @@ export function RoadmapApp({
       </div>
 
       <section
+        ref={canvasPanelRef}
         className={`roadmap__canvas-panel${hasConceptGraph ? "" : " roadmap__canvas-panel--empty"}${layoutEditMode ? " roadmap__canvas-panel--grid-edit" : ""}`}
         aria-label={isConceptView ? "Mapa de conceptos de la materia" : "Mapa de materias"}
       >

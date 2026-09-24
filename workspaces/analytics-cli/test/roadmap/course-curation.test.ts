@@ -105,31 +105,34 @@ describe("moveAreaInCourseGrid", () => {
 
 describe("resolveCuratedGridMetrics", () => {
   const metrics: CuratedCourseLayoutMetrics = {
-    nodeWidth: 195,
-    columnGap: 70,
-    rowStride: 104,
-    yearGap: 150,
+    nodeWidth: 250,
+    nodeHeight: 92,
+    columnGap: 90,
+    rowStride: 130,
+    yearGap: 185,
   };
 
   it("derives stride from layout metrics", () => {
     expect(resolveCuratedGridMetrics(metrics)).toEqual({
-      nodeWidth: 195,
-      columnGap: 70,
-      stride: 265,
+      nodeWidth: 250,
+      nodeHeight: 92,
+      columnGap: 90,
+      stride: 340,
     });
   });
 });
 
 describe("resolveCuratedRowStride", () => {
   const metrics: CuratedCourseLayoutMetrics = {
-    nodeWidth: 195,
-    columnGap: 70,
-    rowStride: 104,
-    yearGap: 150,
+    nodeWidth: 250,
+    nodeHeight: 92,
+    columnGap: 90,
+    rowStride: 130,
+    yearGap: 185,
   };
 
   const defaults = {
-    nodeHeight: 64,
+    nodeHeight: 92,
     subrowGap: 64,
   };
 
@@ -141,7 +144,7 @@ describe("resolveCuratedRowStride", () => {
         { year: "año 1", withinYearStage: 0 },
         defaults,
       ),
-    ).toBe(104);
+    ).toBe(130);
   });
 
   it("uses year gap between year bands", () => {
@@ -152,7 +155,7 @@ describe("resolveCuratedRowStride", () => {
         { year: "año 1", withinYearStage: 1 },
         defaults,
       ),
-    ).toBe(150);
+    ).toBe(185);
   });
 
   it("falls back to subrow stride for parallel rows", () => {
@@ -163,6 +166,6 @@ describe("resolveCuratedRowStride", () => {
         { year: "año 2", withinYearStage: 0 },
         defaults,
       ),
-    ).toBe(128);
+    ).toBe(156);
   });
 });

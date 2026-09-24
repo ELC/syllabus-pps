@@ -95,7 +95,6 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
 
       <span
         className={[
-          "roadmap__node-label",
           "roadmap__course-label",
           isSpine ? "roadmap__course-label--spine" : "",
           status === "done" ? "roadmap__course-label--done" : "",

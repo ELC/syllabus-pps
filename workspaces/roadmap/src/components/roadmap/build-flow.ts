@@ -1,10 +1,12 @@
 import {
   isTrayectoNoEstructurado,
+  yearIndexFromDisplayLabel,
   type DegreeRoadmap,
   type DegreeRoadmapAdjacency,
   type DegreeRoadmapNodeTitle,
 } from "@pps/core";
 import type { Edge, Node } from "@xyflow/react";
+import { borderColorForYearIndex } from "@pps/shell/austral-tokens";
 
 import { capitalizeWords } from "../../scripts/labels";
 import {
@@ -623,11 +625,20 @@ function tneEdgeSuffix(
   return sourceTne || targetTne ? " roadmap__edge--tne" : "";
 }
 
+export function courseDagEdgeStrokeColor(
+  sourceTitle: DegreeRoadmapNodeTitle,
+  courseYearsByTitle?: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
+): string {
+  const yearIndex = yearIndexFromDisplayLabel(courseYearsByTitle?.get(sourceTitle) ?? "") ?? 1;
+  return borderColorForYearIndex(yearIndex);
+}
+
 function emitCourseDagLinks(
   links: SpineLink[],
   layout: RoadmapLayout,
   edges: Edge[],
   activeSuffix: (source: string, target: string) => string,
+  courseYearsByTitle?: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
   courseTrayectoByTitle?: ReadonlyMap<DegreeRoadmapNodeTitle, string>,
 ): void {
   for (const link of links) {
@@ -639,6 +650,7 @@ function emitCourseDagLinks(
       sourceHandle: handles.sourceHandle,
       targetHandle: handles.targetHandle,
       className: `roadmap__edge roadmap__edge--spine roadmap__edge--course-dag${activeSuffix(link.source, link.target)}${tneEdgeSuffix(link.source, link.target, courseTrayectoByTitle)}`,
+      style: { stroke: courseDagEdgeStrokeColor(link.source, courseYearsByTitle) },
       focusable: false,
       interactionWidth: 0,
       selectable: false,
@@ -788,7 +800,14 @@ export function buildRoadmapFlow({
       }
     }
 
-    emitCourseDagLinks(spineLinks, layout, edges, styleSuffix, courseTrayectoByTitle);
+    emitCourseDagLinks(
+      spineLinks,
+      layout,
+      edges,
+      styleSuffix,
+      courseYearsByTitle,
+      courseTrayectoByTitle,
+    );
     return { nodes, edges };
   }
 

@@ -1,5 +1,6 @@
 export interface CuratedCourseLayoutMetrics {
   nodeWidth: number;
+  nodeHeight: number;
   columnGap: number;
   rowStride: number;
   yearGap: number;
@@ -7,6 +8,7 @@ export interface CuratedCourseLayoutMetrics {
 
 const METRIC_VARS = {
   nodeWidth: "--roadmap-course-node-width",
+  nodeHeight: "--roadmap-course-node-height",
   columnGap: "--roadmap-course-column-gap",
   rowStride: "--roadmap-course-row-stride",
   yearGap: "--roadmap-course-year-gap",
@@ -31,12 +33,14 @@ export function readCuratedCourseLayoutMetrics(
   }
 
   const nodeWidth = readCssPixelProperty(root, METRIC_VARS.nodeWidth);
+  const nodeHeight = readCssPixelProperty(root, METRIC_VARS.nodeHeight);
   const columnGap = readCssPixelProperty(root, METRIC_VARS.columnGap);
   const rowStride = readCssPixelProperty(root, METRIC_VARS.rowStride);
   const yearGap = readCssPixelProperty(root, METRIC_VARS.yearGap);
 
   if (
     nodeWidth === null ||
+    nodeHeight === null ||
     columnGap === null ||
     rowStride === null ||
     yearGap === null
@@ -44,16 +48,18 @@ export function readCuratedCourseLayoutMetrics(
     return null;
   }
 
-  return { nodeWidth, columnGap, rowStride, yearGap };
+  return { nodeWidth, nodeHeight, columnGap, rowStride, yearGap };
 }
 
 export function resolveCuratedGridMetrics(metrics: CuratedCourseLayoutMetrics): {
   nodeWidth: number;
+  nodeHeight: number;
   columnGap: number;
   stride: number;
 } {
   return {
     nodeWidth: metrics.nodeWidth,
+    nodeHeight: metrics.nodeHeight,
     columnGap: metrics.columnGap,
     stride: metrics.nodeWidth + metrics.columnGap,
   };
