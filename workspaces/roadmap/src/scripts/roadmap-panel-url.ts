@@ -39,7 +39,7 @@ export function subscribeRoadmapPanelUrl(onStoreChange: () => void): () => void 
 
 export function writeRoadmapPanelUrl(
   state: RoadmapPanelUrlState,
-  mode: "replace" | "push" = "replace",
+  mode: "replace" | "push" = "push",
 ): void {
   const params = new URLSearchParams(window.location.search);
   params.delete("course");

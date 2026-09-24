@@ -108,7 +108,7 @@ export function App() {
         }
 
         if (urlId) {
-          writeResourceParam(urlId);
+          writeResourceParam(urlId, "replace");
         }
 
         setEntries(nextItems);
@@ -127,6 +127,21 @@ export function App() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    const onPopState = (): void => {
+      const id = readResourceParam();
+      if (!id) {
+        return;
+      }
+      const index = entries.findIndex((entry) => entry.id === id);
+      if (index >= 0) {
+        setSelectedIndex(index);
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [entries]);
 
   const selected = entries[selectedIndex];
 

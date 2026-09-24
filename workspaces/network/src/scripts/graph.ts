@@ -87,7 +87,7 @@ type KindFilters = Record<KindFilterKey, string>;
 interface GraphUi {
   expansionListRoot: HTMLElement | null;
   degreeContext: GraphDegreeContext | null;
-  syncView: (fit?: boolean) => void;
+  syncView: (fit?: boolean, historyMode?: "push" | "replace") => void;
 }
 
 function defaultCmsBase(): string {
@@ -1250,7 +1250,7 @@ function mountKindFilters(
 
     select.addEventListener("change", () => {
       viewState.kindFilters[kind] = select.value;
-      ui.syncView();
+      ui.syncView(false, "push");
       refreshGraphLayout(cy, viewState, ui.degreeContext);
     });
 
@@ -1380,7 +1380,7 @@ function mountDegreeScopeDropdown(
     options: resolveDegreeScopeOptions(cy, pages),
     onChange: (value) => {
       viewState.degreeScopeSlug = value;
-      ui.syncView(true);
+      ui.syncView(true, "push");
       if (!isExpansionActive(viewState)) {
         refreshGraphLayout(cy, viewState, ui.degreeContext);
       }
@@ -1397,7 +1397,7 @@ function mountResetFiltersButton(
 ): void {
   resetButton.addEventListener("click", () => {
     resetKindFilters(filtersRoot, viewState);
-    ui.syncView();
+    ui.syncView(false, "push");
     refreshGraphLayout(cy, viewState, ui.degreeContext);
   });
 }
@@ -1413,7 +1413,7 @@ function setConceptsHidden(
   hidden: boolean,
 ): void {
   viewState.conceptsHidden = hidden;
-  ui.syncView();
+  ui.syncView(false, "push");
 
   if (!isExpansionActive(viewState)) {
     refreshGraphLayout(cy, viewState, ui.degreeContext);
@@ -1469,11 +1469,11 @@ function setCourseLinkMode(
   viewState.courseLinkMode = mode;
 
   if (wasExpanded) {
-    applyFocusView(cy, viewState, ui, { randomize: false });
+    applyFocusView(cy, viewState, ui, { randomize: false, historyMode: "push" });
     return;
   }
 
-  ui.syncView(true);
+  ui.syncView(true, "push");
   refreshGraphLayout(cy, viewState, ui.degreeContext);
 }
 
@@ -1786,14 +1786,23 @@ function removeExpansionNode(
     return;
   }
 
-  applyFocusView(cy, viewState, ui, { randomize: true, forceRelayout: true });
+  applyFocusView(cy, viewState, ui, {
+    randomize: true,
+    forceRelayout: true,
+    historyMode: "push",
+  });
 }
 
 function applyFocusView(
   cy: cytoscape.Core,
   viewState: GraphViewState,
   ui: GraphUi,
-  options: { randomize: boolean; focusNode?: cytoscape.NodeSingular; forceRelayout?: boolean },
+  options: {
+    randomize: boolean;
+    focusNode?: cytoscape.NodeSingular;
+    forceRelayout?: boolean;
+    historyMode?: "push" | "replace";
+  },
 ): void {
   const expansionNodeIds = viewState.expansionNodeIds;
   if (!expansionNodeIds || expansionNodeIds.length === 0) {
@@ -1816,7 +1825,7 @@ function applyFocusView(
     viewState.focusedNodeId = options.focusNode.id();
   }
 
-  ui.syncView();
+  ui.syncView(false, options.historyMode ?? "replace");
 
   if (!options.forceRelayout) {
     const cached = viewState.focusLayoutCache.get(sessionKey);
@@ -1854,7 +1863,7 @@ function focusOrExpandNeighborhood(
     viewState.focusedNodeId = nodeId;
     cy.nodes().removeClass("focused");
     node.addClass("focused");
-    ui.syncView(true);
+    ui.syncView(true, "push");
     return;
   }
 
@@ -1877,7 +1886,7 @@ function focusOrExpandNeighborhood(
     viewState.focusedNodeId = nodeId;
     cy.nodes().removeClass("focused");
     node.addClass("focused");
-    ui.syncView(true);
+    ui.syncView(true, "push");
     return;
   }
 
@@ -1885,6 +1894,7 @@ function focusOrExpandNeighborhood(
     randomize: true,
     forceRelayout: true,
     focusNode: node,
+    historyMode: "push",
   });
 }
 
@@ -1906,7 +1916,7 @@ function clearNeighborhoodFilter(
     restorePositions(cy, viewState.fullGraphPositions);
   }
 
-  ui.syncView(true);
+  ui.syncView(true, "push");
   refreshGraphLayout(cy, viewState, ui.degreeContext);
 }
 
@@ -2294,14 +2304,14 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
   const ui: GraphUi = {
     expansionListRoot,
     degreeContext,
-    syncView: (fit = false) => {
+    syncView: (fit = false, historyMode: "push" | "replace" = "replace") => {
       applyElementVisibility(cy, viewState, degreeContext);
       applyDegreeScopePresentation(cy, viewState, degreeContext);
       applyExpansionEdgeColors(cy, viewState);
       updateGraphLegendUI(legendRoot, viewState, degreeContext);
       updateExpansionListUI(cy, viewState, expansionListRoot, ui);
       updateCourseWorkspaceLinksUI(cy, viewState, courseWorkspaceLinksRoot, allowCmsNavigation);
-      writeGraphUrlState(urlStateFromViewState(cy, viewState));
+      writeGraphUrlState(urlStateFromViewState(cy, viewState), historyMode);
       cy.resize();
       if (fit) {
         fitVisibleGraph(cy);

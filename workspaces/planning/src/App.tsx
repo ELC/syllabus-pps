@@ -237,7 +237,7 @@ export function App() {
 
         setDegreeSlug(initialDegree);
         setCourseSlug(initialCourse);
-        writePlanningUrlParams(initialCourse, initialDegree);
+        writePlanningUrlParams(initialCourse, initialDegree, "replace");
       })
       .catch((error) => setMessage(error instanceof Error ? error.message : String(error)))
       .finally(() => setCatalogLoading(false));
@@ -252,19 +252,25 @@ export function App() {
       if (courseSlug) {
         setCourseSlug("");
       }
-      writePlanningUrlParams("", degreeSlug);
+      writePlanningUrlParams("", degreeSlug, "replace");
       return;
     }
 
     if (!courseSlug || !selectableCourseSlugs.includes(courseSlug)) {
       const nextCourse = selectableCourseSlugs[0]!;
       setCourseSlug(nextCourse);
-      writePlanningUrlParams(nextCourse, degreeSlug);
-      return;
+      writePlanningUrlParams(nextCourse, degreeSlug, "replace");
     }
-
-    writePlanningUrlParams(courseSlug, degreeSlug);
   }, [catalogLoading, courseSlug, degreeSlug, selectableCourseSlugs]);
+
+  useEffect(() => {
+    const onPopState = (): void => {
+      setDegreeSlug(readDegreeParam() ?? "");
+      setCourseSlug(readCourseParam() ?? "");
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   useEffect(() => {
     if (!courseSlug) {
@@ -420,7 +426,13 @@ export function App() {
     if (hasUnsavedChanges && !window.confirm("Hay cambios sin guardar. ¿Querés descartarlos?")) {
       return;
     }
+    const nextCourseOptions = buildCourseDropdownOptions(pages, courses, nextDegree);
+    const nextSlugs = selectableCourseSlugsFromOptions(nextCourseOptions);
+    const nextCourse =
+      courseSlug && nextSlugs.includes(courseSlug) ? courseSlug : (nextSlugs[0] ?? "");
     setDegreeSlug(nextDegree);
+    setCourseSlug(nextCourse);
+    writePlanningUrlParams(nextCourse, nextDegree, "push");
   }
 
   function selectCourse(nextSlug: string): void {
@@ -428,7 +440,7 @@ export function App() {
       return;
     }
     setCourseSlug(nextSlug);
-    writePlanningUrlParams(nextSlug, degreeSlug);
+    writePlanningUrlParams(nextSlug, degreeSlug, "push");
   }
 
   function discardPlanChanges(): void {

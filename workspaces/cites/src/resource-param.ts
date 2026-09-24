@@ -3,7 +3,7 @@ export function readResourceParam(): string | null {
   return value?.trim() || null;
 }
 
-export function writeResourceParam(id: string): void {
+export function writeResourceParam(id: string, mode: "push" | "replace" = "push"): void {
   const url = new URL(window.location.href);
   if (url.searchParams.get("id") === id) {
     return;
@@ -14,7 +14,11 @@ export function writeResourceParam(id: string): void {
   } else {
     url.searchParams.delete("id");
   }
-  window.history.replaceState({}, "", url);
+  if (mode === "push") {
+    window.history.pushState({}, "", url);
+  } else {
+    window.history.replaceState({}, "", url);
+  }
 }
 
 export function readNewResourceRequest(): boolean {

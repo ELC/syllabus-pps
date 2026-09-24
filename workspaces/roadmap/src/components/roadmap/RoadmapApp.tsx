@@ -1053,7 +1053,7 @@ export function RoadmapApp({
   }, [confirmingReset]);
 
   const syncPanelUrl = useCallback(
-    (state: RoadmapPanelUrlState, mode: "replace" | "push" = "replace") => {
+    (state: RoadmapPanelUrlState, mode: "replace" | "push" = "push") => {
       writeRoadmapPanelUrl(state, mode);
       lastAppliedUrlKeyRef.current = roadmapPanelUrlKey(state);
     },

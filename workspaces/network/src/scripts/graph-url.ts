@@ -184,7 +184,10 @@ export function parseGraphUrlState(
   };
 }
 
-export function writeGraphUrlState(state: GraphUrlState): void {
+export function writeGraphUrlState(
+  state: GraphUrlState,
+  mode: "push" | "replace" = "replace",
+): void {
   const url = new URL(window.location.href);
   const params = url.searchParams;
 
@@ -225,6 +228,10 @@ export function writeGraphUrlState(state: GraphUrlState): void {
   const next = `${url.pathname}${params.toString() ? `?${params.toString()}` : ""}${url.hash}`;
   const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   if (next !== current) {
-    window.history.replaceState({}, "", next);
+    if (mode === "push") {
+      window.history.pushState({}, "", next);
+    } else {
+      window.history.replaceState({}, "", next);
+    }
   }
 }

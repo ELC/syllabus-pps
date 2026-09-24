@@ -11,7 +11,11 @@ export function readDegreeParam(): string | null {
   return value?.trim() || null;
 }
 
-export function writePlanningUrlParams(courseSlug: string, degreeSlug: string): void {
+export function writePlanningUrlParams(
+  courseSlug: string,
+  degreeSlug: string,
+  mode: "push" | "replace" = "push",
+): void {
   const url = new URL(window.location.href);
   const course = courseSlug.trim();
   const degree = degreeSlug.trim();
@@ -30,7 +34,11 @@ export function writePlanningUrlParams(courseSlug: string, degreeSlug: string): 
 
   const next = url.toString();
   if (next !== window.location.href) {
-    window.history.replaceState({}, "", next);
+    if (mode === "push") {
+      window.history.pushState({}, "", next);
+    } else {
+      window.history.replaceState({}, "", next);
+    }
   }
 }
 
