@@ -581,6 +581,176 @@ body.dashboard--body {
     overflow-y: hidden;
   }
 
+  &__main-foot {
+    position: absolute;
+    z-index: 30;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    height: var(--pps-session-banner-height, 3.25rem);
+    min-height: var(--pps-session-banner-height, 3.25rem);
+    margin: 0;
+    pointer-events: none;
+
+    &[hidden] {
+      display: none !important;
+    }
+  }
+
+  &__session-banner {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: stretch;
+    align-self: stretch;
+    width: 100%;
+    height: 100%;
+    min-height: var(--pps-session-banner-height, 3.25rem);
+    max-height: var(--pps-session-banner-height, 3.25rem);
+    box-sizing: border-box;
+    padding: 0 3rem 0 0.75rem;
+    border: 0;
+    border-top: 1px solid var(--dash-border);
+    border-radius: 0;
+    background: color-mix(in srgb, var(--dash-surface) 96%, var(--austral-blanco));
+    box-shadow: 0 -8px 24px color-mix(in srgb, var(--dash-text) 8%, transparent);
+    font-family: var(--font-body, "Open Sans", sans-serif);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--dash-text);
+    pointer-events: auto;
+
+    &[hidden] {
+      display: none !important;
+    }
+
+    p {
+      margin: 0;
+      text-align: center;
+    }
+
+    p + p {
+      margin-top: 0.35rem;
+    }
+
+    &.dashboard__ethical-ads {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin: 0;
+      overflow: hidden;
+      text-align: center;
+
+      &.flat.adaptive-css {
+        --ea-bgcolor: transparent;
+        --ea-bgcolor-dark: transparent;
+        --ea-stylefixed-bgcolor: transparent;
+        --ea-stylefixed-bgcolor-dark: transparent;
+        --ea-font-size: 0.8125rem;
+      }
+
+      &.loaded {
+        min-height: var(--pps-session-banner-height, 3.25rem) !important;
+        height: var(--pps-session-banner-height, 3.25rem) !important;
+        max-height: var(--pps-session-banner-height, 3.25rem) !important;
+      }
+
+      .ea-placement.ea-type-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        min-height: 0 !important;
+        max-height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .ea-content {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem 0.75rem;
+        width: 100%;
+        max-width: 100%;
+        min-height: 0;
+        max-height: 100%;
+        margin: 0;
+        padding: 0;
+        background: transparent !important;
+        overflow: hidden;
+      }
+
+      .ea-text {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        font-size: 0.8125rem;
+        line-height: 1.3;
+      }
+
+      .ea-callout {
+        flex: 0 0 auto;
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      .ea-callout a {
+        font-size: 0.6875rem;
+        line-height: 1.2;
+      }
+
+      @media (max-width: 40rem) {
+        .ea-content {
+          flex-wrap: wrap;
+          gap: 0.25rem;
+        }
+      }
+    }
+  }
+
+  &__session-banner-close {
+    appearance: none;
+    z-index: 2;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: center;
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: 0 0.5rem 0 0;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--dash-text);
+    font-size: 1.85rem;
+    font-weight: 400;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--dash-muted);
+    }
+
+    &:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--dash-accent) 45%, transparent);
+      outline-offset: 1px;
+    }
+  }
+
   &__main--scroll &__content {
     overflow: visible;
   }

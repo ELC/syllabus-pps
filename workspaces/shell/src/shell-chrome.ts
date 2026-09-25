@@ -2,6 +2,7 @@ import "@pps/login/styles/login.scss";
 
 import { shellIsologoHref, shellLogoHref } from "./logo-meta";
 import { mountShellSidebar } from "./mount-shell-sidebar";
+import { scheduleMountSessionBanner } from "./session-banner";
 import { siteRootFromEnv } from "./site-root";
 
 import "./styles/shell.scss";
@@ -19,3 +20,4 @@ if (brandIsologo && !brandIsologo.getAttribute("src")) {
 }
 
 mountShellSidebar();
+scheduleMountSessionBanner();

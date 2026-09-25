@@ -10,6 +10,7 @@ import {
 } from "./logo-meta.js";
 import { navIconSvg, navToggleIconSvg, sidebarCollapseIconSvg } from "./nav-icons.js";
 import { NAV_ITEMS, navHref } from "./nav.js";
+import { renderSessionBannerFoot } from "./session-banner-html.js";
 
 export interface StaticShellOptions {
   sidebarExtraId?: string;
@@ -91,6 +92,6 @@ export function renderStaticShell(
     </div>
   </aside>
   <button type="button" class="dashboard__sidebar-collapse" aria-expanded="true" aria-controls="dashboard-site-nav" title="Contraer barra lateral"><span class="dashboard__sidebar-collapse-icon">${sidebarCollapseIconSvg(false)}</span></button>
-  <main class="${mainClass}"><div id="root" class="app-root"></div></main>
+  <main class="${mainClass}"><div id="root" class="app-root"></div>${renderSessionBannerFoot(activeNav)}</main>
 </div>`;
 }

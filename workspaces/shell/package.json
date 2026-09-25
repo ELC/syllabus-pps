@@ -33,6 +33,9 @@
     "./workspace-links": "./src/workspace-links.ts",
     "./shell-chrome": "./src/shell-chrome.ts",
     "./mount-shell-sidebar": "./src/mount-shell-sidebar.ts",
+    "./session-banner": "./src/session-banner.ts",
+    "./SessionBanner": "./src/SessionBanner.tsx",
+    "./ethical-ads": "./src/ethical-ads.ts",
     "./astro": {
       "types": "./integration/dist/index.d.ts",
       "default": "./integration/dist/index.js"

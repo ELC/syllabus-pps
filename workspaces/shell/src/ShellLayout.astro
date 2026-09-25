@@ -17,14 +17,24 @@ import GoogleAnalytics from "./GoogleAnalytics.astro";
 import { navIconSvg, navToggleIconSvg, sidebarCollapseIconSvg } from "./nav-icons";
 import { NAV_ITEMS, navHref } from "./nav";
 import type { NavId } from "./site-root";
+import {
+  ETHICAL_ADS_KEYWORDS,
+  ETHICAL_ADS_PUBLISHER_ID,
+  ethicalAdsFooterPlacementId,
+} from "./ethical-ads";
 import { siteRootFromEnv } from "./site-root";
 
 interface Props {
   title: string;
   activeNav: NavId;
+  /** EthicalAds text placement in the unified session banner bar (default on). */
+  sessionBannerEthicalAds?: boolean;
 }
 
-const { title, activeNav } = Astro.props;
+const { title, activeNav, sessionBannerEthicalAds = true } = Astro.props;
+const hasSessionBanner = Astro.slots.has("session-banner");
+const showSessionBanner = sessionBannerEthicalAds || hasSessionBanner;
+const ethicalAdsPlacementId = ethicalAdsFooterPlacementId(activeNav);
 const siteRoot = siteRootFromEnv(import.meta.env.BASE_URL);
 const logoHref = shellLogoHref(siteRoot);
 const isologoHref = shellIsologoHref(siteRoot);
@@ -120,13 +130,46 @@ const isologoHref = shellIsologoHref(siteRoot);
         <div class="dashboard__content">
           <slot />
         </div>
+        {
+          showSessionBanner ? (
+            <div class="dashboard__main-foot" data-pps-main-foot hidden>
+              <div
+                class:list={[
+                  "dashboard__session-banner",
+                  sessionBannerEthicalAds && "dashboard__ethical-ads flat adaptive-css",
+                ]}
+                id={sessionBannerEthicalAds ? ethicalAdsPlacementId : undefined}
+                role="region"
+                aria-label={sessionBannerEthicalAds ? "Publicidad" : "Aviso"}
+                data-pps-session-banner
+                data-ea-publisher={sessionBannerEthicalAds ? ETHICAL_ADS_PUBLISHER_ID : undefined}
+                data-ea-type={sessionBannerEthicalAds ? "text" : undefined}
+                data-ea-keywords={sessionBannerEthicalAds ? ETHICAL_ADS_KEYWORDS : undefined}
+                hidden
+              >
+                {!sessionBannerEthicalAds ? <slot name="session-banner" /> : null}
+              </div>
+              <button
+                type="button"
+                class="dashboard__session-banner-close"
+                data-pps-session-banner-close
+                aria-label="Cerrar aviso"
+              >
+                ×
+              </button>
+            </div>
+          ) : null
+        }
       </main>
     </div>
     <script>
       import { mountShellAuth } from "@pps/login/mountShellAuth";
       import { mountShellSidebar } from "@pps/shell/mount-shell-sidebar";
 
+      import { scheduleMountSessionBanner } from "@pps/shell/session-banner";
+
       mountShellSidebar();
+      scheduleMountSessionBanner();
       void mountShellAuth();
     </script>
   </body>
