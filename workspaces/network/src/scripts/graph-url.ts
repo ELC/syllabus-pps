@@ -14,11 +14,11 @@ export const DEFAULT_GRAPH_COURSE_LINK_MODE: CourseLinkMode = "correlativas";
 type KindFilterKey = (typeof GRAPH_FILTER_KINDS)[number]["kind"];
 
 const KIND_FILTER_URL_PARAM: Record<KindFilterKey, string> = {
-  degree: "filterDegree",
-  year: "filterYear",
   course: "filterCourse",
   concept: "filterConcept",
 };
+
+const REMOVED_KIND_FILTER_URL_PARAMS = ["filterDegree", "filterYear", "year"] as const;
 
 /** @deprecated Dev/bookmark alias for {@link GRAPH_URL_DEGREE_SCOPE_PARAM}. */
 const LEGACY_DEGREE_SCOPE_PARAM = "carrera";
@@ -33,8 +33,6 @@ export interface GraphUrlState {
 
 function emptyFilterSlugs(): Record<KindFilterKey, string> {
   return {
-    degree: "",
-    year: "",
     course: "",
     concept: "",
   };
@@ -125,17 +123,7 @@ function parseDegreeScopeSlug(params: URLSearchParams): string {
     params.get(GRAPH_URL_DEGREE_SCOPE_PARAM)?.trim() ??
     params.get(LEGACY_DEGREE_SCOPE_PARAM)?.trim() ??
     "";
-  if (scoped) {
-    return scoped;
-  }
-
-  // Legacy: sidebar kind filter shared the bare `degree` key before scope used `carrera`.
-  const legacyFilterDegree = params.get("degree")?.trim();
-  if (legacyFilterDegree && !params.has(KIND_FILTER_URL_PARAM.degree)) {
-    return legacyFilterDegree;
-  }
-
-  return "";
+  return scoped;
 }
 
 function parseKindFilterSlugs(params: URLSearchParams): Record<KindFilterKey, string> {
@@ -149,12 +137,9 @@ function parseKindFilterSlugs(params: URLSearchParams): Record<KindFilterKey, st
       continue;
     }
 
-    // Legacy URLs used kind names as query keys (e.g. `year=`).
-    if (kind !== "degree") {
-      const legacy = params.get(kind)?.trim() ?? "";
-      if (legacy) {
-        filterSlugs[kind] = legacy;
-      }
+    const legacy = params.get(kind)?.trim() ?? "";
+    if (legacy) {
+      filterSlugs[kind] = legacy;
     }
   }
 
@@ -170,15 +155,21 @@ export function parseGraphUrlState(
     ? params.get(GRAPH_URL_COURSE_LINKS_PARAM)
     : null;
 
+  const filterSlugs = parseKindFilterSlugs(params);
+  let conceptsHidden = parseBooleanFlag(
+    params.has(GRAPH_URL_HIDE_CONCEPTS_PARAM)
+      ? params.get(GRAPH_URL_HIDE_CONCEPTS_PARAM)
+      : null,
+    DEFAULT_GRAPH_CONCEPTS_HIDDEN,
+  );
+  if (filterSlugs.concept.trim()) {
+    conceptsHidden = false;
+  }
+
   return {
     expansionSlugs: parseSlugList(params.get(GRAPH_URL_EXPAND_PARAM)),
-    filterSlugs: parseKindFilterSlugs(params),
-    conceptsHidden: parseBooleanFlag(
-      params.has(GRAPH_URL_HIDE_CONCEPTS_PARAM)
-        ? params.get(GRAPH_URL_HIDE_CONCEPTS_PARAM)
-        : null,
-      DEFAULT_GRAPH_CONCEPTS_HIDDEN,
-    ),
+    filterSlugs,
+    conceptsHidden,
     degreeScopeSlug: parseDegreeScopeSlug(params),
     courseLinkMode: parseCourseLinkMode(courseLinksParam),
   };
@@ -192,6 +183,9 @@ export function writeGraphUrlState(
   const params = url.searchParams;
 
   params.delete(LEGACY_DEGREE_SCOPE_PARAM);
+  for (const key of REMOVED_KIND_FILTER_URL_PARAMS) {
+    params.delete(key);
+  }
 
   if (state.expansionSlugs.length > 0) {
     params.set(GRAPH_URL_EXPAND_PARAM, state.expansionSlugs.join(","));

@@ -125,11 +125,16 @@ interface GraphDegreeContext {
 
 function createKindFilters(): KindFilters {
   return {
-    degree: "",
-    year: "",
     course: "",
     concept: "",
   };
+}
+
+/** Concept sidebar filter requires concept nodes in scope (degree filter + toggle UI). */
+function reconcileConceptVisibilityWithConceptFilter(viewState: GraphViewState): void {
+  if (viewState.kindFilters.concept.trim()) {
+    viewState.conceptsHidden = false;
+  }
 }
 
 function nodeSlug(node: cytoscape.NodeSingular): string | undefined {
@@ -223,6 +228,7 @@ function applyUrlStateToViewState(
 
   viewState.kindFilters = kindFilters;
   viewState.conceptsHidden = urlState.conceptsHidden;
+  reconcileConceptVisibilityWithConceptFilter(viewState);
   viewState.degreeScopeSlug = urlState.degreeScopeSlug;
   viewState.courseLinkMode = urlState.courseLinkMode;
   viewState.expansionNodeIds = expansionNodeIds.length > 0 ? expansionNodeIds : null;
@@ -1157,8 +1163,6 @@ function updateExpansionListUI(
 
 function buildKindFilterOptions(cy: cytoscape.Core): Record<KindFilterKey, cytoscape.NodeSingular[]> {
   const options: Record<KindFilterKey, cytoscape.NodeSingular[]> = {
-    degree: [],
-    year: [],
     course: [],
     concept: [],
   };
@@ -1217,6 +1221,7 @@ function mountKindFilters(
 
     select.addEventListener("change", () => {
       viewState.kindFilters[kind] = select.value;
+      reconcileConceptVisibilityWithConceptFilter(viewState);
       ui.syncView(false, "push");
       refreshGraphLayout(cy, viewState, ui.degreeContext);
     });
@@ -2289,6 +2294,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
     expansionListRoot,
     degreeContext,
     syncView: (fit = false, historyMode: "push" | "replace" = "replace") => {
+      reconcileConceptVisibilityWithConceptFilter(viewState);
       applyElementVisibility(cy, viewState, degreeContext);
       applyDegreeScopePresentation(cy, viewState, degreeContext);
       applyExpansionEdgeColors(cy, viewState);
@@ -2348,6 +2354,7 @@ export async function mountGraph(containerClass: string, options: MountGraphOpti
 
   if (toggleConceptsButton instanceof HTMLButtonElement) {
     mountToggleConceptsButton(cy, viewState, ui, toggleConceptsButton);
+    reconcileConceptVisibilityWithConceptFilter(viewState);
     syncToggleConceptsButton(toggleConceptsButton, viewState.conceptsHidden);
   }
 
