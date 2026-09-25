@@ -1,3 +1,7 @@
+import {
+  DEVELOPER_CREDIT_LABEL,
+  DEVELOPER_LINKEDIN_URL,
+} from "./sidebar-footer-html";
 import { signOutIconSvg } from "./sidebar-icons";
 
 interface ShellSidebarFooterProps {
@@ -39,6 +43,16 @@ export function ShellSidebarFooter({ email, userName, onSignOut }: ShellSidebarF
             <span className="dashboard__link-label">Sign out</span>
           </button>
         ) : null}
+      </div>
+      <div className="dashboard__developer-credit">
+        <a
+          href={DEVELOPER_LINKEDIN_URL}
+          className="dashboard__developer-credit-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {DEVELOPER_CREDIT_LABEL}
+        </a>
       </div>
     </div>
   );

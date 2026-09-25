@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { DEVELOPER_CREDIT_LABEL, DEVELOPER_LINKEDIN_URL } from "./sidebar-footer-html";
 import { readBrowserSiteRoot } from "./siteRoot";
 
 const LOGO_WIDTH = 5000;
@@ -25,7 +26,19 @@ export function LoginScreen({ children }: { children: ReactNode }) {
           decoding="async"
         />
       </div>
-      <div className="login__panel">{children}</div>
+      <div className="login__panel">
+        {children}
+        <div className="login__developer-credit">
+          <a
+            href={DEVELOPER_LINKEDIN_URL}
+            className="login__developer-credit-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {DEVELOPER_CREDIT_LABEL}
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
