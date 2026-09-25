@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import { mountConceptPanel, type ConceptPage } from "@pps/roadmap/concept-panel";
 
@@ -40,7 +40,7 @@ import {
   resolvePlanningSaveBlockReason,
 } from "./catalog-sync";
 import { ConceptCombobox } from "./ConceptCombobox";
-import { PlanningCalendar } from "./PlanningCalendar";
+import { PlanningCalendar, PlanningCalendarHeader } from "./PlanningCalendar";
 import { buildProgramWeekGrid } from "./planning-calendar";
 import {
   cmsCoursePageHref,
@@ -94,28 +94,35 @@ function PlanCalendarSkeleton() {
   return (
     <div className="planning__calendar-wrap planning__calendar-wrap--loading" aria-hidden="true">
       <div className="planning-calendar planning-calendar--skeleton">
-        <header className="planning-calendar__header">
-          <span className="planning__skeleton planning__skeleton--calendar-title" />
-          <span className="planning__skeleton planning__skeleton--calendar-subtitle" />
-        </header>
-        <div className="planning-calendar__grid">
+        <PlanningCalendarHeader />
+        <div className="planning-calendar__grid" role="presentation">
           {grid.map((row, rowIndex) => (
-            <div className="planning-calendar__block" key={rowIndex}>
-              {row.map((week, columnIndex) => (
-                <div
-                  className={
-                    week == null
-                      ? "planning-calendar__cell planning-calendar__cell--empty planning-calendar__cell--skeleton"
-                      : "planning-calendar__cell planning-calendar__cell--skeleton"
-                  }
-                  key={columnIndex}
-                >
-                  {week != null ? (
-                    <span className="planning-calendar__week-label">Semana {week}</span>
-                  ) : null}
-                  <span className="planning__skeleton planning__skeleton--calendar-ribbon" />
-                </div>
-              ))}
+            <div
+              className="planning-calendar__block"
+              key={rowIndex}
+              style={{ "--planning-calendar-lanes": 1 } as CSSProperties}
+            >
+              <div className="planning-calendar__cells">
+                {row.map((week, columnIndex) => (
+                  <div
+                    className={
+                      week == null
+                        ? "planning-calendar__cell planning-calendar__cell--empty"
+                        : "planning-calendar__cell"
+                    }
+                    key={columnIndex}
+                  >
+                    {week != null ? (
+                      <span className="planning-calendar__week-label">Semana {week}</span>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+              <div className="planning-calendar__ribbon-layer" aria-hidden="true">
+                {row.some((week) => week != null) ? (
+                  <span className="planning__skeleton planning__skeleton--calendar-ribbon planning-calendar__skeleton-ribbon" />
+                ) : null}
+              </div>
             </div>
           ))}
         </div>

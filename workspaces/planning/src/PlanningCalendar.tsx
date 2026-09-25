@@ -18,6 +18,18 @@ interface PlanningCalendarProps {
   onConceptOpen?: (slug: string) => void;
 }
 
+export function PlanningCalendarHeader() {
+  return (
+    <header className="planning-calendar__header">
+      <h2 className="planning-calendar__title">Programa · {PLANNING_WEEK_COUNT} semanas</h2>
+      <p className="planning-calendar__subtitle">
+        Cintas sólidas: <strong>Tema</strong>; rayadas: <strong>Sugerido</strong>. Tocá una cinta
+        para ver recursos.
+      </p>
+    </header>
+  );
+}
+
 export function PlanningCalendar({ plan, labels, onConceptOpen }: PlanningCalendarProps) {
   const topicSpans = useMemo(() => conceptTopicSpansFromPlan(plan), [plan]);
   const prerequisiteSpans = useMemo(() => conceptPrerequisiteSpansFromPlan(plan), [plan]);
@@ -43,13 +55,7 @@ export function PlanningCalendar({ plan, labels, onConceptOpen }: PlanningCalend
 
   return (
     <div className="planning-calendar">
-      <header className="planning-calendar__header">
-        <h2 className="planning-calendar__title">Programa · {PLANNING_WEEK_COUNT} semanas</h2>
-        <p className="planning-calendar__subtitle">
-          Cintas sólidas: <strong>Tema</strong>; rayadas: <strong>Sugerido</strong>. Tocá una cinta
-          para ver recursos.
-        </p>
-      </header>
+      <PlanningCalendarHeader />
 
       <div className="planning-calendar__grid" role="grid" aria-label="Calendario del programa">
         {rowLayouts.map(({ row, ribbons, laneCount }, rowIndex) => (

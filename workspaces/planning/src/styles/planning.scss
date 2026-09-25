@@ -604,17 +604,6 @@
       border-radius: 0.35rem;
     }
 
-    &--calendar-title {
-      width: min(100%, 14rem);
-      height: 1.25rem;
-    }
-
-    &--calendar-subtitle {
-      width: min(100%, 22rem);
-      height: 0.85rem;
-      margin-top: 0.35rem;
-    }
-
     &--calendar-ribbon {
       height: var(--planning-calendar-ribbon-height, 1.45rem);
       margin-top: 0.35rem;
@@ -802,10 +791,15 @@
 
     &--skeleton {
       pointer-events: none;
+    }
 
-      .planning-calendar__cell--skeleton {
-        justify-content: flex-start;
-      }
+    &__skeleton-ribbon {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      width: auto;
+      min-width: 0;
+      margin: 0;
+      align-self: start;
     }
     --planning-calendar-ribbon-gap: 0.28rem;
     --planning-calendar-label-block: 1.35rem;
