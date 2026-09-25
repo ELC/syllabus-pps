@@ -34,7 +34,7 @@ function parseHex(hex: string): [number, number, number] {
 
 function toHex([red, green, blue]: [number, number, number]): string {
   return `#${[red, green, blue]
-    .map((channel) => clamp255(channel).toString(16).padStart(2, "0"))
+    .map((channel) => clamp255(Math.round(channel)).toString(16).padStart(2, "0"))
     .join("")
     .toUpperCase()}`;
 }
@@ -98,9 +98,9 @@ export function courseYearPresentation(
   const spine = options.spine ?? false;
   return {
     borderColor,
-    backgroundColor: tint(borderColor, spine ? 0.16 : 0.08),
-    progressBackgroundColor: tint(borderColor, 0.08),
-    progressFillColor: tint(borderColor, 0.24),
+    backgroundColor: tint(borderColor, spine ? 0.17 : 0.15),
+    progressBackgroundColor: tint(borderColor, 0.15),
+    progressFillColor: tint(borderColor, 0.26),
   };
 }
 
