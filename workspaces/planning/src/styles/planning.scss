@@ -486,7 +486,7 @@
     overflow: hidden;
     cursor: text;
 
-    input {
+    .planning__cell-editor-input {
       min-width: 10rem;
       flex: 1 1 8rem;
       align-self: center;
@@ -498,8 +498,13 @@
       font: inherit;
       line-height: 1.35;
 
-      &::placeholder {
-        color: var(--dash-muted);
+      &--collapsed {
+        width: 0;
+        min-width: 0;
+        flex: 0 0 0;
+        margin: 0;
+        padding: 0;
+        opacity: 0;
       }
     }
   }
@@ -709,6 +714,25 @@
       padding: 0.12rem 0.55rem;
       cursor: pointer;
       font: inherit;
+    }
+
+    &--add {
+      flex-shrink: 0;
+      justify-content: center;
+      width: 1.55rem;
+      height: 1.55rem;
+      padding: 0;
+      color: var(--dash-muted);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1;
+      pointer-events: none;
+
+      .planning__cell-editor-surface:hover & {
+        border-color: color-mix(in srgb, var(--dash-accent) 35%, var(--dash-border));
+        background: color-mix(in srgb, var(--dash-accent) 10%, var(--dash-surface));
+        color: var(--dash-text);
+      }
     }
   }
 

@@ -285,12 +285,21 @@ export function ConceptCombobox({
             </button>
           </span>
         ))}
+        {!query && !open ? (
+          <span className="planning__chip planning__chip--add" aria-hidden="true">
+            +
+          </span>
+        ) : null}
         <input
           ref={inputRef}
           type="search"
           value={query}
           disabled={disabled}
-          placeholder={selected.length ? "Agregar otro…" : "Buscar concepto…"}
+          className={
+            !query && !open
+              ? "planning__cell-editor-input planning__cell-editor-input--collapsed"
+              : "planning__cell-editor-input"
+          }
           aria-label="Agregar concepto"
           aria-expanded={open}
           aria-controls={id}
