@@ -322,8 +322,44 @@ body.dashboard--body {
     }
 
     .dashboard__developer-credit {
-      opacity: 0;
-      pointer-events: none;
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      padding-right: 0.25rem;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    .dashboard__developer-credit-link {
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    .dashboard__developer-credit-label--full {
+      display: none !important;
+    }
+
+    .dashboard__developer-credit-label--short {
+      display: inline-block !important;
+      max-width: none;
+      overflow: visible;
+      text-overflow: clip;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    .dashboard__developer-credit-link:not(:has(.dashboard__developer-credit-label--short)) {
+      font-size: 0;
+      color: transparent;
+
+      &::after {
+        content: attr(data-pps-developer-credit-short);
+        display: inline-block;
+        font-size: inherit;
+        line-height: inherit;
+        color: var(--dash-sidebar-muted);
+        text-align: left;
+      }
     }
 
     .dashboard__sidebar-head {
@@ -359,7 +395,7 @@ body.dashboard--body {
     }
 
     .dashboard__footer {
-      min-height: 0;
+      min-height: 4.75rem;
       padding-top: 0.35rem;
     }
   }
@@ -488,19 +524,31 @@ body.dashboard--body {
   }
 
   &__developer-credit {
+    --dash-developer-credit-block-height: calc(0.6875rem * 1.35 + 0.15rem + 0.45rem);
     flex-shrink: 0;
+    box-sizing: border-box;
+    min-height: var(--dash-developer-credit-block-height);
+    max-height: var(--dash-developer-credit-block-height);
     padding: 0.15rem 1.25rem 0.45rem;
+    overflow: hidden;
     font-family: var(--font-body, "Open Sans", sans-serif);
     font-size: 0.6875rem;
     font-weight: 400;
     line-height: 1.35;
     color: var(--dash-sidebar-muted);
     text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   &__developer-credit-link {
+    display: block;
+    max-height: calc(0.6875rem * 1.35);
+    overflow: hidden;
     color: inherit;
     text-decoration: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
     &:hover {
       color: var(--dash-sidebar-text);
@@ -511,6 +559,19 @@ body.dashboard--body {
       outline-offset: 2px;
       border-radius: 0.15rem;
     }
+  }
+
+  &__developer-credit-label {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: top;
+  }
+
+  &__developer-credit-label--short {
+    display: none;
   }
 
   &__user {

@@ -1,5 +1,6 @@
 import {
   DEVELOPER_CREDIT_LABEL,
+  DEVELOPER_CREDIT_SHORT_LABEL,
   DEVELOPER_LINKEDIN_URL,
 } from "./sidebar-footer-html";
 import { signOutIconSvg } from "./sidebar-icons";
@@ -50,8 +51,15 @@ export function ShellSidebarFooter({ email, userName, onSignOut }: ShellSidebarF
           className="dashboard__developer-credit-link"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={DEVELOPER_CREDIT_LABEL}
+          data-pps-developer-credit-short={DEVELOPER_CREDIT_SHORT_LABEL}
         >
-          {DEVELOPER_CREDIT_LABEL}
+          <span className="dashboard__developer-credit-label dashboard__developer-credit-label--full">
+            {DEVELOPER_CREDIT_LABEL}
+          </span>
+          <span className="dashboard__developer-credit-label dashboard__developer-credit-label--short">
+            {DEVELOPER_CREDIT_SHORT_LABEL}
+          </span>
         </a>
       </div>
     </div>

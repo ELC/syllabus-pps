@@ -1,4 +1,4 @@
-import { repairShellSignOutMarkup } from "@pps/login/sidebar-footer-html";
+import { ensureDeveloperCredit, repairShellSignOutMarkup } from "@pps/login/sidebar-footer-html";
 
 import { navToggleIconSvg, sidebarCollapseIconSvg } from "./nav-icons";
 
@@ -7,7 +7,7 @@ const COLLAPSE_EVENT = "pps-sidebar-collapsed";
 const MOBILE_NAV_MQ = "(max-width: 900px)";
 
 const INTERACTIVE_SELECTOR =
-  ".dashboard__link, .dashboard__brand, .dashboard__sidebar-collapse, .dashboard__nav-toggle, .login__sign-out";
+  ".dashboard__link, .dashboard__brand, .dashboard__sidebar-collapse, .dashboard__nav-toggle, .login__sign-out, .dashboard__developer-credit-link";
 
 function isMobileNav(): boolean {
   return window.matchMedia(MOBILE_NAV_MQ).matches;
@@ -57,6 +57,7 @@ export function applySidebarCollapsed(dashboard: HTMLElement, collapsed: boolean
     }
   }
 
+  ensureDeveloperCredit(document);
   dashboard.dispatchEvent(new CustomEvent(COLLAPSE_EVENT, { detail: { collapsed } }));
 }
 
@@ -127,7 +128,8 @@ export function mountShellSidebar(root: ParentNode = document): void {
 
   sidebar.dataset.ppsSidebarMounted = "1";
   ensureMobileMenuStructure(sidebar);
-  repairShellSignOutMarkup(sidebar);
+  repairShellSignOutMarkup(document);
+  ensureDeveloperCredit(document);
   setSidebarCollapsed(dashboard, readSidebarCollapsedPreference());
   setMobileNavOpen(dashboard, false);
   enableSidebarTransitions(dashboard);
