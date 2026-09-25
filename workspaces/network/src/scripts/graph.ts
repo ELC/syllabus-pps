@@ -1189,6 +1189,10 @@ function mountKindFilters(
   ui: GraphUi,
   filtersRoot: HTMLElement,
 ): void {
+  filtersRoot.replaceChildren();
+  filtersRoot.removeAttribute("aria-busy");
+  filtersRoot.removeAttribute("aria-label");
+
   const optionsByKind = buildKindFilterOptions(cy);
 
   for (const { kind, label } of GRAPH_FILTER_KINDS) {

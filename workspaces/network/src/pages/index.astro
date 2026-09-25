@@ -54,7 +54,21 @@ import networkCss from "../styles/network.scss?url";
         lo mismo que hacer clic en el grafo, que expande el vecindario de un nodo.
       </span>
     </div>
-    <div id="graph-filters" class="graph__filters-list"></div>
+    <div
+      id="graph-filters"
+      class="graph__filters-list"
+      aria-busy="true"
+      aria-label="Cargando filtros del grafo"
+    >
+      <div class="graph__filter graph__filter--loading" aria-hidden="true">
+        <span class="network__skeleton graph__filter-skeleton-label"></span>
+        <span class="network__skeleton graph__filter-skeleton-select"></span>
+      </div>
+      <div class="graph__filter graph__filter--loading" aria-hidden="true">
+        <span class="network__skeleton graph__filter-skeleton-label"></span>
+        <span class="network__skeleton graph__filter-skeleton-select"></span>
+      </div>
+    </div>
     <button
       id="graph-reset-filters"
       type="button"

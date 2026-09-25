@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { verticalStretchToFillViewport } from "../../../roadmap/src/components/roadmap/course-layout";
-import { viewportForRoadmapBounds } from "../../../roadmap/src/components/roadmap/RoadmapApp";
+import { viewportForRoadmapBounds } from "../../../roadmap/src/components/roadmap/roadmap-viewport";
 
 describe("verticalStretchToFillViewport", () => {
   it("stretches when width is the limiting axis", () => {

@@ -1,7 +1,6 @@
 import {
   Background,
   Controls,
-  MiniMap,
   Panel,
   ReactFlow,
   useEdgesState,
@@ -48,7 +47,7 @@ import {
 import type { RoadmapWorkspaceNav } from "../../RoadmapHeaderWorkspaceLinks";
 
 import type { ConceptPage } from "../../scripts/concept-panel";
-import { buildRoadmapFlow } from "./build-flow";
+import { buildRoadmapFlow, buildYearBandOverlays } from "./build-flow";
 import {
   buildConceptCurationDebugExport,
   copyConceptCurationDebugExport,
@@ -106,9 +105,18 @@ import {
   gridLayoutStatusToSemaphore,
 } from "./grid-layout-semaphore";
 import { buildLinearConceptLayout, type RoadmapBounds } from "./layout";
+import {
+  ROADMAP_VIEWPORT_PADDING,
+  viewportForRoadmapBounds,
+} from "./roadmap-viewport";
+
+export { viewportForRoadmapBounds } from "./roadmap-viewport";
 import { RoadmapCanvasSkeleton } from "./RoadmapCanvasSkeleton";
+import { RoadmapLoadingShell } from "./RoadmapLoadingShell";
+import { RoadmapToolbarSkeleton } from "./RoadmapToolbarSkeleton";
 import { RoadmapAnchorNode } from "./RoadmapAnchorNode";
-import { RoadmapYearBandNode } from "./RoadmapYearBandNode";
+import { RoadmapMiniMap } from "./RoadmapMiniMap";
+import { RoadmapYearBandsLayer } from "./RoadmapYearBandsLayer";
 import { RoadmapBranchEdge } from "./RoadmapBranchEdge";
 import { RoadmapCourseEdge } from "./RoadmapCourseEdge";
 import { RoadmapSpineEdge } from "./RoadmapSpineEdge";
@@ -140,7 +148,6 @@ const nodeTypes: NodeTypes = {
   roadmapCourse: RoadmapCourseNode,
   roadmapAnchor: RoadmapAnchorNode,
   roadmapJunction: RoadmapJunctionNode,
-  roadmapYearBand: RoadmapYearBandNode,
 };
 
 const edgeTypes: EdgeTypes = {
@@ -148,8 +155,6 @@ const edgeTypes: EdgeTypes = {
   roadmapBranch: RoadmapBranchEdge,
   roadmapCourse: RoadmapCourseEdge,
 };
-
-const VIEWPORT_PADDING = 48;
 
 function parseGeneratedPayload<T>(content: string): T {
   const newlineIndex = content.indexOf("\n");
@@ -176,37 +181,23 @@ function normalizeCurriculumGraph(loaded: unknown): CurriculumGraph {
   return hydrateCurriculumGraph(raw as CurriculumGraph);
 }
 
-export function viewportForRoadmapBounds(
-  bounds: RoadmapBounds,
-  width: number,
-  height: number,
-  padding = VIEWPORT_PADDING,
-): { x: number; y: number; zoom: number } {
-  const contentWidth = Math.max(bounds.maxX - bounds.minX, 1);
-  const contentHeight = Math.max(bounds.maxY - bounds.minY, 1);
-  const zoomX = (width - padding * 2) / contentWidth;
-  const zoomY = (height - padding * 2) / contentHeight;
-  const zoom = Math.min(1, zoomX, zoomY);
-  const centerX = (bounds.minX + bounds.maxX) / 2;
-  const centerY = (bounds.minY + bounds.maxY) / 2;
-
-  return {
-    x: width / 2 - centerX * zoom,
-    y: height / 2 - centerY * zoom,
-    zoom,
-  };
-}
-
 function CanvasViewport({
   bounds,
   viewportKey,
+  onViewportReady,
 }: {
   bounds: RoadmapBounds;
   viewportKey: string;
+  onViewportReady?: () => void;
 }) {
   const { setViewport } = useReactFlow();
   const width = useStore((state) => state.width);
   const height = useStore((state) => state.height);
+  const readyForKeyRef = useRef<string | null>(null);
+
+  useLayoutEffect(() => {
+    readyForKeyRef.current = null;
+  }, [viewportKey]);
 
   useLayoutEffect(() => {
     if (width === 0 || height === 0) {
@@ -214,7 +205,16 @@ function CanvasViewport({
     }
 
     setViewport(viewportForRoadmapBounds(bounds, width, height));
-  }, [bounds, height, setViewport, viewportKey, width]);
+
+    if (readyForKeyRef.current === viewportKey) {
+      return;
+    }
+
+    readyForKeyRef.current = viewportKey;
+    requestAnimationFrame(() => {
+      onViewportReady?.();
+    });
+  }, [bounds, height, onViewportReady, setViewport, viewportKey, width]);
 
   return null;
 }
@@ -269,6 +269,7 @@ export function RoadmapApp({
     useState<RoadmapCourseLayoutDocument | null>(null);
   const [courseLayoutLoading, setCourseLayoutLoading] = useState(false);
   const [courseLayoutReadySlug, setCourseLayoutReadySlug] = useState<string | null>(null);
+  const [canvasViewportReady, setCanvasViewportReady] = useState(false);
   const [gridLayoutStatus, setGridLayoutStatus] = useState("");
   const lastAppliedUrlKeyRef = useRef<string | null>(null);
   const courseLayoutEditBaselineRef = useRef<RoadmapCourseLayoutDocument | null>(null);
@@ -284,9 +285,6 @@ export function RoadmapApp({
       });
   }, []);
 
-  useEffect(() => {
-    onLoadingChange?.(!graph && !loadError);
-  }, [graph, loadError, onLoadingChange]);
 
   useEffect(() => {
     onGridLayoutSemaphoreChange?.(gridLayoutStatusToSemaphore(gridLayoutStatus));
@@ -319,6 +317,19 @@ export function RoadmapApp({
   }, [courseRoadmaps, focusedCourseSlug, selectedDegree]);
 
   const isConceptView = focusedCourseSlug !== null;
+
+  const viewportKey = useMemo(
+    () => `${activeCourseRoadmap?.degreeSlug ?? "none"}:${focusedCourseSlug ?? "courses"}`,
+    [activeCourseRoadmap?.degreeSlug, focusedCourseSlug],
+  );
+
+  useEffect(() => {
+    setCanvasViewportReady(false);
+  }, [viewportKey]);
+
+  const handleCanvasViewportReady = useCallback(() => {
+    setCanvasViewportReady(true);
+  }, []);
 
   const activeDegreeRoadmap = useMemo(() => {
     if (!graph || !activeCourseRoadmap) {
@@ -667,7 +678,7 @@ export function RoadmapApp({
       baseLayout.bounds,
       canvasPanelSize.width,
       canvasPanelSize.height,
-      VIEWPORT_PADDING,
+      ROADMAP_VIEWPORT_PADDING,
     );
 
     return stretchCourseRoadmapLayoutVertically(baseLayout, courseYearsByTitle, stretch);
@@ -702,6 +713,40 @@ export function RoadmapApp({
 
   const showLayoutSkeleton = showCourseLayoutSkeleton || showConceptLayoutSkeleton;
 
+  const hasConceptGraph = Boolean(
+    activeDegreeRoadmap && (!isConceptView || activeDegreeRoadmap.concepts.length > 0),
+  );
+
+  const initialViewport = useMemo(() => {
+    if (!layout || canvasPanelSize.width <= 0 || canvasPanelSize.height <= 0) {
+      return null;
+    }
+
+    return viewportForRoadmapBounds(
+      layout.bounds,
+      canvasPanelSize.width,
+      canvasPanelSize.height,
+    );
+  }, [canvasPanelSize.height, canvasPanelSize.width, layout]);
+
+  const showCanvasSkeleton = Boolean(
+    showLayoutSkeleton ||
+      (hasConceptGraph &&
+        (canvasPanelSize.width <= 0 ||
+          canvasPanelSize.height <= 0 ||
+          !canvasViewportReady)),
+  );
+
+  const canMountFlow = Boolean(hasConceptGraph && !showLayoutSkeleton && initialViewport);
+
+  const showToolbarSkeleton = Boolean(
+    !graph || !layout || showCanvasSkeleton,
+  );
+
+  useEffect(() => {
+    onLoadingChange?.((!graph && !loadError) || showToolbarSkeleton);
+  }, [graph, loadError, onLoadingChange, showToolbarSkeleton]);
+
   useEffect(() => {
     const panel = canvasPanelRef.current;
     if (!panel) {
@@ -719,7 +764,7 @@ export function RoadmapApp({
     const observer = new ResizeObserver(updateSize);
     observer.observe(panel);
     return () => observer.disconnect();
-  }, [isConceptView, showLayoutSkeleton]);
+  }, [graph, isConceptView, layout]);
 
   const canEditCourseGrid = Boolean(
     !isConceptView &&
@@ -1055,6 +1100,14 @@ export function RoadmapApp({
     ],
   );
 
+  const yearBandOverlays = useMemo(
+    () =>
+      !isConceptView && layout
+        ? buildYearBandOverlays(layout, yearPageSlugByLabel)
+        : [],
+    [isConceptView, layout, yearPageSlugByLabel],
+  );
+
   const [flowNodes, setFlowNodes, onFlowNodesChange] = useNodesState<Node>([]);
   const [flowEdges, setFlowEdges, onFlowEdgesChange] = useEdgesState<Edge>([]);
 
@@ -1313,9 +1366,14 @@ export function RoadmapApp({
       return;
     }
 
-    progress.reset();
+    if (focusedCourseSlug && focusedCourse) {
+      progress.reset({ courseTitle: focusedCourse.title });
+    } else {
+      progress.reset();
+    }
+
     setConfirmingReset(false);
-  }, [confirmingReset, progress]);
+  }, [confirmingReset, focusedCourse, focusedCourseSlug, progress]);
 
   const handleSaveCourseGrid = useCallback(() => {
     if (!activeCourseRoadmap || !effectiveCourseCuration) {
@@ -1623,14 +1681,16 @@ export function RoadmapApp({
   }
 
   if (!graph) {
-    return null;
+    return <RoadmapLoadingShell canvasPanelRef={canvasPanelRef} />;
   }
 
-  if (!activeCourseRoadmap || !layout || !activeDegreeRoadmap) {
+  if (!activeCourseRoadmap || !activeDegreeRoadmap) {
     return <p className="roadmap__empty">No hay carreras con materias para mostrar.</p>;
   }
 
-  const hasConceptGraph = !isConceptView || activeDegreeRoadmap.concepts.length > 0;
+  if (!layout) {
+    return <RoadmapLoadingShell canvasPanelRef={canvasPanelRef} />;
+  }
 
   const remaining = progressCounts.total - progressCounts.skipped;
   const percent = remainingProgressPercent(
@@ -1642,10 +1702,11 @@ export function RoadmapApp({
   const progressScopeLabel = isConceptView
     ? (focusedCourse?.title ?? activeCourseRoadmap.degree)
     : activeCourseRoadmap.degree;
-  const viewportKey = `${activeCourseRoadmap.degreeSlug}:${focusedCourseSlug ?? "courses"}`;
-
   return (
     <div className="roadmap">
+      {showToolbarSkeleton ? (
+        <RoadmapToolbarSkeleton />
+      ) : (
       <div className="roadmap__toolbar">
         <div className="roadmap__toolbar-selectors">
           <div className="roadmap__degree-field">
@@ -1751,19 +1812,27 @@ export function RoadmapApp({
         </div>
 
       </div>
+      )}
 
       <section
         ref={canvasPanelRef}
-        className={`roadmap__canvas-panel${hasConceptGraph ? "" : " roadmap__canvas-panel--empty"}${layoutEditMode ? " roadmap__canvas-panel--grid-edit" : ""}`}
+        className={`roadmap__canvas-panel${hasConceptGraph ? "" : " roadmap__canvas-panel--empty"}${layoutEditMode ? " roadmap__canvas-panel--grid-edit" : ""}${showCanvasSkeleton ? " roadmap__canvas-panel--booting" : ""}`}
         aria-label={isConceptView ? "Mapa de conceptos de la materia" : "Mapa de materias"}
       >
-        {showLayoutSkeleton ? (
-          <RoadmapCanvasSkeleton />
-        ) : hasConceptGraph ? (
-          <RoadmapProgressContext.Provider value={progress}>
-            <ReactFlow
-              nodes={flowNodes}
-              edges={flowEdges}
+        {showCanvasSkeleton ? <RoadmapCanvasSkeleton /> : null}
+        {canMountFlow ? (
+          <div
+            className={
+              showCanvasSkeleton
+                ? "roadmap__canvas-flow roadmap__canvas-flow--preparing"
+                : "roadmap__canvas-flow"
+            }
+          >
+            <RoadmapProgressContext.Provider value={progress}>
+              <ReactFlow
+                defaultViewport={initialViewport ?? undefined}
+                nodes={flowNodes}
+                edges={flowEdges}
               onNodesChange={onFlowNodesChange}
               onEdgesChange={onFlowEdgesChange}
               nodeTypes={nodeTypes}
@@ -1797,7 +1866,14 @@ export function RoadmapApp({
                 }
               }}
             >
-              <CanvasViewport bounds={layout.bounds} viewportKey={viewportKey} />
+              <CanvasViewport
+                bounds={layout.bounds}
+                viewportKey={viewportKey}
+                onViewportReady={handleCanvasViewportReady}
+              />
+              {yearBandOverlays.length > 0 ? (
+                <RoadmapYearBandsLayer overlays={yearBandOverlays} />
+              ) : null}
               {isConceptView ? (
                 <Panel position="top-left" className="roadmap__graph-back">
                   <button type="button" className="roadmap__back-button" onClick={handleBackToCourses}>
@@ -1886,12 +1962,13 @@ export function RoadmapApp({
                   </div>
                 </Panel>
               ) : null}
-              <MiniMap pannable zoomable className="roadmap__minimap" nodeStrokeWidth={0} />
+              <RoadmapMiniMap />
               <Controls className="roadmap__controls" showInteractive={false} />
               <Background gap={20} size={1} className="roadmap__background" />
-            </ReactFlow>
-          </RoadmapProgressContext.Provider>
-        ) : (
+              </ReactFlow>
+            </RoadmapProgressContext.Provider>
+          </div>
+        ) : !hasConceptGraph ? (
           <>
             <div className="roadmap__graph-back">
               <button type="button" className="roadmap__back-button" onClick={handleBackToCourses}>
@@ -1902,7 +1979,7 @@ export function RoadmapApp({
               {focusedCourse?.title ?? "Esta materia"} no tiene conceptos vinculados todavía.
             </p>
           </>
-        )}
+        ) : null}
       </section>
     </div>
   );

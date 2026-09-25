@@ -5,15 +5,14 @@ import { siteRootFromEnv } from "@pps/shell/site-root";
 export type { RoadmapYearBandNodeData } from "./roadmap-node-data";
 import type { RoadmapYearBandNodeData } from "./roadmap-node-data";
 
-export function RoadmapYearBandNode({ data }: NodeProps) {
-  const nodeData = data as unknown as RoadmapYearBandNodeData;
-  const yearPageSlug = nodeData.yearPageSlug?.trim();
+export function YearBandDecoration({ data }: { data: RoadmapYearBandNodeData }) {
+  const yearPageSlug = data.yearPageSlug?.trim();
   const cmsHref = yearPageSlug
     ? cmsCoursePageHref(siteRootFromEnv(import.meta.env.BASE_URL ?? "/"), yearPageSlug)
     : null;
   const className = [
     "roadmap__year-band",
-    nodeData.showYearSeparator ? "roadmap__year-band--between-years" : "",
+    data.showYearSeparator ? "roadmap__year-band--between-years" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -23,7 +22,7 @@ export function RoadmapYearBandNode({ data }: NodeProps) {
       className={className}
       style={
         {
-          "--roadmap-year-separator-top": `${nodeData.separatorTop}px`,
+          "--roadmap-year-separator-top": `${data.separatorTop}px`,
         } as React.CSSProperties
       }
       aria-hidden={cmsHref ? undefined : "true"}
@@ -32,14 +31,19 @@ export function RoadmapYearBandNode({ data }: NodeProps) {
         <a
           className="roadmap__year-band-label roadmap__year-band-link"
           href={cmsHref}
-          title={`Editar ${nodeData.label} en el CMS`}
-          aria-label={`Editar ${nodeData.label} en el CMS`}
+          title={`Editar ${data.label} en el CMS`}
+          aria-label={`Editar ${data.label} en el CMS`}
         >
-          {nodeData.label}
+          {data.label}
         </a>
       ) : (
-        <span className="roadmap__year-band-label">{nodeData.label}</span>
+        <span className="roadmap__year-band-label">{data.label}</span>
       )}
     </div>
   );
+}
+
+export function RoadmapYearBandNode({ data }: NodeProps) {
+  const nodeData = data as unknown as RoadmapYearBandNodeData;
+  return <YearBandDecoration data={nodeData} />;
 }

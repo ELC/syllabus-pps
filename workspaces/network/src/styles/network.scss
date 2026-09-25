@@ -268,14 +268,52 @@
     visibility: visible;
   }
 
+  &__filters-list {
+    --graph-filter-row-height: 3.625rem;
+    --graph-filter-label-height: 0.6875rem;
+    --graph-filter-field-gap: 0.4rem;
+    --graph-filter-control-height: calc(
+      var(--graph-filter-row-height) - var(--graph-filter-label-height) - var(--graph-filter-field-gap)
+    );
+    --graph-filter-row-count: 2;
+    --graph-filter-list-gap: 0.55rem;
+    min-height: calc(
+      var(--graph-filter-row-height) * var(--graph-filter-row-count) + var(--graph-filter-list-gap) *
+        (var(--graph-filter-row-count) - 1) + 0.1rem
+    );
+  }
+
   &__filter {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: var(--graph-filter-field-gap, 0.4rem);
+    height: var(--graph-filter-row-height, 3.625rem);
+    box-sizing: border-box;
+
+    &--loading {
+      pointer-events: none;
+    }
+  }
+
+  &__filter-skeleton-label {
+    width: 5.25rem;
+    height: var(--graph-filter-label-height, 0.6875rem);
+    flex-shrink: 0;
+    border-radius: 0.25rem;
+  }
+
+  &__filter-skeleton-select {
+    width: 100%;
+    height: var(--graph-filter-control-height, 2.5375rem);
+    flex-shrink: 0;
+    border-radius: 0.5rem;
   }
 
   &__filter-label {
+    display: block;
+    height: var(--graph-filter-label-height, 0.6875rem);
+    line-height: var(--graph-filter-label-height, 0.6875rem);
     color: var(--dash-sidebar-muted);
     font-size: 0.6875rem;
     letter-spacing: 0.04em;
@@ -283,7 +321,10 @@
   }
 
   &__filter-select {
+    box-sizing: border-box;
     width: 100%;
+    height: var(--graph-filter-control-height, 2.5375rem);
+    min-height: var(--graph-filter-control-height, 2.5375rem);
     padding: 0.45rem 0.6rem;
     border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 0.5rem;
@@ -311,7 +352,7 @@
   &__filters-list {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
+    gap: var(--graph-filter-list-gap, 0.55rem);
     padding-top: 0.1rem;
   }
 

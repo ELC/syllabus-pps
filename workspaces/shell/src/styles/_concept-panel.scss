@@ -101,12 +101,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
     border: 0;
     border-radius: 0.35rem;
     background: transparent;
-    font-size: 1.125rem;
+    font-family: var(--font-heading);
+    font-size: 1.625rem;
+    font-weight: 700;
     line-height: 1;
     color: var(--dash-muted);
     cursor: pointer;

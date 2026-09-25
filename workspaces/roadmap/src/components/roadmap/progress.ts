@@ -155,7 +155,7 @@ export interface RoadmapProgress {
   resourceStatusFor: (slug: string, line: number) => RoadmapStatus;
   toggleResourceDone: (slug: string, line: number) => void;
   toggleResourceSkipped: (slug: string, line: number) => void;
-  reset: () => void;
+  reset: (options?: { courseTitle?: string }) => void;
   counts: RoadmapProgressCounts;
 }
 
@@ -312,12 +312,59 @@ export function useRoadmapProgress(
     [degreeSlug],
   );
 
-  const reset = useCallback(() => {
-    setStore((current) => {
-      const { [degreeSlug]: _dropped, ...rest } = current;
-      return rest;
-    });
-  }, [degreeSlug]);
+  const reset = useCallback(
+    (options?: { courseTitle?: string }) => {
+      const courseTitle = options?.courseTitle?.trim();
+      if (!courseTitle) {
+        setStore((current) => {
+          const { [degreeSlug]: _dropped, ...rest } = current;
+          return rest;
+        });
+        return;
+      }
+
+      const conceptTitles = courseConceptsByTitle?.get(courseTitle) ?? [];
+      const conceptSlugs = new Set(
+        conceptTitles
+          .map((title) => slugByTitle.get(title))
+          .filter((slug): slug is string => Boolean(slug)),
+      );
+
+      if (conceptSlugs.size === 0) {
+        return;
+      }
+
+      setStore((current) => {
+        const degree = current[degreeSlug];
+        if (!degree) {
+          return current;
+        }
+
+        let changed = false;
+        const nextDegree: Record<string, Record<string, RoadmapStatus>> = {};
+
+        for (const [slug, resources] of Object.entries(degree)) {
+          if (conceptSlugs.has(slug)) {
+            changed = true;
+            continue;
+          }
+          nextDegree[slug] = resources;
+        }
+
+        if (!changed) {
+          return current;
+        }
+
+        if (Object.keys(nextDegree).length === 0) {
+          const { [degreeSlug]: _dropped, ...rest } = current;
+          return rest;
+        }
+
+        return { ...current, [degreeSlug]: nextDegree };
+      });
+    },
+    [courseConceptsByTitle, degreeSlug, slugByTitle],
+  );
 
   const counts = useMemo(() => {
     const tally: RoadmapProgressCounts = {

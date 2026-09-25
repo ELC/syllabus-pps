@@ -572,6 +572,15 @@ const YEAR_BAND_MARGIN_TOP = 20;
 const YEAR_BAND_MARGIN_BOTTOM = 28;
 const YEAR_SEPARATOR_LINE_HEIGHT = 3;
 
+export interface YearBandOverlay {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  data: RoadmapYearBandNodeData;
+}
+
 function yearBandNode(
   band: CourseYearBand,
   minNodeX: number,
@@ -613,6 +622,42 @@ function yearBandNode(
       yearPageSlug: options.yearPageSlug,
     },
   };
+}
+
+export function buildYearBandOverlays(
+  layout: RoadmapLayout,
+  yearPageSlugByLabel?: Map<string, string>,
+): YearBandOverlay[] {
+  if (!layout.courseYearBands?.length) {
+    return [];
+  }
+
+  const placementExtents = [...layout.placements.values()];
+  const minNodeX =
+    placementExtents.length > 0
+      ? Math.min(...placementExtents.map((placement) => placement.x))
+      : layout.bounds.minX + COURSE_YEAR_LABEL_GUTTER;
+  const maxNodeX =
+    placementExtents.length > 0
+      ? Math.max(...placementExtents.map((placement) => placement.x + placement.width))
+      : layout.bounds.maxX;
+
+  return layout.courseYearBands.map((band, index) => {
+    const previousBand = index > 0 ? layout.courseYearBands![index - 1] : undefined;
+    const node = yearBandNode(band, minNodeX, maxNodeX, {
+      previousBandMaxY: previousBand ? previousBand.y + previousBand.height : undefined,
+      yearPageSlug: yearPageSlugByLabel?.get(band.year),
+    });
+
+    return {
+      id: node.id,
+      x: node.position.x,
+      y: node.position.y,
+      width: node.width ?? 0,
+      height: node.height ?? 0,
+      data: node.data,
+    };
+  });
 }
 
 function tneEdgeSuffix(
@@ -726,30 +771,6 @@ export function buildRoadmapFlow({
       anchorNode(ROADMAP_START_ID, "start", "Inicio", layout.start),
       anchorNode(ROADMAP_END_ID, "end", "Objetivo", layout.end),
     );
-  }
-
-  if (courseDagEdges && layout.courseYearBands) {
-    const placementExtents = [...layout.placements.values()];
-    // Course columns only — bounds.minX already subtracts COURSE_YEAR_LABEL_GUTTER for the labels.
-    const minNodeX =
-      placementExtents.length > 0
-        ? Math.min(...placementExtents.map((placement) => placement.x))
-        : layout.bounds.minX + COURSE_YEAR_LABEL_GUTTER;
-    const maxNodeX =
-      placementExtents.length > 0
-        ? Math.max(...placementExtents.map((placement) => placement.x + placement.width))
-        : layout.bounds.maxX;
-    for (const [index, band] of layout.courseYearBands.entries()) {
-      const previousBand = index > 0 ? layout.courseYearBands[index - 1] : undefined;
-      nodes.push(
-        yearBandNode(band, minNodeX, maxNodeX, {
-          previousBandMaxY: previousBand
-            ? previousBand.y + previousBand.height
-            : undefined,
-          yearPageSlug: yearPageSlugByLabel?.get(band.year),
-        }),
-      );
-    }
   }
 
   for (const concept of roadmap.concepts) {
