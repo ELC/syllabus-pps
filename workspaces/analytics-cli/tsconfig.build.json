@@ -1,15 +1,20 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "jsx": "preserve",
     "noEmit": false,
     "outDir": "dist",
     "rootDir": ".",
     "declaration": true,
-    "sourceMap": true,
-    "jsx": "preserve",
-    "lib": ["ES2022"]
+    "sourceMap": true
   },
   "include": ["src/**/*.ts", "pps.config.ts"]
 }
