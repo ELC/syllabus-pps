@@ -626,12 +626,12 @@
 
     &--tne {
       border-style: dashed;
+      box-shadow: 0 8px 20px rgba(30, 41, 59, 0.08), 0 0 0 1px color-mix(in srgb, var(--roadmap-course-border) 35%, transparent);
     }
 
     &--done {
       border-color: var(--austral-graph-concept-base);
       background: var(--austral-graph-concept-base);
-
     }
 
     &--skipped {
@@ -646,6 +646,23 @@
       gap: 0.1rem;
       padding: 0.32rem 0.5rem;
     }
+  }
+
+  &__course-trayecto-badge {
+    position: absolute;
+    top: 0.28rem;
+    right: 0.35rem;
+    z-index: 1;
+    padding: 0.05rem 0.35rem;
+    border-radius: 0.25rem;
+    font-family: var(--font-heading);
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1.35;
+    color: #fff;
+    background: var(--austral-graph-tne-base, #7b4fb3);
+    pointer-events: none;
   }
 
   &__course-progress {

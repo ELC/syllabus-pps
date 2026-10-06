@@ -1,5 +1,5 @@
 import { isTrayectoNoEstructurado, yearIndexFromDisplayLabel } from "@pps/core";
-import { courseYearPresentation } from "@pps/shell/austral-tokens";
+import { AUSTRAL_GRAPH_TNE, courseYearPresentation } from "@pps/shell/austral-tokens";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import type { CSSProperties } from "react";
 
@@ -43,12 +43,13 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
   const denseLabel = courseUsesDenseLabel(nodeData.label);
   const yearIndex = yearIndexFromDisplayLabel(nodeData.year) ?? 1;
   const yearColors = courseYearPresentation(yearIndex, { spine: isSpine });
+  const borderColor = isTne ? AUSTRAL_GRAPH_TNE.border : yearColors.borderColor;
 
   return (
     <div
       style={
         {
-          "--roadmap-course-border": yearColors.borderColor,
+          "--roadmap-course-border": borderColor,
           "--roadmap-course-bg": yearColors.backgroundColor,
           "--roadmap-course-progress-bg": yearColors.progressBackgroundColor,
           "--roadmap-course-progress-fill": yearColors.progressFillColor,
@@ -80,6 +81,12 @@ export function RoadmapCourseNode({ id, data }: NodeProps) {
         <div className="roadmap__course-progress" aria-hidden="true">
           <span className="roadmap__course-progress-fill" style={{ width: `${percent}%` }} />
         </div>
+      ) : null}
+
+      {isTne ? (
+        <span className="roadmap__course-trayecto-badge" aria-hidden="true">
+          TNE
+        </span>
       ) : null}
 
       {HANDLES.map((handle) => (

@@ -234,6 +234,8 @@ interface RoadmapAppProps {
   ) => void;
   onGridLayoutEditHintChange?: (hint: string | null) => void;
   onWorkspaceNavChange?: (nav: RoadmapWorkspaceNav | null) => void;
+  /** When analytics rebuild finishes, reload curriculum-graph from Supabase. */
+  analyticsArtifactRevision?: string | null;
 }
 
 export function RoadmapApp({
@@ -245,6 +247,7 @@ export function RoadmapApp({
   onGridLayoutSemaphoreChange,
   onGridLayoutEditHintChange,
   onWorkspaceNavChange,
+  analyticsArtifactRevision = null,
 }: RoadmapAppProps) {
   const { isAdmin } = useAppAdmin();
   const [graph, setGraph] = useState<CurriculumGraph | null>(null);
@@ -276,14 +279,22 @@ export function RoadmapApp({
   const conceptCurationEditBaselineRef = useRef<RoadmapCuration | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
     void loadAnalyticsArtifact("curriculum-graph.json")
       .then((loaded) => {
-        setGraph(normalizeCurriculumGraph(loaded));
+        if (!cancelled) {
+          setGraph(normalizeCurriculumGraph(loaded));
+        }
       })
       .catch((error: unknown) => {
-        setLoadError(error instanceof Error ? error.message : "Failed to load roadmap data.");
+        if (!cancelled) {
+          setLoadError(error instanceof Error ? error.message : "Failed to load roadmap data.");
+        }
       });
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [analyticsArtifactRevision]);
 
 
   useEffect(() => {

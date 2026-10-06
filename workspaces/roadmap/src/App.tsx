@@ -151,6 +151,7 @@ export function App() {
           onRegisterPanelUrlSync={(sync) => {
             panelUrlSyncRef.current = sync;
           }}
+          analyticsArtifactRevision={rebuildStatus?.lastOkAt ?? null}
         />
       </section>
 
