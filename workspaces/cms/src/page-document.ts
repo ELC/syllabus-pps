@@ -34,6 +34,8 @@ export interface PageMetadata {
   courses: string[];
   /** kind: year — Trayecto No Estructurado course page slugs (not display titles). */
   coursesNoEstructurado: string[];
+  /** kind: year — prerequisite course titles keyed by course page slug. */
+  courseCorrelativas: Record<string, string[]>;
 }
 
 export { EDITOR_KINDS };
@@ -67,7 +69,22 @@ export function defaultPageMetadata(slug: string): PageMetadata {
     dependsOn: [],
     courses: [],
     coursesNoEstructurado: [],
+    courseCorrelativas: {},
   };
+}
+
+function parseCourseCorrelativas(value: unknown): Record<string, string[]> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return {};
+  }
+  const record: Record<string, string[]> = {};
+  for (const [key, list] of Object.entries(value)) {
+    if (typeof key !== "string" || !key.trim()) {
+      continue;
+    }
+    record[key.trim()] = parseStringList(list);
+  }
+  return record;
 }
 
 function parseYearsCount(value: unknown): number | undefined {
@@ -133,6 +150,7 @@ export function splitPageDocument(source: string, fileSlug: string): { metadata:
       yearIndex: parseYearIndex(data.yearIndex),
       courses: parseStringList(data.courses),
       coursesNoEstructurado: parseStringList(data.coursesNoEstructurado),
+      courseCorrelativas: parseCourseCorrelativas(data.courseCorrelativas),
     },
     body: content,
   };
@@ -150,12 +168,6 @@ export function composePageDocument(metadata: PageMetadata, body: string): strin
   }
   if (metadata.updatedAt) {
     record.updatedAt = metadata.updatedAt;
-  }
-
-  if (metadata.kind === PageKind.Course) {
-    if (metadata.correlativas.length > 0) {
-      record.correlativas = metadata.correlativas;
-    }
   }
 
   if (metadata.kind === PageKind.Degree) {
@@ -179,6 +191,12 @@ export function composePageDocument(metadata: PageMetadata, body: string): strin
     }
     if (metadata.coursesNoEstructurado.length > 0) {
       record.coursesNoEstructurado = metadata.coursesNoEstructurado;
+    }
+    const courseCorrelativasEntries = Object.entries(metadata.courseCorrelativas).filter(
+      ([, list]) => list.length > 0,
+    );
+    if (courseCorrelativasEntries.length > 0) {
+      record.courseCorrelativas = Object.fromEntries(courseCorrelativasEntries);
     }
   }
 

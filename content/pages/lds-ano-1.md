@@ -14,4 +14,9 @@ courses:
   - filosofia
   - programacion-i
   - tecnicas-de-comunicacion-y-storytelling
+courseCorrelativas:
+  analisis-matematico-i:
+    - álgebra y geometría
+  programacion-i:
+    - algoritmos y estructuras de datos
 ---

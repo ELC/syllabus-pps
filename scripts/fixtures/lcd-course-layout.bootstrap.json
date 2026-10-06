@@ -1,0 +1,81 @@
+{
+  "degreeSlug": "lcd",
+  "courses": {
+    "matematica-para-machine-learning-i": { "slug": "matematica-para-machine-learning-i" },
+    "programacion-i": { "slug": "programacion-i" },
+    "introduccion-a-los-problemas-basicos-de-las-ciencias-biomedicas": {
+      "slug": "introduccion-a-los-problemas-basicos-de-las-ciencias-biomedicas"
+    },
+    "taller-de-internet-i": { "slug": "taller-de-internet-i" },
+    "filosofia": { "slug": "filosofia" },
+    "estadistica-i": { "slug": "estadistica-i" },
+    "programacion-ii": { "slug": "programacion-ii" },
+    "introduccion-a-los-problemas-basicos-de-administracion-y-economia": {
+      "slug": "introduccion-a-los-problemas-basicos-de-administracion-y-economia"
+    },
+    "taller-de-internet-ii": { "slug": "taller-de-internet-ii" },
+    "antropologia": { "slug": "antropologia" },
+    "matematica-discreta": { "slug": "matematica-discreta" },
+    "matematica-para-machine-learning-ii": { "slug": "matematica-para-machine-learning-ii" },
+    "algoritmos-y-estructuras-de-datos": { "slug": "algoritmos-y-estructuras-de-datos" },
+    "introduccion-a-los-problemas-de-fisica": { "slug": "introduccion-a-los-problemas-de-fisica" },
+    "taller-de-resolucion-de-problemas-i": { "slug": "taller-de-resolucion-de-problemas-i" },
+    "teologia-i": { "slug": "teologia-i" },
+    "estadistica-ii": { "slug": "estadistica-ii" },
+    "bases-de-datos": { "slug": "bases-de-datos" },
+    "introduccion-al-marketing-on-line-y-los-negocios-digitales": {
+      "slug": "introduccion-al-marketing-on-line-y-los-negocios-digitales"
+    },
+    "taller-de-resolucion-de-problemas-ii": { "slug": "taller-de-resolucion-de-problemas-ii" },
+    "teologia-ii": { "slug": "teologia-ii" },
+    "calculo-numerico-y-simulacion": { "slug": "calculo-numerico-y-simulacion" },
+    "computacion-i": { "slug": "computacion-i" },
+    "analisis-multivariado-y-descubrimiento-de-patrones": {
+      "slug": "analisis-multivariado-y-descubrimiento-de-patrones"
+    },
+    "taller-preprocesamiento-datos-estructurados": {
+      "slug": "taller-preprocesamiento-datos-estructurados"
+    },
+    "etica-general": { "slug": "etica-general" },
+    "optimizacion-e-investigacion-operativa": { "slug": "optimizacion-e-investigacion-operativa" },
+    "computacion-ii": { "slug": "computacion-ii" },
+    "procesamiento-de-big-data": { "slug": "procesamiento-de-big-data" },
+    "taller-de-resolucion-de-problemas-iii": { "slug": "taller-de-resolucion-de-problemas-iii" },
+    "procesamiento-de-imagenes": { "slug": "procesamiento-de-imagenes" },
+    "modelos-de-aprendizaje-i": { "slug": "modelos-de-aprendizaje-i" },
+    "desarrollo-de-software-y-mantenimiento": { "slug": "desarrollo-de-software-y-mantenimiento" },
+    "materia-legal": { "slug": "materia-legal" },
+    "proyecto-final-lcd": { "slug": "proyecto-final-lcd" },
+    "etica-profesional-y-aspectos-legales": { "slug": "etica-profesional-y-aspectos-legales" },
+    "modelos-de-aprendizaje-ii": { "slug": "modelos-de-aprendizaje-ii" },
+    "taller-procesamiento-series-de-tiempo": { "slug": "taller-procesamiento-series-de-tiempo" },
+    "taller-datos-no-estructurados": { "slug": "taller-datos-no-estructurados" },
+    "responsabilidad-social": { "slug": "responsabilidad-social" }
+  },
+  "years": {
+    "año 1": {
+      "templateAreas": [
+        "matematica-para-machine-learning-i programacion-i introduccion-a-los-problemas-basicos-de-las-ciencias-biomedicas taller-de-internet-i filosofia . . . . . . .",
+        "estadistica-i programacion-ii introduccion-a-los-problemas-basicos-de-administracion-y-economia taller-de-internet-ii antropologia matematica-discreta . . . . . ."
+      ]
+    },
+    "año 2": {
+      "templateAreas": [
+        "matematica-para-machine-learning-ii algoritmos-y-estructuras-de-datos introduccion-a-los-problemas-de-fisica taller-de-resolucion-de-problemas-i teologia-i . . . . . . .",
+        "estadistica-ii bases-de-datos introduccion-al-marketing-on-line-y-los-negocios-digitales taller-de-resolucion-de-problemas-ii teologia-ii . . . . . . ."
+      ]
+    },
+    "año 3": {
+      "templateAreas": [
+        "calculo-numerico-y-simulacion computacion-i analisis-multivariado-y-descubrimiento-de-patrones taller-preprocesamiento-datos-estructurados etica-general . . . . . . .",
+        "optimizacion-e-investigacion-operativa computacion-ii procesamiento-de-big-data taller-de-resolucion-de-problemas-iii procesamiento-de-imagenes . . . . . . ."
+      ]
+    },
+    "año 4": {
+      "templateAreas": [
+        "modelos-de-aprendizaje-i desarrollo-de-software-y-mantenimiento materia-legal proyecto-final-lcd etica-profesional-y-aspectos-legales . . . . . . .",
+        "modelos-de-aprendizaje-ii taller-procesamiento-series-de-tiempo taller-datos-no-estructurados responsabilidad-social . . . . . . . ."
+      ]
+    }
+  }
+}

@@ -3,9 +3,9 @@ import { normalizeTitle } from "../normalize";
 import { CurriculumGraph, Diagnostic, PageKind } from "../types";
 
 import {
+  courseCorrelativasDeprecatedOnCourseDiagnostic,
   courseCorrelativasInvalidDiagnostic,
   courseCorrelativasNonCourseDiagnostic,
-  courseCorrelativasOnNonCourseDiagnostic,
   courseCorrelativasSelfDiagnostic,
   courseCorrelativasUnresolvedDiagnostic,
 } from "./course-correlativas-errors";
@@ -16,42 +16,40 @@ export function courseCorrelativasDiagnostics(graph: CurriculumGraph): Diagnosti
   const diagnostics: Diagnostic[] = [];
 
   for (const page of graph.pages) {
-    if (page.correlativas === undefined) {
+    if (page.correlativas === undefined && !page.correlativasInvalid) {
       continue;
     }
 
     if (page.kind !== PageKind.Course) {
-      const diagnostic = courseCorrelativasOnNonCourseDiagnostic(page);
-      diagnostics.push(diagnostic);
       continue;
     }
 
     if (page.correlativasInvalid) {
-      const diagnostic = courseCorrelativasInvalidDiagnostic(page);
-      diagnostics.push(diagnostic);
+      diagnostics.push(courseCorrelativasInvalidDiagnostic(page));
       continue;
     }
 
-    for (const correlativa of page.correlativas) {
+    if (page.correlativas !== undefined) {
+      diagnostics.push(courseCorrelativasDeprecatedOnCourseDiagnostic(page));
+    }
+
+    for (const correlativa of page.correlativas ?? []) {
       const resolved = correlativa.resolvedTarget ?? correlativa.target;
       const normalizedResolved = normalizeTitle(resolved);
       const targetPage = pagesByTitle.get(normalizedResolved);
 
       if (normalizedResolved === page.normalizedTitle) {
-        const diagnostic = courseCorrelativasSelfDiagnostic(page, correlativa);
-        diagnostics.push(diagnostic);
+        diagnostics.push(courseCorrelativasSelfDiagnostic(page, correlativa));
         continue;
       }
 
       if (!targetPage) {
-        const diagnostic = courseCorrelativasUnresolvedDiagnostic(page, correlativa);
-        diagnostics.push(diagnostic);
+        diagnostics.push(courseCorrelativasUnresolvedDiagnostic(page, correlativa));
         continue;
       }
 
       if (targetPage.kind !== PageKind.Course) {
-        const diagnostic = courseCorrelativasNonCourseDiagnostic(page, targetPage);
-        diagnostics.push(diagnostic);
+        diagnostics.push(courseCorrelativasNonCourseDiagnostic(page, targetPage));
       }
     }
   }

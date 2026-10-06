@@ -154,12 +154,6 @@ export function PageMetadataForm({
     [],
   );
 
-  const correlativasChoices = titlePickerOptions(
-    courseTitles,
-    metadata.correlativas,
-    metadata.title,
-  );
-
   const layoutKind = documentReady ? metadata.kind : expectedKind;
   const isCourse = layoutKind === "course";
   const isDegree = layoutKind === "degree";
@@ -176,8 +170,6 @@ export function PageMetadataForm({
 
   const showYearCoursesEditor =
     metaPrimaryReady && catalogExtrasReady && metadata.kind === PageKind.Year;
-  const showCorrelativasEditor =
-    metaPrimaryReady && catalogExtrasReady && metadata.kind === PageKind.Course;
   const showCourseCatalogPending =
     metaPrimaryReady && isCourse && !catalogExtrasReady;
   const showCatalogExtrasPending =
@@ -474,32 +466,6 @@ export function PageMetadataForm({
                   ariaLabel="Tipo"
                 />
               )}
-              {isCourse ? (
-                <>
-                  <span className="cms__meta-label cms__meta-correlativas-label">Correlativas:</span>
-                  {showCourseCatalogPending ? (
-                    <p className="cms__catalog-pending cms__meta-correlativas-wrap" role="status">
-                      Cargando el catálogo para correlativas…
-                    </p>
-                  ) : showCorrelativasEditor ? (
-                    <div className="cms__meta-correlativas-wrap cms__meta-field--overlay">
-                      <DependsOnCombobox
-                        key={`correlativas-${dependsOnResetKey}`}
-                        listboxId="cms-correlativas-dropdown"
-                        choices={correlativasChoices}
-                        selected={metadata.correlativas}
-                        onChange={(correlativas) => patch({ correlativas })}
-                        placeholderEmpty="Buscar materias para agregar…"
-                        placeholderMore="Agregar otra…"
-                        emptyWhenFiltered="Ninguna materia coincide."
-                        emptyWhenAllSelected="Ya están seleccionadas todas las materias."
-                        inputAriaLabel="Agregar correlativas"
-                        onChipActivate={openCoursePageFromChip}
-                      />
-                    </div>
-                  ) : null}
-                </>
-              ) : null}
               </div>
 
               {showCourseYearPageSection ? (

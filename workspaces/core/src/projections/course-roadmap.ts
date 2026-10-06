@@ -1,8 +1,12 @@
 import { buildCurriculumIndexes } from "../analysis";
+import {
+  buildCoursePrerequisiteEdgesForDegree,
+  correlativasForCourseInDegree,
+} from "../degree-course-correlativas";
 import { courseTrayectoForCourseInDegree } from "../degree-year";
 import { yearLabelForCourseInDegree } from "../degree-year";
 import { normalizeTitle, uniqueSorted } from "../normalize";
-import { CourseTrayecto, CurriculumGraph, GraphEdge, ZettelPage, PageKind, EdgeKind } from "../types";
+import { CourseTrayecto, CurriculumGraph, GraphEdge, ZettelPage, PageKind } from "../types";
 import { attachDegreeRoadmapOpen } from "../roadmap/course-concept-roadmap-open";
 import type { CurriculumPageSlug, DegreeRoadmapNodeTitle, RoadmapLayoutSlug } from "../roadmap/titles";
 import {
@@ -62,11 +66,12 @@ export function projectCourseRoadmap(
   const courses = coursesForDegree(reachable, graph);
   const courseTitles = new Set(courses.map((page) => page.title));
 
-  const edges = graph.edges.filter(
-    (edge) =>
-      edge.kind === EdgeKind.CoursePrerequisite &&
-      courseTitles.has(edge.source) &&
-      courseTitles.has(edge.target),
+  const edges = buildCoursePrerequisiteEdgesForDegree(
+    graph,
+    degreePage.title,
+    degreePage.slug,
+  ).filter(
+    (edge) => courseTitles.has(edge.source) && courseTitles.has(edge.target),
   );
 
   return {
@@ -77,9 +82,9 @@ export function projectCourseRoadmap(
       slug: page.slug,
       year: yearLabelForCourseInDegree(graph, degreePage.title, page.title, degreePage.slug),
       correlativas: uniqueSorted(
-        (page.correlativas ?? [])
-          .map((correlativa) => correlativa.resolvedTarget ?? correlativa.target)
-          .filter((title) => courseTitles.has(title)),
+        correlativasForCourseInDegree(graph, degreePage.title, page.title, degreePage.slug).filter(
+          (title) => courseTitles.has(title),
+        ),
       ),
       concepts: conceptTitlesLinkedToCourse(page, conceptTitles),
       trayecto: courseTrayectoForCourseInDegree(graph, degreePage.title, page.title, degreePage.slug),

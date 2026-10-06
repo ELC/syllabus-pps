@@ -17,12 +17,27 @@ kind: course
 `,
         },
         {
+          path: "lds-ano-1.md",
+          content: `---
+title: LDS · año 1
+kind: year
+degree: LDS
+yearIndex: 1
+courses:
+  - base
+  - next
+courseCorrelativas:
+  next:
+    - programación i
+---
+`,
+        },
+        {
           path: "next.md",
           content: `---
 title: introducción a devops
+slug: next
 kind: course
-correlativas:
-  - programación i
 ---
 - #devops
 `,

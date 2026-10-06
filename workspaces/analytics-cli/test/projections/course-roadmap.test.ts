@@ -27,6 +27,12 @@ kind: degree
           content: `---
 title: año 1
 kind: year
+courses:
+  - programacion-i
+  - devops
+courseCorrelativas:
+  devops:
+    - programación i
 ---
 - [[programación i]]
 - [[introducción a devops]]
@@ -46,8 +52,6 @@ kind: course
           content: `---
 title: introducción a devops
 kind: course
-correlativas:
-  - programación i
 ---
 - #contenedores
 `,
@@ -138,6 +142,119 @@ dependsOn: []
 
     const subRoadmap = projectCourseConceptRoadmap(graph, "LDS", "programación i");
     expect(subRoadmap?.concepts.map((concept) => concept.title)).toEqual(["algoritmos"]);
+  });
+
+  it("does not merge prerequisite edges from another degree's year pages", () => {
+    const config = createLoadedConfig({ years: [] });
+    const graph = buildGraphFromPages({
+      config,
+      sources: [
+        {
+          path: "lds.md",
+          content: `---
+title: LDS
+kind: degree
+years: 1
+---
+`,
+        },
+        {
+          path: "lcd.md",
+          content: `---
+title: LCD
+kind: degree
+years: 1
+---
+`,
+        },
+        {
+          path: "lds-ano-1.md",
+          content: `---
+title: LDS · año 1
+kind: year
+degree: LDS
+yearIndex: 1
+courses:
+  - simulacion
+  - estadistica-i
+  - estadistica-ii
+courseCorrelativas:
+  simulacion:
+    - estadística i
+---
+`,
+        },
+        {
+          path: "lcd-ano-1.md",
+          content: `---
+title: LCD · año 1
+kind: year
+degree: LCD
+yearIndex: 1
+courses:
+  - simulacion
+  - estadistica-i
+  - estadistica-ii
+courseCorrelativas:
+  simulacion:
+    - estadística ii
+---
+`,
+        },
+        {
+          path: "simulacion.md",
+          content: `---
+title: cálculo numérico y simulación
+slug: simulacion
+kind: course
+---
+- simulación
+`,
+        },
+        {
+          path: "estadistica-i.md",
+          content: `---
+title: estadística i
+kind: course
+---
+- stats
+`,
+        },
+        {
+          path: "estadistica-ii.md",
+          content: `---
+title: estadística ii
+kind: course
+---
+- stats
+`,
+        },
+      ],
+      resources: [],
+    });
+
+    const lds = projectCourseRoadmap(graph, "LDS");
+    expect(
+      lds?.courses.find((course) => course.title === "cálculo numérico y simulación")?.correlativas,
+    ).toEqual(["estadística i"]);
+    expect(lds?.edges).toContainEqual({
+      source: "estadística i",
+      target: "cálculo numérico y simulación",
+      kind: "course-prerequisite",
+      rawTarget: "estadística i",
+      line: 0,
+    });
+    expect(lds?.edges).not.toContainEqual(
+      expect.objectContaining({
+        source: "estadística ii",
+        target: "cálculo numérico y simulación",
+      }),
+    );
+
+    const lcd = projectCourseRoadmap(graph, "LCD");
+    expect(
+      lcd?.courses.find((course) => course.title === "cálculo numérico y simulación")?.correlativas,
+    ).toEqual(["estadística ii"]);
   });
 
   it("includes courses listed only on coursesNoEstructurado for the degree", () => {

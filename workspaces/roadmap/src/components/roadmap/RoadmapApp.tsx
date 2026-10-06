@@ -89,6 +89,7 @@ import { readCuratedCourseLayoutMetrics } from "./course-layout-metrics";
 import { loadCourseLayout, saveCourseLayout } from "../../api/course-layout";
 import type { RoadmapCourseLayoutDocument } from "@pps/content";
 import {
+  bootstrapCourseLayoutFromRoadmap,
   buildCourseRoadmapCuration,
   courseLayoutDocumentFromCuration,
   hasCuratedCourseGrid,
@@ -115,7 +116,6 @@ import { RoadmapCanvasSkeleton } from "./RoadmapCanvasSkeleton";
 import { RoadmapLoadingShell } from "./RoadmapLoadingShell";
 import { RoadmapToolbarSkeleton } from "./RoadmapToolbarSkeleton";
 import { RoadmapAnchorNode } from "./RoadmapAnchorNode";
-import { RoadmapMiniMap } from "./RoadmapMiniMap";
 import { RoadmapYearBandsLayer } from "./RoadmapYearBandsLayer";
 import { RoadmapBranchEdge } from "./RoadmapBranchEdge";
 import { RoadmapCourseEdge } from "./RoadmapCourseEdge";
@@ -644,13 +644,16 @@ export function RoadmapApp({
     isConceptView,
   ]);
 
-  const effectiveCourseCuration = useMemo(
-    () =>
-      activeCourseRoadmap
-        ? buildCourseRoadmapCuration(activeCourseRoadmap.degreeSlug, courseLayoutDocument)
-        : null,
-    [activeCourseRoadmap, courseLayoutDocument],
-  );
+  const effectiveCourseCuration = useMemo(() => {
+    if (!activeCourseRoadmap) {
+      return null;
+    }
+
+    return (
+      buildCourseRoadmapCuration(activeCourseRoadmap.degreeSlug, courseLayoutDocument) ??
+      bootstrapCourseLayoutFromRoadmap(activeCourseRoadmap)
+    );
+  }, [activeCourseRoadmap, courseLayoutDocument]);
 
   const effectiveConceptCuration = useMemo(() => {
     if (!isConceptView || !conceptCuration) {
@@ -1973,7 +1976,6 @@ export function RoadmapApp({
                   </div>
                 </Panel>
               ) : null}
-              <RoadmapMiniMap />
               <Controls className="roadmap__controls" showInteractive={false} />
               <Background gap={20} size={1} className="roadmap__background" />
               </ReactFlow>

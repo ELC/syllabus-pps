@@ -71,6 +71,34 @@ function parseStringListField(value: unknown): { raw: unknown; targets?: string[
   return { raw: value, targets };
 }
 
+function parseCourseCorrelativasField(value: unknown): {
+  raw: unknown;
+  entries?: Record<string, string[]>;
+  invalid?: boolean;
+} {
+  if (value === undefined) {
+    return { raw: undefined };
+  }
+
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return { raw: value, invalid: true };
+  }
+
+  const entries: Record<string, string[]> = {};
+  for (const [key, list] of Object.entries(value)) {
+    if (typeof key !== "string" || key.trim().length === 0) {
+      return { raw: value, invalid: true };
+    }
+    const parsed = parseStringListField(list);
+    if (!parsed.targets) {
+      return { raw: value, invalid: true };
+    }
+    entries[key.trim()] = parsed.targets;
+  }
+
+  return { raw: value, entries };
+}
+
 export function parsePageContent(source: { path: string; content: string }): RawPage {
   const parsed = parseFrontmatter(source.content);
   const fileSlug = slugFromPath(source.path);
@@ -87,6 +115,7 @@ export function parsePageContent(source: { path: string; content: string }): Raw
   const correlativas = parseStringListField(parsed.data.correlativas);
   const courses = parseStringListField(parsed.data.courses);
   const coursesNoEstructurado = parseStringListField(parsed.data.coursesNoEstructurado);
+  const courseCorrelativas = parseCourseCorrelativasField(parsed.data.courseCorrelativas);
   const yearsCount = parsePositiveIntField(parsed.data.years);
   const yearIndex = parsePositiveIntField(parsed.data.yearIndex);
   const degreeRaw = parsed.data.degree;
@@ -148,6 +177,9 @@ export function parsePageContent(source: { path: string; content: string }): Raw
     coursesTargets: courses.targets,
     coursesNoEstructuradoRaw: coursesNoEstructurado.raw,
     coursesNoEstructuradoTargets: coursesNoEstructurado.targets,
+    courseCorrelativasRaw: courseCorrelativas.raw,
+    courseCorrelativasEntries: courseCorrelativas.entries,
+    courseCorrelativasInvalid: courseCorrelativas.invalid,
     blocks,
     nonBulletLines,
   };

@@ -2,10 +2,12 @@ import { ROADMAP_COURSE_GRID_COLUMN_COUNT } from "@pps/content";
 import { describe, expect, it } from "vitest";
 
 import {
+  bootstrapCourseLayoutFromRoadmap,
   moveAreaInCourseGrid,
   parseTemplateAreas,
   type CourseRoadmapCuration,
 } from "../../../roadmap/src/components/roadmap/course-curation";
+import { COURSE_TRAYECTO_PRINCIPAL, type CourseRoadmap } from "@pps/core";
 
 function paddedRow(...cells: string[]): string {
   const row = [...cells];
@@ -19,6 +21,38 @@ import {
   resolveCuratedRowStride,
   type CuratedCourseLayoutMetrics,
 } from "../../../roadmap/src/components/roadmap/course-layout-metrics";
+
+describe("bootstrapCourseLayoutFromRoadmap", () => {
+  it("builds a year grid from course roadmap assignments", () => {
+    const roadmap: CourseRoadmap = {
+      degree: "LCD",
+      degreeSlug: "lcd",
+      courses: [
+        {
+          title: "programación i",
+          slug: "programacion-i",
+          year: "año 1",
+          correlativas: [],
+          concepts: [],
+          trayecto: COURSE_TRAYECTO_PRINCIPAL,
+        },
+        {
+          title: "estadística i",
+          slug: "estadistica-i",
+          year: "año 1",
+          correlativas: [],
+          concepts: [],
+          trayecto: COURSE_TRAYECTO_PRINCIPAL,
+        },
+      ],
+      edges: [],
+    };
+
+    const curation = bootstrapCourseLayoutFromRoadmap(roadmap);
+    expect(curation.years["año 1"]?.templateAreas[0]?.split(/\s+/)[0]).toBe("estadistica-i");
+    expect(curation.courses["programacion-i"]?.slug).toBe("programacion-i");
+  });
+});
 
 describe("parseTemplateAreas", () => {
   const courses = {

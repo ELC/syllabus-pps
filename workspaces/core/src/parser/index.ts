@@ -97,6 +97,17 @@ export function parsePages(
         ? []
         : page.coursesNoEstructuradoTargets?.map((target) => resolveCorrelativa(target, index));
 
+      const courseCorrelativasInvalid = page.courseCorrelativasInvalid === true;
+      const courseCorrelativas =
+        courseCorrelativasInvalid || !page.courseCorrelativasEntries
+          ? undefined
+          : Object.fromEntries(
+              Object.entries(page.courseCorrelativasEntries).map(([courseSlug, targets]) => [
+                courseSlug,
+                targets.map((target) => resolveCorrelativa(target, index)),
+              ]),
+            );
+
       return {
         id: page.id,
         slug: page.slug,
@@ -127,6 +138,8 @@ export function parsePages(
         coursesInvalid,
         coursesNoEstructurado,
         coursesNoEstructuradoInvalid,
+        courseCorrelativas,
+        courseCorrelativasInvalid,
       };
     })
     .sort((left, right) => left.title.localeCompare(right.title, "es-AR"));

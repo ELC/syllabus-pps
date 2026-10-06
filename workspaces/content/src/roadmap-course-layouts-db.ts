@@ -1,7 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { ROADMAP_COURSE_LAYOUTS_TABLE } from "./constants";
-import { normalizeRoadmapCourseLayoutDocument } from "./roadmap-course-layout-normalize";
+import {
+  normalizeRoadmapCourseLayoutDocument,
+  roadmapCourseGridColumnCount,
+} from "./roadmap-course-layout-normalize";
 
 export interface RoadmapCourseLayoutYearTemplate {
   templateAreas: string[];
@@ -39,24 +42,33 @@ function isYearsMap(value: unknown): value is RoadmapCourseLayoutYears {
 
 export function normalizeRoadmapCourseLayoutPayload(
   raw: unknown,
+  degreeSlug?: string,
 ): RoadmapCourseLayoutDocument | null {
+  const columnCount = roadmapCourseGridColumnCount(degreeSlug);
+
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
     return null;
   }
 
   const record = raw as Record<string, unknown>;
   if (record.courses && record.years && isYearsMap(record.years)) {
-    return normalizeRoadmapCourseLayoutDocument({
-      courses: record.courses as Record<string, RoadmapCourseLayoutCourseEntry>,
-      years: record.years,
-    });
+    return normalizeRoadmapCourseLayoutDocument(
+      {
+        courses: record.courses as Record<string, RoadmapCourseLayoutCourseEntry>,
+        years: record.years,
+      },
+      columnCount,
+    );
   }
 
   if (isYearsMap(raw)) {
-    return normalizeRoadmapCourseLayoutDocument({
-      courses: {},
-      years: raw,
-    });
+    return normalizeRoadmapCourseLayoutDocument(
+      {
+        courses: {},
+        years: raw,
+      },
+      columnCount,
+    );
   }
 
   return null;
@@ -80,7 +92,7 @@ export async function fetchRoadmapCourseLayout(
     return null;
   }
 
-  return normalizeRoadmapCourseLayoutPayload((data as LayoutRow).years);
+  return normalizeRoadmapCourseLayoutPayload((data as LayoutRow).years, degreeSlug);
 }
 
 /** @deprecated Use fetchRoadmapCourseLayout */
@@ -97,7 +109,10 @@ export async function upsertRoadmapCourseLayout(
   degreeSlug: string,
   layout: RoadmapCourseLayoutDocument,
 ): Promise<void> {
-  const normalized = normalizeRoadmapCourseLayoutDocument(layout);
+  const normalized = normalizeRoadmapCourseLayoutDocument(
+    layout,
+    roadmapCourseGridColumnCount(degreeSlug),
+  );
   const { error } = await client.from(ROADMAP_COURSE_LAYOUTS_TABLE).upsert(
     {
       degree_slug: degreeSlug,

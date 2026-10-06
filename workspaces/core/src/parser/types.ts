@@ -45,6 +45,9 @@ export interface RawPage {
   coursesTargets?: string[];
   coursesNoEstructuradoRaw?: unknown;
   coursesNoEstructuradoTargets?: string[];
+  courseCorrelativasRaw?: unknown;
+  courseCorrelativasEntries?: Record<string, string[]>;
+  courseCorrelativasInvalid?: boolean;
   blocks: ZettelBlock[];
   nonBulletLines: number[];
 }

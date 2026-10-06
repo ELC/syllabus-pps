@@ -5,6 +5,7 @@ export { slugFromPath, slugifyTitle } from "./slug";
 export * from "./config/loaded-config";
 export * from "./curriculum";
 export * from "./degree-year";
+export * from "./degree-course-correlativas";
 export * from "./parser";
 export * from "./graph";
 export * from "./analysis";

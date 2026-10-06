@@ -1,5 +1,6 @@
 import { LoadedConfig } from "../config/loaded-config";
 import { deriveExpectedCurriculum } from "../curriculum";
+import { buildCoursePrerequisiteEdgesFromYearPages } from "../degree-course-correlativas";
 import { coursesLinkedToYearPage, yearPagesForDegree } from "../degree-year";
 import { indexResourceCatalog, ResourceCatalogEntry } from "../resources";
 import { parsePages, PageSource } from "../parser";
@@ -68,23 +69,9 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
 
   const titleSet = new Set(pages.map((page) => page.title));
 
-  const edges = pages.flatMap((page) => [
-    ...(page.kind === PageKind.Course ? (page.correlativas ?? []) : []).flatMap((correlativa) => {
-      const prerequisite = correlativa.resolvedTarget ?? correlativa.target;
-      if (!titleSet.has(prerequisite)) {
-        return [];
-      }
-
-      return [
-        {
-          source: prerequisite,
-          target: page.title,
-          kind: EdgeKind.CoursePrerequisite,
-          rawTarget: correlativa.target,
-          line: 0,
-        },
-      ];
-    }),
+  const edges = [
+    ...buildCoursePrerequisiteEdgesFromYearPages(pages),
+    ...pages.flatMap((page) => [
     ...page.refs.map((ref) => {
       const target = ref.resolvedTarget ?? ref.target;
       const direction = canonicalStructuralEdgeDirection(page.title, target, pageKindByTitle);
@@ -104,7 +91,8 @@ export function buildEdges(pages: ZettelPage[]): GraphEdge[] {
       rawTarget: tag.target,
       line: tag.line,
     })),
-  ]);
+    ]),
+  ];
 
   const preliminaryGraph = { pages, edges };
   for (const page of pages) {

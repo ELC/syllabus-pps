@@ -1,10 +1,10 @@
 import type { CourseCorrelativa, Diagnostic, ZettelPage } from "../types";
 
-export function courseCorrelativasOnNonCourseDiagnostic(page: ZettelPage): Diagnostic {
+export function courseCorrelativasDeprecatedOnCourseDiagnostic(page: ZettelPage): Diagnostic {
   return {
-    severity: "warning",
-    code: "course-correlativas-on-non-course",
-    message: `Page "${page.title}" declares correlativas but is not a course page.`,
+    severity: "error",
+    code: "course-correlativas-deprecated-on-course",
+    message: `Course page "${page.title}" still declares correlativas in frontmatter; move prerequisites to the degree year page courseCorrelativas map.`,
     page: page.title,
   };
 }

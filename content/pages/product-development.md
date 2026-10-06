@@ -1,9 +1,6 @@
 ---
 title: product development
 kind: course
-correlativas:
-  - gestión de proyectos
-  - user experience
 ---
 - conecta producto, mercado y validación a partir de [[análisis de sistemas]], [[gestión de proyectos]] y [[user experience]]
 - #design-thinking organiza discovery centrado en usuarios

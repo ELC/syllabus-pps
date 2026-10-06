@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Upsert curated roadmap layout documents into public.roadmap_course_layouts.
- * Usage: node --env-file=.env scripts/seed-roadmap-course-layout.mjs [degreeSlug]
+ * Usage: node --env-file=.env scripts/seed-roadmap-course-layout.mjs [degreeSlug] [--force]
  */
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -56,7 +56,9 @@ function layoutFromLegacyFile(path) {
 }
 
 async function main() {
-  const degreeSlug = process.argv[2]?.trim() || "lds";
+  const args = process.argv.slice(2).filter((arg) => arg !== "--force");
+  const forceFromFile = process.argv.includes("--force");
+  const degreeSlug = args[0]?.trim() || "lds";
   const legacyPath = resolve(
     repoRoot,
     `scripts/fixtures/${degreeSlug}-course-layout.bootstrap.json`,
@@ -72,7 +74,11 @@ async function main() {
     );
     const row = existing.rows[0]?.years;
     let years = fromFile.years;
-    if (row && typeof row === "object") {
+    if (
+      !forceFromFile &&
+      row &&
+      typeof row === "object"
+    ) {
       if (row.years && typeof row.years === "object") {
         years = row.years;
       } else if (Object.values(row).some((entry) => entry?.templateAreas)) {

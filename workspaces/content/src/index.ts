@@ -20,6 +20,7 @@ export {
   normalizeRoadmapCourseLayoutDocument,
   normalizeRoadmapCourseLayoutYears,
   normalizeRoadmapCourseLayoutYearTemplate,
+  roadmapCourseGridColumnCount,
 } from "./roadmap-course-layout-normalize";
 export {
   deleteRoadmapConceptLayout,

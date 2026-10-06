@@ -9,6 +9,7 @@ import {
   conceptNotesWithoutLinks,
 } from "./concepts";
 import { courseCorrelativasDiagnostics } from "./course-correlativas";
+import { yearCourseCorrelativasDiagnostics } from "./year-course-correlativas";
 import { courseTrayectoDiagnostics } from "./course-trayecto";
 import { courseWithoutConceptLinks, courseYearDiagnostics } from "./courses";
 import { degreeYearDiagnostics, yearBodyLinkDiagnostics } from "./degree-year";
@@ -71,6 +72,9 @@ export function collectDiagnostics(graph: CurriculumGraph): Diagnostic[] {
 
   const correlativas = courseCorrelativasDiagnostics(graph);
   diagnostics.push(...correlativas);
+
+  const yearCorrelativas = yearCourseCorrelativasDiagnostics(graph);
+  diagnostics.push(...yearCorrelativas);
 
   const trayecto = courseTrayectoDiagnostics(graph);
   diagnostics.push(...trayecto);

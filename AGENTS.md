@@ -76,6 +76,7 @@ kind: concept
 - Slug filenames on disk; `title` is the display name and wikilink target.
 - `kind` is required for `degree`, `year`, `course`, and `concept`.
 - Year pages (`kind: year`) assign course slugs to `courses` (Trayecto Principal) and/or `coursesNoEstructurado` (Trayecto No Estructurado); the same course may appear in different trayectos across degrees. Roadmap styles TNE per degree; the network graph uses one course color.
+- Course prerequisites (`correlativas`) live on year pages as `courseCorrelativas`: a map from course page **slug** to a list of prerequisite course **titles**. Do not declare `correlativas` on `kind: course` pages (diagnostics error); the same materia can have different prerequisites in LDS vs LCD on each degree’s year page.
 - Wikilinks resolve by title, then slug, then normalized match.
 
 ## PPS Analytics And DAC

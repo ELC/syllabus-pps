@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   normalizeRoadmapCourseLayoutPayload,
   ROADMAP_COURSE_GRID_COLUMN_COUNT,
+  roadmapCourseGridColumnCount,
 } from "@pps/content";
 
 function paddedRow(...cells: string[]): string {
@@ -45,6 +46,20 @@ describe("normalizeRoadmapCourseLayoutPayload", () => {
 
     expect(layout?.years["año 2"]?.templateAreas[0]?.split(/\s+/)).toHaveLength(
       ROADMAP_COURSE_GRID_COLUMN_COUNT,
+    );
+  });
+
+  it("pads LCD rows to twelve columns when degree slug is lcd", () => {
+    const layout = normalizeRoadmapCourseLayoutPayload(
+      {
+        courses: {},
+        years: { "año 1": { templateAreas: ["programacion-i"] } },
+      },
+      "lcd",
+    );
+
+    expect(layout?.years["año 1"]?.templateAreas[0]?.split(/\s+/)).toHaveLength(
+      roadmapCourseGridColumnCount("lcd"),
     );
   });
 });

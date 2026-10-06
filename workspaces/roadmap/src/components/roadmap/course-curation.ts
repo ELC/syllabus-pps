@@ -1,7 +1,13 @@
-import type { CurriculumPageSlug, DegreeRoadmapNodeTitle, RoadmapLayoutSlug } from "@pps/core";
+import type {
+  CourseRoadmap,
+  CurriculumPageSlug,
+  DegreeRoadmapNodeTitle,
+  RoadmapLayoutSlug,
+} from "@pps/core";
 import {
   normalizeRoadmapCourseLayoutDocument,
   normalizeRoadmapCourseLayoutYears,
+  roadmapCourseGridColumnCount,
   type RoadmapCourseLayoutDocument,
 } from "@pps/content";
 
@@ -45,7 +51,65 @@ export function buildCourseRoadmapCuration(
   return {
     degreeSlug,
     courses: layout.courses,
-    years: normalizeRoadmapCourseLayoutYears(layout.years),
+    years: normalizeRoadmapCourseLayoutYears(
+      layout.years,
+      roadmapCourseGridColumnCount(degreeSlug),
+    ),
+  };
+}
+
+/** One grid row per year (chunked to column cap) when Postgres has no curated layout yet. */
+export function bootstrapCourseLayoutFromRoadmap(roadmap: CourseRoadmap): CourseRoadmapCuration {
+  const byYear = new Map<string, CourseRoadmap["courses"]>();
+
+  for (const course of roadmap.courses) {
+    const year = course.year.trim() || "Sin año";
+    const group = byYear.get(year) ?? [];
+    group.push(course);
+    byYear.set(year, group);
+  }
+
+  const courses: Record<string, CourseCurationEntry> = {};
+  const years: Record<string, YearGridTemplate> = {};
+
+  for (const year of [...byYear.keys()].sort((left, right) =>
+    left.localeCompare(right, "es-AR"),
+  )) {
+    const sorted = [...(byYear.get(year) ?? [])].sort((left, right) =>
+      left.title.localeCompare(right.title, "es-AR"),
+    );
+    const areaIds: string[] = [];
+
+    for (const course of sorted) {
+      const areaId = course.slug;
+      courses[areaId] = { slug: course.slug };
+      areaIds.push(areaId);
+    }
+
+    const columnCount = roadmapCourseGridColumnCount(roadmap.degreeSlug);
+    const templateAreas: string[] = [];
+    for (let index = 0; index < areaIds.length; index += columnCount) {
+      const row = areaIds.slice(index, index + columnCount);
+      while (row.length < columnCount) {
+        row.push(EMPTY_AREA);
+      }
+      templateAreas.push(row.join(" "));
+    }
+
+    if (templateAreas.length === 0) {
+      templateAreas.push(Array(columnCount).fill(EMPTY_AREA).join(" "));
+    }
+
+    years[year] = { templateAreas };
+  }
+
+  return {
+    degreeSlug: roadmap.degreeSlug,
+    courses,
+    years: normalizeRoadmapCourseLayoutYears(
+      years,
+      roadmapCourseGridColumnCount(roadmap.degreeSlug),
+    ),
   };
 }
 
@@ -289,7 +353,8 @@ export function moveAreaInCourseGrid(
   areaId: string,
   target: CourseGridPosition,
 ): CourseRoadmapCuration {
-  const years = structuredClone(normalizeRoadmapCourseLayoutYears(curation.years));
+  const columnCount = roadmapCourseGridColumnCount(curation.degreeSlug);
+  const years = structuredClone(normalizeRoadmapCourseLayoutYears(curation.years, columnCount));
   const from = findAreaPosition(years, areaId);
   if (!from) {
     return curation;
@@ -332,15 +397,18 @@ export function moveAreaInCourseGrid(
 
   return {
     ...curation,
-    years: normalizeRoadmapCourseLayoutYears(years),
+    years: normalizeRoadmapCourseLayoutYears(years, columnCount),
   };
 }
 
 export function courseLayoutDocumentFromCuration(
   curation: CourseRoadmapCuration,
 ): RoadmapCourseLayoutDocument {
-  return normalizeRoadmapCourseLayoutDocument({
-    courses: curation.courses,
-    years: curation.years,
-  });
+  return normalizeRoadmapCourseLayoutDocument(
+    {
+      courses: curation.courses,
+      years: curation.years,
+    },
+    roadmapCourseGridColumnCount(curation.degreeSlug),
+  );
 }

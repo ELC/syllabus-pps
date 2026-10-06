@@ -95,6 +95,13 @@ export const diagnosticCodes = [
   "course-correlativas-non-course",
   "course-correlativas-self",
   "course-correlativas-on-non-course",
+  "course-correlativas-deprecated-on-course",
+  "year-course-correlativas-invalid",
+  "year-course-correlativas-unlisted",
+  "year-course-correlativas-unresolved",
+  "year-course-correlativas-non-course",
+  "year-course-correlativas-self",
+  "year-course-correlativas-on-non-year",
   "course-trayecto-invalid",
   "course-trayecto-on-non-course",
   "course-trayecto-deprecated",
@@ -165,8 +172,10 @@ export interface PageFrontmatter {
   updatedAt?: string;
   /** Direct prerequisite concept titles for kind: concept pages. */
   dependsOn: string[];
-  /** Courses that must be completed before this course (kind: course only). */
+  /** @deprecated Use courseCorrelativas on kind: year pages. */
   correlativas?: string[];
+  /** Per-course prerequisite titles keyed by course page slug (kind: year only). */
+  courseCorrelativas?: Record<string, string[]>;
   /** Course track; defaults to trayecto principal when omitted on course pages. */
   trayecto?: CourseTrayecto;
   /** Number of academic years for kind: degree. */
@@ -226,6 +235,10 @@ export interface ZettelPage {
   coursesNoEstructurado?: CourseCorrelativa[];
   /** True when frontmatter coursesNoEstructurado is present but malformed. */
   coursesNoEstructuradoInvalid?: boolean;
+  /** Parsed from frontmatter on year pages; keys are course page slugs. */
+  courseCorrelativas?: Record<string, CourseCorrelativa[]>;
+  /** True when frontmatter courseCorrelativas is present but malformed. */
+  courseCorrelativasInvalid?: boolean;
 }
 
 export interface GraphEdge {
