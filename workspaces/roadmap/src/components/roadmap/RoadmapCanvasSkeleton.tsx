@@ -10,10 +10,10 @@ const SKELETON_NODES = [
   { row: 4, col: 3, w: 2, h: 1 },
 ] as const;
 
-export function RoadmapCanvasSkeleton() {
+export function RoadmapCanvasSkeleton({ className }: { className?: string }) {
   return (
     <div
-      className="roadmap__canvas-skeleton"
+      className={["roadmap__canvas-skeleton", className].filter(Boolean).join(" ")}
       role="status"
       aria-live="polite"
       aria-label="Cargando mapa de materias"

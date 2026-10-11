@@ -26,6 +26,7 @@ describe("bootstrapCourseLayoutFromRoadmap", () => {
   it("builds a year grid from course roadmap assignments", () => {
     const roadmap: CourseRoadmap = {
       degree: "LCD",
+      degreeDisplayName: "LCD",
       degreeSlug: "lcd",
       courses: [
         {

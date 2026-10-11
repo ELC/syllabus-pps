@@ -18,6 +18,14 @@ const base = process.env.ROADMAP_BASE ?? "/roadmap/";
 export default defineConfig({
   base,
   ...sharedViteEnv(workspaceDir),
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(workspaceDir, "index.html"),
+        compare: resolve(workspaceDir, "compare/index.html"),
+      },
+    },
+  },
   plugins: [
     ...withSharedVitePlugins(repoRoot),
     quietEmbeddedDevPlugin(),

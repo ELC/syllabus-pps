@@ -7,10 +7,11 @@ import {
 } from "@pps/shell/AnalyticsRebuildIndicator";
 import { useAnalyticsRebuildStatus } from "@pps/shell/use-analytics-rebuild-status";
 import { WorkspaceNavLink } from "@pps/shell/WorkspaceNavLink";
-import { cmsCoursePageHref } from "@pps/shell/workspace-links";
+import { cmsCoursePageHref, roadmapDegreeOverviewHref } from "@pps/shell/workspace-links";
 import { siteRootFromEnv } from "@pps/shell/site-root";
 
 import { RoadmapApp } from "./components/roadmap/RoadmapApp";
+import { RoadmapCompareView } from "./components/roadmap/RoadmapCompareView";
 import {
   RoadmapHeaderWorkspaceLinks,
   type RoadmapWorkspaceNav,
@@ -21,11 +22,18 @@ import {
   type ConceptPage,
   type ConceptPanelProgress,
 } from "./scripts/concept-panel";
+import { isRoadmapCompareRoute, readRoadmapCompareUrl } from "./scripts/roadmap-compare-url";
 import { readRoadmapPanelUrl, writeRoadmapPanelUrl } from "./scripts/roadmap-panel-url";
 
 export function App() {
   const { isAdmin } = useAppAdmin();
   const rebuildStatus = useAnalyticsRebuildStatus();
+  const siteRoot = useMemo(() => siteRootFromEnv(import.meta.env.BASE_URL ?? "/"), []);
+  const compareView = isRoadmapCompareRoute();
+  const compareMapHref = useMemo(() => {
+    const { a } = readRoadmapCompareUrl();
+    return roadmapDegreeOverviewHref(siteRoot, a?.trim() || "lds");
+  }, [compareView, siteRoot]);
   const [roadmapLoading, setRoadmapLoading] = useState(true);
   const [gridLayoutSemaphore, setGridLayoutSemaphore] =
     useState<PpsStatusIndicatorOverride | null>(null);
@@ -44,7 +52,6 @@ export function App() {
       return nav;
     });
   }, []);
-  const siteRoot = useMemo(() => siteRootFromEnv(import.meta.env.BASE_URL ?? "/"), []);
   const conceptPanelRef = useRef<HTMLElement>(null);
   const conceptPanelControllerRef = useRef<ReturnType<typeof mountConceptPanel> | null>(null);
   const panelUrlSyncRef = useRef<{ markApplied: (state: ReturnType<typeof readRoadmapPanelUrl>) => void } | null>(
@@ -116,14 +123,16 @@ export function App() {
         <div className="dashboard__header-top">
           <div className="dashboard__header-title-band">
             <div className="roadmap__header-title-row dashboard__header-title-row">
-              <h1 className="dashboard__header-title">Degree roadmaps</h1>
+              <h1 className="dashboard__header-title">
+                {compareView ? "Comparar carreras" : "Degree roadmaps"}
+              </h1>
               <div className="roadmap__header-status">
                 <AnalyticsRebuildIndicator
                   status={rebuildStatus}
                   loading={roadmapLoading}
-                  override={gridLayoutSemaphore}
+                  override={compareView ? null : gridLayoutSemaphore}
                 />
-                {gridLayoutEditHint ? (
+                {!compareView && gridLayoutEditHint ? (
                   <p className="roadmap__grid-layout-hint">{gridLayoutEditHint}</p>
                 ) : null}
               </div>
@@ -131,30 +140,47 @@ export function App() {
           </div>
           <div className="dashboard__header-lead-row">
             <p className="dashboard__header-lead">
-              Explorá materias por año y correlativas. Abrí una materia para ver conceptos, recursos y
-              tu avance.
+              {compareView
+                ? "Materias exclusivas de cada carrera y las compartidas, en una sola vista de solo lectura. Pasá el cursor sobre las materias compartidas para ver el año en cada carrera."
+                : "Explorá materias por año y correlativas. Abrí una materia para ver conceptos, recursos y tu avance."}
             </p>
-            <RoadmapHeaderWorkspaceLinks nav={workspaceNav} />
+            {compareView ? (
+              <div className="roadmap__header-workspace-links pps-workspace-nav-links">
+                <WorkspaceNavLink navId="roadmap" href={compareMapHref}>
+                  Mapa
+                </WorkspaceNavLink>
+              </div>
+            ) : (
+              <RoadmapHeaderWorkspaceLinks nav={workspaceNav} />
+            )}
           </div>
         </div>
       </header>
 
       <section className="roadmap__shell">
-        <RoadmapApp
-          onConceptOpen={handleConceptOpen}
-          onClosePanels={handleClosePanels}
-          onProgressChange={handleProgressChange}
-          onLoadingChange={setRoadmapLoading}
-          onGridLayoutSemaphoreChange={setGridLayoutSemaphore}
-          onGridLayoutEditHintChange={setGridLayoutEditHint}
-          onWorkspaceNavChange={handleWorkspaceNavChange}
-          onRegisterPanelUrlSync={(sync) => {
-            panelUrlSyncRef.current = sync;
-          }}
-          analyticsArtifactRevision={rebuildStatus?.lastOkAt ?? null}
-        />
+        {compareView ? (
+          <RoadmapCompareView
+            onLoadingChange={setRoadmapLoading}
+            analyticsArtifactRevision={rebuildStatus?.lastOkAt ?? null}
+          />
+        ) : (
+          <RoadmapApp
+            onConceptOpen={handleConceptOpen}
+            onClosePanels={handleClosePanels}
+            onProgressChange={handleProgressChange}
+            onLoadingChange={setRoadmapLoading}
+            onGridLayoutSemaphoreChange={setGridLayoutSemaphore}
+            onGridLayoutEditHintChange={setGridLayoutEditHint}
+            onWorkspaceNavChange={handleWorkspaceNavChange}
+            onRegisterPanelUrlSync={(sync) => {
+              panelUrlSyncRef.current = sync;
+            }}
+            analyticsArtifactRevision={rebuildStatus?.lastOkAt ?? null}
+          />
+        )}
       </section>
 
+      {!compareView ? (
       <aside
         ref={conceptPanelRef}
         id="roadmap-concept-panel"
@@ -187,6 +213,7 @@ export function App() {
           <div id="graph-concept-panel-notes" className="graph__concept-body" />
         </div>
       </aside>
+      ) : null}
     </div>
   );
 }

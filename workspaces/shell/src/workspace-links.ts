@@ -73,6 +73,18 @@ export function roadmapDegreeOverviewHref(siteRoot: string, degreeSlug: string):
   return `${siteRootPrefix(siteRoot)}roadmap/?${params.toString()}`;
 }
 
+export function roadmapCompareHref(
+  siteRoot: string,
+  degreeSlugA: string,
+  degreeSlugB: string,
+): string {
+  const params = new URLSearchParams({
+    a: degreeSlugA.trim(),
+    b: degreeSlugB.trim(),
+  });
+  return `${siteRootPrefix(siteRoot)}roadmap/compare?${params.toString()}`;
+}
+
 export function roadmapCourseSubgraphHref(
   siteRoot: string,
   degreeSlug: string | null | undefined,

@@ -7,6 +7,7 @@ import {
   networkCourseExpansionHref,
   networkDegreeExpansionHref,
   planningCoursePageHref,
+  roadmapCompareHref,
 } from "@pps/shell/workspace-links";
 import { siteRootFromEnv } from "@pps/shell/site-root";
 
@@ -28,6 +29,17 @@ export interface RoadmapHeaderWorkspaceLinksProps {
 }
 
 /** Degree query param for cross-app links (omit when Carrera = Todas). */
+function defaultComparePartnerDegreeSlug(degreeSlug: string): string {
+  const slug = degreeSlug.trim();
+  if (slug === "lcd") {
+    return "lds";
+  }
+  if (slug === "lds") {
+    return "lcd";
+  }
+  return slug;
+}
+
 export function degreeSlugForWorkspaceLinks(
   panelUrl: ReturnType<typeof readRoadmapPanelUrl>,
   nav: RoadmapWorkspaceNav | null,
@@ -87,6 +99,11 @@ export function RoadmapHeaderWorkspaceLinks({ nav }: RoadmapHeaderWorkspaceLinks
 
   const networkHref = networkDegreeExpansionHref(siteRoot, degreeSlug);
   const cmsHref = isAdmin ? cmsCoursePageHref(siteRoot, degreeSlug) : null;
+  const compareHref = roadmapCompareHref(
+    siteRoot,
+    degreeSlug,
+    defaultComparePartnerDegreeSlug(degreeSlug),
+  );
 
   return (
     <div className="roadmap__header-workspace-links pps-workspace-nav-links">
@@ -95,6 +112,9 @@ export function RoadmapHeaderWorkspaceLinks({ nav }: RoadmapHeaderWorkspaceLinks
           Editar
         </WorkspaceNavLink>
       ) : null}
+      <WorkspaceNavLink navId="roadmap" href={compareHref}>
+        Comparar
+      </WorkspaceNavLink>
       <WorkspaceNavLink navId="network" href={networkHref}>
         Red
       </WorkspaceNavLink>

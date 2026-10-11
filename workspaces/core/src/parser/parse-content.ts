@@ -116,6 +116,10 @@ export function parsePageContent(source: { path: string; content: string }): Raw
   const courses = parseStringListField(parsed.data.courses);
   const coursesNoEstructurado = parseStringListField(parsed.data.coursesNoEstructurado);
   const courseCorrelativas = parseCourseCorrelativasField(parsed.data.courseCorrelativas);
+  const fullName =
+    typeof parsed.data.fullName === "string" && parsed.data.fullName.trim()
+      ? parsed.data.fullName.trim()
+      : undefined;
   const yearsCount = parsePositiveIntField(parsed.data.years);
   const yearIndex = parsePositiveIntField(parsed.data.yearIndex);
   const degreeRaw = parsed.data.degree;
@@ -164,6 +168,7 @@ export function parsePageContent(source: { path: string; content: string }): Raw
     trayectoRaw: trayecto.raw,
     trayecto: trayecto.trayecto,
     trayectoInvalid: trayecto.invalid,
+    fullName,
     yearsCountRaw: yearsCount.raw,
     yearsCount: yearsCount.value,
     yearsCountInvalid: yearsCount.invalid,

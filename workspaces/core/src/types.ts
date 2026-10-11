@@ -178,6 +178,8 @@ export interface PageFrontmatter {
   courseCorrelativas?: Record<string, string[]>;
   /** Course track; defaults to trayecto principal when omitted on course pages. */
   trayecto?: CourseTrayecto;
+  /** Long display name for kind: degree (`fullName` in frontmatter). */
+  fullName?: string;
   /** Number of academic years for kind: degree. */
   years?: number;
   /** Parent degree title for kind: year. */
@@ -216,6 +218,8 @@ export interface ZettelPage {
   trayecto?: CourseTrayecto;
   /** True when frontmatter trayecto is present but malformed. */
   trayectoInvalid?: boolean;
+  /** Parsed from frontmatter on kind: degree pages. */
+  fullName?: string;
   /** Parsed from frontmatter on degree pages. */
   yearsCount?: number;
   /** True when frontmatter years is present but malformed. */

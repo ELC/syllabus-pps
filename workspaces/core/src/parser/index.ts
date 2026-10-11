@@ -128,6 +128,7 @@ export function parsePages(
         correlativasInvalid,
         trayecto: page.trayectoInvalid ? undefined : page.trayecto,
         trayectoInvalid: page.trayectoInvalid,
+        fullName: page.fullName,
         yearsCount: page.yearsCountInvalid ? undefined : page.yearsCount,
         yearsCountInvalid: page.yearsCountInvalid,
         degree,

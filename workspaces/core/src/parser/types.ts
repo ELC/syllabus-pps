@@ -32,6 +32,7 @@ export interface RawPage {
   trayecto?: import("../types").CourseTrayecto;
   /** True when frontmatter trayecto is present but malformed. */
   trayectoInvalid?: boolean;
+  fullName?: string;
   yearsCountRaw?: unknown;
   yearsCount?: number;
   yearsCountInvalid?: boolean;

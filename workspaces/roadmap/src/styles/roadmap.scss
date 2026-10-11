@@ -489,6 +489,15 @@
     height: 100%;
     padding: 2.5rem 2rem;
     box-sizing: border-box;
+
+    &--overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      min-height: 0;
+      background: var(--dash-surface);
+      pointer-events: none;
+    }
   }
 
   &__canvas-skeleton-grid {
@@ -1028,6 +1037,172 @@
 
     &--active:not(&--done) .react-flow__edge-path {
       stroke: var(--austral-azul-primario);
+    }
+  }
+
+  &--compare {
+    flex: 1;
+    min-height: min(75vh, 780px);
+    --roadmap-course-node-width: 284px;
+    --roadmap-course-node-height: 108px;
+    --roadmap-course-label-size: 1.875rem;
+  }
+
+  &__toolbar--compare {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+
+    > .roadmap__toolbar-selectors {
+      width: 100%;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__canvas-panel--compare {
+    flex: 1;
+    min-height: min(65vh, 680px);
+
+    .react-flow__node {
+      overflow: visible;
+    }
+  }
+
+  &__compare-header {
+    box-sizing: border-box;
+    padding: 0 0.5rem 0.25rem;
+    text-align: center;
+  }
+
+  &__compare-header-title {
+    margin: 0;
+    font-family: var(--dash-font-display, Montserrat, sans-serif);
+    font-size: 3rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--dash-text);
+  }
+
+  &__compare-header-subtitle {
+    margin: 0.35rem 0 0;
+    font-size: 2rem;
+    line-height: 1.15;
+    color: var(--dash-muted);
+  }
+
+  &__compare-year-band {
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0.65rem 0.5rem 0.75rem;
+    position: relative;
+
+    &--separator::before {
+      content: "";
+      position: absolute;
+      top: 0.35rem;
+      left: 0.35rem;
+      right: 0.35rem;
+      height: 3px;
+      background: repeating-linear-gradient(
+        to right,
+        rgba(15, 76, 129, 0.34) 0 20px,
+        transparent 20px 38px
+      );
+    }
+  }
+
+  &__compare-year-band-label {
+    margin: 1.15rem 0 1rem;
+    padding: 0.35rem 0 0.5rem;
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--austral-azul-primario);
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+
+  &__compare-year-band--separator .roadmap__compare-year-band-label {
+    margin-top: 1.45rem;
+  }
+
+  &__compare-column-bg {
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--dash-table-head) 88%, transparent);
+    border: 1px solid color-mix(in srgb, var(--dash-border) 70%, transparent);
+
+    &--center {
+      background: color-mix(in srgb, var(--austral-azul-primario) 6%, var(--dash-table-head));
+    }
+  }
+
+  &__course--compare {
+    width: var(--roadmap-course-node-width);
+    min-height: var(--roadmap-course-node-height);
+    cursor: default;
+    pointer-events: auto;
+    overflow: visible;
+
+    .roadmap__course-label--compact-md {
+      font-size: 1.6875rem;
+      line-height: 1.16;
+    }
+
+    .roadmap__course-label--compact {
+      font-size: 1.5625rem;
+      line-height: 1.14;
+    }
+
+    &.roadmap__course--compare-shared {
+      --roadmap-course-border: color-mix(in srgb, var(--austral-azul-primario) 45%, var(--dash-border));
+      --roadmap-course-bg: color-mix(in srgb, var(--austral-azul-primario) 8%, var(--dash-surface));
+      border-color: var(--roadmap-course-border);
+      background: var(--roadmap-course-bg);
+    }
+
+    &.roadmap__course--compare-tooltip {
+      position: relative;
+
+      &::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 0.75rem);
+        z-index: 40;
+        transform: translateX(-50%);
+        width: max-content;
+        max-width: min(38rem, 96vw);
+        padding: 1.1rem 1.45rem;
+        border-radius: 0.75rem;
+        border: 1px solid color-mix(in srgb, var(--dash-border) 80%, transparent);
+        background: var(--dash-surface);
+        box-shadow: 0 14px 36px rgba(15, 23, 42, 0.2);
+        font-family: var(--font-body);
+        font-size: 1.75rem;
+        font-weight: 600;
+        line-height: 1.4;
+        text-align: center;
+        color: var(--dash-text);
+        white-space: normal;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.12s ease, visibility 0.12s ease;
+      }
+
+      &:hover,
+      &:focus-visible {
+        z-index: 30;
+      }
+
+      &:hover::after,
+      &:focus-visible::after {
+        opacity: 1;
+        visibility: visible;
+      }
     }
   }
 }

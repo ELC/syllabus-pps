@@ -5,6 +5,7 @@ import {
 } from "../degree-course-correlativas";
 import { courseTrayectoForCourseInDegree } from "../degree-year";
 import { yearLabelForCourseInDegree } from "../degree-year";
+import { preferDegreeDisplayName } from "../degree-display";
 import { normalizeTitle, uniqueSorted } from "../normalize";
 import { CourseTrayecto, CurriculumGraph, GraphEdge, ZettelPage, PageKind } from "../types";
 import { attachDegreeRoadmapOpen } from "../roadmap/course-concept-roadmap-open";
@@ -27,6 +28,8 @@ export interface CourseRoadmapCourse {
 
 export interface CourseRoadmap {
   degree: string;
+  /** Long degree label for UI (frontmatter fullName when set). */
+  degreeDisplayName: string;
   degreeSlug: RoadmapLayoutSlug;
   courses: CourseRoadmapCourse[];
   edges: GraphEdge[];
@@ -76,6 +79,7 @@ export function projectCourseRoadmap(
 
   return {
     degree: degreePage.title,
+    degreeDisplayName: preferDegreeDisplayName(degreePage.title, degreePage.fullName),
     degreeSlug: degreePage.slug,
     courses: courses.map((page) => ({
       title: page.title,
